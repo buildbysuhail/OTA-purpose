@@ -1597,198 +1597,329 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       errors,
     };
   };
- const attachMaster = async(formState: TransactionFormState) => {
+  interface ItemTaxDetails {
+    rowNumber: number;
+    taxPerc: number;
+    taxableAmount: number;
+    taxAmount: number;
+  }
 
-     const m = formState.transaction.master;
-  const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
-  const master = {
-    ...m,
-      salesManID: formState.transaction.master.employeeID,
+  interface TaxableDetails {
+    taxPerc: number;
+    taxableAmount: number;
+    taxAmount: number;
+  }
 
-    /** ---------------- Identity ---------------- */
-    // invTransactionMasterID: options.isEdit
-    //   ? options.invTransMasterID
-    //   : 0,
+  const loadItemTaxDetails = (
+    master: TransactionMaster,
+    details: TransactionDetail[],
+    billDiscount: number,
+    isRPOS = false
+  ) => {
+    master.itemTaxDetails = [];
+    master.taxableDetails = [];
 
-    // randomKey: options.randomKey,
-    activeStatus: true,
+    // 1️⃣ Build item-level tax rows
+    details.forEach((d, index) => {
+      const taxPerc = d.vatPerc ?? 0;
 
-    /** ---------------- Party ---------------- */
-    // partyName:
-    //   m.partyName && m.partyName !== ""
-    //     ? m.partyName
-    //     : formState..partyText,
+      const taxableAmount = isRPOS
+        ? d.gross ?? 0
+        : d.netValue ?? 0;
 
-    ledgerID: m.ledgerID,
-   inventoryLedgerID:
-    m.inventoryLedgerID > 0
-      ? m.inventoryLedgerID
-      : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT" && !clientSession.isAppGlobal
-      ? applicationSettings.branchSettings.defaultSIBTAcc
-      : applicationSettings.inventorySettings.defaultSalesAcc,
-    
+      const taxAmount = d.vatAmount ?? 0;
 
-    /** ---------------- Address ---------------- */
-    address1: m.address1,
-    address2: m.address2,
-    address3: m.address3,
-    address4: m.address4,
+      master.itemTaxDetails.push({
+        rowNumber: index + 1,
+        taxPerc,
+        taxableAmount,
+        taxAmount,
+      });
+    });
 
-    /** ---------------- Dates ---------------- */
-    transactionDate: m.transactionDate,
-    orderDate: m.orderDate,
-    quotationDate: m.quotationDate,
-    purchaseInvoiceDate: m.purchaseInvoiceDate,
-    deliveryDate: m.deliveryDate,
-    despatchDate: m.despatchDate,
-    dueDate: m.dueDate,
+    let maxTaxPerc = 0;
+    let totalTaxable = 0;
 
-    /** ---------------- Amounts ---------------- */
-    adjustmentAmount: m.adjustmentAmount,
-    adjustmentType: "Add",
-    billDiscount: m.billDiscount,
-    taxOnDiscount: m.taxOnDiscount,
-    cashReceived: m.cashReceived,
-    cashReturned: 0,
-    srAmount: m.srAmount,
+    try {
+      maxTaxPerc = Math.max(
+        ...master.itemTaxDetails.map((i: any) => i.taxPerc)
+      );
 
-    totalGross: m.totalGross,
-    totalDiscount: m.totalDiscount,
-    vatAmount: m.vatAmount,
-    grandTotal: m.grandTotal,
-    totalProfit: m.totalProfit,
+      totalTaxable = master.itemTaxDetails
+        .filter((i: any) => i.taxPerc === maxTaxPerc)
+        .reduce((s: any, i: any) => s + i.taxableAmount, 0);
+    } catch {
+      maxTaxPerc = 0;
+      totalTaxable = 0;
+    }
 
-    /** ---------------- Cash / Bank ---------------- */
-    cashAmt: m.cashAmt,
-    bankAmt: m.bankAmt,
-    couponAmt: m.couponAmt,
+    // 2️⃣ Apply bill discount into tax slabs
+    if (maxTaxPerc > 0) {
+      if (billDiscount > 0 && totalTaxable >= billDiscount) {
+        master.itemTaxDetails.push({
+          rowNumber: details.length + 1,
+          taxPerc: maxTaxPerc,
+          taxableAmount: -billDiscount,
+          taxAmount: -(maxTaxPerc * billDiscount) / 100,
+        });
+      } else if (billDiscount > 0 && totalTaxable < billDiscount) {
+        let remainingDisc = billDiscount;
 
-    creditAmt:
-      isCashOrBank!== true
-        ? Math.max(
-            m.grandTotal -
-              m.cashAmt -
-              m.bankAmt -
-              m.couponAmt,
-            0
-          )
-        : clientSession.isAppGlobal?
-Math.max(
-            m.grandTotal -
-              m.cashAmt -
-              m.bankAmt -
-              m.couponAmt-
-              m.srAmount,
-            0
-          ):0,
+        // Apply against highest tax slab
+        master.itemTaxDetails.push({
+          rowNumber: details.length + 1,
+          taxPerc: maxTaxPerc,
+          taxableAmount: -totalTaxable,
+          taxAmount: -(maxTaxPerc * totalTaxable) / 100,
+        });
 
-    /** ---------------- Rounding ---------------- */
-    roundAmount: m.roundAmount,
+        remainingDisc -= totalTaxable;
 
-    /** ---------------- Warehouse ---------------- */
-    fromWarehouseID: m.fromWarehouseID || 1,
+        // Find next lower tax slab
+        let nextTaxPerc = 0;
+        try {
+          nextTaxPerc = Math.max(
+            ...master.itemTaxDetails
+              .filter((i: any) => i.taxPerc < maxTaxPerc)
+              .map((i: any) => i.taxPerc)
+          );
+        } catch {
+          nextTaxPerc = 0;
+        }
 
-    /** ---------------- Sales / Employee ---------------- */
-    employeeID: m.employeeID,
-    salesManIncentive:
-      applicationSettings.miscellaneousSettings.salesmanIncentive > 0
-        ? m.grandTotal *
-          (applicationSettings.miscellaneousSettings.salesmanIncentive /
-            100)
-        : m.salesManIncentive,
+        master.itemTaxDetails.push({
+          rowNumber: details.length + 2,
+          taxPerc: nextTaxPerc,
+          taxableAmount: -remainingDisc,
+          taxAmount: -(nextTaxPerc * remainingDisc) / 100,
+        });
+      }
+    } else {
+      // No tax items at all
+      master.itemTaxDetails.push({
+        rowNumber: details.length + 1,
+        taxPerc: 0,
+        taxableAmount: -billDiscount,
+        taxAmount: 0,
+      });
+    }
 
-    /** ---------------- Logistics ---------------- */
-    driverID: m.driverID,
-    deliveryManID: m.deliveryManID,
-    vehicelID: m.vehicleID,
-    gatePassNo: m.gatePassNo,
-    despatchDocumentNumber: applicationSettings.inventorySettings.enableDummyTransation && clientSession.isAppGlobal?formState.userConfig?.dummyBill:m.despatchDocumentNumber,
+    // 3️⃣ Aggregate taxable summary (taxableDetails)
+    const distinctTaxPerc = [
+      ...new Set(master.itemTaxDetails.map((i: any) => i.taxPerc)),
+    ];
 
-    /** ---------------- Voucher ---------------- */
-    voucherNumber: m.voucherNumber,
-    voucherPrefix: m.voucherPrefix,
-    voucherType: m.voucherType,
-    voucherForm: m.voucherForm,
-
-    /** ---------------- Lock / Invoice ---------------- */
-    isLocked: m.isLocked,
-    isInvoiced:
-      userSession.dbIdValue === "543140180640"
-        ? false
-        : true,
-
-    tokenNumber: m.tokenNumber,
-
-    /** ---------------- Privilege ---------------- */
-    // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
-    // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
-    // privilageRedeem: m.privilageRedeem,
-
-    /** ---------------- Project / Cost ---------------- */
-    costCentreID: m.costCentreID,
-    projectID: m.projectID || 0,
-
-    /** ---------------- Advance ---------------- */
-    advanceAmt: formState.advanceAmtFromSo || 0,
-
-    /** ---------------- Customer ---------------- */
-    customerType:
-      m.customerType ||
-      "B2C",
-
-    /** ---------------- Draft ---------------- */
-    draftTransactionMasterID:
-      m.draftTransactionMasterID > 0
-        ? m.draftTransactionMasterID
-        : 0,
-
-    /** ---------------- External API ---------------- */
-    refInvTransactionMasterSOID:
-      applicationSettings.miscellaneousSettings.enableExternalAPI &&
-      m.voucherPrefix === "ESI/"
-        ? m.refInvTransactionMasterSOID ?? ""
-        : "",
+    distinctTaxPerc.forEach(taxPerc => {
+      master.taxableDetails.push({
+        taxPerc,
+        taxableAmount: master.itemTaxDetails
+          .filter((i: any) => i.taxPerc === taxPerc)
+          .reduce((s: any, i: any) => s + i.taxableAmount, 0),
+        taxAmount: master.itemTaxDetails
+          .filter((i: any) => i.taxPerc === taxPerc)
+          .reduce((s: any, i: any) => s + i.taxAmount, 0),
+      });
+    });
+    return master;
   };
 
-  /** ---------------- Cash Returned Adjustment ---------------- */
-  master.cashReturned =
-    master.cashAmt +
-    master.bankAmt +
-    master.srAmount +
-    master.couponAmt -
-    master.grandTotal;
+  const attachMaster = async (formState: TransactionFormState) => {
 
-  if (master.cashReturned > 0) {
-    master.cashAmt -= master.cashReturned;
-  }
-if( userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal){
-master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt-m.srAmount
-}
-if( userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal){
-master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
-}
-  /** ---------------- BT Exception ---------------- */
-  if (m.voucherForm === "BT") {
-    master.isLocked = false;
-    master.customerType = "";
-  }
+    const m = formState.transaction.master;
+    const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
+    const privperc = applicationSettings.mainSettings.previlegeCardPerc;
+    let master = {
+      ...m,
+      salesManID: formState.transaction.master.employeeID,
 
-  /** ---------------- KSA E-Invoice Rule ---------------- */
-  if (
-    applicationSettings.branchSettings.maintainKSA_EInvoice &&
-    m.voucherForm === "VAT" &&
-    m.voucherType === "SI"
-  ) {
-    if (new Date(m.transactionDate) >= new Date("2021-12-04")) {
-      master.isLocked = true;
+      /** ---------------- Identity ---------------- */
+      // invTransactionMasterID: options.isEdit
+      //   ? options.invTransMasterID
+      //   : 0,
+
+      // randomKey: options.randomKey,
+      activeStatus: true,
+
+      /** ---------------- Party ---------------- */
+      // partyName:
+      //   m.partyName && m.partyName !== ""
+      //     ? m.partyName
+      //     : formState..partyText,
+
+      ledgerID: m.ledgerID,
+      inventoryLedgerID:
+        m.inventoryLedgerID > 0
+          ? m.inventoryLedgerID
+          : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT" && !clientSession.isAppGlobal
+            ? applicationSettings.branchSettings.defaultSIBTAcc
+            : applicationSettings.inventorySettings.defaultSalesAcc,
+
+
+      /** ---------------- Address ---------------- */
+      address1: m.address1,
+      address2: m.address2,
+      address3: m.address3,
+      address4: m.address4,
+
+      /** ---------------- Dates ---------------- */
+      transactionDate: m.transactionDate,
+      orderDate: m.orderDate,
+      quotationDate: m.quotationDate,
+      purchaseInvoiceDate: m.purchaseInvoiceDate,
+      deliveryDate: m.deliveryDate,
+      despatchDate: m.despatchDate,
+      dueDate: m.dueDate,
+
+      /** ---------------- Amounts ---------------- */
+      adjustmentAmount: m.adjustmentAmount,
+      adjustmentType: "Add",
+      billDiscount: m.billDiscount,
+      taxOnDiscount: m.taxOnDiscount,
+      cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) ? 0 : m.cashReceived,
+      cashReturned: 0,
+      srAmount: m.srAmount,
+
+      totalGross: m.totalGross,
+      totalDiscount: m.totalDiscount,
+      vatAmount: m.vatAmount,
+      grandTotal: m.grandTotal,
+      totalProfit: m.totalProfit,
+
+      /** ---------------- Cash / Bank ---------------- */
+      cashAmt: m.cashAmt,
+      bankAmt: m.bankAmt,
+      couponAmt: m.couponAmt,
+
+      creditAmt:
+        isCashOrBank !== true
+          ? Math.max(
+            m.grandTotal -
+            m.cashAmt -
+            m.bankAmt -
+            m.couponAmt,
+            0
+          )
+          : clientSession.isAppGlobal ?
+            Math.max(
+              m.grandTotal -
+              m.cashAmt -
+              m.bankAmt -
+              m.couponAmt -
+              m.srAmount,
+              0
+            ) : 0,
+
+      /** ---------------- Rounding ---------------- */
+      roundAmount: m.roundAmount,
+
+      /** ---------------- Warehouse ---------------- */
+      fromWarehouseID: m.fromWarehouseID || 1,
+
+      /** ---------------- Sales / Employee ---------------- */
+      employeeID: m.employeeID,
+      salesManIncentive:
+        applicationSettings.miscellaneousSettings.salesmanIncentive > 0
+          ? m.grandTotal *
+          (applicationSettings.miscellaneousSettings.salesmanIncentive /
+            100)
+          : m.salesManIncentive,
+
+      /** ---------------- Logistics ---------------- */
+      driverID: m.driverID,
+      deliveryManID: m.deliveryManID,
+      vehicelID: m.vehicleID,
+      gatePassNo: m.gatePassNo,
+      despatchDocumentNumber: applicationSettings.inventorySettings.enableDummyTransation && clientSession.isAppGlobal ? formState.userConfig?.dummyBill : m.despatchDocumentNumber,
+
+      /** ---------------- Voucher ---------------- */
+      voucherNumber: m.voucherNumber,
+      voucherPrefix: m.voucherPrefix,
+      voucherType: m.voucherType,
+      voucherForm: m.voucherForm,
+
+      /** ---------------- Lock / Invoice ---------------- */
+      isLocked: m.isLocked,
+      isInvoiced:
+        userSession.dbIdValue === "543140180640"
+          ? false
+          : true,
+
+      tokenNumber: m.tokenNumber,
+
+      /** ---------------- Privilege ---------------- */
+      // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
+      // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
+      privilageAddAmount: privperc > 0 ? m.grandTotal * (privperc / 100) : 0,
+      // privilageRedeem: m.privilageRedeem,
+
+      /** ---------------- Project / Cost ---------------- */
+      costCentreID: m.costCentreID,
+      projectID: m.projectID || 0,
+
+      /** ---------------- Advance ---------------- */
+      advanceAmt: formState.advanceAmtFromSo || 0,
+
+      /** ---------------- Customer ---------------- */
+      customerType:
+        m.customerType ||
+        "B2C",
+
+      /** ---------------- Draft ---------------- */
+      draftTransactionMasterID:
+        m.draftTransactionMasterID > 0
+          ? m.draftTransactionMasterID
+          : 0,
+
+      /** ---------------- External API ---------------- */
+      refInvTransactionMasterSOID:
+        applicationSettings.miscellaneousSettings.enableExternalAPI &&
+          m.voucherPrefix === "ESI/"
+          ? m.refInvTransactionMasterSOID ?? ""
+          : "",
+    };
+
+    /** ---------------- Cash Returned Adjustment ---------------- */
+    master.cashReturned =
+      master.cashAmt +
+      master.bankAmt +
+      master.srAmount +
+      master.couponAmt -
+      master.grandTotal;
+
+    if (master.voucherType == VoucherType.SalesInvoice && master.voucherForm == "VAT") {
+      master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
+    }
+    if (master.cashReturned > 0) {
+      master.cashAmt -= master.cashReturned;
+    }
+    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal) {
+      master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt - m.srAmount
+    }
+    if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal) {
+      master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt;
+    }
+    /** ---------------- BT Exception ---------------- */
+    if (m.voucherForm === "BT") {
+      master.isLocked = false;
+      master.customerType = "";
     }
 
-    if (!master.customerType) {
-      master.customerType = "B2C";
-    }
-  }
+    /** ---------------- KSA E-Invoice Rule ---------------- */
+    if (
+      applicationSettings.branchSettings.maintainKSA_EInvoice &&
+      m.voucherForm === "VAT" &&
+      m.voucherType === "SI"
+    ) {
+      if (new Date(m.transactionDate) >= new Date("2021-12-04")) {
+        master.isLocked = true;
+      }
 
-  return master;
+      if (!master.customerType) {
+        master.customerType = "B2C";
+      }
+    }
+
+    return master;
   };
   const attachMaster2 = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
@@ -3026,31 +3157,31 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
               ? (_res?.transaction
                 ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
-               if (data.rowIndex >= 0) {
-          currentDetails[data.rowIndex] = final as TransactionDetail;
-          const summaryRes = calculateSummary(currentDetails, formState, {
-            result: {},
-          });
+          if (data.rowIndex >= 0) {
+            currentDetails[data.rowIndex] = final as TransactionDetail;
+            const summaryRes = calculateSummary(currentDetails, formState, {
+              result: {},
+            });
 
-          const totalRes = await calculateTotal(
-            formState.transaction.master,
-            summaryRes.summary as SummaryItems,
-            {
-              ...formState.formElements,
-              ...result.formElements,
-            } as FormElementsState,
-            { result: {} }
-          );
-          result = {
-            ...totalRes,
-            summary: summaryRes.summary,
-            showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
-            transaction: {
-              ...totalRes.transaction,
-              details: [final],
-            },
-          };
-         }
+            const totalRes = await calculateTotal(
+              formState.transaction.master,
+              summaryRes.summary as SummaryItems,
+              {
+                ...formState.formElements,
+                ...result.formElements,
+              } as FormElementsState,
+              { result: {} }
+            );
+            result = {
+              ...totalRes,
+              summary: summaryRes.summary,
+              showQuantityFactors: { visible: false, rowIndex: -1, qtyDesc: "" },
+              transaction: {
+                ...totalRes.transaction,
+                details: [final],
+              },
+            };
+          }
         }
         // Handle mobile row update (rowIndex < 0 indicates mobile)
         if (data.rowIndex < 0 && result.transaction) {
@@ -3352,17 +3483,17 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
       if (formState.transaction.master.voucherType !== VoucherType.SaleReturnEstimate) {
 
         if (([VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
-            .includes(formState.transaction.master.voucherType as any)) ||
+          .includes(formState.transaction.master.voucherType as any)) ||
           (![VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation]
             .includes(formState.transaction.master.voucherType as any) && formState.transaction.master.voucherForm !== "")
         ) {
 
-        result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
-            result.transaction!.master!.master3!.totCGST = round(cgst);
-            result.transaction!.master!.master3!.totSGST = round(sgst);
-            result.transaction!.master!.master3!.totIGST = round(igst);
-            result.transaction!.master!.master3!.totCess = round(cessAmt);
-            result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
+          result.transaction!.master!.master3 ??= (TransactionMaster3InitialData as any);
+          result.transaction!.master!.master3!.totCGST = round(cgst);
+          result.transaction!.master!.master3!.totSGST = round(sgst);
+          result.transaction!.master!.master3!.totIGST = round(igst);
+          result.transaction!.master!.master3!.totCess = round(cessAmt);
+          result.transaction!.master!.master3!.totAdditionalCess = round(additionalCess);
         }
       }
     }
@@ -3503,7 +3634,7 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
     }
 
 
-    result.transaction!.master!.roundAmount = round((result.transaction!.master!.grandTotal || 0) -_grandTotal);
+    result.transaction!.master!.roundAmount = round((result.transaction!.master!.grandTotal || 0) - _grandTotal);
     if (clientSession.isAppGlobal && formState.transaction.master.voucherType == VoucherType.SalesInvoice) {
       // TCS calculation (Indian SI uses TCS percentage if present)
       const TCSPerc = Number(formState.ledgerData.tCSPerc ?? master.master3?.totTCS ?? 0);
@@ -3636,13 +3767,13 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
           if (confirm) {
             let updatedRow = {
               ...row,
-            qty: qty,
-            schemeFreeQty: qty,
-            unitPrice: 0,
-            vatPerc: 0,
-            discPerc: 0,
-            ratePlusTax: 0            
-          }
+              qty: qty,
+              schemeFreeQty: qty,
+              unitPrice: 0,
+              vatPerc: 0,
+              discPerc: 0,
+              ratePlusTax: 0
+            }
 
             outRow = await calculateRowAmount(updatedRow, "qty", { result: {} }, false, i);
             finalRows[i] = outRow.transaction!.details![0] as TransactionDetail;
@@ -3733,7 +3864,7 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
             // Exact field updates from C#
             let updatedRow = {
               ...row,
-              qty:qty,
+              qty: qty,
               schemeFreeQty: qty,
               unitPrice: price,
               ratePlusTax: price
@@ -3783,7 +3914,7 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
           confirmButtonText: t("ok"),
         });
       } else {
-        if(outRow){
+        if (outRow) {
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: outRow,
@@ -3876,15 +4007,15 @@ master.cashAmt=m.grandTotal-m.bankAmt-m.creditAmt-m.couponAmt;
           //   || (!clientSession.isAppGlobal && formState.transaction.master.voucherForm === "VAT") ? Number(stdItem.sVatPerc || 0) : 0;
           // row.ratePlusTax = row.unitPrice;
 
-            let updatedRow = {
-              ...row,
-              qty: 1,
-              schemeFreeQty: 0,
-              unitPrice: Number(stdItem[i].stdSalesPrice || 0),
-              vatPerc: stdItem[i].sVatPerc,
-              ratePlusTax: row.unitPrice
+          let updatedRow = {
+            ...row,
+            qty: 1,
+            schemeFreeQty: 0,
+            unitPrice: Number(stdItem[i].stdSalesPrice || 0),
+            vatPerc: stdItem[i].sVatPerc,
+            ratePlusTax: row.unitPrice
 
-           }
+          }
 
           // Reverse calculate base price from ratePlusTax
           const taxP = Number(row.vatPerc || 0);

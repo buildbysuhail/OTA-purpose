@@ -620,11 +620,12 @@ export const useTransaction = (
       loadVType = "GD"
       url = url + "/LoadGDQuotation";
     }
-    if(!usingManualInvNumber){
+    if (!usingManualInvNumber) {
       if (voucherNumber == undefined || voucherNumber <= 0) {
-      return voucher;
+        return voucher;
 
-    }}
+      }
+    }
     const params: Record<any, any> = {
       VoucherNumber: loadVType === "" ? voucherNumber ?? formState.transaction.master.voucherNumber : voucherNumber,
       voucherPrefix: loadVType === "" ? voucherPrefix ?? formState.transaction.master.voucherPrefix : loadPrefix,
@@ -632,7 +633,7 @@ export const useTransaction = (
       voucherForm: loadVType === "" ? out_voucherForm : formType,
       // InvokeUsingVoucherNumber: !usingManualInvNumber,
       isUsingManualInvNo: usingManualInvNumber,  // This is for load and more manual invoice number
-      IsUsingManualInvoiceNo:usingManualInvNumber, // This is for load and more manual invoice number in haeder
+      IsUsingManualInvoiceNo: usingManualInvNumber, // This is for load and more manual invoice number in haeder
       autoEwayBill: formState.userConfig?.autoEwayBill ?? false, // for india sales
       isActualPriceVisible:
         formState.gridColumns.find((x) => x.dataField == "actualSalesPrice")
@@ -1483,7 +1484,7 @@ export const useTransaction = (
     await save("LPQ");
   };
 
-   const Tender = (): Promise<boolean> => {
+  const Tender = (): Promise<boolean> => {
     return new Promise((resolve) => {
       if (formState.transaction.master.voucherType === "SID") {
         resolve(true);
@@ -1493,7 +1494,7 @@ export const useTransaction = (
       if (applicationSettings.accountsSettings.showTenderDialogInSales) {
         // Store the resolver so it can be called from Tender component
         tenderResolver = resolve;
-        
+
         dispatch(
           formStateHandleFieldChange({
             fields: {
@@ -1531,16 +1532,16 @@ export const useTransaction = (
     const valid = await validate();
     if (valid == true) {
       const tenderOk = await Tender()
-    if (!tenderOk) {
-      return;
-    }
-    dispatch(
-      formStateHandleFieldChange({
-        fields: {
-          saving: true,
-        },
-      })
-    );
+      if (!tenderOk) {
+        return;
+      }
+      dispatch(
+        formStateHandleFieldChange({
+          fields: {
+            saving: true,
+          },
+        })
+      );
       const master = await attachMaster(formState);
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
@@ -1618,6 +1619,13 @@ export const useTransaction = (
             })
           );
           clearControls(true, true);
+          dispatch(
+            formStateHandleFieldChange({
+              fields: {
+                savingCompleted: true,
+              },
+            })
+          );
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
             await printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID
@@ -1633,13 +1641,7 @@ export const useTransaction = (
               formState?.lastChoosedTemplate?.id //lastChooseTempId
             );
           }
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-                savingCompleted: true,
-              },
-            })
-          );
+
           // ERPToast.show(saveRes.message, "success");
         } else {
           // dispatch(acc)
@@ -1978,8 +1980,8 @@ export const useTransaction = (
             ledgerID: {
               reload: true,
               disabled: applicationSettings.accountsSettings?.allowSalesCounter &&
-                        (userSession.counterwiseCashLedgerId ?? 0) > 0 &&
-                        formState.transaction.master.voucherType !== "BT",
+                (userSession.counterwiseCashLedgerId ?? 0) > 0 &&
+                formState.transaction.master.voucherType !== "BT",
             },
             cbCostCentre: {
               reload: true,
@@ -2065,19 +2067,19 @@ export const useTransaction = (
     if (formState.userConfig?.askConfirmationForRemoveItem) {
       allow = await ERPAlert.show({
         icon: "warning",
-        title: t("are_you_sure_to_remove_item"),    
+        title: t("are_you_sure_to_remove_item"),
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
-      })??false;
+      }) ?? false;
     }
-    if(!allow){
+    if (!allow) {
       return;
     }
-    if(applicationSettings.productsSettings.giftOnBilling){
-              await removeGiftFromGrid(formState.transaction.details, formState.currentCell);
-            }
-    
+    if (applicationSettings.productsSettings.giftOnBilling) {
+      await removeGiftFromGrid(formState.transaction.details, formState.currentCell);
+    }
+
     dispatch(
       formStateTransactionDetailsRowRemove({
         slNo: slNo,
@@ -2864,7 +2866,7 @@ export const useTransaction = (
       return;
     }
     // Edit Authorization
-    if(applicationSettings.inventorySettings.setAuthorizationinSales && !applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit){
+    if (applicationSettings.inventorySettings.setAuthorizationinSales && !applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit) {
       let isAuthorized = false;
       const voucherType = formState.transaction.master.voucherType;
       const formType = formState.transaction.master.voucherForm;
@@ -3458,12 +3460,12 @@ export const useTransaction = (
       ledgerID: formState.transaction.master.ledgerID,
       vatPerc: outDetail.vatPerc ?? 0,
       isCustomer_LSP_Visible: customer_LSPVisible,
-      showRateBeforeTax: formState.userConfig?.showRateBeforeTax?? false,
+      showRateBeforeTax: formState.userConfig?.showRateBeforeTax ?? false,
       userSalesPriceForTransfer: formState.userConfig?.UserSalesPriceForTransfer ?? false,
       formType: formState.transaction.master.voucherForm,
     };
     // Not completed - response issue noted
-    const res = await api.postAsync(url,body);
+    const res = await api.postAsync(url, body);
     const updatedDetail = {
       ...outDetail,
       unitPrice: res.unitPrice,
@@ -3841,43 +3843,43 @@ export const useTransaction = (
                 },
               })
             );
-        }
-        }else{
+          }
+        } else {
           if (formState.userConfig?.showProductInfoPopup) {
-              dispatch(
-                commonParams.formStateHandleFieldChangeKeysOnly({
-                  fields: {
-                    productInfo: false,
-                  },
-                })
-              );
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  productInfo: false,
+                },
+              })
+            );
           }
         }
       }
-      
+
       // page down => open close product info down popup
       if (event.key === "PageDown") {
-       event.preventDefault();
+        event.preventDefault();
         if (!formState.userConfig?.showProductInfoPopup) {
           if (formState.productInfo == true) {
-          dispatch(
-            commonParams.formStateHandleFieldChangeKeysOnly({
-              fields: {
-                productInfo: false,
-              },
-            })
-          );
-         }else{
-                dispatch(
-                  commonParams.formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      productInfo: true,
-                    },
-                  })
-                );
-            }
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  productInfo: false,
+                },
+              })
+            );
+          } else {
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  productInfo: true,
+                },
+              })
+            );
+          }
         }
-        }
+      }
 
       // ctrl + F11 => if draft mode checked then do something
       if (event.ctrlKey && event.key.toUpperCase() === "F11") {
@@ -3905,10 +3907,11 @@ export const useTransaction = (
               const slNo = currentFormState.transaction.details[currentRowIndex].slNo;
               if (slNo) {
                 handleRemoveItem(slNo);
+              }
             }
-          }},
+          },
         });
-    }
+      }
       if (event.key.toUpperCase() === "ESCAPE") {
         const currentFormState = formStateRef.current;
         if (currentFormState.isUserConfigOpen === true) {
@@ -4121,12 +4124,12 @@ export const useTransaction = (
               const priceCategoryCount = priceCategoryList?.length ?? 0;
               const currentId = formState.transaction.master.priceCategoryID;
               let currentIndex = priceCategoryList?.findIndex((x: any) => x.id === currentId) ?? 0;
-              if(currentIndex == priceCategoryCount - 1){
+              if (currentIndex == priceCategoryCount - 1) {
                 currentIndex = 0;
-              }else{
+              } else {
                 currentIndex = currentIndex + 1;
               }
-              
+
               const nextPriceCategoryId = priceCategoryList[currentIndex].id ?? 0;
               dispatch(
                 formStateMasterHandleFieldChange({
@@ -4136,31 +4139,32 @@ export const useTransaction = (
                 })
               );
               // Need a api call for changing unit price
-            // const units = formState.batchesUnits?.filter(
-            //   (xer) => xer.productBatchID == detail.productBatchID
-            // );
-            // const unitIndex =
-            //   units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
-            // const nextUnitIndex =
-            //   unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
-            // if (!units) {
-            //   return { handled: true };
-            // }
-            // const unitName = units[nextUnitIndex].label;
-            // const unitID = units[nextUnitIndex].value;
-            // outDetail.unit = unitName;
-            // outDetail.unitID = unitID;
-            // debugger;
+              // const units = formState.batchesUnits?.filter(
+              //   (xer) => xer.productBatchID == detail.productBatchID
+              // );
+              // const unitIndex =
+              //   units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
+              // const nextUnitIndex =
+              //   unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
+              // if (!units) {
+              //   return { handled: true };
+              // }
+              // const unitName = units[nextUnitIndex].label;
+              // const unitID = units[nextUnitIndex].value;
+              // outDetail.unit = unitName;
+              // outDetail.unitID = unitID;
+              // debugger;
 
-            // handleChangeUnit(
-            //   outDetail,
-            //   detail,
-            //   actualPriceVisible ?? false,
-            //   outState,
-            //   columnName,
-            //   isMobRow ? -1 : rowIndex
-            // );
-          }}
+              // handleChangeUnit(
+              //   outDetail,
+              //   detail,
+              //   actualPriceVisible ?? false,
+              //   outState,
+              //   columnName,
+              //   isMobRow ? -1 : rowIndex
+              // );
+            }
+          }
           break;
         }
 
@@ -4181,7 +4185,7 @@ export const useTransaction = (
         case "Enter":
           let data = rowIndex < 0 ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
-                        if (!isNullOrUndefinedOrEmpty(value)) {
+            if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
             } else {
               // const res = focusToNextColumn(rowIndex, columnName);
@@ -4435,7 +4439,7 @@ export const useTransaction = (
             //   }
             // }
           } else if (columnName == "smCode") {
-            if(data.smCode !==""){
+            if (data.smCode !== "") {
               const employeeList = await getApLocalData("Employees");
               if (!employeeList || employeeList.length === 0) {
                 return { handled: false };
@@ -4465,14 +4469,14 @@ export const useTransaction = (
                 }
               }))
               break;
-            }else{
+            } else {
               const res = focusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
 
           } else if (columnName == "btnPrintBarcode") {
             const pbData: TransactionDetail =
-              isMobRow  ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             if (
               pbData.qty +
               pbData.stickerQty <=
@@ -4524,8 +4528,8 @@ export const useTransaction = (
           //     dgvInventory.CurrentCell = dgvInventory[dgvInventory.FirstVisibleWritableColumnIndex, dgvInventory.FirstFreeRow];
           // }
           else if (columnName == "bd") {
-          const data: TransactionDetail =
-              isMobRow  ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+            const data: TransactionDetail =
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
 
             const batchDetails = {
               // Required fields
@@ -4586,9 +4590,9 @@ export const useTransaction = (
           } else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
-           const rowData: TransactionDetail =
+            const rowData: TransactionDetail =
               isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
-              dispatch(
+            dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
                   serialNoEntryData: {
@@ -5568,8 +5572,8 @@ export const useTransaction = (
 
     return maxTaxPerc;
   };
- const gridCode = `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
-const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
+  const gridCode = `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
+  const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
     , voucherType ?? formState.transaction.master.voucherType
     , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
   const initializeFormElements = async (
@@ -5582,660 +5586,662 @@ const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, use
     transactionMasterID: number,
   ) => {
     debugger;
-const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/warranty/`
-      ) : [];
-      const dataBrands = voucherType != "LPO" ? await api.getWithCacheAsync(
-        `${Urls.inv_transaction_base}${transactionType}/data/brands/`
-      ) : [];debugger;
-      const priceCategory = voucherType != "LPO" ? await api.getWithCacheAsync(
-        `${Urls.inv_transaction_base}${transactionType}/Data/PriceCategories/`
-      ) : [];
-  debugger;
-      const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
+    const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
+      `${Urls.inv_transaction_base}${transactionType}/data/warranty/`
+    ) : [];
+    const dataBrands = voucherType != "LPO" ? await api.getWithCacheAsync(
+      `${Urls.inv_transaction_base}${transactionType}/data/brands/`
+    ) : []; debugger;
+    const priceCategory = voucherType != "LPO" ? await api.getWithCacheAsync(
+      `${Urls.inv_transaction_base}${transactionType}/Data/PriceCategories/`
+    ) : [];
+    debugger;
+    const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
     const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
     if (Utc) {
       const decoded = safeBase64Decode(Utc) ?? "{}";
       userConfig = customJsonParse(decoded ?? "{}");
     } else {
-      userConfig = JSON.parse(JSON.stringify(await fetchUserConfig())) ;
+      userConfig = JSON.parse(JSON.stringify(await fetchUserConfig()));
     }
-    
-      let _formState: TransactionFormState;
-      const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
-      const softwareDate = moment(
-        clientSession.softwareDate,
-        "DD/MM/YYYY"
-      ).local();
+    let _formState: TransactionFormState;
+    const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
-      let employeeID = 0;
-      let _voucherNo = 0;
-     let _voucherPrefix = "";
-      if (!isInvoker) {
-        const vchrNoRslt = await getNextVoucherNumber(
-          formType ?? "",
-          voucherType ?? "",
-          voucherPrefix ?? "",
-          false
-        );
-        _voucherNo = vchrNoRslt.voucherNumber;
-        _voucherPrefix = vchrNoRslt.voucherPrefix;
+    const softwareDate = moment(
+      clientSession.softwareDate,
+      "DD/MM/YYYY"
+    ).local();
 
-      }
+    let employeeID = 0;
+    let _voucherNo = 0;
+    let _voucherPrefix = "";
+    if (!isInvoker) {
+      const vchrNoRslt = await getNextVoucherNumber(
+        formType ?? "",
+        voucherType ?? "",
+        voucherPrefix ?? "",
+        false
+      );
+      _voucherNo = vchrNoRslt.voucherNumber;
+      _voucherPrefix = vchrNoRslt.voucherPrefix;
 
-debugger;
+    }
 
-      if (!isInvoker) {
-         const voucher: TransactionData = {...transactionInitialData,details:!deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
-                   ...initialTransactionDetailData,
-                   slNo: generateUniqueKey()
-                 })) : []};
-                   _formState = {
-          ...TransactionFormStateInitialData,
-              initialFormType: formType ?? "",              
-              initialVrType: voucherType ?? "",
-              initialVrPrefix: _voucherPrefix ?? "",
-          transaction: {
-            ...voucher,
-            master: {
-              ...voucher.master,
-              voucherType: voucherType ?? "",
-              voucherPrefix: _voucherPrefix ?? "",
-              voucherForm: formType ?? "",
-              transactionDate: softwareDate.toISOString(),
-              purchaseInvoiceDate: moment().local().toISOString(),
-              voucherNumber: _voucherNo,
-              inventoryLedgerID:
-                voucherType == VoucherType.SalesReturn
-                  ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
-                  :  applicationSettings.inventorySettings?.defaultSalesAcc,
-              ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
-              fromWarehouseID:
-        applicationSettings.inventorySettings.maintainWarehouse
-          ? userConfig?.presetWarehouseId ?? 0 > 0
-            ? userConfig?.presetWarehouseId??0
-            : applicationSettings.accountsSettings.allowSalesCounter &&
-              (userConfig?.counterWiseWarehouseId ?? 0) > 0
-              ? userConfig?.counterWiseWarehouseId ?? 0
-              : applicationSettings.inventorySettings.defaultWareHouse
-          : (TransactionFormStateInitialData.transaction.master.fromWarehouseID??0),
-          costCentreID:
-        userConfig?.presetCostenterId ?? 0 > 0
-          ? userConfig?.presetCostenterId ?? 0
-          : TransactionFormStateInitialData.transaction.master.costCentreID,
-      employeeID:formState.userConfig?.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
-        ? userSession.employeeId
-        : voucher.master.employeeID,
-       
-            },
-          },
-          formElements: {
-            ...initialFormElements,
-          },
-          transactionType: transactionType ?? "",
-          formCode: formCode ?? "",
-          title:
-            (formType == undefined || formType.trim() == ""
-              ? t(title)
-              : t(title) + "[" + formType + "]") ?? "",
+    debugger;
 
-          printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
-        };
-        _formState = await loadLedgerData(_formState) as any;
-        _formState.isInitialLedger = true;
-      } else {
-        _formState = (await loadTransVoucher(
-          false,
-          voucherNo,
-          voucherPrefix,
-          voucherType,
-          formType,
-          undefined,
-          transactionMasterID
-        )) as TransactionFormState;
-
-        _formState = {
-          ..._formState,
-          oldLedgerId:
-            _formState.transaction.master.ledgerID,
-          previousGrandTotal:
-            _formState.transaction.master.grandTotal,
-            
-        }
-      }
-      _formState.userConfig = userConfig??{};
-      _formState.dataWarranty = dataWarranty;
-      _formState.dataBrands = dataBrands;
-
-      _formState.inSearch =
-        applicationSettings.productsSettings?.batchCriteria != "NB"
-          ? false
-          : true;
-
-
-
-      
-        _formState.formElements = {
-          ..._formState.formElements,
-          ////////////////////////
-          cbWarehouse: {
-            ..._formState.formElements.cbWarehouse,
-            visible: applicationSettings.inventorySettings.maintainWarehouse,
-            disabled:
-              (_formState.userConfig?.presetWarehouseId ?? 0) > 0 ||
-              (
-                applicationSettings.accountsSettings.allowSalesCounter &&
-                (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0 &&
-                userSession.dbIdValue?.trim() === "BAHAMDOON"
-              )
-          },
-
-
-
-          // 🔘 Round Off checkbox logic
-          hasroundOff: {
-            ..._formState.formElements.hasroundOff,
-            disabled:
-              !(applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
-              (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
-                applicationSettings.mainSettings.roundingMethod === "No Rounding")),
-          },
-
-          // 🧾 Cost Centre
-          cbCostCentre: {
-            ..._formState.formElements.cbCostCentre,
-            disabled: (_formState.userConfig?.presetCostenterId ?? 0) > 0,
-          },
-
-          // 🧾 Credit Account default
-
-          /////////////////////////////////
-          // Reset initial states
-          lblCustomerType: { ..._formState.formElements.lblCustomerType, label: "" },
-
-          // Hide or disable elements based on settings
-          btnSave: {
-            ..._formState.formElements.btnSave,
-            disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
-          },
-          btnEdit: {
-            ..._formState.formElements.btnEdit,
-            disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
-          },
-          btnDelete: {
-            ..._formState.formElements.btnDelete,
-            disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
-          },
-
-          // By default
-          btnPartySearch: {
-            ..._formState.formElements.btnPartySearch,
-            visible: _formState.transaction.master.voucherForm !== "BT"
-          },
-
-          // Prefix handling
-
-          txtVrPrefix: {
-            ..._formState.formElements.voucherPrefix,
-            disabled:
-              (_formState.transaction.master.voucherForm === "CSI" &&
-                applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
-                !applicationSettings.branchSettings.maintainKSA_EInvoice) ||
-              (applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
-                userSession.counter_vr_prefix !== "" &&
-                !applicationSettings.branchSettings.maintainKSA_EInvoice),
-          },
-          
-
-          // Default customer handling
-          
-
-          // Draft mode and import options
-          btnDraftList: {
-            ..._formState.formElements.btnDraftList,
-            visible: applicationSettings.inventorySettings.enableSalesInvoiceDraftOption === true
-          },
-          chkDraftMode: {
-            ..._formState.formElements.chkDraftMode,
-            visible: _formState.transaction.master.voucherForm !== "BT" && applicationSettings.inventorySettings.enableSalesInvoiceDraftOption === true
-          },
-          importFromExcelToolStripMenuItem: {
-            ..._formState.formElements.importFromExcelToolStripMenuItem,
-            visible: applicationSettings.inventorySettings.enableImportSales ?? false
-          },
-
-        };
-         _formState.transaction.master.ledgerID = (() => {
-            let selectedValue = _formState.transaction.master.ledgerID;
-           
-            if (
-              ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
-                userSession.dbIdValue?.trim()
-              )
-            ) {
-              selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
-            }
-
-            if (applicationSettings.accountsSettings.setDefaultCustomerInSales) {
-              if (!_formState.userConfig.notSetDefaultCustomer) {
-                selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
-              }
-            }
-
-            return selectedValue;
-          })(),
-        _formState.userConfig.enableVoucherPrefix =
-              applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
-              userSession.counter_vr_prefix !== "" &&
-              !applicationSettings.branchSettings.maintainKSA_EInvoice;
-
-      // _formState.transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&
-      //   applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
-      //   !applicationSettings.branchSettings.maintainKSA_EInvoice
-      //   ? applicationSettings.mainSettings.cashSalesVoucherPrefix
-      //   : applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
-      //     userSession.counter_vr_prefix !== "" &&
-      //     !applicationSettings.branchSettings.maintainKSA_EInvoice
-      //     ? userSession.counter_vr_prefix
-      //     : _formState.formElements.voucherPrefix.text
-
-      /////////////////////////////////////////////////
-
-
-      /////////////////////////
-      // 1️⃣ Project visibility
-      if (applicationSettings.accountsSettings.maintainProjectSite) {
-        _formState.formElements = {
-          ..._formState.formElements,
-          lblProject: {
-            ...initialFormElements.lblProject,
-            visible: true
-          },
-          cbProject: {
-            ...initialFormElements.cbProject,
-            visible: true
-          }
-        };
-      }
-
-      // 2️⃣ KSA E-Invoice logic
-      if (applicationSettings.branchSettings.maintainKSA_EInvoice && formType === "VAT") {
-        _formState.formElements = {
-          ..._formState.formElements,
-          btnEdit: {
-            ...initialFormElements.btnEdit,
-            visible: false
-          },
-          btnDelete: {
-            ...initialFormElements.btnDelete,
-            visible: false
-          }
-        };
-
-        if (applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit) {
-          _formState.formElements.btnEdit = {
-            ..._formState.formElements.btnEdit,
-            visible: true
-          };
-        }
-      }
-          let disabled = true;
-
-      // 3️⃣ Initial date and field setup
-      if (!isInvoker) {
-        const today = softwareDate;
-
-        _formState.transaction.master.transactionDate = today.toISOString();
-        _formState.transaction.master.purchaseInvoiceDate = today.toISOString();
-
-        _formState.transaction.master.priceCategoryID = priceCategory[0]?.id;
-
-
-        // 4️⃣ Party assignment logic
-        const g = userSession;
-
-        if (g.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter) {
-
-          _formState.transaction.master.ledgerID = g.counterwiseCashLedgerId;
-
-
-          // if not BT, disable
-          if (formType !== "BT") {
-            disabled = true;
-          }
-
-          // exception: maintain shift = false AND DBID != SAMAPLASTICS
-          if (!g.isMaintainShift && g.dbIdValue !== "SAMAPLASTICS") {
-            disabled = false;
-          }
-
-          _formState.formElements.cbParty = {
-            ...initialFormElements.cbParty,
-            disabled
-          };
-
-        } else {
-          // fallback to warehouse cash ledger (NOT defaultCashAcc)
-          _formState.transaction.master.ledgerID = applicationSettings.accountsSettings.defaultCashAcc;
-        }
-
-
-        // DBID SPECIFIC OVERRIDE
-        const dbid = g.dbIdValue?.trim();
-        if (["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(dbid)) {
-          _formState.transaction.master.ledgerID =
-            applicationSettings.accountsSettings.defaultCustomerLedgerID;
-        }
-
-
-        // SET DEFAULT CUSTOMER IN SALES
-        if (
-          applicationSettings.accountsSettings.setDefaultCustomerInSales &&
-          !_formState.userConfig?.notSetDefaultCustomer
-        ) {
-          _formState.transaction.master.ledgerID =
-            applicationSettings.accountsSettings.defaultCustomerLedgerID;
-        }
-
-        // 5️⃣ Salesman assignment
-        _formState.transaction.master.employeeID = 0;
-
-        if (g.employeeId > 0) {
-          _formState.transaction.master.employeeID = g.employeeId;
-          _formState.formElements.cbSalesMan = {
-            ..._formState.formElements.cbSalesMan,
-            disabled: ["BAHAMDOON", "DURRAH_RYD"].includes(dbid)
-          };
-        }
-
-
-        // 6️⃣ Checkbox defaults
-        _formState.userConfig!.printOnSave = _formState.userConfig!.printOnSave ?? applicationSettings.inventorySettings.printInvAfterSave
-
-        _formState.userConfig!.duplicationMessage = _formState.userConfig!.duplicationMessage ?? applicationSettings.inventorySettings.showProductDuplicationMessage
-        _formState.userConfig!.focusToQtyAfterBarcode = _formState.userConfig!.focusToQtyAfterBarcode ?? applicationSettings.productsSettings.focusToQtyAfterBarcode
-        _formState.userConfig!.roundOff =   (
-          applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
-          (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
-            applicationSettings.mainSettings.roundingMethod === "No Rounding")
-        )
+    if (!isInvoker) {
+      const voucher: TransactionData = {
+        ...transactionInitialData, details: !deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
+          ...initialTransactionDetailData,
+          slNo: generateUniqueKey()
+        })) : []
       };
-
-      // 7️⃣ Tender button visibility
-      _formState.formElements.btnTender = {
-        ...initialFormElements.btnTender,
-        visible: applicationSettings.accountsSettings.showTenderDialogInSales
-      };
-
-      //////////////////////
-
-      if (userSession.dbIdValue?.trim() === "SEMAKA") {
-        _formState.formElements = {
-          ..._formState.formElements,
-          rbCash: {
-            ...initialFormElements.rbCash,
-            visible: true
-          },
-          rbCredit: {
-            ...initialFormElements.rbCredit,
-            visible: true
-          }
-        } as any;
-      }
-
-      if (userSession.dbIdValue === "543140180640") {
-        if (
-          userSession.userTypeCode === "BA" ||
-          userSession.userTypeCode === "CA"
-        ) {
-          _formState.formElements = {
-            ..._formState.formElements,
-            btnSettings: {
-              ...initialFormElements.btnSettings,
-              visible: true
-            }
-          } as any;
-        } else {
-          _formState.formElements = {
-            ..._formState.formElements,
-            btnSettings: {
-              ...initialFormElements.btnSettings,
-              visible: false
-            }
-          } as any;
-        }
-      }
-
-      if (
-        applicationSettings.inventorySettings?.blockBillDiscount === "On Standard Sales" ||
-        applicationSettings.inventorySettings?.blockBillDiscount === "On Both"
-      ) {
-        _formState.formElements = {
-          ..._formState.formElements,
-          txtBillDiscount: {
-            ...initialFormElements.txtBillDiscount,
-            disabled: true
-          },
-          txtBillDiscPerc: {
-            ...initialFormElements.txtBillDiscPerc,
-            disabled: true
-          }
-        } as any;
-      }
-
-      // if (hasBlockedDiscountRight(_formState.transaction.master.voucherForm) === true) {
-      //   // txtBillDiscount.Enabled = txtBillDiscPerc.Enabled = false;
-      //   _formState.formElements = {
-      //     ..._formState.formElements,
-      //     txtBillDiscount: {
-      //       ...initialFormElements.txtBillDiscount,
-      //       disabled: true
-      //     },
-      //     txtBillDiscPerc: {
-      //       ...initialFormElements.txtBillDiscPerc,
-      //       disabled: true
-      //     }
-      //   } as any;
-      // }
-
-      if (!isInvoker) {
-        // C# logic: if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON" || PolosysFrameWork.General.DBID_VALUE.Trim() == "HANAPLASTICS")
-        if (applicationSettings.accountsSettings?.setDefaultCustomerInSales) {
-          if (_formState.userConfig?.notSetDefaultCustomer !== true) {
-            _formState.transaction.master.ledgerID = applicationSettings.accountsSettings?.defaultCustomerLedgerID;
-          }
-        }
-      }
-      if (userSession.dbIdValue === "SAMAPLASTICS") {
-        _formState.formElements = {
-          ..._formState.formElements,
-          chkPrintAfterSave: {
-            ...initialFormElements.chkPrintAfterSave,
-            disabled: true
-          }
-        } as any;
-      }
-      logUserAction({
-        action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
-        actionForm: formState.transaction.master.voucherType
-      });
-
-      if (
-        applicationSettings.printerSettings?.printSelectedGatePass ||
-        applicationSettings.printerSettings?.printGatePass
-      ) {
-        _formState.gatePassPrint = true;           
-        _formState.formElements = {
-          ..._formState.formElements,
-          chkPrintGatepass: {
-            ...initialFormElements.chkPrintGatepass,
-            disabled: false
-          }
-        } as any;
-      } else {
-        _formState.gatePassPrint = false;
-        _formState.formElements = {
-          ..._formState.formElements,
-          chkPrintGatepass: {
-            ...initialFormElements.chkPrintGatepass,
-            disabled: true,
-          }
-        } as any;
-      }
-
-      if (userSession?.countryId === 1) {
-        _formState.formElements = {
-          ..._formState.formElements,
-          btnSrAmtPnlsShow: {
-            ...initialFormElements.btnSrAmtPnlsShow,
-            visible: false
-          }
-        } as any;
-      }
-
-      if (
-        applicationSettings.inventorySettings?.enableDiscountSlabOffer &&
-        applicationSettings.accountsSettings?.showTenderDialogInSales === false
-      ) {
-        _formState.formElements = {
-          ..._formState.formElements,
-          btnDiscountSlab: {
-            ...initialFormElements.btnDiscountSlab,
-            visible: true
-          }
-        } as any;
-      }
-
-      if (formType === "BT") {
-        _formState.formElements = {
-          ..._formState.formElements,
-          chkUserSalesPriceForTransfer: {
-            ...initialFormElements.chkUserSalesPriceForTransfer,
-            visible: true
-          }
-        } as any;
-      }
-      let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
-      const _gridCols = __gridCols.columnPreferences.map(x => {
-        return {
-          ...x,
-          visible: (clientSession.isAppGlobal && (_formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
-            _formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
-            _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst", "sgst", "sgstPerc", "cgstPerc"].includes(x.dataField)) ? false : x.visible
-        }
-      });
-       
-      const mergedUserConfig = merge({}, formState.userConfig, userConfig);
       _formState = {
-        ..._formState,
-        isInv: true,
+        ...TransactionFormStateInitialData,
+        initialFormType: formType ?? "",
+        initialVrType: voucherType ?? "",
+        initialVrPrefix: _voucherPrefix ?? "",
         transaction: {
-          ..._formState.transaction,
+          ...voucher,
           master: {
-            ..._formState.transaction.master,            
-            hasCashPaid: _formState.userConfig.setDefaultCashReceived??false,
-            customerType: getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).CUSTOMER_TYPE,
+            ...voucher.master,
+            voucherType: voucherType ?? "",
+            voucherPrefix: _voucherPrefix ?? "",
+            voucherForm: formType ?? "",
+            transactionDate: softwareDate.toISOString(),
+            purchaseInvoiceDate: moment().local().toISOString(),
+            voucherNumber: _voucherNo,
+            inventoryLedgerID:
+              voucherType == VoucherType.SalesReturn
+                ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
+                : applicationSettings.inventorySettings?.defaultSalesAcc,
+            ledgerID: applicationSettings.accountsSettings?.defaultCashAcc,
+            fromWarehouseID:
+              applicationSettings.inventorySettings.maintainWarehouse
+                ? userConfig?.presetWarehouseId ?? 0 > 0
+                  ? userConfig?.presetWarehouseId ?? 0
+                  : applicationSettings.accountsSettings.allowSalesCounter &&
+                    (userConfig?.counterWiseWarehouseId ?? 0) > 0
+                    ? userConfig?.counterWiseWarehouseId ?? 0
+                    : applicationSettings.inventorySettings.defaultWareHouse
+                : (TransactionFormStateInitialData.transaction.master.fromWarehouseID ?? 0),
+            costCentreID:
+              userConfig?.presetCostenterId ?? 0 > 0
+                ? userConfig?.presetCostenterId ?? 0
+                : TransactionFormStateInitialData.transaction.master.costCentreID,
+            employeeID: formState.userConfig?.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
+              ? userSession.employeeId
+              : voucher.master.employeeID,
+
           },
         },
-        gridColumns: _gridCols as any,
-        
-        userConfig: mergedUserConfig,
+        formElements: {
+          ...initialFormElements,
+        },
         transactionType: transactionType ?? "",
-        dummyProducts: applicationSettings.productsSettings?.loadDummyProducts,
-
         formCode: formCode ?? "",
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
-            : clientSession.isAppGlobal ?
-              getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
-              :
-              t(title) + "[" + formType + "]") ?? "",
-        initialTitle:
-          (formType == undefined || formType.trim() == ""
-            ? t(title)
-            : clientSession.isAppGlobal ?
-              getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
-              :
-              t(title) + "[" + formType + "]") ?? "",
+            : t(title) + "[" + formType + "]") ?? "",
+
+        printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
       };
+      _formState = await loadLedgerData(_formState) as any;
+      _formState.isInitialLedger = true;
+    } else {
+      _formState = (await loadTransVoucher(
+        false,
+        voucherNo,
+        voucherPrefix,
+        voucherType,
+        formType,
+        undefined,
+        transactionMasterID
+      )) as TransactionFormState;
 
-      _formState.gridColumns?.forEach((x: any) => {
-        if (x.dataFiled === "unitPriceFC" || x.dataFiled === "grossFC") {
-          x.visible = true;
+      _formState = {
+        ..._formState,
+        oldLedgerId:
+          _formState.transaction.master.ledgerID,
+        previousGrandTotal:
+          _formState.transaction.master.grandTotal,
+
+      }
+    }
+    _formState.userConfig = userConfig ?? {};
+    _formState.dataWarranty = dataWarranty;
+    _formState.dataBrands = dataBrands;
+
+    _formState.inSearch =
+      applicationSettings.productsSettings?.batchCriteria != "NB"
+        ? false
+        : true;
+
+
+
+
+    _formState.formElements = {
+      ..._formState.formElements,
+      ////////////////////////
+      cbWarehouse: {
+        ..._formState.formElements.cbWarehouse,
+        visible: applicationSettings.inventorySettings.maintainWarehouse,
+        disabled:
+          (_formState.userConfig?.presetWarehouseId ?? 0) > 0 ||
+          (
+            applicationSettings.accountsSettings.allowSalesCounter &&
+            (_formState.userConfig?.counterWiseWarehouseId ?? 0) > 0 &&
+            userSession.dbIdValue?.trim() === "BAHAMDOON"
+          )
+      },
+
+
+
+      // 🔘 Round Off checkbox logic
+      hasroundOff: {
+        ..._formState.formElements.hasroundOff,
+        disabled:
+          !(applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+            (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
+              applicationSettings.mainSettings.roundingMethod === "No Rounding")),
+      },
+
+      // 🧾 Cost Centre
+      cbCostCentre: {
+        ..._formState.formElements.cbCostCentre,
+        disabled: (_formState.userConfig?.presetCostenterId ?? 0) > 0,
+      },
+
+      // 🧾 Credit Account default
+
+      /////////////////////////////////
+      // Reset initial states
+      lblCustomerType: { ..._formState.formElements.lblCustomerType, label: "" },
+
+      // Hide or disable elements based on settings
+      btnSave: {
+        ..._formState.formElements.btnSave,
+        disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
+      },
+      btnEdit: {
+        ..._formState.formElements.btnEdit,
+        disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
+      },
+      btnDelete: {
+        ..._formState.formElements.btnDelete,
+        disabled: !applicationSettings.branchSettings.maintainInventoryTransactionsEntry
+      },
+
+      // By default
+      btnPartySearch: {
+        ..._formState.formElements.btnPartySearch,
+        visible: _formState.transaction.master.voucherForm !== "BT"
+      },
+
+      // Prefix handling
+
+      txtVrPrefix: {
+        ..._formState.formElements.voucherPrefix,
+        disabled:
+          (_formState.transaction.master.voucherForm === "CSI" &&
+            applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
+            !applicationSettings.branchSettings.maintainKSA_EInvoice) ||
+          (applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+            userSession.counter_vr_prefix !== "" &&
+            !applicationSettings.branchSettings.maintainKSA_EInvoice),
+      },
+
+
+      // Default customer handling
+
+
+      // Draft mode and import options
+      btnDraftList: {
+        ..._formState.formElements.btnDraftList,
+        visible: applicationSettings.inventorySettings.enableSalesInvoiceDraftOption === true
+      },
+      chkDraftMode: {
+        ..._formState.formElements.chkDraftMode,
+        visible: _formState.transaction.master.voucherForm !== "BT" && applicationSettings.inventorySettings.enableSalesInvoiceDraftOption === true
+      },
+      importFromExcelToolStripMenuItem: {
+        ..._formState.formElements.importFromExcelToolStripMenuItem,
+        visible: applicationSettings.inventorySettings.enableImportSales ?? false
+      },
+
+    };
+    _formState.transaction.master.ledgerID = (() => {
+      let selectedValue = _formState.transaction.master.ledgerID;
+
+      if (
+        ["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(
+          userSession.dbIdValue?.trim()
+        )
+      ) {
+        selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+
+      if (applicationSettings.accountsSettings.setDefaultCustomerInSales) {
+        if (!_formState.userConfig.notSetDefaultCustomer) {
+          selectedValue = applicationSettings.accountsSettings.defaultCustomerLedgerID;
         }
-      });
+      }
 
+      return selectedValue;
+    })(),
+      _formState.userConfig.enableVoucherPrefix =
+      applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+      userSession.counter_vr_prefix !== "" &&
+      !applicationSettings.branchSettings.maintainKSA_EInvoice;
+
+    // _formState.transaction.master.voucherPrefix = _formState.transaction.master.voucherForm === "CSI" &&
+    //   applicationSettings.mainSettings.maintainSeperatePrefixforCashSales &&
+    //   !applicationSettings.branchSettings.maintainKSA_EInvoice
+    //   ? applicationSettings.mainSettings.cashSalesVoucherPrefix
+    //   : applicationSettings.branchSettings.maintainCounterWisePrefixForTransaction &&
+    //     userSession.counter_vr_prefix !== "" &&
+    //     !applicationSettings.branchSettings.maintainKSA_EInvoice
+    //     ? userSession.counter_vr_prefix
+    //     : _formState.formElements.voucherPrefix.text
+
+    /////////////////////////////////////////////////
+
+
+    /////////////////////////
+    // 1️⃣ Project visibility
+    if (applicationSettings.accountsSettings.maintainProjectSite) {
       _formState.formElements = {
         ..._formState.formElements,
-        pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
-
-        hasCashPaid: {
-          ...initialFormElements.hasCashPaid,
-          label:
-            voucherType == "SR"
-              ? "cash_paid"
-              : "cash_received",
+        lblProject: {
+          ...initialFormElements.lblProject,
+          visible: true
         },
-        ledgerID: {
-          ...initialFormElements.ledgerID,
-          accLedgerType: applicationSettings.inventorySettings.showAccountPayableInSales ?
-            LedgerType.Cash_Bank_Suppliers_Customers_Employees
-            : applicationSettings.accountsSettings.showEmployeesInSales ?
-              LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees,
-          label: "customer",
+        cbProject: {
+          ...initialFormElements.cbProject,
+          visible: true
+        }
+      };
+    }
 
+    // 2️⃣ KSA E-Invoice logic
+    if (applicationSettings.branchSettings.maintainKSA_EInvoice && formType === "VAT") {
+      _formState.formElements = {
+        ..._formState.formElements,
+        btnEdit: {
+          ...initialFormElements.btnEdit,
+          visible: false
         },
-        cbEmployee: {
-          ...initialFormElements.cbEmployee,
-          label: "sales_man"
-        },
-        
-        chkTaxNumber: {
-          ...initialFormElements.chkTaxNumber,
-          label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
-        },
+        btnDelete: {
+          ...initialFormElements.btnDelete,
+          visible: false
+        }
+      };
 
-
-      } as any;
-
-      const editableColumn = _formState.gridColumns?.find(
-        (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
-      );
-      if(applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
-        _formState.formElements.transactionDate = {
-          ..._formState.formElements.transactionDate,
-          autoFocus: true
-        };
-      } else if (formState.userConfig?.initialFocusToCustomer){
-        _formState.formElements.ledgerID = {
-          ..._formState.formElements.ledgerID,
-          autoFocus: true
-        };
-      } else {
-        _formState.currentCell = {
-          column: editableColumn?.dataField ?? "",
-          data: formState.transaction.details[0],
-          rowIndex: 0,
-          reCenterRow: false
+      if (applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit) {
+        _formState.formElements.btnEdit = {
+          ..._formState.formElements.btnEdit,
+          visible: true
         };
       }
-      // if (_formState.formElements.cbDebitAccount ?? {})
-      // }
+    }
+    let disabled = true;
 
-      // debugger;
-        //  
-        // _formState = await loadLedgerData(_formState) as any;
-        // _formState.isInitialLedger = true;
-        setTransVoucher(_formState, true);
-      // if (voucherNo != undefined && voucherNo > 0) {
-      //   dispatch(
-      //     setUserRight({ userSession: userSession, hasRight: hasRight })
-      //   );
-      // }
+    // 3️⃣ Initial date and field setup
+    if (!isInvoker) {
+      const today = softwareDate;
+
+      _formState.transaction.master.transactionDate = today.toISOString();
+      _formState.transaction.master.purchaseInvoiceDate = today.toISOString();
+
+      _formState.transaction.master.priceCategoryID = priceCategory[0]?.id;
+
+
+      // 4️⃣ Party assignment logic
+      const g = userSession;
+
+      if (g.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter) {
+
+        _formState.transaction.master.ledgerID = g.counterwiseCashLedgerId;
+
+
+        // if not BT, disable
+        if (formType !== "BT") {
+          disabled = true;
+        }
+
+        // exception: maintain shift = false AND DBID != SAMAPLASTICS
+        if (!g.isMaintainShift && g.dbIdValue !== "SAMAPLASTICS") {
+          disabled = false;
+        }
+
+        _formState.formElements.cbParty = {
+          ...initialFormElements.cbParty,
+          disabled
+        };
+
+      } else {
+        // fallback to warehouse cash ledger (NOT defaultCashAcc)
+        _formState.transaction.master.ledgerID = applicationSettings.accountsSettings.defaultCashAcc;
+      }
+
+
+      // DBID SPECIFIC OVERRIDE
+      const dbid = g.dbIdValue?.trim();
+      if (["543140180640", "BAHAMDOON", "HANAPLASTICS"].includes(dbid)) {
+        _formState.transaction.master.ledgerID =
+          applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+
+
+      // SET DEFAULT CUSTOMER IN SALES
+      if (
+        applicationSettings.accountsSettings.setDefaultCustomerInSales &&
+        !_formState.userConfig?.notSetDefaultCustomer
+      ) {
+        _formState.transaction.master.ledgerID =
+          applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+
+      // 5️⃣ Salesman assignment
+      _formState.transaction.master.employeeID = 0;
+
+      if (g.employeeId > 0) {
+        _formState.transaction.master.employeeID = g.employeeId;
+        _formState.formElements.cbSalesMan = {
+          ..._formState.formElements.cbSalesMan,
+          disabled: ["BAHAMDOON", "DURRAH_RYD"].includes(dbid)
+        };
+      }
+
+
+      // 6️⃣ Checkbox defaults
+      _formState.userConfig!.printOnSave = _formState.userConfig!.printOnSave ?? applicationSettings.inventorySettings.printInvAfterSave
+
+      _formState.userConfig!.duplicationMessage = _formState.userConfig!.duplicationMessage ?? applicationSettings.inventorySettings.showProductDuplicationMessage
+      _formState.userConfig!.focusToQtyAfterBarcode = _formState.userConfig!.focusToQtyAfterBarcode ?? applicationSettings.productsSettings.focusToQtyAfterBarcode
+      _formState.userConfig!.roundOff = (
+        applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
+        (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
+          applicationSettings.mainSettings.roundingMethod === "No Rounding")
+      )
     };
+
+    // 7️⃣ Tender button visibility
+    _formState.formElements.btnTender = {
+      ...initialFormElements.btnTender,
+      visible: applicationSettings.accountsSettings.showTenderDialogInSales
+    };
+
+    //////////////////////
+
+    if (userSession.dbIdValue?.trim() === "SEMAKA") {
+      _formState.formElements = {
+        ..._formState.formElements,
+        rbCash: {
+          ...initialFormElements.rbCash,
+          visible: true
+        },
+        rbCredit: {
+          ...initialFormElements.rbCredit,
+          visible: true
+        }
+      } as any;
+    }
+
+    if (userSession.dbIdValue === "543140180640") {
+      if (
+        userSession.userTypeCode === "BA" ||
+        userSession.userTypeCode === "CA"
+      ) {
+        _formState.formElements = {
+          ..._formState.formElements,
+          btnSettings: {
+            ...initialFormElements.btnSettings,
+            visible: true
+          }
+        } as any;
+      } else {
+        _formState.formElements = {
+          ..._formState.formElements,
+          btnSettings: {
+            ...initialFormElements.btnSettings,
+            visible: false
+          }
+        } as any;
+      }
+    }
+
+    if (
+      applicationSettings.inventorySettings?.blockBillDiscount === "On Standard Sales" ||
+      applicationSettings.inventorySettings?.blockBillDiscount === "On Both"
+    ) {
+      _formState.formElements = {
+        ..._formState.formElements,
+        txtBillDiscount: {
+          ...initialFormElements.txtBillDiscount,
+          disabled: true
+        },
+        txtBillDiscPerc: {
+          ...initialFormElements.txtBillDiscPerc,
+          disabled: true
+        }
+      } as any;
+    }
+
+    // if (hasBlockedDiscountRight(_formState.transaction.master.voucherForm) === true) {
+    //   // txtBillDiscount.Enabled = txtBillDiscPerc.Enabled = false;
+    //   _formState.formElements = {
+    //     ..._formState.formElements,
+    //     txtBillDiscount: {
+    //       ...initialFormElements.txtBillDiscount,
+    //       disabled: true
+    //     },
+    //     txtBillDiscPerc: {
+    //       ...initialFormElements.txtBillDiscPerc,
+    //       disabled: true
+    //     }
+    //   } as any;
+    // }
+
+    if (!isInvoker) {
+      // C# logic: if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON" || PolosysFrameWork.General.DBID_VALUE.Trim() == "HANAPLASTICS")
+      if (applicationSettings.accountsSettings?.setDefaultCustomerInSales) {
+        if (_formState.userConfig?.notSetDefaultCustomer !== true) {
+          _formState.transaction.master.ledgerID = applicationSettings.accountsSettings?.defaultCustomerLedgerID;
+        }
+      }
+    }
+    if (userSession.dbIdValue === "SAMAPLASTICS") {
+      _formState.formElements = {
+        ..._formState.formElements,
+        chkPrintAfterSave: {
+          ...initialFormElements.chkPrintAfterSave,
+          disabled: true
+        }
+      } as any;
+    }
+    logUserAction({
+      action: `User Printed Voucher ${formState.transaction.master.voucherType}:${formState.transaction.master.voucherForm}:${formState.transaction.master.voucherPrefix}${formState.transaction.master.voucherNumber}`,
+      actionForm: formState.transaction.master.voucherType
+    });
+
+    if (
+      applicationSettings.printerSettings?.printSelectedGatePass ||
+      applicationSettings.printerSettings?.printGatePass
+    ) {
+      _formState.gatePassPrint = true;
+      _formState.formElements = {
+        ..._formState.formElements,
+        chkPrintGatepass: {
+          ...initialFormElements.chkPrintGatepass,
+          disabled: false
+        }
+      } as any;
+    } else {
+      _formState.gatePassPrint = false;
+      _formState.formElements = {
+        ..._formState.formElements,
+        chkPrintGatepass: {
+          ...initialFormElements.chkPrintGatepass,
+          disabled: true,
+        }
+      } as any;
+    }
+
+    if (userSession?.countryId === 1) {
+      _formState.formElements = {
+        ..._formState.formElements,
+        btnSrAmtPnlsShow: {
+          ...initialFormElements.btnSrAmtPnlsShow,
+          visible: false
+        }
+      } as any;
+    }
+
+    if (
+      applicationSettings.inventorySettings?.enableDiscountSlabOffer &&
+      applicationSettings.accountsSettings?.showTenderDialogInSales === false
+    ) {
+      _formState.formElements = {
+        ..._formState.formElements,
+        btnDiscountSlab: {
+          ...initialFormElements.btnDiscountSlab,
+          visible: true
+        }
+      } as any;
+    }
+
+    if (formType === "BT") {
+      _formState.formElements = {
+        ..._formState.formElements,
+        chkUserSalesPriceForTransfer: {
+          ...initialFormElements.chkUserSalesPriceForTransfer,
+          visible: true
+        }
+      } as any;
+    }
+    let __gridCols = (await getInitialPreference(gridCode, _purchaseGridCol, new APIClient()))
+    const _gridCols = __gridCols.columnPreferences.map(x => {
+      return {
+        ...x,
+        visible: (clientSession.isAppGlobal && (_formState.transaction.master.voucherForm.toUpperCase() == "INTERSTATE" ||
+          _formState.transaction.master.voucherForm.toUpperCase() == "INT" ||
+          _formState.transaction.master.voucherForm.toUpperCase() == "IMPORT") && ["cgst", "sgst", "sgstPerc", "cgstPerc"].includes(x.dataField)) ? false : x.visible
+      }
+    });
+
+    const mergedUserConfig = merge({}, formState.userConfig, userConfig);
+    _formState = {
+      ..._formState,
+      isInv: true,
+      transaction: {
+        ..._formState.transaction,
+        master: {
+          ..._formState.transaction.master,
+          hasCashPaid: _formState.userConfig.setDefaultCashReceived ?? false,
+          customerType: getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).CUSTOMER_TYPE,
+        },
+      },
+      gridColumns: _gridCols as any,
+
+      userConfig: mergedUserConfig,
+      transactionType: transactionType ?? "",
+      dummyProducts: applicationSettings.productsSettings?.loadDummyProducts,
+
+      formCode: formCode ?? "",
+      title:
+        (formType == undefined || formType.trim() == ""
+          ? t(title)
+          : clientSession.isAppGlobal ?
+            getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
+            :
+            t(title) + "[" + formType + "]") ?? "",
+      initialTitle:
+        (formType == undefined || formType.trim() == ""
+          ? t(title)
+          : clientSession.isAppGlobal ?
+            getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
+            :
+            t(title) + "[" + formType + "]") ?? "",
+    };
+
+    _formState.gridColumns?.forEach((x: any) => {
+      if (x.dataFiled === "unitPriceFC" || x.dataFiled === "grossFC") {
+        x.visible = true;
+      }
+    });
+
+    _formState.formElements = {
+      ..._formState.formElements,
+      pnlMasters: { ...initialFormElements.pnlMasters, disabled: isInvoker },
+
+      hasCashPaid: {
+        ...initialFormElements.hasCashPaid,
+        label:
+          voucherType == "SR"
+            ? "cash_paid"
+            : "cash_received",
+      },
+      ledgerID: {
+        ...initialFormElements.ledgerID,
+        accLedgerType: applicationSettings.inventorySettings.showAccountPayableInSales ?
+          LedgerType.Cash_Bank_Suppliers_Customers_Employees
+          : applicationSettings.accountsSettings.showEmployeesInSales ?
+            LedgerType.Cash_Bank_Customers_Employees : LedgerType.Cash_Bank_Suppliers_Customers_Employees,
+        label: "customer",
+
+      },
+      cbEmployee: {
+        ...initialFormElements.cbEmployee,
+        label: "sales_man"
+      },
+
+      chkTaxNumber: {
+        ...initialFormElements.chkTaxNumber,
+        label: clientSession.isAppGlobal ? "GSTIN" : "VAT",
+      },
+
+
+    } as any;
+
+    const editableColumn = _formState.gridColumns?.find(
+      (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+    );
+    if (applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+      _formState.formElements.transactionDate = {
+        ..._formState.formElements.transactionDate,
+        autoFocus: true
+      };
+    } else if (formState.userConfig?.initialFocusToCustomer) {
+      _formState.formElements.ledgerID = {
+        ..._formState.formElements.ledgerID,
+        autoFocus: true
+      };
+    } else {
+      _formState.currentCell = {
+        column: editableColumn?.dataField ?? "",
+        data: formState.transaction.details[0],
+        rowIndex: 0,
+        reCenterRow: false
+      };
+    }
+    // if (_formState.formElements.cbDebitAccount ?? {})
+    // }
+
+    // debugger;
+    //  
+    // _formState = await loadLedgerData(_formState) as any;
+    // _formState.isInitialLedger = true;
+    setTransVoucher(_formState, true);
+    // if (voucherNo != undefined && voucherNo > 0) {
+    //   dispatch(
+    //     setUserRight({ userSession: userSession, hasRight: hasRight })
+    //   );
+    // }
+  };
 
 
 

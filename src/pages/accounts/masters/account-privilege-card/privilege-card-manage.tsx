@@ -179,7 +179,7 @@ export const PrivilegeCardManage: React.FC<PrivilegeCardEntryProps> = React.memo
         <ERPDateInput
           {...getFieldProps("activatedDate")}
           label={t("activate_date")}
-          onChangeData={(data: any) => handleDateChange("activateDate", data.activateDate)}
+          onChangeData={(data: any) => handleDateChange("activatedDate", data.activatedDate)}
           readOnly={rootState.PopupData.privilegeCard.mode == "view"}
           fetching={formState?.loading !== false ? true : false}
         />

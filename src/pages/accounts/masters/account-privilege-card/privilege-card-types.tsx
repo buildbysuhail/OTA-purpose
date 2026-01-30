@@ -12,8 +12,8 @@ export interface PrivilegeCardData {
   cardType: string,
   priceCategoryID: number,
   expiryDate: Date,
-  activateDate: Date,
-  opBalance: number
+  activatedDate: Date,
+  oBalance: number
 }
 
 export const initialPrivilegeCard = {
@@ -31,8 +31,8 @@ export const initialPrivilegeCard = {
     cardType: "Privilege",
     priceCategoryID: 1,
     expiryDate: new Date(),
-    activateDate: new Date(),
-    opBalance: 0
+    activatedDate: new Date(),
+    oBalance: 0
   },
   validations: {
     cardNumber: "",

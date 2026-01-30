@@ -152,7 +152,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                   <ERPDataCombobox
                     id="driverID"
                     noLabel={true}
-                    value={formState.transaction.master.driverID}
+                    value={formState.transaction.master.driverID || -2}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "driverID",
@@ -311,7 +311,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                   <ERPDataCombobox
                     id="deliveryManID"
                     noLabel={true}
-                    value={formState.transaction.master.deliveryManID}
+                    value={formState.transaction.master.deliveryManID || -2}
                     field={{
                       id: "id",
                       valueKey: "employeeID",
@@ -374,7 +374,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                   <ERPDataCombobox
                     id="vehicleID"
                     noLabel={true}
-                    value={formState.transaction.master.vehicleID}
+                    value={formState.transaction.master.vehicleID || -2}
                     className="flex-1 h-6 text-xs w-full sm:max-w-36"
                     field={{
                       id: "vehicleID",
@@ -406,7 +406,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                     <ERPDataCombobox
                       id="tableId"
                       noLabel={true}
-                      value={formState.transaction.master.tableId}
+                      value={formState.transaction.master.tableId || -2}
                       className="flex-1 h-6 text-xs w-full sm:max-w-36"
                       field={{
                         id: "tableID",

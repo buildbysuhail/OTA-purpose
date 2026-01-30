@@ -1206,8 +1206,11 @@
   "display_the_footer_on_the_right":"Display the footer on the grid",
   "zero_qty_in_row": "Zero qty in row",
   "product_not_found_in_bill_pleasse_check!": "Product not found in bill. Please check!",
-  "state_code": "State Code"
+  "state_code": "State Code",
 
-
+  "ledger_id":"Ledger ID",
+  "party_id":"Party ID",
+  "preset_values":"Pre-set values",
+  "preset_price_category":"Pre-set Price Category"
 
 }

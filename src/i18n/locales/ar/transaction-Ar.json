@@ -1202,7 +1202,12 @@
   "display_the_footer_on_the_right": "إظهار التذييل في الشبكة",
   "zero_qty_in_row": "كمية صفرية في الصف",
   "product_not_found_error": "المنتج غير موجود في الفاتورة. يرجى التحقق!",
-  "state_code": "رمز الولاية"
+  "state_code": "رمز الولاية",
+
+  "ledger_id": "معرف دفتر الأستاذ",
+  "party_id": "معرف الطرف",
+  "preset_values": "قيم مسبقة الضبط",
+  "preset_price_category": "فئة السعر مسبقة الضبط"
 
 }
 

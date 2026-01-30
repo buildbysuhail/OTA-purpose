@@ -114,8 +114,8 @@ export const useTransaction = (
   formStateRef?: any,
   purchaseGridRef?: any,
   setIsDropDownOpen?: (value: { open: boolean, autoAddressFocus: boolean }) => void,
-  voucherType?: string,
-  formType?: string,
+  _voucherType?: string,
+  _formType?: string,
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -314,9 +314,9 @@ export const useTransaction = (
 
   const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
     usingManualInvNumber = false,
-    voucherNumber,
-    voucherPrefix,
-    voucherType,
+    voucherNumber=0,
+    voucherPrefix="",
+    voucherType="",
     formType,
     manualInvoiceNumber,
     transactionMasterID,
@@ -672,12 +672,12 @@ debugger;
         return false;
       }
     }
-let nextVoucherNo=0;
+let nextVoucher ={voucherPrefix:"",voucherNumber:0};
 debugger;
     if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
       if (vch.master?.invTransactionMasterID > 0) {
         // uncomment after check - show in 1050 - checkIt
-        nextVoucherNo = await getNextVoucherNumber(
+        nextVoucher = await getNextVoucherNumber(
           formType ?? formState.transaction.master.voucherForm,
           out_voucherType ?? formState.transaction.master.voucherType,
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
@@ -696,7 +696,8 @@ debugger;
         };
         if (vch?.master) {
           vch.master.invTransactionMasterID = 0;
-          vch.master.voucherNumber = nextVoucherNo;
+          vch.master.voucherNumber = nextVoucher.voucherNumber;
+          vch.master.voucherPrefix = nextVoucher.voucherPrefix;
         }
       }
     }
@@ -720,10 +721,10 @@ debugger;
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
-        voucherNumber: loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ" ? nextVoucherNo : voucherNumber,
+        voucherNumber: loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ" ? nextVoucher.voucherNumber : voucherNumber,
         voucherType: voucherType ?? formState.transaction.master.voucherType,
         voucherPrefix:
-          voucherPrefix ?? formState.transaction.master.voucherPrefix,
+          loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ" ? nextVoucher.voucherPrefix : voucherPrefix ?? formState.transaction.master.voucherPrefix,
         voucherForm: formType ?? formState.transaction.master.voucherForm,
         invTransactionMasterID: vch.master.invTransactionMasterID,
 
@@ -738,7 +739,7 @@ debugger;
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
-        voucherNumber: voucherNumber,
+        voucherNumber: loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ" ? nextVoucher.voucherNumber : voucherNumber,
         voucherType: out_voucherType ?? formState.transaction.master.voucherType,
         voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
         hasroundOff: vch?.master?.roundAmount != 0,
@@ -5575,10 +5576,10 @@ debugger;
 
     return maxTaxPerc;
   };
-  const gridCode = `grd_inv_transaction_${(voucherType ?? "") + (formType ?? "")}`
+  const gridCode = `grd_inv_transaction_${(_voucherType ?? "") + (_formType ?? "")}`
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
-    , voucherType ?? formState.transaction.master.voucherType
-    , formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
+    , _voucherType ?? formState.transaction.master.voucherType
+    , _formType ?? formState.transaction.master.voucherForm, t, formState) ?? []
   const initializeFormElements = async (
     voucherType: string,
     voucherPrefix: string,

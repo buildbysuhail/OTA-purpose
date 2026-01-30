@@ -46,7 +46,7 @@ const Employee = React.forwardRef<HTMLInputElement, CostCentreProps>(({ formStat
               : EmployeeType.All}`
           }}
           disabled={
-            (formState.userConfig?.presetCostenterId ?? 0) > 0 ||
+            // (formState.userConfig?.presetCostenterId ?? 0) > 0 ||   // Not found in 1050, check it
             formState.formElements.cbEmployee.disabled ||
             formState.formElements.pnlMasters?.disabled
           }

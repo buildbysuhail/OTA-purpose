@@ -80,7 +80,7 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       const focusedRowKey = grid.option("focusedRowKey");
       dispatch(
         formStateMasterHandleFieldChange({
-          fields: { ledgerID: focusedRowKey.ledgerID },
+          fields: { ledgerID: focusedRowKey },
         })
       );
       closeModal();
@@ -117,6 +117,7 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       <div className="mt-4">
         <ErpDevGrid
           columns={gridColumns}
+          keyExpr="ledgerID"
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/LedgerList/${salesRoute && mainSalesRoute ? mainSalesRoute : 0}`}
           gridId="ledgerDetailsGrid"
           height={450}

@@ -633,7 +633,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
 
         {/* Cost Center Settings */}
-        <CollapsibleSection title={t("cost_center_settings")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>
+        <CollapsibleSection title={t("preset_values")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>
           <ERPDataCombobox
             id="presetCostenterId"
             data={formState.userConfig}
@@ -645,6 +645,18 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               labelKey: "name",
             }}
             onChangeData={(e) => handleFieldChange("presetCostenterId", e.presetCostenterId)}
+          />
+          <ERPDataCombobox
+            id="presetPriceCategoryId"
+            data={formState.userConfig}
+            label={t("preset_price_category")}
+            field={{
+              id: "presetPriceCategoryId",
+              getListUrl: Urls.data_pricectegory,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(e) => handleFieldChange("presetPriceCategoryId", e.presetPriceCategoryId)}
           />
         </CollapsibleSection>
 

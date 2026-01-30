@@ -8,9 +8,10 @@ interface OrderLookupProps {
   t: (key: string) => string;
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
   onHide?: () => void;
+  voucherType: string;
 }
 
-const OrderLookup: React.FC<OrderLookupProps> = ({ t, loadAndSetTransVoucher, onHide }) => {
+const OrderLookup: React.FC<OrderLookupProps> = ({ t, loadAndSetTransVoucher, onHide, voucherType }) => {
   const [orderNo, setOrderNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
   const [quotationNo, setQuotationNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
   const [deliveryNo, setDeliveryNo] = useState<{vrPrefix: string; vrNumber: string;}>({vrPrefix: "",vrNumber: ""});
@@ -20,7 +21,7 @@ const OrderLookup: React.FC<OrderLookupProps> = ({ t, loadAndSetTransVoucher, on
     let vNumber = "";
     let vPrefix = "";
     let vType = "";
-
+debugger; 
     if (LoadPrefixType.toUpperCase() === "SO") {
       vNumber = orderNo.vrNumber;
       vPrefix = orderNo.vrPrefix;
@@ -42,7 +43,7 @@ const OrderLookup: React.FC<OrderLookupProps> = ({ t, loadAndSetTransVoucher, on
         false,
         Number(vNumber),
         vPrefix.toUpperCase(),
-        vType,
+        voucherType,
         "",
         "",
         0,

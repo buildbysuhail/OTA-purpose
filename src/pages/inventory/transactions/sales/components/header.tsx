@@ -889,7 +889,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                         title={t("create_invoice_from_other_voucher")}
                         width={550}
                         height={350}
-                        content={<OrderLookup t={t} loadAndSetTransVoucher={loadAndSetTransVoucher} onHide={closeCreateInterfaceFromOtherVoucher} />}
+                        content={<OrderLookup t={t} voucherType={formState.transaction.master.voucherType} loadAndSetTransVoucher={loadAndSetTransVoucher} onHide={closeCreateInterfaceFromOtherVoucher} />}
                       />
                     )}
 

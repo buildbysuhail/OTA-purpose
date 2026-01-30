@@ -594,6 +594,7 @@ export const useTransaction = (
     sbCashReceived?: number | 0,
     sbBillDiscount?: number | 0,
   ) => {
+debugger;
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
@@ -671,13 +672,14 @@ export const useTransaction = (
         return false;
       }
     }
-
+let nextVoucherNo=0;
+debugger;
     if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
       if (vch.master?.invTransactionMasterID > 0) {
         // uncomment after check - show in 1050 - checkIt
-        const nextVoucherNo = await getNextVoucherNumber(
+        nextVoucherNo = await getNextVoucherNumber(
           formType ?? formState.transaction.master.voucherForm,
-          voucherType ?? formState.transaction.master.voucherType,
+          out_voucherType ?? formState.transaction.master.voucherType,
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
           false
         );
@@ -718,7 +720,7 @@ export const useTransaction = (
     if (usingManualInvNumber) {
       vch.master = {
         ...vch.master,
-        voucherNumber: voucherNumber,
+        voucherNumber: loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ" ? nextVoucherNo : voucherNumber,
         voucherType: voucherType ?? formState.transaction.master.voucherType,
         voucherPrefix:
           voucherPrefix ?? formState.transaction.master.voucherPrefix,
@@ -736,6 +738,7 @@ export const useTransaction = (
       ...(vch || {}),
       master: {
         ...(vch?.master || {}),
+        voucherNumber: voucherNumber,
         voucherType: out_voucherType ?? formState.transaction.master.voucherType,
         voucherForm: out_voucherForm ?? formState.transaction.master.voucherForm,
         hasroundOff: vch?.master?.roundAmount != 0,

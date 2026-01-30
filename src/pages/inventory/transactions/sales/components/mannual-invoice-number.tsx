@@ -9,14 +9,14 @@ import { LoadAndSetTransVoucherFn } from "../use-transaction";
 import { formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
 
-interface LoadByOrderNoProps extends VoucherElementProps {
+interface LoadByManualInvNoProps extends VoucherElementProps {
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
   type?: string;
   localInputBox?: any
   label?: any
 }
 
-const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
+const ManualInvNo = React.forwardRef<HTMLInputElement, LoadByManualInvNoProps>(
   (props, ref) => {
     const formState = useSelector(
       (state: RootState) => state.InventoryTransaction
@@ -34,7 +34,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
       vPrefixId: -2,
       formType: "",
       vPrefix: "",
-      vNumber: formState.transaction.master.orderNumber,
+      vNumber:parseFloat(formState.transaction.master.mannualInvoiceNumber),
       vType: purchaseVoucherTypes.includes(
         formState.transaction.master.voucherType as VoucherType
       )
@@ -43,11 +43,11 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
     });
     const { value: orderNumberValue, onChange: onOrderNumberChange } =
       useDebouncedInput(
-        formState.transaction.master.orderNumber || "",
+        formState.transaction.master.mannualInvoiceNumber || "",
         (debouncedValue) => {
           props.dispatch(
             formStateMasterHandleFieldChange({
-              fields: { orderNumber: debouncedValue },
+              fields: { mannualInvoiceNumber: debouncedValue },
             })
           );
         },
@@ -69,7 +69,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
           "",
           "",true,false
         );
-    }, [formState.transaction.master.orderNumber]);
+    }, [formState.transaction.master.mannualInvoiceNumber]);
 
     return (
       <>
@@ -83,7 +83,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
                className="flex-1 max-w-none sm:max-w-28"
               onChange={(e) => onOrderNumberChange(e.target.value)}
             />
-            {(formState.transaction.master.voucherType == "not Exist") && (
+            {(
                 <button
                   className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0"
                   onClick={showLoadByRefNo}
@@ -98,4 +98,4 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
   }
 );
 
-export default React.memo(OrderNo);
+export default React.memo(ManualInvNo);

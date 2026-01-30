@@ -21,6 +21,8 @@ import warehouseId from "./components/warehouse-id ";
 import { getStorageString } from "../../../../utilities/storage-utils";
 import { merge } from "lodash";
 import { getApLocalData } from "../../../../redux/cached-urls";
+import orderNumber from "./components/order-number";
+import mannualInvoiceNumber from "./components/mannual-invoice-number";
 
 const api = new APIClient();
 export const useTransactionHelper = (transactionType: string, focusToNextColumn: (
@@ -1748,11 +1750,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       ledgerID: m.ledgerID,
       inventoryLedgerID:
-        m.inventoryLedgerID > 0
+        m.inventoryLedgerID > 0 && VoucherType.SalesInvoice
           ? m.inventoryLedgerID
-          : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT" && !clientSession.isAppGlobal
+          : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice
             ? applicationSettings.branchSettings.defaultSIBTAcc
-            : applicationSettings.inventorySettings.defaultSalesAcc,
+            : [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any)
+              ? applicationSettings.inventorySettings.defaultSalesReturnAcc
+              : applicationSettings.inventorySettings.defaultSalesAcc,
 
 
       /** ---------------- Address ---------------- */
@@ -1769,15 +1773,16 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       deliveryDate: m.deliveryDate,
       despatchDate: m.despatchDate,
       dueDate: m.dueDate,
+      // orderNumber:m.voucherType==VoucherType.SalesInvoice? m.orderNumber:m.voucherType==VoucherType.ServiceInvoice?m.refn,
+      mannualInvoiceNumber:m.mannualInvoiceNumber,
 
       /** ---------------- Amounts ---------------- */
       adjustmentAmount: m.adjustmentAmount,
       adjustmentType: "Add",
       billDiscount: m.billDiscount,
       taxOnDiscount: m.taxOnDiscount,
-      cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) ? 0 : m.cashReceived,
-      cashReturned: 0,
-      srAmount: m.srAmount,
+      cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? 0 : m.cashReceived,
+      srAmount: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) ? 0 : m.srAmount,
 
       totalGross: m.totalGross,
       totalDiscount: m.totalDiscount,
@@ -1786,12 +1791,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       totalProfit: m.totalProfit,
 
       /** ---------------- Cash / Bank ---------------- */
-      cashAmt: m.cashAmt,
+      cashAmt: m.cashReceived,
       bankAmt: m.bankAmt,
       couponAmt: m.couponAmt,
 
       creditAmt:
-        isCashOrBank !== true
+        isCashOrBank === false && !clientSession.isAppGlobal
           ? Math.max(
             m.grandTotal -
             m.cashAmt -
@@ -1799,7 +1804,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             m.couponAmt,
             0
           )
-          : clientSession.isAppGlobal ?
+          : isCashOrBank === false && clientSession.isAppGlobal ?
             Math.max(
               m.grandTotal -
               m.cashAmt -
@@ -1807,13 +1812,17 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               m.couponAmt -
               m.srAmount,
               0
-            ) : 0,
+            ) : 0
+      ,
 
       /** ---------------- Rounding ---------------- */
-      roundAmount: m.roundAmount,
+      roundAmount: [VoucherType.SalesReturn, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? 0 : m.roundAmount,
 
       /** ---------------- Warehouse ---------------- */
-      fromWarehouseID: m.fromWarehouseID || 1,
+      fromWarehouseID: m.fromWarehouseID > 0 ? m.fromWarehouseID : [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest,
+      VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? 0
+        : 1,
 
       /** ---------------- Sales / Employee ---------------- */
       employeeID: m.employeeID,
@@ -1849,7 +1858,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       /** ---------------- Privilege ---------------- */
       // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
       // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
-      privilageAddAmount: privperc > 0 ? m.grandTotal * (privperc / 100) : 0,
+      privilageAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0 ? m.grandTotal * (privperc / 100) : 0,
       // privilageRedeem: m.privilageRedeem,
 
       /** ---------------- Project / Cost ---------------- */
@@ -1879,24 +1888,37 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     };
 
     /** ---------------- Cash Returned Adjustment ---------------- */
-    master.cashReturned =
-      master.cashAmt +
+    //sramt+coupon not in sq UI so condition not added ,in gd cash rcd already in cash amt and txtcard amt visible false in GD so no calculation
+    master.cashReturned = [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest,
+    VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(master.voucherType as any)
+      ? 0
+      : master.cashAmt +
       master.bankAmt +
       master.srAmount +
       master.couponAmt -
       master.grandTotal;
 
-    if (master.voucherType == VoucherType.SalesInvoice && master.voucherForm == "VAT") {
+    if (master.voucherType == VoucherType.SalesInvoice && applicationSettings.branchSettings.maintainKSA_EInvoice && master.voucherForm == "VAT") {
+      master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
+    }
+    if (![VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(master.voucherType as any) && applicationSettings.branchSettings.maintainKSA_EInvoice) {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
     if (master.cashReturned > 0) {
       master.cashAmt -= master.cashReturned;
+    }
+    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any)) {
+      master.cashReturned = master.cashReceived;
     }
     if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt - m.srAmount
     }
     if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt;
+    }
+    if (userSession.dbIdValue == "543140180640" && !clientSession.isAppGlobal) {
+      master.creditAmt = master.grandTotal;
+      master.cashAmt = 0;
     }
     /** ---------------- BT Exception ---------------- */
     if (m.voucherForm === "BT") {
@@ -1939,9 +1961,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       master.transactionDate == ""
         ? moment().local().toISOString()
         : master.prevTransDate;
-    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any)) {
-      master.cashReturned = master.cashReceived;
-    }
+
     master.cashAmt = master.cashReceived;
     master.fromWarehouseID =
       master.fromWarehouseID > 0
@@ -3234,12 +3254,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           })
         );
       } else if (forImport != true && data.searchColumn != "product") {
-        const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
-          "pCode",
-          "product",
-          "barCode",
-        ]);
-        setCurrentCell(res, data.detail as TransactionDetail, false);
+        // const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
+        //   "pCode",
+        //   "product",
+        //   "barCode",
+        // ]);
+        // setCurrentCell(res, data.detail as TransactionDetail, false);
       }
 
       return result;

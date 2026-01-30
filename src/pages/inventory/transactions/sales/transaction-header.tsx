@@ -35,7 +35,7 @@ import { isEnterKey, loadTemplateById } from "../../../../utilities/Utils";
 import VoucherType from "../../../../enums/voucher-types";
 import axios from "axios";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import OrderNo from "./components/order-number";
+import ManualInvNo from "./components/mannual-invoice-number";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import DraftMode from "./draft-mode";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
@@ -1033,7 +1033,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   />
                 )}
                 {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
-                <OrderNo
+                <ManualInvNo
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     formState={formState}
                     dispatch={dispatch}

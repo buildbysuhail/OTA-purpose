@@ -219,6 +219,8 @@ export interface TransactionMaster {
   totalTax?: number; //new
   advAmntFroSO: number;
   refInvTransactionMasterSOID: number;
+  itemTaxDetails: any;
+  taxableDetails:any;
 
   // stock
   stockCountPrefix?: string;

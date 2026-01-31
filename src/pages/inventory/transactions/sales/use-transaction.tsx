@@ -3378,13 +3378,15 @@ debugger;
     isMobRow?: boolean
   ) => {
     try {
+      // ==
+      const _isMobRow = isMobRow ?? deviceInfo.isMobile;
       console.log("handleTextDataChange");
 
-      if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
+      if (!_isMobRow && !formState.transaction?.details?.[rowIndex]) {
         return false;
       }
 
-      const detail = isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
+      const detail = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
       if (!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { details: [{ [columnName]: value, slNo: detail.slNo }] },
@@ -3413,7 +3415,7 @@ debugger;
             actualPriceVisible ?? false,
             outState,
             columnName,
-            isMobRow ? -1 : rowIndex
+            _isMobRow ? -1 : rowIndex
           );
         }
       }
@@ -3509,7 +3511,7 @@ debugger;
         calculateSummaryAndTotal = true;
       }
 
-      if (isMobRow) {
+      if (_isMobRow) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: { row: { ...outState!.transaction!.details![0] } }
@@ -3718,12 +3720,13 @@ debugger;
   }> => {
     let { result } = commonParams;
     try {
+      const _isMobRow = isMobRow ?? deviceInfo.isMobile;
       const key = event.key;
       console.log('🔑 handleTextDataKeyDown called:', { key, value, columnName, rowIndex });
       const isShiftPressed = event.shiftKey;
       const isCtrlPressed = event.ctrlKey;
       // Newly Adding in sales
-      let data = { ...formState.transaction.details[rowIndex] };
+      let data = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
       if ((event.key === "ArrowRight" || event.key === "ArrowLeft" || event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Enter") && columnName === "unitPrice") {
         if (event.key === "Enter") {
           if (formState.userConfig?.blockZeroFigureEntry) {
@@ -4068,7 +4071,7 @@ debugger;
         case "f":
           if (columnName === "qty") {
             if (formState.gridColumns?.find((x) => x.dataField == "free")?.visible) {
-              let data = { ...formState.transaction.details[rowIndex] };
+              let data = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
               const outRow = {
                 free: 1,
                 qty: 0
@@ -4095,7 +4098,7 @@ debugger;
         case "Q":
           if (columnName === "qty") {
             const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -4119,7 +4122,7 @@ debugger;
         case "M":
           if (columnName === "qty") {
             const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -4210,7 +4213,7 @@ debugger;
           const actualPriceVisible = formState.gridColumns?.find(
             (x) => x.dataField == "actualSalesPrice"
           )?.visible;
-          let detail = { ...formState.transaction.details[rowIndex] };
+          let detail = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           let outDetail: DeepPartial<TransactionDetail> = { slNo: detail.slNo };
 
           if (columnName === "qty") {
@@ -4236,7 +4239,7 @@ debugger;
               actualPriceVisible ?? false,
               outState,
               columnName,
-              isMobRow ? -1 : rowIndex
+              _isMobRow ? -1 : rowIndex
             );
           }
           else if (columnName === "unitPrice") {
@@ -4310,7 +4313,7 @@ debugger;
           break;
 
         case "Enter":
-          let data = rowIndex < 0 ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
+          let data = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
@@ -4603,7 +4606,7 @@ debugger;
 
           } else if (columnName == "btnPrintBarcode") {
             const pbData: TransactionDetail =
-              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+              _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             if (
               pbData.qty +
               pbData.stickerQty <=
@@ -4656,7 +4659,7 @@ debugger;
           // }
           else if (columnName == "bd") {
             const data: TransactionDetail =
-              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+              _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
 
             const batchDetails = {
               // Required fields
@@ -4698,9 +4701,11 @@ debugger;
             );
           } else if (columnName == "memoEditor") {
             const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              _isMobRow
+                ? (formState.row ?? initialTransactionDetailData)
+                : formState.transaction.details[rowIndex];
             const memoDetails = {
-              memo: data.moreDetail.memo || "",
+              memo: data.moreDetail?.memo || "",
             };
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
@@ -4718,7 +4723,7 @@ debugger;
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
-              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+              _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -4733,7 +4738,7 @@ debugger;
             );
           }
           else if (columnName == "imf") {
-            const rowData: TransactionDetail = formState.transaction.details[rowIndex];
+            const rowData: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             // const rowIndex = details.findIndex((x) => x.slNo == row.slNo);
 
             dispatch(

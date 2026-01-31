@@ -77,7 +77,7 @@ const ReportList = () => {
 
   const updateFavoriteStatus = async (data: any) => {
     try {
-      await api.postAsync(Urls.update_favorite_reports, { favIds: Array.isArray(data) ? data.join(',') : '' });
+      await api.postAsync(Urls.update_favorite_reports, { value: Array.isArray(data) ? data.join(',') : '' });
     } catch (error) {
       console.error("Failed to update favorite status", error);
     }

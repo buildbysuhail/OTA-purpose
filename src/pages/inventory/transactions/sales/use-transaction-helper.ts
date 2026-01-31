@@ -1774,7 +1774,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       despatchDate: m.despatchDate,
       dueDate: m.dueDate,
       // orderNumber:m.voucherType==VoucherType.SalesInvoice? m.orderNumber:m.voucherType==VoucherType.ServiceInvoice?m.refn,
-      mannualInvoiceNumber:m.mannualInvoiceNumber,
+      mannualInvoiceNumber: m.mannualInvoiceNumber,
 
       /** ---------------- Amounts ---------------- */
       adjustmentAmount: m.adjustmentAmount,
@@ -1828,10 +1828,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       employeeID: m.employeeID,
       salesManIncentive:
         applicationSettings.miscellaneousSettings.salesmanIncentive > 0
-          ? m.grandTotal *
-          (applicationSettings.miscellaneousSettings.salesmanIncentive /
-            100)
-          : m.salesManIncentive,
+          && [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn]
+          ? m.grandTotal * (applicationSettings.miscellaneousSettings.salesmanIncentive / 100)
+          : [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+            ? 0
+            : m.salesManIncentive,
 
       /** ---------------- Logistics ---------------- */
       driverID: m.driverID,
@@ -1858,8 +1859,16 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       /** ---------------- Privilege ---------------- */
       // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
       // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
-      privilageAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0 ? m.grandTotal * (privperc / 100) : 0,
       // privilageRedeem: m.privilageRedeem,
+      privilageCardId: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
+      VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.privilegeCardDetails.privilegeCardsID : 0,
+      privilageAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0
+        ? m.grandTotal * (privperc / 100)
+        : [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+          ? formState.transaction.master.privAddAmount
+          : 0,
+      privilageRedeem: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
+      VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.master.privRedeem : 0,
 
       /** ---------------- Project / Cost ---------------- */
       costCentreID: m.costCentreID,

@@ -191,7 +191,9 @@ export const TransactionMasterInitialData: TransactionMaster = {
   master3: TransactionMaster3InitialData,
   lblSRAmount: "",
   advAmntFroSO: 0,
-  refInvTransactionMasterSOID:0
+  refInvTransactionMasterSOID: 0,
+  itemTaxDetails: null,
+  taxableDetails: null
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",

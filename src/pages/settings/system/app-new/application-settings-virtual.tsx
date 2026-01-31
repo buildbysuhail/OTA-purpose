@@ -241,7 +241,7 @@ export default function SettingsPage() {
 
     try {
       const payload = {
-        settingsScreen: finalGridClass,
+        value: finalGridClass,
       };
       const response: any = await api.post(
         `${Urls.application_settings_UpdateSettingsScreen}`,

@@ -210,7 +210,7 @@ const Header: FC<HeaderProps> = () => {
 
       try{
       const res = await api.postAsync(Urls.updateUserThemes,{
-        userThemes:btoa(JSON.stringify(newState)), 
+        value:btoa(JSON.stringify(newState)), 
       });
   
       

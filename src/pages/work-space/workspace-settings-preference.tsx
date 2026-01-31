@@ -47,7 +47,7 @@ const WorkSpaceSettingsPreference: FC<WorkSpaceSettingsProps> = () => {
   const updateLanguage = async () => {
     
     const response: ResponseModel<any> = await dispatch(
-      updateUserLanguageAction({data: {language: language}}) as any
+      updateUserLanguageAction({data: {value: language}}) as any
     ).unwrap();
     
     handleResponse(response, () => {

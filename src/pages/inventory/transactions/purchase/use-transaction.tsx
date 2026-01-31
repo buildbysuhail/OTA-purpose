@@ -3554,7 +3554,7 @@ export const useTransaction = (
         case "Q":
           if (columnName === "qty") {
             const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -3619,7 +3619,7 @@ export const useTransaction = (
           const actualPriceVisible = formState.gridColumns?.find(
             (x) => x.dataField == "actualSalesPrice"
           )?.visible;
-          let detail = { ...formState.transaction.details[rowIndex] };
+          let detail = isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           let outDetail: DeepPartial<TransactionDetail> = { slNo: detail.slNo };
 
           if (columnName === "qty") {
@@ -3959,9 +3959,9 @@ export const useTransaction = (
             );
           } else if (columnName == "memoEditor") {
             const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+              isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
             const memoDetails = {
-              memo: data.moreDetail.memo || "",
+              memo: data.moreDetail?.memo || "",
             };
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({

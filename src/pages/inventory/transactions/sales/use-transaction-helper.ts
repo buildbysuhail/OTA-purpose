@@ -1910,7 +1910,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     if (master.voucherType == VoucherType.SalesInvoice && applicationSettings.branchSettings.maintainKSA_EInvoice && master.voucherForm == "VAT") {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
-    if (![VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(master.voucherType as any) && applicationSettings.branchSettings.maintainKSA_EInvoice) {
+    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,
+      VoucherType.SalesQuotation,VoucherType.GoodsDeliveryNote].includes(master.voucherType as any)
+      && applicationSettings.branchSettings.maintainKSA_EInvoice) {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
     if (master.cashReturned > 0) {

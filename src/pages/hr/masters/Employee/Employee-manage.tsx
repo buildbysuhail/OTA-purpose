@@ -10,6 +10,7 @@ import { toggleEmployee } from "../../../../redux/slices/popup-reducer";
 import { Employee, initialEmployee } from "./Employee-types";
 import { Tab, Tabs } from "@mui/material";
 import ErpDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
@@ -74,8 +75,21 @@ export const EmployeeManage: React.FC = React.memo(() => {
               autoFocus={true}
               fetching={formState?.loading !== false ? true : false}
             />
+            <ERPDataCombobox
+                  {...getFieldProps("designationID")}
+                  label={t("designation")}
+                  field={{
+                    id: "designationID",
+                    getListUrl: Urls.select_emp_designations_by_combo,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onSelectItem={(data) =>
+                    handleFieldChange({ designationID: data.value, designationName: data.name })
+                  }
+                />
 
-            <ERPInput
+            <ERPInput 
               {...getFieldProps("employeeName")}
               label={t("employee_name")}
               placeholder={t("enter_employee_name")}
@@ -84,6 +98,19 @@ export const EmployeeManage: React.FC = React.memo(() => {
               onChangeData={(data: any) => handleFieldChange("employeeName", data.employeeName)}
               fetching={formState?.loading !== false ? true : false}
             />
+            <ERPDataCombobox
+             {...getFieldProps("accLedgerID")}
+             label={t("ledger_name")}
+             field={{
+               id: "accLedgerID",
+               getListUrl: Urls.select_acc_ledgers_for_combo_by_acc_type,
+               valueKey: "accLedgerID",
+               labelKey: "Name",
+             }}
+             onSelectItem={(data) =>
+               handleFieldChange({ accLedgerID: data.value, accLedgerName: data.name })
+             }
+           />
 
             <ERPInput
               {...getFieldProps("shortName")}
@@ -93,10 +120,26 @@ export const EmployeeManage: React.FC = React.memo(() => {
               readOnly={rootState.PopupData.employee.mode == "view"}
               fetching={formState?.loading !== false ? true : false}
             />
+            <ErpDataCombobox
+              {...getFieldProps("gender")}
+              id="gender"
+              field={{
+                id:"gender",
+                valueKey:"id",
+                labelKey:"name",
+              }}
+              options={[
+                { id: "M", name: "Male" },
+                { id: "F", name: "Female" },
+              ]}
+              label={t("gender")}
+              onChangeData={(data: any) => handleFieldChange("gender", data.gender)}
+              disabled={rootState.PopupData.employee.mode == "view"}
+              fetching={formState?.loading !== false ? true : false}
+            />
 
             <ERPInput
               {...getFieldProps("probotion_Period")}
-              type="number"
               label={t("probotion_Period")}
               placeholder={t("probotion_Period")}
               onChangeData={(data: any) => handleFieldChange("probotionPeriod", data.probotionPeriod)}
@@ -111,14 +154,38 @@ export const EmployeeManage: React.FC = React.memo(() => {
               readOnly={rootState.PopupData.employee.mode == "view"}
               fetching={formState?.loading !== false ? true : false}
             />
-            <ERPInput
+            <ErpDataCombobox
               {...getFieldProps("period_type")}
+              id="period_type"
+              field={{
+                id:"period_type",
+                valueKey:"id",
+                labelKey:"name",
+              }}
+              options={[
+                { id: "H", name: "Hourly" },
+                { id: "D", name: "Daily" },
+                { id: "M", name: "Monthly" },
+                { id: "P", name: "Period" },
+              ]}
               label={t("period_type")}
-              placeholder={t("period_type")}
               onChangeData={(data: any) => handleFieldChange("period_type", data.period_type)}
-              readOnly={rootState.PopupData.employee.mode == "view"}
+              disabled={rootState.PopupData.employee.mode == "view"}
               fetching={formState?.loading !== false ? true : false}
             />
+            <ERPDataCombobox
+             {...getFieldProps("accLedgerID")}
+             label={t("ledger_name")}
+             field={{
+               id: "accLedgerID",
+               getListUrl: Urls.select_acc_ledgers_for_combo_by_acc_type,
+               valueKey: "accLedgerID",
+               labelKey: "Name",
+             }}
+             onSelectItem={(data) =>
+               handleFieldChange({ accLedgerID: data.value, accLedgerName: data.name })
+             }
+           />
             <div className="flex">
               <ERPInput
               {...getFieldProps("cl")}
@@ -158,39 +225,7 @@ export const EmployeeManage: React.FC = React.memo(() => {
                 fetching={formState?.loading !== false ? true : false}
               />
             </div>
-            <ERPInput
-              {...getFieldProps("designationName")}
-              label={t("designation_Name")}
-              placeholder={t("designation_Name")}
-              onChangeData={(data: any) => handleFieldChange("designationName", data.designationName)}
-              readOnly={rootState.PopupData.employee.mode == "view"}
-              fetching={formState?.loading !== false ? true : false}
-            />
-            <ErpDataCombobox
-              {...getFieldProps("gender")}
-              id="gender"
-              field={{
-                id:"gender",
-                valueKey:"id",
-                labelKey:"name",
-              }}
-              options={[
-                { id: "M", name: "Male" },
-                { id: "F", name: "Female" },
-              ]}
-              label={t("gender")}
-              onChangeData={(data: any) => handleFieldChange("gender", data.gender)}
-              disabled={rootState.PopupData.employee.mode == "view"}
-              fetching={formState?.loading !== false ? true : false}
-            />
-            <ERPInput
-              {...getFieldProps("accLedgerID")}
-              label={t("accLedger_ID")}
-              placeholder={t("accLedger_ID")}
-              onChangeData={(data: any) => handleFieldChange("accLedgerID", data.accLedgerID)}
-              readOnly={rootState.PopupData.employee.mode == "view"}
-              fetching={formState?.loading !== false ? true : false}
-            />
+            
             <ERPDateInput
               {...getFieldProps("doj")}
               label={t("doj")}

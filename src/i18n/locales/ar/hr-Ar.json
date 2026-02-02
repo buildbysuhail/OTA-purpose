@@ -119,7 +119,9 @@
   "salary_monthly": "الراتب (شهرياً)",
   "total_working_hours": "ساعات العمل العادية",
   "ot_amount": "قيمة العمل الإضافي",
-  "actions": "الإجراءات"
+  "actions": "الإجراءات",
+  "ledger_name": "اسم دفتر الأستاذ",
+  "period_type": "نوع الفترة"
 
 
   

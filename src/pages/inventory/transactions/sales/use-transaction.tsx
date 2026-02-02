@@ -1202,7 +1202,7 @@ debugger;
         const today = new Date();
         transDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-        if (transDate >= today) {
+        if (transDate > today) {
           await ERPAlert.show({
             icon: "error",
             title: t("validation_error"),
@@ -1380,7 +1380,8 @@ debugger;
 
     // ============ Mobile Number Mandatory Check ============
     if (applicationSettings.inventorySettings?.mobileNumberMandotryInSales) {
-      if (isNullOrUndefinedOrEmpty(master.tokenNumber)) {
+      debugger;
+      if (isNullOrUndefinedOrEmpty(master.address4)) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),

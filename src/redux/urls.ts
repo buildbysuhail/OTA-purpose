@@ -814,6 +814,8 @@ const Urls = {
   benefits_and_deductions: '/HR/BenefitsAndDeductions/',
   employee: '/HR/Employee/',
   emp_designations: '/HR/EmpDesignations/',
+  select_emp_designations_by_combo: '/HR/Employee/SelectEmpDesignationsByCombo',
+  select_acc_ledgers_for_combo_by_acc_type: '/HR/Employee/SelectAccLedgersForComboByAccType',
   leave_type: '/HR/LeaveType/',
   job_works: '/HR/JobWorks/',
   emp_documents: '/HR/EmpDocuments/',

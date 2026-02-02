@@ -46,4 +46,7 @@ export const DATA_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.updateLanguage, method: ActionType.POST as const },
   { url: Urls.updateUserThemes, method: ActionType.POST as const },
   { url: Urls.updateLanguage, method: ActionType.POST as const },
+
+  { url: Urls.select_emp_designations_by_combo, method: ActionType.GET as const },
+  { url: Urls.select_acc_ledgers_for_combo_by_acc_type, method: ActionType.GET as const },
 ] as const;

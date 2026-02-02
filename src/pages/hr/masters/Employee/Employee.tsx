@@ -501,14 +501,14 @@ const Employee = () => {
           width: 100,
           cellRender: (cellElement: any) => (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleEmployee({ isOpen: true, key: cellElement?.data?.id, reload: false, mode: "view" }), }}
-              edit={{ type: "popup", action: () => toggleEmployee({ isOpen: true, key: cellElement?.data?.id, reload: false, mode: "edit" }), }}
+              view={{ type: "popup", action: () => toggleEmployee({ isOpen: true, key: cellElement?.data?.employeeID, reload: false, mode: "view" }), }}
+              edit={{ type: "popup", action: () => toggleEmployee({ isOpen: true, key: cellElement?.data?.employeeID, reload: false, mode: "edit" }), }}
               delete={{
                 onSuccess: () => { dispatch(toggleEmployee({ isOpen: false, key: null, reload: true, })); },
                 confirmationRequired: true,
                 confirmationMessage: t("are_you_sure_you_want_to_delete_this_item"),
                 url: Urls?.employee,
-                key: cellElement?.data?.id,
+                key: cellElement?.data?.employeeID,
               }}
             />
           ),
@@ -542,7 +542,7 @@ const Employee = () => {
         isOpen={rootState.PopupData.employee.isOpen || false}
         title={t("employee")}
         width={1000}
-        height={200}
+        height={400}
         isForm={true}
         closeModal={() => { dispatch(toggleEmployee({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedEmployeeManage />}

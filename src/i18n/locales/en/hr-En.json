@@ -120,7 +120,9 @@
   "salary_monthly": "Salary (Monthly)",
   "total_working_hours": "Normal Working Hours",
   "ot_amount": "OT Amount",
-  "actions": "Actions"
+  "actions": "Actions",
+  "ledger_name": "Ledger Name",
+  "period_type": "Period Type"
 
   
 

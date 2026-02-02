@@ -4,7 +4,7 @@ import type { RootState } from "../../redux/store"
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch"
 import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils"
 import type { AccTransactionFormState, AccUserConfig } from "../accounts/transactions/acc-transaction-types"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { accFormStateHandleFieldChange, } from "../accounts/transactions/reducer"
 import useCurrentBranch from "../../utilities/hooks/use-current-branch"
 import VoucherType from "../../enums/voucher-types"
@@ -13,6 +13,8 @@ import { useDirectPrint } from "../../utilities/hooks/use-direct-print"
 import { fetchTemplateById, getOrFetchTemplate, getTemplateFromStoreById } from "../use-print"
 import { toggleIsPrintPreviewPopup } from "../../redux/slices/popup-reducer"
 import { template } from "lodash"
+import { TemplateState } from "../InvoiceDesigner/Designer/interfaces"
+import { useCallback } from "react"
 
 const api = new APIClient()
 export const useCommenPrint = () => {
@@ -21,46 +23,53 @@ export const useCommenPrint = () => {
   const userSession = useAppSelector((state: RootState) => state.UserSession)
   // const formState = useAppSelector((state: RootState) => state.AccTransaction) 
   const clientSession = useAppSelector((state: RootState) => state.ClientSession)
+  const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
 
-  const printVoucher = async (
+  const printVoucher = useCallback(async (
   masterID: number,
   transactionType: string,
   voucherType: string,
   formType: string,
   customerType: string,
-  isInvTrans: boolean = false,
-  printPreview: boolean = false,
-  printTmeplate?: any,
+  isInvTrans= false,
+  printPreview= false,
+  printTmeplate?: TemplateState<unknown>,
   transDate?: string,
   printData?: any,
   templateId?: number
 ): Promise<void> => {
-    transDate = transDate ?? (new Date()).toISOString();
+      debugger;
+    const effectiveTransDate = transDate ?? new Date().toISOString();
+
     let template;
-    debugger;
+    if (printPreview) {
+      dispatch(toggleIsPrintPreviewPopup({ isOpen: true, masterId: masterID}));
+    } else {
     if (printTmeplate) {
       template = printTmeplate;
       } else if (templateId) {
       template = await fetchTemplateById(templateId,voucherType,customerType,formType);
       } else {
       template = await getOrFetchTemplate(voucherType ?? '', formType, customerType);
-      if (!template) {
+      if (!template&& appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing) {
       template = await getOrFetchTemplate(voucherType ?? '', '', '');
       }
     }
-
+      // If template is valid, proceed with printing
     if (template?.id == 0) {
       // ERPAlert.show({ title: "Please Set Template For Print" })
       ERPToast.showWith("Please Set Template For Print", "warning");
       return
     }
-    // If template is valid, proceed with printing
-    if (printPreview) {
-      dispatch(toggleIsPrintPreviewPopup({ isOpen: true, masterId: masterID,template}));
-    } else {
-      await directPrint({ template: template, data: printData, masterIDParam: masterID, isInvTrans: isInvTrans, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, transDate: transDate })
+      await directPrint({ template: template, data: printData, masterIDParam: masterID, isInvTrans: isInvTrans, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, transDate: effectiveTransDate })
     }
-  }
+  }, [
+  dispatch,
+  directPrint,
+  userSession.dbIdValue,
+  clientSession.isAppGlobal,
+  appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+  ]);
 
   const printPaymentReceiptAdvice = async (voucherType: string) => {
 

@@ -761,7 +761,7 @@ export interface TransactionFormState {
   isUserConfigOpen?: boolean;
   privConfig?: string;
   gatePassPrint?: boolean;
-  lastChoosedTemplate?: { id?: number, group?: string, formType?: string, customerType?: string }; // nizam
+  lastChoosedTemplate?:TemplateState<unknown>; // nizam
   itemPopup?: { isOpen?: boolean, index?: number }
   taxBreakdown?: { name: string, amount: number }[];
   billDiscountPerc?: number;

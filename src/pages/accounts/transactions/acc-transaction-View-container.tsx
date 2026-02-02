@@ -144,7 +144,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
   };
 
   const columnstwo: DevGridColumn[] = useMemo(() => {
-    const isPurchase = (input.isInvTrans && (input.transactionType?.toLowerCase() === "purchase"));
+    const isPurchase = (input.isInvTrans);
     const idField = input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID";
     const CardCol: DevGridColumn = {
       dataField: idField,

@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import { ChevronRight, X, CheckCircle2, AlertTriangle} from 'lucide-react'
 import { useTranslation } from 'react-i18next';
 import { APIClient } from '../../helpers/api-client';
+import type { RootState } from "../../redux/store"
 import Urls from '../../redux/urls';
 import { TemplateState } from '../InvoiceDesigner/Designer/interfaces';
 import { addTemplateToStore, fetchTemplateById, fetchTemplateFromApiById } from '../use-print';
@@ -11,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import ERPButton from '../../components/ERPComponents/erp-button';
 import { removeStorageString } from '../../utilities/storage-utils';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
+
 
 interface TemplatesProps {
   setIsOpen: () => void; 
@@ -19,44 +22,72 @@ interface TemplatesProps {
   customerType:string;
   onTemplateChoosed?: (template: any) => void;
 }
-
+ 
 export default function TemplatesView ({ setIsOpen, onTemplateChoosed, voucherType,formType,customerType}: TemplatesProps) {
 
 const { t } = useTranslation("system");
 const navigate = useNavigate();
+  const appSettings = useSelector((state:RootState) => state.ApplicationSettings);
+
 const [templates, setTemplate] =useState<[]>([])
 const [templateLoad, setTemplateLoad] = useState(false);
  const api = new APIClient();
+
 useEffect(() => {
+  let isActive = true; // prevent state update after unmount
+
   const fetchTemplates = async () => {
     try {
-      setTemplateLoad(true)
-     
-      const payload = {
-      template_group: voucherType,
-      formType: formType,
-      customerType: customerType
-      }
-      let response = await api.postAsync(`${Urls.templates}Filtered`,payload);
-      if (!response || response.length === 0) {
-     response =   await api.postAsync(`${Urls.templates}Filtered`,{
+      setTemplateLoad(true);
+
+      const fetchFiltered = (formTypeVal: string, customerTypeVal: string) =>
+        api.postAsync(`${Urls.templates}Filtered`, {
           template_group: voucherType,
-          formType: "",
-          customerType: ""
+          formType: formTypeVal,
+          customerType: customerTypeVal,
         });
+
+      // 1️⃣ First attempt: exact match
+      let response = await fetchFiltered(formType, customerType);
+
+      // 2️⃣ Fallback: empty tax type (if enabled)
+      if (
+        (!response || response.length === 0) &&
+        appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing
+      ) {
+        response = await fetchFiltered("", "");
       }
-      setTemplate(response);
+
+      // 3️⃣ Final result handling
+      if (isActive) {
+        if (response && response.length > 0) {
+          setTemplate(response);
+        } else {
+          console.warn("No templates found for the given criteria.");
+          setTemplate([]); // keep state consistent
+        }
+      }
     } catch (error) {
       console.error("Error fetching templates:", error);
-    }
-    finally {
-      
-      setTemplateLoad(false)
+    } finally {
+      if (isActive) {
+        setTemplateLoad(false);
+      }
     }
   };
 
   fetchTemplates();
-}, [voucherType]); // Add dependency if value can change
+
+  // ✅ cleanup
+  return () => {
+    isActive = false;
+  };
+}, [
+  voucherType,
+  formType,
+  customerType,
+  appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+]);
 
 const loadTemplateId = useCallback(
   async (template: TemplateState<unknown> | null) => {
@@ -70,13 +101,9 @@ const loadTemplateId = useCallback(
       }
      await addTemplateToStore(_template, template.id);
 
-     if (onTemplateChoosed && _template.id) {
-      onTemplateChoosed({
-        id: template?.id,
-        group: template?.templateGroup,
-        formType: template?.formType,
-        customerType: template?.customerType,
-      });
+     // Pass FULL template to callback (not just metadata)
+      if (onTemplateChoosed) {
+        onTemplateChoosed(_template);  // Pass full template object
       }
       setIsOpen();
     } catch (error) {

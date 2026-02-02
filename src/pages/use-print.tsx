@@ -37,6 +37,7 @@ import {
 import { decompressData } from "../utilities/compression";
 import { templateInitialState } from "../redux/reducers/TemplateReducer";
 import localforage from "localforage";
+import { de } from "date-fns/locale";
 
 // type VoucherType = {
 //   voucherType: string;
@@ -2008,6 +2009,7 @@ export const fetchDefaultTemplateFromApi = async (
   formType?: string,
   customerType?: string
 ): Promise<TemplateState<unknown> | null> => {
+  debugger;
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {
@@ -2037,7 +2039,7 @@ export const fetchDefaultTemplateFromApi = async (
     return null;
   }
 };
-
+ 
 export const fetchTemplateById = async (
   id: any,
   templateGroup: string,
@@ -2098,6 +2100,7 @@ export const fetchTemplateFromApiById = async (
   id: any
 ): Promise<TemplateState<unknown> | null> => {
   try {
+    debugger;
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${id}`);
     const templateContent = await decompressData(res.content);
@@ -2180,13 +2183,14 @@ export const fetchDefaultTemplate = async (
   formType?: string,
   customerType?: string
 ) => {
+   debugger;
   try {
     const _template = await fetchDefaultTemplateFromApi(
       voucherType,
       formType,
       customerType
     );
-    debugger;
+   
     if (!_template) return null;
     await addTemplateToStore(_template);
     return _template;

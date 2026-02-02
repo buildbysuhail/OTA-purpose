@@ -61,6 +61,7 @@ import TransactionForm from "./pages/inventory/transactions/sales/transaction";
 import { initOTAWithBackgroundCheck, markBundleAsWorking } from "./utilities/liveUpdate"
 import UpdateAlertModal from "./components/ERPComponents/UpdateAlertModal"
 import TwilioPdfDownloader from "./pages/inventory/masters/pdf-download";
+import { TemplateState } from "./pages/InvoiceDesigner/Designer/interfaces";
 // ====
 // import ERPModal from "./components/ERPComponents/erp-modal";
 // import 'devextreme/dist/css/dx.dark.css';  
@@ -466,7 +467,7 @@ function App() {
               voucherType={popupData.TemplateChooserModal?.templateGroup ?? ""}
               formType={popupData.TemplateChooserModal?.formType ?? ""}
               customerType={popupData.TemplateChooserModal?.customerType ?? ''}
-              onTemplateChoosed={(template: any) => {
+              onTemplateChoosed={(template: TemplateState<unknown>) => {
                 popupData.TemplateChooserModal?.isInv?
                   dispatch(formStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
                   :

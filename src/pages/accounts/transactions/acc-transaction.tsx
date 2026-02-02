@@ -196,15 +196,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     right: isRtl ? headerLeft : "0",
   };
 
-
-  // const {
-  //   stableTemplateProps,
-  //   templateStyleProperties
-  // } = useTemplateDesigner({
-  //  manuvalTemplateFeatch:true, MasterIDParam: transactionMasterID, isInvTrans: false, dbIdValue: userSession.dbIdValue, isAppGlobal: clientSession.isAppGlobal, printCopies: 1, transactionType: transactionType, voucherType: voucherType,
-  //   transDate: formState.transaction?.master?.transactionDate
-  // })
-
   const [showValidation, setShowValidation] = useState(false);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const focusTaxNoField = () => {

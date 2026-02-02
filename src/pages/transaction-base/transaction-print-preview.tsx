@@ -33,15 +33,10 @@ type TemplatesProps = {
   transactionType: string;
   lastChooseTemp: any;
 };
-// 
+//  
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
   ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp }, ref) => {
-    const [activeTemplate, setActiveTemplate] = useState<TemplateState<unknown>>(printPreviwPopupInfo.template)
-    const prevTemplateIdRef = useRef<number | null>(null);
-    const dispatch = useDispatch();
-    const formState = useAppSelector(
-      (state: RootState) => state.InventoryTransaction
-    );
+
     const { t } = useTranslation();
     const {
       stableTemplateProps,
@@ -52,35 +47,19 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       isInvTrans: isInvTrans,
       MasterIDParam: printPreviwPopupInfo.masterId ?? 0,
       transactionType: transactionType,
-
+      lastChoosedTemplate:lastChooseTemp
     });
   const previewWidth = templateStyleProperties.previewWidth ?? 500;
   const previewHeight = templateStyleProperties.previewHeight??500; // Can be number or "auto"
   const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
-    useEffect(() => {
-      if (prevTemplateIdRef.current === null) {
-        prevTemplateIdRef.current = lastChooseTemp?.id;
-        return;
-      }
-      if (lastChooseTemp?.id !== prevTemplateIdRef.current) {
-        prevTemplateIdRef.current = lastChooseTemp?.id; // update ref
 
-        if (lastChooseTemp?.id) {
-          const fetchNewTemplate = async () => {
-            const tem = await fetchTemplateById(lastChooseTemp?.id, lastChooseTemp?.group ?? "", lastChooseTemp?.customerType, lastChooseTemp?.formType);
-            if (tem) setActiveTemplate(tem);
-          };
-          fetchNewTemplate();
-        }
-      }
-    }, [lastChooseTemp]);
 
     useImperativeHandle(ref, () => ({
       getPrintData: () => {
-        if (!stableTemplateProps?.data || !activeTemplate) return null;
+        if (!stableTemplateProps?.data || !stableTemplateProps?.template) return null;
 
         return {
-          template: activeTemplate,
+          template: stableTemplateProps?.template,
           data: stableTemplateProps.data,
         };
       },
@@ -106,7 +85,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
             className="shadow-lg border border-gray-200 overflow-hidden"
             style={{
 
-                     width: `${previewWidth}pt`, 
+                    width: `${previewWidth}pt`, 
                     height: isAutoHeight ? 'auto' : `${previewHeight}pt`,
                     minHeight: isAutoHeight ? '200pt' : undefined,
                     transformOrigin: 'top left',
@@ -114,7 +93,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           >
             <div className={`relative w-full ${isAutoHeight ? 'flex flex-col' : 'h-full'}`}>
               <SharedTemplatePreview
-                template={activeTemplate}
+                template={stableTemplateProps?.template}
                 data={stableTemplateProps?.data}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
                 isTemplateDesigner={false}

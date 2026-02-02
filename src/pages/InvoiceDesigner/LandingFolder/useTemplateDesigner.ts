@@ -27,7 +27,7 @@ import { Countries } from "../../../redux/slices/user-session/reducer";
 
 const api = new APIClient();
 
-interface UseTemplateDesignerProps {
+interface UseTemplateDesignerProps<T = unknown> {
   templateGroup?: string;
   templateKind?: string;
   designerType?: string;
@@ -52,9 +52,10 @@ interface UseTemplateDesignerProps {
   dbIdValue?: string;
   voucherType?: string;
   isAppGlobal?: boolean;
+  lastChoosedTemplate?: TemplateState<T>;
 }
 
-export const useTemplateDesigner = ({
+export const useTemplateDesigner = <T=unknown,>({
   templateGroup = "",
   templateKind = "",
   designerType = "",
@@ -79,20 +80,21 @@ export const useTemplateDesigner = ({
   dbIdValue,
   voucherType,
   isAppGlobal,
-}: UseTemplateDesignerProps) => {
+  lastChoosedTemplate
+}: UseTemplateDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
-  const activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
-  const userSession = useSelector((state: RootState) => state.UserSession);
-
+  const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);;
+ // State
   const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
-  const [printData, setPrintData] = useState<PrintResponse | null>(null);
+  const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
     signature_image: null,
     background_image: null,
@@ -100,8 +102,11 @@ export const useTemplateDesigner = ({
     background_image_footer: null,
   });
   const [maxHeight, setMaxHeight] = useState<number>(500);
+  // Refs
   const previewContainerRef = useRef<HTMLDivElement>(null);
-
+  const currentMasterIdRef = useRef<number | null | undefined>(null);
+  const lastFetchedTemplateIdRef = useRef<number | null>(null);
+  
   // Create consolidated template style properties object
   const templateStyleProperties = useMemo(() => {
     const pageOrientation =
@@ -130,92 +135,105 @@ export const useTemplateDesigner = ({
   ]);
 
   // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        let data: PrintResponse = DummyVoucherData as any;
-        if (MasterIDParam) {
-          data = (await loadPrintData(
-            MasterIDParam ?? 0,
-            voucherTypeParam ?? "",
-            isInvTrans,
-            isSalesView,
-            isServiceTrans,
-            transDate,
-            printCopies,
-            isReprint,
-            isPOSPrinting,
-            isFromSalesReceipt,
-            isPackingSlipPrint,
-            warehouseID,
-            kitchenIDParam,
-            kitchenPrinterNameParam,
-            kitchenNameParam,
-            commonKitchenProductGroupIDParam,
-            transactionType,
-            dbIdValue,
-            voucherType,
-            isAppGlobal
-          )) as any;
-        }
-          console.log("data for print",data);
-          
-        setPrintData(data);
-        
-           
-        // Fetch template if needed
-        if (manuvalTemplateFeatch) {
-          let _template;
+useEffect(() => {
+  let isActive = true;
+  // let data: PrintResponse= DummyVoucherData as any;
+  const loadData = async () => {
+    if (!MasterIDParam) return;
+
+    setLoading(true);
+    try {
+     
+
+     const data = await loadPrintData(
+        MasterIDParam??0,
+        voucherTypeParam ?? "",
+        isInvTrans,
+        isSalesView,
+        isServiceTrans,
+        transDate,
+        printCopies,
+        isReprint,
+        isPOSPrinting,
+        isFromSalesReceipt,
+        isPackingSlipPrint,
+        warehouseID,
+        kitchenIDParam,
+        kitchenPrinterNameParam,
+        kitchenNameParam,
+        commonKitchenProductGroupIDParam,
+        transactionType,
+        dbIdValue,
+        voucherType,
+        isAppGlobal
+      );
+
+      if (!isActive) return;
+      setPrintData(data);
+
+      if (manuvalTemplateFeatch && data) {
+        let _template = await getOrFetchTemplate(
+          data?.master?.voucherType,
+          data?.master?.voucherForm,
+          data?.master?.customerType
+        );
+
+        if ((!_template || _template.content == null)&&
+            appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing) 
+         {
           _template = await getOrFetchTemplate(
             data?.master?.voucherType,
-            data?.master?.voucherForm,
-            data?.master?.customerType
+            "",
+            ""
           );
-          
-          if (!_template || _template.content == null){
-                _template = await getOrFetchTemplate(
-            data?.master?.voucherType,
-            "",""
-          );
-         };
-          if (_template) {
-            dispatch(setTemplate(_template));
-          }
         }
-      } catch (err) {
+        
+        if (!isActive) return;
+        if (_template) {
+          dispatch(setTemplate(_template));
+        }
+      }
+    } catch (err) {
+      if (isActive) {
         console.error("Error loading data:", err);
-      } finally {
+      }
+    } finally {
+      if (isActive) {
         setLoading(false);
       }
-    };
+    }
+  };
 
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    manuvalTemplateFeatch,
-    MasterIDParam,
-    transactionType,
-    voucherTypeParam,
-    isInvTrans,
-    isSalesView,
-    isServiceTrans,
-    transDate,
-    printCopies,
-    isReprint,
-    isPOSPrinting,
-    isFromSalesReceipt,
-    isPackingSlipPrint,
-    warehouseID,
-    kitchenIDParam,
-    kitchenPrinterNameParam,
-    kitchenNameParam,
-    commonKitchenProductGroupIDParam,
-    dbIdValue,
-    voucherType,
-    isAppGlobal,
+  loadData();
 
-  ]);
+  // ✅ CLEANUP
+  return () => {
+    isActive = false;
+  };
+}, [
+  manuvalTemplateFeatch,
+  MasterIDParam,
+  transactionType,
+  voucherTypeParam,
+  isInvTrans,
+  isSalesView,
+  isServiceTrans,
+  transDate,
+  printCopies,
+  isReprint,
+  isPOSPrinting,
+  isFromSalesReceipt,
+  isPackingSlipPrint,
+  warehouseID,
+  kitchenIDParam,
+  kitchenPrinterNameParam,
+  kitchenNameParam,
+  commonKitchenProductGroupIDParam,
+  dbIdValue,
+  voucherType,
+  isAppGlobal,
+]);
+
 
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
@@ -250,6 +268,32 @@ export const useTemplateDesigner = ({
 
     updateProps();
   }, [activeTemplate, printData]);
+
+  // Effect: Handle user template selection
+useEffect(() => {
+
+  if (!manuvalTemplateFeatch) return;
+    // Detect MasterIDParam change (new transaction)
+  const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;
+  
+  if (isMasterIdChanged) {
+    // New transaction - sync refs and skip fetch
+    currentMasterIdRef.current = MasterIDParam;
+    lastFetchedTemplateIdRef.current = lastChoosedTemplate?.id ?? null;
+    return; // Let Effect 1 handle default template
+  }
+  const newTemplateId = lastChoosedTemplate?.id ?? null;
+  
+  if (newTemplateId === null || newTemplateId === lastFetchedTemplateIdRef.current) return;
+  
+  lastFetchedTemplateIdRef.current = newTemplateId;
+    dispatch(setTemplate(lastChoosedTemplate));
+
+}, [
+  lastChoosedTemplate,
+  MasterIDParam,
+  manuvalTemplateFeatch,
+]);
 
   // Set max height based on window size
   useEffect(() => {
@@ -345,7 +389,7 @@ export const useTemplateDesigner = ({
 
         },
 
-      } as TemplateState<unknown>;
+      } as TemplateState<T>;
       console.log(tmpTemplate);
       
       const compressedContent = await compressData(tmpTemplate);

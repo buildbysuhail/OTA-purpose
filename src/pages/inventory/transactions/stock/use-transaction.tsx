@@ -2678,18 +2678,19 @@ const verified = Boolean(vch.master.pdtVerified);
   const handleTextDataChange = async (
     value: any,
     columnName: string,
-    rowIndex: number
+    rowIndex: number,
+    isMobRow?: boolean
   ) => {
     try {
-      const isMobRow = deviceInfo.isMobile;
+      const _isMobRow = isMobRow ?? deviceInfo.isMobile;
       console.log("handleTextDataChange");
 
-      if (!isMobRow && !formState.transaction?.details?.[rowIndex]) {
+      if (!_isMobRow && !formState.transaction?.details?.[rowIndex]) {
         return false;
       }
 
-      const detail = isMobRow
-        ? { ...formState.row }
+      const detail = _isMobRow
+        ? { ...(formState.row ?? initialTransactionDetailData) }
         : { ...formState.transaction.details[rowIndex] };
       if (!detail) return;
       let outState: DeepPartial<TransactionFormState> = {
@@ -2719,7 +2720,7 @@ const verified = Boolean(vch.master.pdtVerified);
             actualPriceVisible ?? false,
             outState,
             columnName,
-            isMobRow ? -1 : rowIndex
+            _isMobRow ? -1 : rowIndex
           );
         }
       }
@@ -2815,7 +2816,7 @@ const verified = Boolean(vch.master.pdtVerified);
         calculateSummaryAndTotal = true;
       }
       debugger;
-      if (isMobRow) {
+      if (_isMobRow) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
             fields: { row: { ...outState!.transaction!.details![0] } },
@@ -2840,14 +2841,22 @@ const verified = Boolean(vch.master.pdtVerified);
             ?.details as TransactionDetail[];
         }
         outState = totalRes;
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: outState,
+            updateOnlyGivenDetailsColumns: true,
+            rowIndex: rowIndex,
+          })
+        );
+      } else {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: outState,
+            updateOnlyGivenDetailsColumns: true,
+            rowIndex: rowIndex,
+          })
+        );
       }
-      dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: outState,
-          updateOnlyGivenDetailsColumns: true,
-          rowIndex: rowIndex,
-        })
-      );
     } catch (error) {
       console.error("Error in handleTextDataChange:", error);
     } finally {
@@ -3417,6 +3426,7 @@ const verified = Boolean(vch.master.pdtVerified);
     showDialog?: boolean;
   }> => {
     let { result } = commonParams;
+    const _isMobRow = isMobRow ?? deviceInfo.isMobile;
     try {
       const key = event.key;
       const isShiftPressed = event.shiftKey;
@@ -3515,8 +3525,9 @@ const verified = Boolean(vch.master.pdtVerified);
         case "q":
         case "Q":
           if (columnName === "qty") {
-            const data: TransactionDetail =
-              formState.transaction.details[rowIndex];
+            const data: TransactionDetail = _isMobRow
+              ? ((formState.row ?? initialTransactionDetailData) as TransactionDetail)
+              : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
@@ -3581,7 +3592,9 @@ const verified = Boolean(vch.master.pdtVerified);
             const actualPriceVisible = formState.gridColumns?.find(
               (x) => x.dataField == "actualSalesPrice"
             )?.visible;
-            let detail = { ...formState.transaction.details[rowIndex] };
+            let detail = _isMobRow
+              ? { ...(formState.row ?? initialTransactionDetailData) }
+              : { ...formState.transaction.details[rowIndex] };
             let outDetail: DeepPartial<TransactionDetail> = {
               slNo: detail.slNo,
             };
@@ -3608,7 +3621,7 @@ const verified = Boolean(vch.master.pdtVerified);
                 actualPriceVisible ?? false,
                 outState,
                 columnName,
-                isMobRow ? -1 : rowIndex
+                _isMobRow ? -1 : rowIndex
               );
             }
             break;
@@ -3630,7 +3643,9 @@ const verified = Boolean(vch.master.pdtVerified);
           break;
 
         case "Enter":
-          let data = { ...formState.transaction.details[rowIndex] };
+          let data = _isMobRow
+            ? { ...(formState.row ?? initialTransactionDetailData) }
+            : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
@@ -3929,15 +3944,16 @@ const verified = Boolean(vch.master.pdtVerified);
           else if (columnName == "grossConvert") {
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
-            const rowData: TransactionDetail =
-              formState.transaction.details[rowIndex];
+            const rowData: TransactionDetail = _isMobRow
+              ? ((formState.row ?? initialTransactionDetailData) as TransactionDetail)
+              : formState.transaction.details[rowIndex];
             dispatch(
               commonParams.formStateHandleFieldChangeKeysOnly({
                 fields: {
                   serialNoEntryData: {
                     visible: true,
                     data: rowData.productDescription,
-                    rowIndex: rowIndex,
+                    rowIndex: _isMobRow ? -1 : rowIndex,
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,

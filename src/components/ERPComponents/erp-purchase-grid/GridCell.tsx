@@ -314,9 +314,9 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   backgroundColor,
   foreColor,
 }) => {
-//   if (!column) {
-//     return null;
-//   }
+  if (!column) {
+    return null;
+  }
   const { getFormattedValue } = useNumberFormat();
   const dispatch = useAppDispatch();
   const cellId = `${gridId}_${column.dataField}_${index}`;
@@ -422,15 +422,36 @@ const cellContentStyle = {...getCellContentStyle(column)}
     }
 
     if (column.dataType === "chk") {
+      const checkboxId = `${cellId}_chk`;
       return (
-        
-        <input
-          disabled={formState.formElements.pnlMasters?.disabled}
-          type="checkbox"
-          height={rowHeight}
-          checked={cellValue === true}
-          onChange={(e) => onChange(e.target.checked, column.dataField as keyof TransactionDetail, index)}
-        />
+        <label
+          htmlFor={checkboxId}
+          className="flex items-center justify-center w-full h-full"
+          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <input
+            id={checkboxId}
+            disabled={formState.formElements.pnlMasters?.disabled}
+            type="checkbox"
+            height={rowHeight}
+            checked={cellValue === true}
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+            onChange={(e) =>
+              onChange(
+                e.target.checked,
+                column.dataField as keyof TransactionDetail,
+                index
+              )
+            }
+            style={{
+              // width: isMobile_ ? "20px" : undefined,
+              // height: isMobile_ ? "20px" : undefined,
+              margin: 0,
+            }}
+          />
+        </label>
       );
     }
 

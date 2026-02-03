@@ -802,7 +802,6 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
                       {t(formState.transaction.master.customerType)}
                     </span>
-                  )}
 
                 {(formState.transaction.master.voucherType ===
                   VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
@@ -1388,12 +1387,9 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       disabled={formState.formElements.pnlMasters?.disabled}
                     />
                   )}
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
                     <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
                       {t(formState.transaction.master.customerType)}
                     </span>
-                  )}
               </div>
 
               <div className="flex items-center gap-2 mt-2">

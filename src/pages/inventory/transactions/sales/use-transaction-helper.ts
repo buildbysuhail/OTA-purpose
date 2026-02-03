@@ -1792,9 +1792,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       /** ---------------- Cash / Bank ---------------- */
       cashAmt: m.cashReceived,
-      bankAmt: m.bankAmt,
+      bankAmt:[VoucherType.SalesInvoice].includes(m.voucherType as any)? m.bankAmt:isCashOrBank && m.voucherType == VoucherType.SalesReturn
+      ? m.grandTotal - m.cashAmt:0,
       couponAmt: m.couponAmt,
-
       creditAmt:
         isCashOrBank === false && !clientSession.isAppGlobal
           ? Math.max(
@@ -1910,27 +1910,40 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     if (master.voucherType == VoucherType.SalesInvoice && applicationSettings.branchSettings.maintainKSA_EInvoice && master.voucherForm == "VAT") {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
-    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,
-      VoucherType.SalesQuotation,VoucherType.GoodsDeliveryNote].includes(master.voucherType as any)
+    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
+    VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(master.voucherType as any)
       && applicationSettings.branchSettings.maintainKSA_EInvoice) {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
-    if (master.cashReturned > 0) {
+    if (master.cashReturned > 0 && [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)) {
       master.cashAmt -= master.cashReturned;
     }
     if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any)) {
       master.cashReturned = master.cashReceived;
     }
-    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal) {
+    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt - m.srAmount
     }
-    if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal) {
+    if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt;
     }
-    if (userSession.dbIdValue == "543140180640" && !clientSession.isAppGlobal) {
+    if (userSession.dbIdValue == "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.creditAmt = master.grandTotal;
       master.cashAmt = 0;
     }
+    if (master.cashAmt > master.grandTotal && master.voucherType == VoucherType.SalesReturn && !clientSession.isAppGlobal) {
+      master.cashAmt = master.grandTotal;
+    }
+    if (isCashOrBank && m.voucherType == VoucherType.SalesReturn && clientSession.isAppGlobal) {
+      master.cashAmt = m.grandTotal;
+    }
+     if(m.voucherType==VoucherType.SalesReturn && clientSession.isAppGlobal){
+      m.bankAmt=0;
+     }
+    if (m.voucherType == VoucherType.GoodsDeliveryNote || m.voucherType == VoucherType.ServiceInvoice) {
+      m.cashAmt = 0;
+    }
+
     /** ---------------- BT Exception ---------------- */
     if (m.voucherForm === "BT") {
       master.isLocked = false;

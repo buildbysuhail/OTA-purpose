@@ -4394,6 +4394,8 @@ debugger;
           break;
 
         case "Enter":
+          event.preventDefault();
+          event.stopPropagation();
           let data = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
@@ -4481,6 +4483,8 @@ debugger;
           } else if (columnName == "qty") {
             const ShowNegativeStockWarning = applicationSettings.inventorySettings.showRateWarning;
             if (ShowNegativeStockWarning === "Block" && data.itemType === "Inventory") {
+              event.preventDefault();
+              event.stopPropagation();
               let Qty = Number(data.qty)
               const prevQty = (data.qtyTag ?? 0);
               Qty = Qty - prevQty;
@@ -4488,6 +4492,8 @@ debugger;
               const selectedUnit = unitQty?.find((u: any) => u.unitID === data.unitID);
               Qty = Qty * selectedUnit.multiFactor;
               if (Qty > data.stock) {
+                event.preventDefault();
+                event.stopPropagation();
                 await ERPAlert.show({
                   icon: "info",
                   title: t("warning"),
@@ -4499,6 +4505,8 @@ debugger;
               }
 
             } else if (ShowNegativeStockWarning === "Warn" && data.itemType === "Inventory") {
+              event.preventDefault();
+              event.stopPropagation();
               let Qty = Number(data.qty)
               const prevQty = (data.qtyTag ?? 0);
               Qty = Qty - prevQty;

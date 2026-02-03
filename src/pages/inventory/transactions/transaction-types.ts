@@ -60,6 +60,7 @@ export interface TransactionData {
   eInvoiceStatus?: string
   ewbStatus?: string
   postedTransactionLabel?: string
+  hasApproved?: boolean
 }
 
 export interface InvAccTransaction {

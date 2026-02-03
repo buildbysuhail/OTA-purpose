@@ -3285,6 +3285,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
       };
+      debugger;
       let billDisc = 0,
         totalGross = 0,
         itemGross = 0,
@@ -3292,14 +3293,15 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         itemDisc = 0,
         discPerc = 0;
 
-      let details = formState.transaction.details.filter(
+      let details = [...formState.transaction.details.filter(
         (x) => x.productID > 0
-      );
+      )];
       billDisc = formState.transaction.master.billDiscount;
       outState.transaction!.master!.billDiscount = 0;
       // Calculate total gross for items with productID > 0
       totalGross = formState.summary.gross;
       // Apply discount to each item with productID > 0
+      let updatedRows: DeepPartial<TransactionDetail>[] = [];
       if (details.length > 0) {
         for (let i = 0; i < details.length; i++) {
           const item = details[i];
@@ -3316,13 +3318,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             true
           );
           if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
-            outState.transaction!.details!.push(
-              updatedRow.transaction!.details![0]
+            updatedRows!.push(
+              updatedRow.transaction!.details![0] as any
             );
-            return { ...item, ...updatedRow.transaction!.details![0] };
           }
 
-          details[i] = item;
+          details[i] = { ...item, ...updatedRow.transaction!.details![0] };
         }
 
         const summaryRes = await calculateSummary(details, formState, {
@@ -3343,8 +3344,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           totalRes.transaction = totalRes.transaction ?? {};
           totalRes.transaction.master = totalRes.transaction.master ?? {};
           totalRes.transaction.master.billDiscount = 0;
-          totalRes.transaction.details = outState?.transaction
-            ?.details as TransactionDetail[];
+          totalRes.transaction.details = details
 
           dispatch(
             formStateHandleFieldChangeKeysOnly({

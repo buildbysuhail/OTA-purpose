@@ -107,6 +107,7 @@ export const useTransaction = (
   taxableAmountRef?: any,
   refNoRef?: any,
   mobileNumRef?: any,
+  transactionDateRef?: any,
   discountRef?: any,
   chequeStatusRef?: any,
   employeeRef?: any,
@@ -145,7 +146,8 @@ export const useTransaction = (
     checkTheProductPriceInSchemes,
     setCurrentCell,
     loadProductDetailsByAutoBarcode,
-    removeGiftFromGrid
+    removeGiftFromGrid,
+    enableControls
 
   } = useTransactionHelper(transactionType, focusToNextColumn, focusColumn);
   const applicationSettings = useAppSelector(
@@ -1746,7 +1748,22 @@ debugger;
               value: undefined,
             })
           );
-          clearControls(true, true);
+          // If clearDetailsAfterSave is checked, Then clear details, otherwise, disable pnl master
+          if(formState.userConfig?.clearDetailsAfterSave){
+            clearControls(true, true);
+          }else{
+            dispatch(
+              formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  formElements: {
+                    pnlMasters:{
+                      disabled: true,
+                    },
+                  },
+                },
+              })
+            );
+          }
           dispatch(
             formStateHandleFieldChange({
               fields: {
@@ -2107,9 +2124,20 @@ debugger;
             },
             ledgerID: {
               reload: true,
-              disabled: applicationSettings.accountsSettings?.allowSalesCounter &&
-                (userSession.counterwiseCashLedgerId ?? 0) > 0 &&
-                formState.transaction.master.voucherType !== "BT",
+              disabled: (() => {
+                let disabled = false;
+                const counterLedgerId = (userSession.counterwiseCashLedgerId ?? 0) > 0;
+                const allowSalesCounter = applicationSettings.accountsSettings?.allowSalesCounter === true;
+                if (counterLedgerId && allowSalesCounter) {
+                  if (formState.transaction.master.voucherType !== "BT") {
+                    disabled = true;
+                  }
+                  if (!userSession?.isMaintainShift && userSession?.dbIdValue !== "SAMAPLASTICS") {
+                    disabled = false;
+                  }
+                }
+                return disabled;
+              })(),
             },
             cbCostCentre: {
               reload: true,
@@ -2166,28 +2194,80 @@ debugger;
             pendingOrderListMenuItem: {
               disabled: false,
             },
+            // grandTotal, dxGrid  - both are included in pnlMaster, Just Added
+            grandTotal:{
+              disabled: false,
+            },
+            dxGrid:{
+              disabled: false,
+            }
           },
         },
         updateOnlyGivenDetailsColumns: true,
       })
     );
 
-    // Focus first editable column if required
-    const editableColumns = formState.gridColumns?.filter(
-      (col) =>
-        col.visible != false &&
-        col.dataField != null &&
-        col.allowEditing == true &&
-        col.readOnly !== true
+    // SetUserRights - check user rights for buttons
+    // ------------------- THE SECTION BELOW THIS IS NOT VERIFIED ------------------
+    const voucherWithRights = setUserRightsFn(
+      { ...formState, formElements: {} } as any,
+      userSession,
+      hasRight
     );
-
-    if (focusFirstRow && editableColumns && editableColumns.length > 0) {
-      const res = focusColumn(0, editableColumns[0].dataField ?? "");
-      setCurrentCell(
-        res,
-        formState.transaction.details[0] as TransactionDetail,
-        true
+    if (voucherWithRights?.formElements) {
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: { formElements: voucherWithRights.formElements },
+          updateOnlyGivenDetailsColumns: true,
+        })
       );
+    }
+    // ------------------- THE SECTION ABOVE THIS IS NOT VERIFIED ------------------
+
+    // SetPresetPriceCategory - if preset price category is configured
+    if ((formState.userConfig?.presetPriceCategoryId ?? 0) > 0) {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: {
+            priceCategoryID: formState.userConfig?.presetPriceCategoryId,
+          },
+        })
+      );
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            formElements: {
+              cbPriceCategory: { disabled: true },
+            },
+          },
+          updateOnlyGivenDetailsColumns: true,
+        })
+      );
+    }
+     if(applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+        setTimeout(() => {
+          transactionDateRef?.current?.focus();
+         }, 0);
+      } else if (formState.userConfig?.initialFocusToCustomer){
+          ledgerIdRef?.current?.focus();
+          ledgerIdRef?.current?.select();
+      }  else {
+          const editableColumns = formState.gridColumns?.filter(
+          (col) =>
+            col.visible != false &&
+            col.dataField != null &&
+            col.allowEditing == true &&
+            col.readOnly !== true
+        );
+
+        if (focusFirstRow && editableColumns && editableColumns.length > 0) {
+          const res = focusColumn(0, editableColumns[0].dataField ?? "");
+          setCurrentCell(
+            res,
+            formState.transaction.details[0] as TransactionDetail,
+            true
+          );
+        }
     }
   };
   const handleRemoveItem = async (slNo: string) => {
@@ -6343,17 +6423,14 @@ debugger;
     const editableColumn = _formState.gridColumns?.find(
       (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
     );
-    if (applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
-      _formState.formElements.transactionDate = {
-        ..._formState.formElements.transactionDate,
-        autoFocus: true
-      };
-    } else if (formState.userConfig?.initialFocusToCustomer) {
-      _formState.formElements.ledgerID = {
-        ..._formState.formElements.ledgerID,
-        autoFocus: true
-      };
-    } else {
+    if(applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+        setTimeout(() => {
+          transactionDateRef?.current?.focus();
+         }, 0);
+      } else if (_formState.userConfig?.initialFocusToCustomer){
+          ledgerIdRef?.current?.focus();
+          ledgerIdRef?.current?.select();
+      } else {
       _formState.currentCell = {
         column: editableColumn?.dataField ?? "",
         data: formState.transaction.details[0],

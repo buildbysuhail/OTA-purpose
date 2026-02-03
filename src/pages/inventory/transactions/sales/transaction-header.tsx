@@ -41,7 +41,9 @@ import DraftMode from "./draft-mode";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import WareHouseStock from "./components/warehouse-stock";
 import PartiesManage from "../../../accounts/masters/parties/parties-manage";
+import { APIClient } from "../../../../helpers/api-client";
 
+const api = new APIClient();
 interface TransactionHeaderProps {
   formState: TransactionFormState;
   dispatch: any;
@@ -64,6 +66,7 @@ interface TransactionHeaderProps {
   refNoRef: any;
   isAppGlobal: boolean;
   mobileNumRef: any;
+  transactionDateRef: any;
   employeeRef?: any;
   isDropDownOpen: {
     open: boolean;
@@ -93,6 +96,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   voucherNumberRef,
   refNoRef,
   mobileNumRef,
+  transactionDateRef,
   employeeRef,
   isDropDownOpen,
   toggleDropdown,
@@ -203,25 +207,24 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   // const ReferenceNumberRef = useRef<HTMLInputElement>(null);
   const referenceNumberInputRef = useRef<HTMLInputElement>(null);
 
-const [openPartyModal, setOpenPartyModal] = useState(false);
+const [openPartyModal, setOpenPartyModal] = useState(false);  // Customer add master modal opens
 const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   // Handle sequential input navigation
   const handleInputNavigation = useCallback(
-    (e: React.KeyboardEvent, nextRef: React.RefObject<HTMLInputElement | any>) => {
+    async(e: React.KeyboardEvent<HTMLInputElement>, nextRef: React.RefObject<HTMLInputElement | any>) => {
       if (e.key === "Enter") {
-        // The below code is not completed, Waiting for api 
-        const mobileNo = formState.transaction.master.address4;
+        // const mobileNo = formState.transaction.master.address4;
+        const mobileNo = e.currentTarget.value;
         if (applicationSettings.inventorySettings.allowCustomerCreationByMobNo && mobileNo?.trim()) {
-          //An Api call SelectLedgerIDByMobNo needed Here, The ledger id is getting from the res
-          const LedgerID: number = 0;
-          if(LedgerID>0){
+          const resLedgerId = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadCustomerByMobileNumber/${mobileNo}`);
+          if(Number(resLedgerId)>0){
             dispatch(
               formStateMasterHandleFieldChange({
-                fields: { ledgerID: LedgerID },
+                fields: { ledgerID: Number(resLedgerId) },
               })
             );
           }
-          if(LedgerID === 0){
+          if(Number(resLedgerId) === 0){
             // Opens the modal for customer creation
             setOpenPartyModal(true);
              return;
@@ -535,7 +538,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
               t={t}
             />
 
-            <TransactionDate formState={formState} dispatch={dispatch} t={t} />
+            <TransactionDate formState={formState} dispatch={dispatch} t={t} ref={transactionDateRef}/>
           </div>
 
           {/* Dropdown content */}

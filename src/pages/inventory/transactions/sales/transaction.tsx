@@ -255,6 +255,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const partyNameRef = useRef<HTMLInputElement>(null);
   const refNoRef = useRef<HTMLInputElement>(null);
   const mobileNumRef = useRef<HTMLInputElement>(null);
+  const transactionDateRef = useRef<HTMLInputElement>(null);
   const taxNoRef = useRef<HTMLInputElement>(null);
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
@@ -614,6 +615,33 @@ const TransactionForm: React.FC<TransactionProps> = ({
     };
   }, []);
 
+  // If productId is lees than zero, then set isProductSummaryOpen false
+  // Need to open only when if a product id exist
+  useEffect(() => {
+    const productID = Number(formState.currentCell?.data.productID)
+    if( productID <= 0 ){
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { isProductSummaryOpen: false },
+        })
+      )
+    }
+  }, [formState.isProductSummaryOpen]);
+
+  // Open Party summary only when the ledger id exist
+  useEffect(() => {
+    const ledgerId = Number(formState.transaction.master.ledgerID)
+    if( ledgerId <= 0 ){
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { isPartyWiseSummaryOpen: false },
+        })
+      )
+    }
+  }, [formState.isPartyWiseSummaryOpen]);
+
+  
+
   const [loadTemplate, setLoadTemplate] = useState<TemplateState<TransactionDetail>>();
   const focusToNextColumn = (rowIndex: number, column: string, excludedColumns?: (keyof TransactionDetail)[]) => {
     return purchaseGridRef?.current?.nextCellFind(rowIndex, column, excludedColumns) ?? null;
@@ -702,6 +730,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     taxableAmountRef,
     refNoRef,
     mobileNumRef,
+    transactionDateRef,
     discountRef,
     chequeStatusRef,
     employeeRef,
@@ -1700,6 +1729,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               footerLayout="vertical"
               userSession={userSession}
               mobileNumRef={mobileNumRef}
+              transactionDateRef={transactionDateRef}
               employeeRef={employeeRef}
               partyNameRef={partyNameRef}
               // isDropDownOpen={false}
@@ -1932,6 +1962,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                     footerLayout="vertical"
                     userSession={userSession}
                     mobileNumRef={mobileNumRef}
+                    transactionDateRef={transactionDateRef}
                     employeeRef={employeeRef}
                     partyNameRef={partyNameRef}
                     // isDropDownOpen={false}

@@ -23,6 +23,7 @@ const AccTransactionDate = React.forwardRef<
       <>
         {formState.formElements.transactionDate.visible && (
           <ERPDateInput
+            ref={ref}
             localInputBox={formState.userConfig?.inputBoxStyle}
             id="transactionDate"
             label={t(formState.formElements.transactionDate.label)}

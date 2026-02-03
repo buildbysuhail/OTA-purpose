@@ -12,9 +12,10 @@ import { InvAccTransaction, TransactionFormState, VoucherElementProps } from "..
 import { isNullOrUndefinedOrEmpty, isNullOrUndefinedOrZero } from "../../../../../utilities/Utils";
 
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
-import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../../../utilities/hooks/useAppDispatch";
 import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../../reducer";
 import { LedgerType } from "../../../../../enums/ledger-types";
+import { RootState } from "../../../../../redux/store";
 // Memoize ErpDevGrid to prevent unnecessary re-renders
 const MemoizedErpDevGrid = React.memo(ErpDevGrid, (prevProps, nextProps) => {
   // Only re-render if the 'data' prop changes
@@ -49,6 +50,7 @@ export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown
       const dispatch = useAppDispatch();
       const ledCodeInputRef = useRef<HTMLInputElement>(null);
       const [editingIndex, setEditingIndex] = useState<number | null>(null);
+      const clientSession = useAppSelector((state: RootState) => state.ClientSession);
       const [amountModal, setAmountModal] = useState<AmountModalTransaction>({
         ledCode: "",
         ledgerName: "",
@@ -56,7 +58,7 @@ export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown
         amount: 0,
         remarks: "",
         isIncome: false,
-        showAllList: true,
+        showAllList: false,
         debitCredit: "debit",
         amountFc: 0, //CP
       });
@@ -215,26 +217,31 @@ const handleAmountModal = (
       };
     
     const handleApplyClick = () => {
-    if (total_Debit !== total_Credit) {
-      ERPAlert.show({
-        icon: "warning",
-        text: t("total_debit_and_credit"),
-        title: "",
-      });
-      return;
-    }
+    // if (total_Debit !== total_Credit) {
+    //   ERPAlert.show({
+    //     icon: "warning",
+    //     text: t("total_debit_and_credit"),
+    //     title: "",
+    //   });
+    //   return;
+    // }
     gridData.map((x: InvAccTransaction, index: number) => {
       return {
         ...x,
         slNo: index+1
 
       }})
-    dispatch(formStateTransactionIvAccTransactionsRowsUpdate(gridData))
-    dispatch(formStateMasterHandleFieldChange({fields: {
-      adjustmentAmount: totalCredit
-    }}))
-    resetAndCloseModal();
-  };
+     dispatch(formStateTransactionIvAccTransactionsRowsUpdate(gridData))
+      if(formState.transaction.master.voucherType === "SI"){
+        dispatch(
+              formStateMasterHandleFieldChange(
+                {
+                  fields: { adjustmentAmount: totalCredit }
+                }
+        ) )
+      }
+        resetAndCloseModal();
+      };
   
       const gridColumns: DevGridColumn[] = [
     {
@@ -403,7 +410,8 @@ const handleAmountModal = (
                       id: "ledgerID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/?ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Liabilities_Expenses}`,
+                      getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/AccLedgers/`,
+                         params: `ledgerType=${amountModal.showAllList? LedgerType.All: LedgerType.Incomes}`,  // Check other pages and change parameters later
                     }}
                     noLabel={true}
                     enableClearOption={false}

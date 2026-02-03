@@ -144,7 +144,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
   };
 
   const columnstwo: DevGridColumn[] = useMemo(() => {
-    const isPurchase = (input.isInvTrans);
+    const isInvTrans = (input.isInvTrans);
     const idField = input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID";
     const CardCol: DevGridColumn = {
       dataField: idField,
@@ -182,7 +182,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
             }}
           >
             {/* Title/Party Name */}
-            <Tooltip title={isPurchase ? (d?.partyName || "") : (d?.particulars || "")} arrow placement="top-start">
+            <Tooltip title={isInvTrans ? (d?.partyName || "") : (d?.particulars || "")} arrow placement="top-start">
               <Box
                 className="dark:!text-dark-text"
                 sx={{
@@ -199,7 +199,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
                   }
                 }}
               >
-                {isPurchase ? d?.partyName : d?.particulars}
+                {isInvTrans ? d?.partyName : d?.particulars}
               </Box>
             </Tooltip>
 
@@ -253,7 +253,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
                   {dateStr}
                 </Box>
               </Tooltip>
-              <Tooltip title={Math.abs(Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)).toLocaleString("en-IN", { style: "currency", currency: "INR" })} arrow placement="top-start">
+              <Tooltip title={Math.abs(Number(isInvTrans ? d?.grandTotal ?? 0 : d?.amount ?? 0)).toLocaleString("en-IN", { style: "currency", currency: "INR" })} arrow placement="top-start">
                 <Box
                   className="dark:!text-dark-text"
                   sx={{
@@ -271,7 +271,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
                   }}
                 >
                   {Math.abs(
-                    Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+                    Number(isInvTrans ? d?.grandTotal ?? 0 : d?.amount ?? 0)
                   ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
                 </Box>
               </Tooltip>
@@ -280,7 +280,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
             {/* Amount */}
             {/* <Tooltip 
               title={Math.abs(
-                Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+                Number(isInvTrans ? d?.grandTotal ?? 0 : d?.amount ?? 0)
               ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
               arrow 
               placement="top-start"
@@ -298,7 +298,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
                 }}
               >
                 {Math.abs(
-                  Number(isPurchase ? d?.grandTotal ?? 0 : d?.amount ?? 0)
+                  Number(isInvTrans ? d?.grandTotal ?? 0 : d?.amount ?? 0)
                 ).toLocaleString("en-IN", { style: "currency", currency: "INR" })}
               </Box>
             </Tooltip> */}
@@ -342,7 +342,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
       { dataField: "voucherNumber", visible: false, allowFiltering: true, dataType: "string" },
     ];
 
-    return [CardCol, ...(isPurchase ? hiddenForPurchase : hiddenForCash)];
+    return [CardCol, ...(isInvTrans ? hiddenForPurchase : hiddenForCash)];
   }, [t, input.isInvTrans, input.transactionType]);
 
   const MemoizedGrid = useMemo(() => {
@@ -443,6 +443,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
             isInvTrans={input.isInvTrans}
             transactionMasterID={input.transactionMasterID}
             transactionType={input.transactionType}
+            voucherNo={input.voucherNo}
           />
         </Box>
       </Box>

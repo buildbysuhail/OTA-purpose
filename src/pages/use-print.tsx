@@ -2017,11 +2017,18 @@ export const fetchDefaultTemplateFromApi = async (
       formType: formType,
       customerType: customerType,
     });
+    const isValidTemplateResponse =
+      res &&
+      typeof res === "object" &&
+      typeof res.id === "number" &&
+      res.id > 0 &&
+      res.content != null;
 
-    if (res == "" || !res.id || res.id <= 0 || res.content == null) {
-      console.warn("No default template response received.");
+    if (!isValidTemplateResponse) {
+      console.warn("No default template response received.", res);
       return null;
     }
+
     const templateContent = await decompressData(res.content);
     const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(
       res,

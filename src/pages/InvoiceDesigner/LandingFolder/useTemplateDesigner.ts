@@ -87,7 +87,7 @@ export const useTemplateDesigner = <T=unknown,>({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
-  const activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);;
+  let activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
  // State
   const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
   const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
@@ -106,7 +106,8 @@ export const useTemplateDesigner = <T=unknown,>({
   const previewContainerRef = useRef<HTMLDivElement>(null);
   const currentMasterIdRef = useRef<number | null | undefined>(null);
   const lastFetchedTemplateIdRef = useRef<number | null>(null);
-  
+  const autoTemplateResolvedRef = useRef(false);
+
   // Create consolidated template style properties object
   const templateStyleProperties = useMemo(() => {
     const pageOrientation =
@@ -189,9 +190,9 @@ useEffect(() => {
         }
         
         if (!isActive) return;
-        if (_template) {
-          dispatch(setTemplate(_template));
-        }
+          dispatch(setTemplate(_template)); // or initial empty template
+          autoTemplateResolvedRef.current = true;
+  
       }
     } catch (err) {
       if (isActive) {
@@ -238,7 +239,11 @@ useEffect(() => {
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
     const updateProps = async () => {
-      if (!activeTemplate || !printData) return;
+    //    if (!activeTemplate) {
+    //   setStableTemplateProps(null); 
+    //   return;
+    // }
+    // if (!printData) return;
 
       try {
         // Generate QR codes
@@ -260,7 +265,7 @@ useEffect(() => {
           qrCodeImages: qrImages
         };
 
-        setStableTemplateProps(props);
+        setStableTemplateProps(props)
       } catch (err) {
         console.error("Error updating props:", err);
       }
@@ -272,16 +277,19 @@ useEffect(() => {
   // Effect: Handle user template selection
 useEffect(() => {
 
-  if (!manuvalTemplateFeatch) return;
+  ;if (!manuvalTemplateFeatch) return;
     // Detect MasterIDParam change (new transaction)
   const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;
   
   if (isMasterIdChanged) {
     // New transaction - sync refs and skip fetch
     currentMasterIdRef.current = MasterIDParam;
-    lastFetchedTemplateIdRef.current = lastChoosedTemplate?.id ?? null;
+    lastFetchedTemplateIdRef.current =  null;
+    autoTemplateResolvedRef.current = false; // 🔴 invalidate manual restore
     return; // Let Effect 1 handle default template
   }
+    // 🔒 Block manual restore until auto-fetch finishes
+  if (!autoTemplateResolvedRef.current) return;
   const newTemplateId = lastChoosedTemplate?.id ?? null;
   
   if (newTemplateId === null || newTemplateId === lastFetchedTemplateIdRef.current) return;
@@ -413,40 +421,6 @@ useEffect(() => {
 
       const initial = templateInitialState().activeTemplate;
       const cleanedTemplate = removeDefaults(activeTemplates, initial);
-      // dispatch(setTemplate(_returnData));
-
-// const taxType = userSession.countryId == Countries.India ? "GST" : "VAT"      
-// const templateViewToCopy: any = {
-//   TemplateType: activeTemplate.propertiesState?.template_type ?? "standard",
-//   TemplateKind: activeTemplate.propertiesState?.template_kind ?? "",
-//   TemplateGroup: activeTemplate.propertiesState?.template_group ?? "",
-//   TemplateName:
-//     `${templateGroup}-${taxType}-${
-//       activeTemplate.propertiesState?.template_kind === "universal" ? "UN" : "STD"
-//     }-${templateKind.toUpperCase()}`,
-
-//   Content: compressedContent, // or tmpTemplate if you want raw before compression
-//   TemplateDescription: "",
-
-//   thumbImage,
-//   background_image: backgroundImage,
-//   background_image_header: backgroundImageHeader,
-//   background_image_footer: backgroundImageFooter,
-//   signature_image: signatureImage,
-
-//   TaxType: tmpTemplate.propertiesState?.template_formType ?? "",
-// };
-// const copyText = JSON.stringify(templateViewToCopy, null, 2);
-
-// // Alert preview
-// alert(copyText);
-// console.log(`('${templateViewToCopy.TemplateType}','en','${templateViewToCopy.TemplateGroup}','${templateViewToCopy.TemplateName}','${templateViewToCopy.Content}',NULL,'${templateViewToCopy.thumbImage}',NULL,NULL,NULL,NULL,'${taxType}'),`);
-
-// // Auto-copy
-// navigator.clipboard.writeText(copyText).catch(() => {
-//   console.warn("Clipboard copy failed");
-// });
-// return;
       try {
         const res = await api.postAsync(Urls.templates, cleanedTemplate);
         handleResponse(res, () => {

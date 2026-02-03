@@ -18,6 +18,7 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import urls from "../../../redux/urls";
 import { TransactionDetail } from "../../inventory/transactions/transaction-types";
 import { AccTransactionRow } from "./acc-transaction-types";
+import { Link } from "react-router-dom";
 
 export interface TransactionViewProps {
   voucherType?: string;
@@ -185,7 +186,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
       >
         <header className="fixed z-40 w-[-webkit-fill-available] h-[52px] bg-white dark:bg-dark-bg-card flex items-center justify-between gap-4 px-6 py-3 border-b border-gray-200 dark:border-dark-border">
           <h1 className="text-sm md:text-sm font-semibold tracking-tight text-[color:var(--color-foreground)] dark:!text-dark-text">
-            {`INV-${String(stableTemplateProps?.data?.master?.voucherNumber || "")}`}
+            {`INV-${String(stableTemplateProps?.data?.master?.voucherNumber||"__")}`}
           </h1>
 
           <div className="flex items-center gap-1 border border-gray-200 dark:border-dark-border rounded-md bg-white dark:bg-dark-bg-card p-0.5">
@@ -302,9 +303,19 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
                         isInvTrans={props.isInvTrans}
                       />
                       : (
-                        <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 italic">
-                          ...No Template Found
-                        </div>
+                      <div className="flex items-center justify-center h-full italic">
+                        <span className="text-gray-500 dark:text-gray-400">
+                          ...No Template Found.&nbsp;
+                        </span>
+
+                        <Link
+                          to="/templates/new"
+                          className="text-blue-600 hover:underline dark:text-blue-400"
+                        >
+                          Create Template
+                        </Link>
+                      </div>
+
                       )
                   )}
                 </div>

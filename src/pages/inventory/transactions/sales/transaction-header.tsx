@@ -797,9 +797,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
 
                 
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-                    <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
+                <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
                       {t(formState.transaction.master.customerType)}
                     </span>
 

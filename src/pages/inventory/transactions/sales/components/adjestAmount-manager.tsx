@@ -16,6 +16,10 @@ import { useAppDispatch, useAppSelector } from "../../../../../utilities/hooks/u
 import { formStateMasterHandleFieldChange, formStateTransactionIvAccTransactionsRowsUpdate } from "../../reducer";
 import { LedgerType } from "../../../../../enums/ledger-types";
 import { RootState } from "../../../../../redux/store";
+// -------------------------------------------
+// In Sales Is income Is not needed, So we can remove the section in future after checking
+// Note that InvAccTransaction is common
+// -------------------------------------------
 // Memoize ErpDevGrid to prevent unnecessary re-renders
 const MemoizedErpDevGrid = React.memo(ErpDevGrid, (prevProps, nextProps) => {
   // Only re-render if the 'data' prop changes
@@ -50,7 +54,6 @@ export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown
       const dispatch = useAppDispatch();
       const ledCodeInputRef = useRef<HTMLInputElement>(null);
       const [editingIndex, setEditingIndex] = useState<number | null>(null);
-      const clientSession = useAppSelector((state: RootState) => state.ClientSession);
       const [amountModal, setAmountModal] = useState<AmountModalTransaction>({
         ledCode: "",
         ledgerName: "",
@@ -71,7 +74,9 @@ export const AdjustmentAmountManager=({formState,transactionType,t,handleKeyDown
   const total_Credit = gridData.reduce((sum, item) => sum + Number(item.credit), 0);
   // Total credit value based on Is Income
   const totalCredit = gridData.reduce((sum, item) => {
-    const value = item.isIncome ? sum-Number(item.credit) : sum+Number(item.credit);
+    // Is income is npt show in sales, so the below code commented
+    // const value = item.isIncome ? sum-Number(item.credit) : sum+Number(item.credit);
+    const value = sum + Number(item.credit); // Above code will becomes like this
     return value;
   },0)
   // Total amountFc value, now it set as totalCredit value based on income
@@ -145,13 +150,11 @@ const handleAmountModal = (
 
       const handleAddClick = () => {
         if (
-          isNullOrUndefinedOrEmpty(amountModal.ledgerID) ||
-          isNullOrUndefinedOrZero(amountModal.amount)
-        ) {
+          isNullOrUndefinedOrEmpty(amountModal.ledgerID) || isNullOrUndefinedOrZero(amountModal.amount)) {
           ERPAlert.show({
             icon: "warning",
-            text: t("invalid_zero_amount"),
-            title: "",
+            text: t(""),  // "Invalid amount or ledger, please check!"
+            title: t("invalid_zero_amount"),
           });
           return;
         }
@@ -317,15 +320,15 @@ const handleAmountModal = (
       width: 100,
       visible: false,
     },
-    {
-      dataField: "isIncome",
-      caption: t("is_income"),
-      dataType: "boolean",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
+    // {    Check is this filed needed
+    //   dataField: "isIncome",
+    //   caption: t("is_income"),
+    //   dataType: "boolean",
+    //   allowSorting: true,
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    // },
     {
       dataField: "actions",
       caption: t("actions"),
@@ -486,7 +489,8 @@ const handleAmountModal = (
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between">
+                  {/* The is Income is not shows in sales */}
+                  {/* <div className="flex items-center justify-between">
                     <label className="text-xs">{t("remarks")}</label>
                     <ERPCheckbox
                       id="isIncome"
@@ -496,7 +500,7 @@ const handleAmountModal = (
                         handleAmountModal("isIncome", e.target.checked)
                       }
                     />
-                  </div>
+                  </div> */}
                   <ERPInput
                     id="remarks"
                     noLabel={true}

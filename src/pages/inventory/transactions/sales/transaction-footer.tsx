@@ -1576,7 +1576,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <div className={`${footerLayout === "vertical" ? "flex flex-col items-start w-full" : "hidden md:flex flex-col items-start w-full md:w-auto"}`}>
               <div className={`flex ${footerLayout === "vertical" ? "flex-col items-start" : "items-end"} gap-2 mb-2`}>
                 <div className={`flex items-center w-full ${footerLayout === "vertical" ? "justify-between" : "gap-2"}`}>
-                  {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+                  {1==1 && (
                     <CashPaidSection
                       formState={formState}
                       dispatch={dispatch}
@@ -1999,7 +1999,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <div className="flex md:hidden flex-col w-full max-w-full">
           <div className="flex flex-col gap-2 mb-2">
             <div className="flex flex-wrap items-end gap-2 w-full">
-              {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && formState.transaction.master.voucherType !== VoucherType.PurchaseEstimate && (
+              {1 == 1 && (
                 <CashPaidSection
                   formState={formState}
                   dispatch={dispatch}
@@ -2148,13 +2148,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
                 fromVoucherType={
                   isModalOpen.type == "SI_Ref" ? VoucherType.SalesInvoice : formState.transaction.master.voucherType === VoucherType.SalesInvoice ? VoucherType.GoodsReceiptNote : ""
-                  // : formState.transaction.master.voucherType ===
-                  //   VoucherType.GoodsReceiptNote
-                  //   ? VoucherType.PurchaseOrder
-                  //   : formState.transaction.master.voucherType ===
-                  //     VoucherType.PurchaseReturn
-                  //     ? VoucherType.GoodsReceiptReturn
-                  //     : ""
+                  
                 }
                 dispatch={dispatch}
                 formState={formState}
@@ -2206,13 +2200,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 // Need to update this based on the upcoming condition
                 updateDeliveryNoteNumber={["SI", "SR"].includes(isModalOpen.type)}
                 fromVoucherType={isModalOpen.type == "SI_Ref" ? VoucherType.SalesInvoice : formState.transaction.master.voucherType === VoucherType.SalesInvoice ? VoucherType.GoodsReceiptNote : ""
-                  // : formState.transaction.master.voucherType ===
-                  //   VoucherType.GoodsReceiptNote
-                  //   ? VoucherType.PurchaseOrder
-                  //   : formState.transaction.master.voucherType ===
-                  //     VoucherType.PurchaseReturn
-                  //     ? VoucherType.GoodsReceiptReturn
-                  //     : ""
+                
                 }
                 dispatch={dispatch}
                 formState={formState}

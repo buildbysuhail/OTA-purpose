@@ -1518,26 +1518,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.supplierProductReferenceCode =
         detail.supplierReferenceProductCode;
 
-      // GR Transaction details
-      // outputRow.gRTransDetailID = detail.grTransDetailsID;
-
-      // Purchase Order handling
-      // if (
-      //   applicationSettings?.inventorySettings
-      //     ?.carryForwardPurchaseOrderQtyToPurchase
-      // ) {
-      //   outputRow.pOTransDetailID = detail.poTransDetailsID;
-      // } else {
-      //   outputRow.pO_PITransDetailIDs = detail.poTransDetailsID as string;
-      //   try {
-      //     outputRow.pO_PITransDetailQtys = detail.poTransDetailsIDTag as string;
-      //   } catch (error) {
-      //     hasError = true;
-      //     errors.push(
-      //       `Row ${rowNumber}, PO Detail Quantities Column: Error setting PO detail quantities - ${error}`
-      //     );
-      //   }
-      // }
       // Memo and random key
       outputRow.memo = detail.memo;
       outputRow.randomKey = 0;
@@ -1966,47 +1946,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
     return master;
-  };
-  const attachMaster2 = (formState: TransactionFormState) => {
-    const master: TransactionMaster = {
-      ...formState.transaction.master,
-      salesManID: formState.transaction.master.employeeID,
-      voucherPrefix: formState.transaction.master.voucherPrefix || "",
-    };
-
-    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)
-      ? master.displayName
-      : master.partyName;
-    master.invTransactionMasterID = formState.isEdit
-      ? master.invTransactionMasterID
-      : 0;
-    // master.bankDate = new Date().toISOString();
-    master.prevTransDate =
-      master.transactionDate == ""
-        ? moment().local().toISOString()
-        : master.prevTransDate;
-
-    master.cashAmt = master.cashReceived;
-    master.fromWarehouseID =
-      master.fromWarehouseID > 0
-        ? master.fromWarehouseID
-        : master.voucherType == VoucherType.PurchaseReturn
-          ? 0
-          : 1;
-    master.stockUpdate = master.stockUpdate;
-    master.ledgerID = isNullOrUndefinedOrZero(master.ledgerID)
-      ? 0
-      : master.ledgerID;
-    master.supplyType =
-      master.supplyType == undefined || master.supplyType == null
-        ? ""
-        : master.supplyType.toString();
-
-    let _master = sanitizeDataAdvanced(
-      { ...master },
-      TransactionMasterInitialData
-    );
-    return _master;
   };
   async function applySpecialSpriceExactQtyLimitReached(
     qtyLimit: number,

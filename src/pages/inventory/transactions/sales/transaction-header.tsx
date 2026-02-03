@@ -801,81 +801,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       {t(formState.transaction.master.customerType)}
                     </span>
 
-                {(formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn || formState.transaction.master.voucherType ===
-                  VoucherType.GoodsReceiptNote) && (
-                    <div>
-                      <ERPButton
-                        title={t(
-                          getGRNTitle(formState.transaction.master.voucherType)
-                        )}
-                        onClick={() =>
-                          handleButtonClick(
-                            formState.transaction.master.voucherType
-                          )
-                        }
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                        disabled={formState.transactionLoading || formState.formElements.pnlMasters?.disabled}
-                      />
-                    </div>
-                  )}
-
-                {/* {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-                    <OrderNo
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      type="PI_Ref"
-                      label={t("pi_ref")}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                    />
-                  )} */}
-
-                {isModalOpen &&
-                  isModalOpen.visible &&
-                  [
-                    VoucherType.PurchaseInvoice,
-                    VoucherType.PurchaseReturn,
-                    VoucherType.GoodsReceiptNote,
-                  ].includes(
-                    formState.transaction.master.voucherType as VoucherType
-                  ) && (
-                    <ERPModal
-                      isOpen={isModalOpen.visible}
-                      title={getGRNTitle(isModalOpen.type)}
-                      width={600}
-                      height={175}
-                      closeModal={closeModal}
-                      content={
-                        <VoucherLoader
-                          updateDeliveryNoteNumber={["PI", "PR"].includes(isModalOpen.type)}
-                          fromVoucherType={
-                            isModalOpen.type == "PI_Ref"
-                              ? VoucherType.PurchaseInvoice
-                              : formState.transaction.master.voucherType ===
-                                VoucherType.PurchaseInvoice
-                                ? VoucherType.GoodsReceiptNote
-                                : formState.transaction.master.voucherType ===
-                                  VoucherType.GoodsReceiptNote
-                                  ? VoucherType.PurchaseOrder
-                                  : formState.transaction.master.voucherType ===
-                                    VoucherType.PurchaseReturn
-                                    ? VoucherType.GoodsReceiptReturn
-                                    : ""
-                          }
-                          dispatch={dispatch}
-                          formState={formState}
-                          closeModal={closeModal}
-                          t={t}
-                          loadAndSetTransVoucher={loadAndSetTransVoucher}
-                        />
-                      }
-                    />
-                  )}
+                
 
                 {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
                   <div>
@@ -1223,9 +1149,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
 
-                {formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseReturn && (
-                    <ERPInput
+                <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="address2"
                       label={t("address_2")}
@@ -1240,11 +1164,8 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       }
                       disabled={formState.formElements.pnlMasters?.disabled}
                     />
-                  )}
 
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-                    <ERPInput
+                <ERPInput
                       localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="address4"
                       label={t("mobile_number")}
@@ -1261,7 +1182,6 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       }
                       disabled={formState.formElements.pnlMasters?.disabled}
                     />
-                  )}
               </div>
 
               <div className="flex flex-wrap items-end gap-2">
@@ -1279,10 +1199,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   transactionType={transactionType}
                   t={t}
                 />
-                {/* {formState.transaction.master.voucherType !==
-                  VoucherType.GoodsReceiptNote &&
-                  formState.transaction.master.voucherType !==
-                  VoucherType.PurchaseEstimate && ( */}
+                
                 <VatTokenInput
                   formState={formState}
                   dispatch={dispatch}
@@ -1309,41 +1226,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder &&
-                  userSession.dbIdValue === "572054329920" && (
-                    <ERPDataCombobox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      enableClearOption={false}
-                      fetching={formState.transactionLoading}
-                      id="orderStatus"
-                      className="min-w-[180px] !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                      label={t(formState.formElements.orderStatus.label)}
-                      data={formState.transaction.master}
-                      field={{
-                        valueKey: "id",
-                        labelKey: "name",
-                        getListUrl: Urls.data_order_status,
-                      }}
-                      disabled={
-                        formState.formElements.cbLabelDesign.disabled ||
-                        formState.formElements.pnlMasters?.disabled
-                      }
-                      disableEnterNavigation
-                      onKeyDown={(e: any) => {
-                        handleKeyDown && handleKeyDown(e, "labelDesign");
-                      }}
-                    />
-                  )}
-
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder &&
-                  formState.transaction.hasApproved === true && (
-                    <span className="bg-gradient-to-r from-green-400 to-green-600 p-2 rounded-xl text-white font-medium shadow-lg">
-                      {t("approved")}
-                    </span>
-                  )}
-
+                
                 {formState.transaction.master.voucherType ===
                   VoucherType.SalesOrder &&
                   formState.transaction.hasApproved !== true && (
@@ -1356,74 +1239,15 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     </div>
                   )}
 
-                {/* {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseOrder && (
-                  <div>
-                    <ERPButton
-                      title={t("update_status")}
-                      variant="secondary"
-                      onClick={() => setUpdateTriggered(true)}
-                    />
-                  </div>
-                )} */}
+              
 
-                {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-                    <ERPCheckbox
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      id="inventoryUpdate"
-                      className="text-left !m-0 dark:text-dark-text"
-                      label={t("inventory_update")}
-                      checked={formState.transaction.master.stockUpdate}
-                      onChange={(e) => {
-                        dispatch(
-                          formStateMasterHandleFieldChange({
-                            fields: { stockUpdate: e.target.checked },
-                          })
-                        );
-                      }}
-                      disabled={formState.formElements.pnlMasters?.disabled}
-                    />
-                  )}
                     <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
                       {t(formState.transaction.master.customerType)}
                     </span>
               </div>
 
               <div className="flex items-center gap-2 mt-2">
-                {(formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseInvoice || formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn || formState.transaction.master.voucherType ===
-                  VoucherType.GoodsReceiptNote) && (
-                    <div>
-                      <ERPButton
-                        title={t(
-                          getGRNTitle(formState.transaction.master.voucherType)
-                        )}
-                        onClick={() =>
-                          handleButtonClick(
-                            formState.transaction.master.voucherType
-                          )
-                        }
-                        localInputBox={formState?.userConfig?.inputBoxStyle}
-                        className="!m-0 dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                        disabled={formState.transactionLoading}
-                      />
-                    </div>
-                  )}
-                {/* {formState.transaction.master.voucherType ===
-                  VoucherType.PurchaseReturn && (
-
-                    <OrderNo
-                      localInputBox={formState?.userConfig?.inputBoxStyle}
-                      formState={formState}
-                      dispatch={dispatch}
-                      t={t}
-                      type="PI_Ref"
-                      label={t("pi_ref")}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                    />
-                  )} */}
+                
 
                 {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
 
@@ -1437,40 +1261,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                 )}
               </div>
 
-              {/* Modals */}
-              {isModalOpen && isModalOpen.visible && (
-                <ERPModal
-                  isOpen={isModalOpen.visible}
-                  title={isModalOpen.type}
-                  width={600}
-                  height={280}
-                  closeModal={closeModal}
-                  content={
-                    <VoucherLoader
-                      updateDeliveryNoteNumber={["PI", "PR"].includes(isModalOpen.type)}
-                      fromVoucherType={
-                        isModalOpen.type == "PI_Ref"
-                          ? VoucherType.PurchaseInvoice
-                          : formState.transaction.master.voucherType ===
-                            VoucherType.PurchaseInvoice
-                            ? VoucherType.GoodsReceiptNote
-                            : formState.transaction.master.voucherType ===
-                              VoucherType.GoodsReceiptNote
-                              ? VoucherType.PurchaseOrder
-                              : formState.transaction.master.voucherType ===
-                                VoucherType.PurchaseReturn
-                                ? VoucherType.GoodsReceiptReturn
-                                : ""
-                      }
-                      dispatch={dispatch}
-                      formState={formState}
-                      closeModal={closeModal}
-                      t={t}
-                      loadAndSetTransVoucher={loadAndSetTransVoucher}
-                    />
-                  }
-                />
-              )}
+             
               {
                 isMoreModalOpen && (
                   <ERPModal

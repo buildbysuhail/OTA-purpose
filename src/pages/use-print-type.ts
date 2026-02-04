@@ -343,6 +343,13 @@ heading1: string;
   footer9: string;
   footer10: string;
 }
+export interface LedgerReportDataForPrint {
+ledgerId: number;
+  asOnDate?: Date;        // or string if coming as ISO string from API
+  code: string;
+  customerAccName: string;
+  balance: number;
+}
 export interface PrintDetailDto {
   slNo: number;
   invTransactionDetailID: number;

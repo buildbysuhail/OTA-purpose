@@ -1,10 +1,10 @@
 
 import { OptionGroup } from "../../components/ERPComponents/erp-grouped-combo";
-import { initialHeaderFooter } from "../../redux/slices/user-session/reducer";
+import { initialHeaderFooter, initialLedgerReportDataForPrint } from "../../redux/slices/user-session/reducer";
 import { modelToListFromObject } from "../../utilities/Utils";
 import { TransactionMasterInitialData, initialTransactionDetailData, initialProductData } from "../inventory/transactions/transaction-type-data";
 import { TransactionMaster, TransactionDetail, BarcodeLabel } from "../inventory/transactions/transaction-types";
-import { CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
+import { CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, LedgerReportDataForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
 import { initialCompanyDetailsForPrint, initialInvDetail2ForPrint, initialPartyDetailsForPrint, initialPrintCustomFields, initialPrintDetailDto, initialPrintMasterDto } from "../use-print-type-data";
 interface fdf {
   fdd: number
@@ -18,6 +18,7 @@ export const inventoryFields: OptionGroup[] = [
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
+  { groupName: 'LedgerReport', options: modelToListFromObject<LedgerReportDataForPrint>(initialLedgerReportDataForPrint, "ledgerReportDataForPrint___") },
 ];
 export const accountsFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields, "custom___") },

@@ -1263,13 +1263,28 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         ) : row.cst;
       }
 
-      detail.ratePlusTax = [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal
-        ? row.rateWithTax
-        : [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) && !clientSession.isAppGlobal ?
-          row.rateWithTax
-          : [VoucherType.SalesReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
-            ? Math.round((Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100)) * 100) / 100
-            : getFormattedValueIgnoreRoundingToNumber(Number(row.rateWithTax || 0));
+      // detail.ratePlusTax = [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal
+      //   ? row.rateWithTax
+      //   : [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) && !clientSession.isAppGlobal ?
+      //     row.rateWithTax
+      //     : [VoucherType.SalesReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
+      //       ? Math.round((Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100)) * 100) / 100
+      //       : getFormattedValueIgnoreRoundingToNumber(Number(row.rateWithTax || 0));
+
+      if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any) && clientSession.isAppGlobal) {
+        detail.ratePlusTax = row.rateWithTax;
+      } else if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) && !clientSession.isAppGlobal) {
+        detail.ratePlusTax = row.rateWithTax;
+      } else if ([VoucherType.SalesReturn, VoucherType.ServiceInvoice,VoucherType.GoodRequest].includes(voucherType as any)) {
+        detail.ratePlusTax =
+          Math.round(
+            Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100) * 100
+          ) / 100;
+      } else {
+        detail.ratePlusTax = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.rateWithTax || 0)
+        );
+      }
       detail.productDescription = row.productDescription;
       detail.actualSalesPrice = row.transMRP;
       detail.memo = row.memo;

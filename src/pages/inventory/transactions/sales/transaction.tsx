@@ -53,7 +53,6 @@ import QtyFactorsModal from "./qty-factors";
 import Serials from "./serials";
 import Flavours from "./flavours";
 import TransactionFooter from "./transaction-footer";
-import { purchaseGridCol } from "./transaction-grid-cols";
 import TransactionHeader from "./transaction-header";
 import UnsavedChangesModal from "./unsavedChangesModal";
 import { useTransaction } from "./use-transaction";

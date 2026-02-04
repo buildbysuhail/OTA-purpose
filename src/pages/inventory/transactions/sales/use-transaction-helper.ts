@@ -1518,26 +1518,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.supplierProductReferenceCode =
         detail.supplierReferenceProductCode;
 
-      // GR Transaction details
-      // outputRow.gRTransDetailID = detail.grTransDetailsID;
-
-      // Purchase Order handling
-      // if (
-      //   applicationSettings?.inventorySettings
-      //     ?.carryForwardPurchaseOrderQtyToPurchase
-      // ) {
-      //   outputRow.pOTransDetailID = detail.poTransDetailsID;
-      // } else {
-      //   outputRow.pO_PITransDetailIDs = detail.poTransDetailsID as string;
-      //   try {
-      //     outputRow.pO_PITransDetailQtys = detail.poTransDetailsIDTag as string;
-      //   } catch (error) {
-      //     hasError = true;
-      //     errors.push(
-      //       `Row ${rowNumber}, PO Detail Quantities Column: Error setting PO detail quantities - ${error}`
-      //     );
-      //   }
-      // }
       // Memo and random key
       outputRow.memo = detail.memo;
       outputRow.randomKey = 0;
@@ -1792,9 +1772,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       /** ---------------- Cash / Bank ---------------- */
       cashAmt: m.cashReceived,
-      bankAmt: m.bankAmt,
+      bankAmt:[VoucherType.SalesInvoice].includes(m.voucherType as any)? m.bankAmt:isCashOrBank && m.voucherType == VoucherType.SalesReturn
+      ? m.grandTotal - m.cashAmt:0,
       couponAmt: m.couponAmt,
-
       creditAmt:
         isCashOrBank === false && !clientSession.isAppGlobal
           ? Math.max(
@@ -1910,27 +1890,40 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     if (master.voucherType == VoucherType.SalesInvoice && applicationSettings.branchSettings.maintainKSA_EInvoice && master.voucherForm == "VAT") {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
-    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,
-      VoucherType.SalesQuotation,VoucherType.GoodsDeliveryNote].includes(master.voucherType as any)
+    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
+    VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(master.voucherType as any)
       && applicationSettings.branchSettings.maintainKSA_EInvoice) {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }
-    if (master.cashReturned > 0) {
+    if (master.cashReturned > 0 && [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)) {
       master.cashAmt -= master.cashReturned;
     }
     if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any)) {
       master.cashReturned = master.cashReceived;
     }
-    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal) {
+    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt - m.srAmount
     }
-    if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal) {
+    if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt;
     }
-    if (userSession.dbIdValue == "543140180640" && !clientSession.isAppGlobal) {
+    if (userSession.dbIdValue == "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.creditAmt = master.grandTotal;
       master.cashAmt = 0;
     }
+    if (master.cashAmt > master.grandTotal && master.voucherType == VoucherType.SalesReturn && !clientSession.isAppGlobal) {
+      master.cashAmt = master.grandTotal;
+    }
+    if (isCashOrBank && m.voucherType == VoucherType.SalesReturn && clientSession.isAppGlobal) {
+      master.cashAmt = m.grandTotal;
+    }
+     if(m.voucherType==VoucherType.SalesReturn && clientSession.isAppGlobal){
+      m.bankAmt=0;
+     }
+    if (m.voucherType == VoucherType.GoodsDeliveryNote || m.voucherType == VoucherType.ServiceInvoice) {
+      m.cashAmt = 0;
+    }
+
     /** ---------------- BT Exception ---------------- */
     if (m.voucherForm === "BT") {
       master.isLocked = false;
@@ -1953,47 +1946,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
     return master;
-  };
-  const attachMaster2 = (formState: TransactionFormState) => {
-    const master: TransactionMaster = {
-      ...formState.transaction.master,
-      salesManID: formState.transaction.master.employeeID,
-      voucherPrefix: formState.transaction.master.voucherPrefix || "",
-    };
-
-    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)
-      ? master.displayName
-      : master.partyName;
-    master.invTransactionMasterID = formState.isEdit
-      ? master.invTransactionMasterID
-      : 0;
-    // master.bankDate = new Date().toISOString();
-    master.prevTransDate =
-      master.transactionDate == ""
-        ? moment().local().toISOString()
-        : master.prevTransDate;
-
-    master.cashAmt = master.cashReceived;
-    master.fromWarehouseID =
-      master.fromWarehouseID > 0
-        ? master.fromWarehouseID
-        : master.voucherType == VoucherType.PurchaseReturn
-          ? 0
-          : 1;
-    master.stockUpdate = master.stockUpdate;
-    master.ledgerID = isNullOrUndefinedOrZero(master.ledgerID)
-      ? 0
-      : master.ledgerID;
-    master.supplyType =
-      master.supplyType == undefined || master.supplyType == null
-        ? ""
-        : master.supplyType.toString();
-
-    let _master = sanitizeDataAdvanced(
-      { ...master },
-      TransactionMasterInitialData
-    );
-    return _master;
   };
   async function applySpecialSpriceExactQtyLimitReached(
     qtyLimit: number,
@@ -3285,6 +3237,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
       };
+      debugger;
       let billDisc = 0,
         totalGross = 0,
         itemGross = 0,
@@ -3292,14 +3245,15 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         itemDisc = 0,
         discPerc = 0;
 
-      let details = formState.transaction.details.filter(
+      let details = [...formState.transaction.details.filter(
         (x) => x.productID > 0
-      );
+      )];
       billDisc = formState.transaction.master.billDiscount;
       outState.transaction!.master!.billDiscount = 0;
       // Calculate total gross for items with productID > 0
       totalGross = formState.summary.gross;
       // Apply discount to each item with productID > 0
+      let updatedRows: DeepPartial<TransactionDetail>[] = [];
       if (details.length > 0) {
         for (let i = 0; i < details.length; i++) {
           const item = details[i];
@@ -3316,13 +3270,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             true
           );
           if (updatedRow?.transaction?.details?.length ?? 0 > 0) {
-            outState.transaction!.details!.push(
-              updatedRow.transaction!.details![0]
+            updatedRows!.push(
+              updatedRow.transaction!.details![0] as any
             );
-            return { ...item, ...updatedRow.transaction!.details![0] };
           }
 
-          details[i] = item;
+          details[i] = { ...item, ...updatedRow.transaction!.details![0] };
         }
 
         const summaryRes = await calculateSummary(details, formState, {
@@ -3343,8 +3296,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           totalRes.transaction = totalRes.transaction ?? {};
           totalRes.transaction.master = totalRes.transaction.master ?? {};
           totalRes.transaction.master.billDiscount = 0;
-          totalRes.transaction.details = outState?.transaction
-            ?.details as TransactionDetail[];
+          totalRes.transaction.details = details
 
           dispatch(
             formStateHandleFieldChangeKeysOnly({

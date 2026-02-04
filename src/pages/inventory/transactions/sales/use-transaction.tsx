@@ -1034,15 +1034,13 @@ debugger;
     // }
     isVoucherPrefix = isVoucherPrefix ? isVoucherPrefix : false;
     isVoucherPrefix =
-      !clientSession.isAppGlobal && voucherType == VoucherType.PurchaseReturn
-        ? true
-        : isVoucherPrefix;
-    const response = voucherType !== "LPO" ? await api.getAsync(
+      isVoucherPrefix;
+    const response = await api.getAsync(
       `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
       `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
       }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
-    ) : undefined;
+    ) ;
 
     const nextVoucherNumber = response || { voucherNumber: 1, voucherPrefix: "" };
 
@@ -4887,11 +4885,11 @@ debugger;
       const workbook = new ExcelJS.Workbook();
 
       // Set workbook properties
-      workbook.creator = "Purchase Import System";
+      workbook.creator = "Sales Import System";
       workbook.created = new Date();
 
-      // Add Purchase worksheet
-      const worksheet = workbook.addWorksheet("Purchase", {
+      // Add Sales worksheet
+      const worksheet = workbook.addWorksheet("Sales", {
         properties: {
           tabColor: { argb: "FF0070C0" },
         },
@@ -4961,7 +4959,7 @@ debugger;
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Purchase_Import_Template_${new Date().toISOString().split("T")[0]
+      link.download = `Sales_Import_Template_${new Date().toISOString().split("T")[0]
         }.xlsx`;
       link.style.display = "none";
 
@@ -4992,14 +4990,14 @@ debugger;
       const fileBuffer = await file.arrayBuffer();
       await workbook.xlsx.load(fileBuffer);
 
-      // Get 'Purchase' worksheet
-      const purchaseWorksheet = workbook.getWorksheet("Purchase");
-      if (!purchaseWorksheet) {
-        throw new Error("Purchase worksheet not found in the Excel file");
+      // Get 'Sales' worksheet
+      const salesWorksheet = workbook.getWorksheet("Sales");
+      if (!salesWorksheet) {
+        throw new Error("Sales worksheet not found in the Excel file");
       }
 
       // Get the range of used cells
-      const rowCount = purchaseWorksheet.rowCount;
+      const rowCount = salesWorksheet.rowCount;
 
       if (rowCount <= 1) {
         throw new Error("No data rows found in the Excel file");
@@ -5009,7 +5007,7 @@ debugger;
       const excelData: ExcelRowData[] = [];
 
       for (let rowNumber = 2; rowNumber <= rowCount; rowNumber++) {
-        const row = purchaseWorksheet.getRow(rowNumber);
+        const row = salesWorksheet.getRow(rowNumber);
 
         // Skip empty rows
         if (!row.hasValues) {

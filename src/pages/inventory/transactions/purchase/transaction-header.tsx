@@ -1057,7 +1057,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
                     label={t(formState.formElements.cbLabelDesign.label)}
                     data={formState.transaction.master}
-                    onSelectItem={(e) => {
+                    onSelectItem={async (e) => {
+                      let barcodeTem =
+                        await loadTemplateById<TransactionDetail>(e.value);
+                      dispatch(
+                        formStateHandleFieldChange({
+                          fields: { barcodeTemplate: barcodeTem },
+                        })
+                      );
                       dispatch(
                         formStateMasterHandleFieldChange({
                           fields: { labelDesignID: e.value },
@@ -1067,16 +1074,18 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     }}
                     value={formState.transaction.master.labelDesignID}
                     field={{
+                      params: `TemplateType=barcode`,
                       id: "labelDesignID",
                       valueKey: "id",
                       labelKey: "name",
+                      getListUrl: Urls.data_templates,
                     }}
                     disabled={
                       formState.formElements.cbLabelDesign.disabled ||
                       formState.formElements.pnlMasters?.disabled
                     }
                     disableEnterNavigation
-                    onKeyDown={(e) => {
+                    onKeyDown={(e: any) => {
                       handleKeyDown && handleKeyDown(e, "labelDesign");
                     }}
                   />

@@ -12,7 +12,7 @@ const api = new APIClient();
 
 let openAuthModal:| ((action: string) => Promise<boolean>)| null = null;
 
-export const EditAuthorization = (action:string): Promise<boolean> => {
+export const SalesAuthorization = (action:string): Promise<boolean> => {
   return openAuthModal ? openAuthModal(action) : Promise.resolve(false);
 };
 

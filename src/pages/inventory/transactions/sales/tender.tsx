@@ -138,7 +138,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   useEffect(() => {
     const additionalAmt = formState.transaction.master.adjustmentAmount; // Additional amount
     const couponAmt = formState.transaction.master.couponAmt || 0;  // Coupon anount
-    const totalNet = (formState.summary.netValue || 0) - (formState.transaction.master.srAmount || 0); // net amount value
+    let totalNet = 0;
+    if(allowMultiPayment){
+      totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0); // Total summary value is using Now check It
+      totalNet = totalNet + additionalAmt + roundOf - couponAmt;
+    }else{
+      totalNet = formState.summary.netValue || 0;
+      totalNet = totalNet + additionalAmt;
+    }
     const round = formState.transaction.master.roundAmount || 0; // round amount
 
     // Set the values into state initially
@@ -700,7 +707,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                     className="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold px-3 py-2 rounded-md transition-colors flex-shrink-0"
                     onClick={handleAddCashClick}
                   >
-                  {t("add")}
+                  {t("add").toUpperCase()}
                   </button>
                 )}
                 <input

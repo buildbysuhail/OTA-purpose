@@ -48,7 +48,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
           });
 
         // 1️⃣ First attempt: exact match
-        let response = await fetchFiltered(formType, customerType);
+        let response = await fetchFiltered(formType??"", customerType??"");
 
         // 2️⃣ Fallback: empty tax type (if enabled)
         if (
@@ -94,7 +94,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
       setTemplateLoad(true)
       try {
         if (!template || isNullOrUndefinedOrEmpty(template.id)) return null;
-        const _template = await fetchTemplateById(template.id, template.templateGroup ?? "", template.customerType, template.formType);
+        const _template = await fetchTemplateById(template.id, template.templateGroup ?? "", template?.customerType??"", template?.formType??"");
         if (!_template) {
           console.warn("Template not found or failed to parse.");
           return;

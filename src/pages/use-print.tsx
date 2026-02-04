@@ -2050,8 +2050,8 @@ export const fetchDefaultTemplateFromApi = async (
 export const fetchTemplateById = async (
   id: any,
   templateGroup: string,
-  customerType: string = "",
-  formType: string = ""
+  customerType: string ,
+  formType: string
 ): Promise<TemplateState<unknown> | null> => {
   try {
     debugger;

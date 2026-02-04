@@ -139,7 +139,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
           {/* Preview Content   overflow-y-auto overflow-x-hidden  flex h-auto max-h-[${maxHeight - 100}px] flex-col gap-1*/}
           <ERPScrollArea className={`overflow-auto  flex-1 p-6 bg-gray-50 dark:bg-dark-bg-card`}
             maxHeight={maxHeight - 100}>
-            <div className="flex justify-center"  >
+            <div className="flex justify-center">
               <div className="relative">
                 {/* Preview Container with Modern Styling */}
                 <div 

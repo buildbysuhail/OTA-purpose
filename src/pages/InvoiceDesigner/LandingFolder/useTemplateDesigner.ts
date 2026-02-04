@@ -175,8 +175,8 @@ useEffect(() => {
       if (manuvalTemplateFeatch && data) {
         let _template = await getOrFetchTemplate(
           data?.master?.voucherType,
-          data?.master?.voucherForm,
-          data?.master?.customerType
+          data?.master?.voucherForm??"",
+          data?.master?.customerType??""
         );
 
         if ((!_template || _template.content == null)&&

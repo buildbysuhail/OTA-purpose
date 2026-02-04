@@ -19,6 +19,7 @@ import urls from "../../../redux/urls";
 import { TransactionDetail } from "../../inventory/transactions/transaction-types";
 import { AccTransactionRow } from "./acc-transaction-types";
 import { Link } from "react-router-dom";
+import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
 
 export interface TransactionViewProps {
   voucherType?: string;
@@ -43,6 +44,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
   const { searchQuery } = useSearch();
   const { t } = useTranslation("transaction");
   const { printVoucher, } = useCommenPrint();
+   const { directPrint } = useDirectPrint();
   const formState = props?.isInvTrans
     ? useAppSelector((state: RootState) => state.InventoryTransaction)
     : useAppSelector((state: RootState) => state.AccTransaction);
@@ -212,32 +214,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
 
               onClick={async () =>
-                await printVoucher(
-                  0,                           // masterID (not needed, data already loaded)
-                  "",                          // transactionType (not needed)
-                  "",                          // voucherType (not needed)
-                  "",                          // formType (not needed)
-                  "",                          // customerType (not needed)
-                  props.isInvTrans,                       // isInvTrans (not needed)
-                  false,                       // printPreview (false to actually print/download)
-                  stableTemplateProps?.template ?? "",          // printTemplate (the actual template)
-                  undefined,                   // transDate
-                  stableTemplateProps?.data,               // printData (the actual data)
-                  undefined                   //lastchoose tempId
-                )
-                //  await printVoucher(
-                //     props.transactionMasterID??0,  // masterID
-                //     props.transactionType ?? "",                       // transactionType
-                //     props.voucherType??'',        // voucherType
-                //     props.formType??'',           // formType
-                //     props.customerType??'',       // customerType
-                //     props.isInvTrans,        //isInv
-                //     false,        //print privew
-                //     undefined,        // printTemplate (the actual template)                                    // printTmeplate (optional)
-                //     undefined,   // transDate
-                //     undefined,  //tmepData
-                //     stableTemplateProps?.template?.id //lastchoose tempId
-                //   )
+                await directPrint({ template:stableTemplateProps?.template, data: stableTemplateProps?.data,})
               }
               title="PDF/Print"
               aria-label="PDF/Print"
@@ -309,7 +286,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
                         </span>
 
                         <Link
-                          to="/templates/new"
+                          to={`/templates?template_group=${stableTemplateProps?.data?.master?.voucherType?? ""}`}
                           className="text-blue-600 hover:underline dark:text-blue-400"
                         >
                           Create Template

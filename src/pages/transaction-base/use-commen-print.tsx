@@ -48,9 +48,9 @@ export const useCommenPrint = () => {
     if (printTmeplate) {
       template = printTmeplate;
       } else if (templateId) {
-      template = await fetchTemplateById(templateId,voucherType,customerType,formType);
+      template = await fetchTemplateById(templateId,voucherType,customerType??"",formType??"");
       } else {
-      template = await getOrFetchTemplate(voucherType ?? '', formType, customerType);
+      template = await getOrFetchTemplate(voucherType, formType??"", customerType??"");
       if (!template&& appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing) {
       template = await getOrFetchTemplate(voucherType ?? '', '', '');
       }

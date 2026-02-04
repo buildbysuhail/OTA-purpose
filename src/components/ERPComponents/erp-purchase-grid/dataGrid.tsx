@@ -1457,7 +1457,7 @@ const VirtualRow = React.memo(
       </>
     );
   }
-);
+); 
 
 const UltraFastReorderableVirtualTableGrid = forwardRef(
   function ErpPurchaseGrid<T extends DataItem>(

@@ -86,7 +86,7 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDe
             boxSizing: "border-box",
           }}
         >
-          <SharedPrvTable data={data?.details ?? []} template={template} />
+          <SharedPrvTable data={data?.details ?? []} template={template} isAutoHeight={isAutoHeight} />
         </div>
         {/* Hoverable Customize Button */}
         {!isTemplateDesigner && (

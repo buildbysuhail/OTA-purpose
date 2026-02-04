@@ -8,6 +8,7 @@ import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import moment from "moment";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { de } from "date-fns/locale";
 
 interface printStatement {
     orientation:"portrait"|"landscape";
@@ -72,6 +73,7 @@ export const useReportPrint = () => {
       await handleDirectPrint({orientation,data,clickedItem});
     };
     const printCB = async ({orientation,data ,clickedItem}:printStatement) => {
+      debugger;
       const api = new APIClient();
       const rpt = await api.postAsync(Urls.get_customer_balance,{LedgerID: data, AsOnDate: moment().local().toDate() })
       

@@ -755,6 +755,7 @@ const Templates = () => {
             </div>
             {/* New Header creation for formtype */}
             {/* Initial first list selection required */}
+            {!["PARP","RARP","CBR","Cheque","barcode",].includes(templateGroup) && (
             <div className="border-b-1 bg-white dark:bg-dark-bg-card h-fit p-2 flex gap-8 border-slate-200 dark:border-dark-border">
               <ERPDataCombobox
                 id="Form Type"
@@ -790,6 +791,8 @@ const Templates = () => {
                 }}
               />
             </div>
+            )}
+
             <div className="flex-1 overflow-y-auto scrollbar-thin">
               <div className="p-2 w-full">
                 {loading ? (

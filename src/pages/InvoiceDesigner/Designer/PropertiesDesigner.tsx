@@ -29,15 +29,12 @@ const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
   { label: "Letter", value: "LETTER" },
+  { label: `2″ roll`, value: "ROLL_2_INCH" },
+  { label: `3″ roll`, value: "ROLL_3_INCH" },
+  { label:`4″ roll`, value: "ROLL_4_INCH" },
   { label: "Custom", value: "CUSTOM" },
 ];
 
-const retailPageSizes = [
-  { label: `2 "`, value: "ROLL_2_INCH" },
-  { label: `3 "`, value: "ROLL_3_INCH" },
-  { label: `4 "`, value: "ROLL_4_INCH" },
-  { label: "Custom", value: "CUSTOM" },
-]
 
 const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup }) => {
   /* ########################################################################################### */
@@ -82,12 +79,12 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             onChange?.({ ...propertiesState, pageSize: data.value })
           }}
           id="pageSize"
-          options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
+          options={pageSizeOptions}
           label={t("page_size")}
         />
 
         {
-          propertiesState?.pageSize == "CUSTOM" ? (
+          propertiesState?.pageSize == "CUSTOM" &&(
             <>
               <div className="flex items-center space-x-3">
                 <div className="basis-2/3 ">
@@ -153,16 +150,22 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 </div>
               </div>
             </>
-          ):(
-          <ERPCheckbox
+          )
+        }
+
+        {propertiesState?.pageSize?.startsWith("ROLL") && (
+         <ERPCheckbox
             id="isAutoHeight"
             label={t("auto_height")}
             checked={propertiesState?.isAutoHeight}
             onChange={(e) => onChange?.({ ...propertiesState, isAutoHeight: e.target.checked })}
           />
+        )
 
-          )
         }
+ 
+
+          
 
         <div className="flex gap-1">
           <ERPDataCombobox

@@ -12,9 +12,10 @@ const BORDER_WIDTH = 1; // Must match PDF borderWidth: 1
 type AccPrvTableProps = {
   data: PrintDetailDto[];
   template?: TemplateState<unknown>;
+  isAutoHeight?: boolean;
 };
 
-const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
+const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template,isAutoHeight }) => {
   const accTableState = (template as TemplateState<unknown>)?.tableState as TableColumn<unknown>[] | undefined;
   const tableMasterState = (template as TemplateState<unknown>)?.itemTableMasterState;
   const HeadFontFamily = tableMasterState?.headerFontFamily || "Roboto";
@@ -45,6 +46,12 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
     if (!accTableState) return [];
     return accTableState.filter((c) => c.show);
   }, [accTableState]);
+  //preview rows
+const rows = useMemo(() => {
+  return isAutoHeight
+    ? data
+    : data.slice(0, 3);
+}, [data, isAutoHeight]);
 
   // component-level styles (DOM-friendly)
   const styles = useMemo(() => {
@@ -203,7 +210,7 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template }) => {
 
     return (
       <div style={styles.tbody}>
-        {data.slice(0, 3).map((row: any, rowIndex: number) => (
+        {rows?.map((row: any, rowIndex: number) => (
 
           <div key={rowIndex}
             style={{

@@ -238,7 +238,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
               <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                 <ul className="space-y-1">
                   <li>
-                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice(voucherType,); }}>
+                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice(voucherType=="CP"); }}>
                       <Printer className="h-4 w-4" />
                       <span>{t("print_payment_advise")}</span>
                     </button>

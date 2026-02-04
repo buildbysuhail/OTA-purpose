@@ -1083,40 +1083,6 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     />
                   )}
 
-                {formState.formElements.cbLabelDesign?.visible && (
-                  <ERPDataCombobox
-                    localInputBox={formState?.userConfig?.inputBoxStyle}
-                    enableClearOption={false}
-                    fetching={formState.transactionLoading}
-                    id="labelDesignID"
-                    className="w-full !m-0 dark:bg-dark-bg-card dark:border-dark-border dark:text-dark-text"
-                    label={t(formState.formElements.cbLabelDesign.label)}
-                    data={formState.transaction.master}
-                    onSelectItem={(e) => {
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { labelDesignID: e.value },
-                        })
-                      );
-                      handleFieldKeyDown("labelDesignID", "Enter");
-                    }}
-                    value={formState.transaction.master.labelDesignID}
-                    field={{
-                      id: "labelDesignID",
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    disabled={
-                      formState.formElements.cbLabelDesign.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                    disableEnterNavigation
-                    onKeyDown={(e) => {
-                      handleKeyDown && handleKeyDown(e, "labelDesign");
-                    }}
-                  />
-                )}
-
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="partyName"

@@ -29,7 +29,7 @@ import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formSta
 import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, initialFormElements, TransactionFormStateInitialData, } from "../transaction-type-data";
 import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, ColumnModel, } from "../transaction-types";
 import PostedTransactionLabel from "./components/PostedTransactionLabel";
-import { EditAuthorization } from "./components/AuthorizationSales";
+import { SalesAuthorization } from "./components/AuthorizationSales";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { purchaseGridCol } from "./transaction-grid-cols";
@@ -1130,17 +1130,20 @@ debugger;
     const voucherType = master.voucherType ?? "";
     const isKSAEInvoice = applicationSettings.branchSettings.maintainKSA_EInvoice;
     const isIndia = clientSession.isAppGlobal;
-    const cashReceived = master.cashReceived || 0;
-    const cardAmount = master.bankAmt || 0;
+    const cashReceived = Number(master.cashReceived) || 0;
+    const cardAmount = Number(master.bankAmt) || 0;
     const grandTotal = master.grandTotal || 0;
     const vatNumber = (master.tokenNumber ?? "").trim();
     const customerType = master.customerType ?? "";
+    const vrPrefix = master.voucherPrefix ?? "";
+    const vrNumber = master.voucherNumber || 0;
 
     // Get first free row index (first row without a product)
     const firstFreeRow = details.findIndex((x) => !x.productID || x.productID === 0);
     const validDetails = firstFreeRow === -1 ? details : details.slice(0, firstFreeRow);
 
-    // ============ Cash/Card Amount Validations ============
+    // CODE CHECKED########
+    // ============ Cash/Card Amount Validations ============ 
     if (cashReceived < 0 || cardAmount < 0) {
       await ERPAlert.show({
         icon: "error",
@@ -1151,7 +1154,8 @@ debugger;
       return false;
     }
 
-    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000) {
+    // CODE CHECKED########
+    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000) {  
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1161,9 +1165,9 @@ debugger;
       return false;
     }
 
+    // CODE CHECKED########  - Working Not checked/ Tested
     // ============ B2B/B2C Tax Reg Number Validation (KSA) ============
-    if (isKSAEInvoice && !isIndia) {
-      if (customerType === "B2B" && vatNumber.length !== 15) {
+      if (customerType === "B2B" && vatNumber.length !== 15 && !isIndia){    //For countryId === 1
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
@@ -1173,7 +1177,8 @@ debugger;
         return false;
       }
 
-      if (customerType === "B2C" && vatNumber.length > 0) {
+      // CODE CHECKED########  - Working Not checked/ Tested
+      if (customerType === "B2C" && vatNumber.length > 0 && !isIndia) {    // //For countryId === 1
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
@@ -1183,21 +1188,23 @@ debugger;
         return false;
       }
 
+      // CODE CHECKED########
       // Tax Registration number format validation (15 digits, starts with 3, ends with 3)
-      if (vatNumber !== "") {
+      if (vatNumber !== "" && !isIndia) {
         if (vatNumber.length !== 15 || !vatNumber.startsWith("3") || !vatNumber.endsWith("3")) {
           await ERPAlert.show({
             icon: "error",
             title: t("validation_error"),
-            text: t("invalid_tax_registration_number"),
+            text: `${t("invalid_tax_registration_number")} ${master.partyName} ${t("please_check")}`,
             confirmButtonText: t("ok"),
           });
           return false;
         }
       }
 
+      // CODE CHECKED########
       // E-Invoice: Transaction date should not be post-dated
-      if (formType === "VAT") {
+      if (isKSAEInvoice && formType === "VAT") {
         const transDate = new Date(master.transactionDate);
         const today = new Date();
         transDate.setHours(0, 0, 0, 0);
@@ -1213,55 +1220,73 @@ debugger;
         }
 
         // E-Invoice: Grand total should be greater than zero
-        if (grandTotal <= 0) {
-          await ERPAlert.show({
-            icon: "error",
-            title: t("validation_error"),
-            text: t("einvoice_total_should_be_greater_than_zero"),
-            confirmButtonText: t("ok"),
-          });
-          return false;
-        }
-      }
+      //   if (grandTotal <= 0) {
+      //     await ERPAlert.show({
+      //       icon: "error",
+      //       title: t("validation_error"),
+      //       text: t("einvoice_total_should_be_greater_than_zero"),
+      //       confirmButtonText: t("ok"),
+      //     });
+      //     return false;
+      // }
     }
 
-    // ============ Excess Card Amount Check ============
+    // CODE CHECKED########
+    // ============ Excess Card Amount Check ============ 
     if (cashReceived + cardAmount > grandTotal) {
-      if (cardAmount > 0) {
+      if(cardAmount > 0){
+      if (formState.userConfig?.allowExcessCashReceipt) {
+        const confirmed = await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("excess_card_amount_entered, do_you_want_to_continue"),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+        });
+
+        if (!confirmed) {
+          return false;
+        }
+      } 
+      else {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
           text: t("excess_card_amount_entered"),
           confirmButtonText: t("ok"),
+          showCancelButton: false,
         });
         return false;
       }
     }
+    }
 
+    // CODE CHECKED########
     // ============ Grand Total Check ============
     if (grandTotal < 0) {
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
-        text: t("wrong_discount_or_value"),
+        text: t("wrong_value_or_discount"),
         confirmButtonText: t("ok"),
       });
       return false;
     }
 
     // ============ Credit Stopped Validation ============
-    if (formState.ledgerData?.creditStopped) {
-      if (cashReceived + cardAmount < grandTotal) {
-        await ERPAlert.show({
-          icon: "error",
-          title: t("validation_error"),
-          text: t("credit_stopped_for_customer"),
-          confirmButtonText: t("ok"),
-        });
-        return false;
-      }
-    }
+    // if (formState.ledgerData?.creditStopped) {
+    //   if (cashReceived + cardAmount < grandTotal) {
+    //     await ERPAlert.show({
+    //       icon: "error",
+    //       title: t("validation_error"),
+    //       text: t("credit_stopped_for_customer"),
+    //       confirmButtonText: t("ok"),
+    //     });
+    //     return false;
+    //   }
+    // }
 
+    // CODE CHECKED########
     // ============ Stock Update Warning ============
     if (!master.stockUpdate && (voucherType === "SI" || voucherType === "SR")) {
       const confirm = await ERPAlert.show({
@@ -1279,6 +1304,7 @@ debugger;
       }
     }
 
+    // CODE CHECKED########
     // ============ Cost Centre Validation ============
     if (applicationSettings.accountsSettings.maintainCostCenter) {
       if (isNullOrUndefinedOrZero(master.costCentreID)) {
@@ -1291,7 +1317,7 @@ debugger;
         return false;
       }
     }
-
+    // CODE CHECKED########
     // ============ Salesman Validation ============
     if (formState.userConfig?.enableSalesMan) {
       if (isNullOrUndefinedOrZero(master.salesManID)) {
@@ -1305,6 +1331,7 @@ debugger;
       }
     }
 
+    // CODE CHECKED########
     // ============ Transaction Date Validation ============
     const transDateValidation = validateTransactionDate(
       new Date(master.transactionDate),
@@ -1321,6 +1348,7 @@ debugger;
       return false;
     }
 
+    // CODE CHECKED########  - Working Not checked/ Tested
     // ============ Credit Limit Check ============
     const creditMode = applicationSettings.accountsSettings.blockOnCreditLimit;
     const creditRes = checkThePartyCreditLimit(
@@ -1335,8 +1363,9 @@ debugger;
         await ERPAlert.show({
           icon: "error",
           title: t("credit_limit_exceeded"),
-          text: `${creditRes.message}. ${t("cannot_be_proceeded")}`,
+          text: `${creditRes.message} ${t("cannot_be_proceeded")}`,
           confirmButtonText: t("ok"),
+          showCancelButton: false
         });
         return false;
       }
@@ -1350,6 +1379,7 @@ debugger;
             title: t("credit_limit_exceeded"),
             text: `${creditRes.message}. ${t("proceed_with_cash_bank_receipt")}`,
             confirmButtonText: t("ok"),
+            showCancelButton: false
           });
           return false;
         }
@@ -1363,10 +1393,12 @@ debugger;
           title: t("warning"),
           text: creditRes.message,
           confirmButtonText: t("ok"),
+          showCancelButton: false
         });
       }
     }
 
+    // CODE CHECKED########
     // ============ Party Selection Check ============
     if (isNullOrUndefinedOrZero(master.ledgerID)) {
       await ERPAlert.show({
@@ -1374,13 +1406,14 @@ debugger;
         title: t("invalid_party"),
         text: t("party_or_cash_account_should_be_selected"),
         confirmButtonText: t("ok"),
+        showCancelButton: false
       });
       return false;
     }
 
+    // CODE CHECKED########
     // ============ Mobile Number Mandatory Check ============
     if (applicationSettings.inventorySettings?.mobileNumberMandotryInSales) {
-      debugger;
       if (isNullOrUndefinedOrEmpty(master.address4)) {
         await ERPAlert.show({
           icon: "error",
@@ -1396,6 +1429,7 @@ debugger;
     for (let i = 0; i < validDetails.length; i++) {
       const row = validDetails[i];
 
+      // CODE CHECKED########
       // Tax calculation validation
       if ((row.vatPerc ?? 0) === 0 && (row.vatAmount ?? 0) > 0) {
         await ERPAlert.show({
@@ -1407,17 +1441,19 @@ debugger;
         return false;
       }
 
+      // CODE CHECKED########
       // Product batch ID validation
-      if (isNullOrUndefinedOrZero(row.productBatchID)) {
+      if (isNullOrUndefinedOrZero(Number(row.productBatchID))) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
           text: `${t("invalid_item_details_in_row")} ${i + 1}. ${t("please_correct_or_remove_row")}`,
           confirmButtonText: t("ok"),
+          showCancelButton: false
         });
         return false;
       }
-
+      // CODE CHECKED########
       // Unit validation
       if (isNullOrUndefinedOrZero(row.unitID)) {
         await ERPAlert.show({
@@ -1425,20 +1461,38 @@ debugger;
           title: t("validation_error"),
           text: `${t("invalid_unit_selection_in_row")} ${i + 1}`,
           confirmButtonText: t("ok"),
+          showCancelButton: false
         });
         return false;
       }
+       // CODE CHECKED########
+      // Zero quantity/rate validation
+      if ((row.free ?? 0) === 0 && row.gross === 0) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("zero_rate_or_qty"),
+          text: `${t("zero_rate_or_qty_entered_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+        if (confirm !== true) {
+          const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
+          const res = focusColumn(rowIndex, "qty");
+          setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+          return false;
+        }
+      }
 
       // Zero quantity/rate validation
-      if (!formState.skipZeroQty) {
-        if ((row.free ?? 0) === 0 && row.gross === 0 && row.productID > 0) {
+      if (formState.userConfig?.blockZeroFigureEntry) {
+        if ((row.free ?? 0) === 0 && row.qty === 0) {
           const confirm = await ERPAlert.show({
             icon: "question",
             title: t("zero_rate_or_qty"),
-            text: `${t("zero_rate_or_qty_entered_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
-            confirmButtonText: t("yes"),
-            cancelButtonText: t("no"),
-            showCancelButton: true,
+            text: `${t("zero_rate_or_qty_entered_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
+            confirmButtonText: t("ok"),
+            showCancelButton: false,
           });
           if (!confirm) {
             const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
@@ -1446,9 +1500,11 @@ debugger;
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
             return false;
           }
+          return false;
         }
       }
 
+      // CODE CHECKED########
       // Bulk quantity warning
       if ((row.qty ?? 0) > 100000) {
         const confirm = await ERPAlert.show({
@@ -1465,6 +1521,7 @@ debugger;
       }
     }
 
+    // CODE CHECKED########
     // ============ Items After Blank Row Check ============
     if (firstFreeRow !== -1) {
       for (let i = firstFreeRow + 1; i < details.length; i++) {
@@ -1472,8 +1529,9 @@ debugger;
           await ERPAlert.show({
             icon: "error",
             title: t("validation_error"),
-            text: `${t("items_entered_after_blank_row_will_be_skipped")} ${t("please_remove_blank_row")} ${firstFreeRow + 1}`,
+            text: `${t("items_entered_after_blank_row_will_be_skipped")} ${firstFreeRow + 1}`,
             confirmButtonText: t("ok"),
+            showCancelButton: false
           });
           return false;
         }
@@ -1492,7 +1550,7 @@ debugger;
             await ERPAlert.show({
               icon: "error",
               title: t("validation_error"),
-              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("cannot_proceed")}`,
+              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("item_please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
               confirmButtonText: t("ok"),
             });
             return false;
@@ -1501,6 +1559,7 @@ debugger;
       }
     }
 
+    // CODE CHECKED########  - Working Not checked/ Tested (SAMA PLASTIC CASE, NEEDS TESTING)
     // ============ Rate Warning Check (Sales price less than purchase/min price) ============
     const showRateWarning = applicationSettings.inventorySettings?.showRateWarning;
     if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT") {
@@ -1513,20 +1572,45 @@ debugger;
         const isSchemeItem = row.isSchemeItem === "S";
 
         if (minSalePrice > 0 && minSalePrice * qty > netValue) {
-          await ERPAlert.show({
+          if(userSession.dbIdValue === "SAMAPLASTICS"){
+            if(purchasePrice*qty > netValue && !isSchemeItem){
+              await ERPAlert.show({
+                icon: "error",
+                title: t("validation_error"),
+                text: `${t("sales_price_less_than_purchase_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
+                confirmButtonText: t("ok"),
+              });
+              return false;
+            }
+            await ERPAlert.show({
+              icon: "error",
+              title: t("validation_error"),
+              text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
+              confirmButtonText: t("ok"),
+            });
+            let isAuthorized = false;
+            const action = `"User tried to allow Sales Price Less than Min Sales Price ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
+            isAuthorized = await SalesAuthorization(action); 
+            if (!isAuthorized) {
+              return false;
+            }
+
+          }else{
+            await ERPAlert.show({
             icon: "error",
             title: t("validation_error"),
-            text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cannot_proceed")}`,
+            text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
             confirmButtonText: t("ok"),
           });
           return false;
+          } 
         }
 
         if (purchasePrice * qty > netValue && minSalePrice === 0 && !isSchemeItem) {
           await ERPAlert.show({
             icon: "error",
             title: t("validation_error"),
-            text: `${t("sales_price_less_than_purchase_price_in_row")} ${i + 1}. ${t("cannot_proceed")}`,
+            text: `${t("sales_price_less_than_purchase_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
             confirmButtonText: t("ok"),
           });
           return false;
@@ -3079,7 +3163,7 @@ debugger;
       const vrPrefix = formState.transaction.master.voucherPrefix;
       const vrNumber = formState.transaction.master.voucherNumber;
       const action = `User tried to edit the transaction ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
-      isAuthorized = await EditAuthorization(action);
+      isAuthorized = await SalesAuthorization(action); // Edit Authorization changed name to SalesAuthorization
       if (!isAuthorized) {
         return false;
       }

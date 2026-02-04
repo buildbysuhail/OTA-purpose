@@ -1674,7 +1674,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     />
                   )} */}
 
-                {formState.formElements.cbLabelDesign?.visible && (
+                {/* {formState.formElements.cbLabelDesign?.visible && (
                   <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     enableClearOption={false}
@@ -1706,7 +1706,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       handleKeyDown && handleKeyDown(e, "labelDesign");
                     }}
                   />
-                )}
+                )} */}
 
                 {/* <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}

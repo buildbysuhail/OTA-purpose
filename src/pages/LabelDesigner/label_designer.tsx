@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo, useLayoutEffect } from "react";
 import { Settings, Minus, Menu, Edit, Scan, Printer, X, Image, QrCode as QrCodeIcon, Package, } from "lucide-react";
 import JsBarcode from "jsbarcode";
 import html2canvas from "html2canvas";
@@ -23,7 +23,7 @@ import { setTemplateCustomElements } from "../../redux/slices/templates/reducer"
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { useTranslation } from "react-i18next";
 import VoucherType, { accountsVoucherTypes, } from "../../enums/voucher-types";
-import { accountsFields, inventoryFields, barCodeField, imgField } from "./fields";
+import { accountsFields, inventoryFields, barCodeField, imgField,ledgerReportFields } from "./fields";
 import { containsArabicString, getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
@@ -180,13 +180,22 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const { t } = useTranslation("labelDesigner");
   const pageSize = template?.propertiesState?.pageSize ?? "A4";
   const selectedPageSize = getPageDimensions(pageSize, template?.propertiesState?.width, template?.propertiesState?.height);
-  const customePageWidth = selectedPageSize.width - ((template?.propertiesState?.padding?.left ?? 0) + (template?.propertiesState?.padding?.right ?? 0))
+  const customePageWidth = selectedPageSize?.width - ((template?.propertiesState?.padding?.left ?? 0) + (template?.propertiesState?.padding?.right ?? 0))
   const [customePageHeight, setCustomePageHeight] = useState(200);
-
+  const customePageMaxHeight = selectedPageSize?.height - (template?.propertiesState?.padding?.top ?? 0);
   const [leftSidebarWidth, setLeftSidebarWidth] = useState(250);
   const [rightSidebarWidth, setRightSidebarWidth] = useState(380);
+  const toolbarRef = useRef<HTMLDivElement | null>(null);
+  const [toolbarHeightPt, setToolbarHeightPt] = useState(0);
 
 
+useLayoutEffect(() => {
+  if (!toolbarRef.current) return;
+
+  const heightPx = toolbarRef.current.getBoundingClientRect().height;
+  const heightPt = pxToPt(heightPx); 
+  setToolbarHeightPt(heightPt);
+}, []);
 
 const {
   canUndo,
@@ -2142,7 +2151,7 @@ useEffect(() => {
       setCustomePageHeight((nestedValue?.height || 200) - (template.propertiesState?.padding?.top ?? 0));
       
         const newTemplateData: TemplateState<unknown> = {
-      ...templateData,
+        ...templateData,
       barcodeState: {
         ...templateData.barcodeState,
         placedComponents: expandedComponents || [],
@@ -2254,12 +2263,18 @@ const debouncedResize = useDebounce(
 );
 
 
-  const getFieldContent = () => {
-    if (!forCustomRows) return barCodeField;
-    return accountsVoucherTypes.includes(templateGroup as VoucherType)
-      ? accountsFields
-      : inventoryFields;
-  };
+const getFieldContent = () => {
+  if (!forCustomRows) return barCodeField;
+
+  if (templateGroup === "CBR") {
+    return ledgerReportFields;
+  }
+
+  return accountsVoucherTypes.includes(templateGroup as VoucherType)
+    ? accountsFields
+    : inventoryFields;
+};
+
 
   // Computed values
   const labelWidthPt = templateData?.barcodeState?.labelState?.labelWidth ?? 300;
@@ -2280,9 +2295,17 @@ const debouncedResize = useDebounce(
     : templateData?.barcodeState?.labelState?.bg_image_objectFit;
 
 
+
   // Main render
   return (
-    <div className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : templateData.propertiesState?.language_prefer === "Arb" ? "dir-rtl" : "dir-ltr"}`}>
+    <div className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full 
+    ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : templateData.propertiesState?.language_prefer === "Arb" ? "dir-rtl" : "dir-ltr"}`}
+        style={forCustomRows ? {
+      height: `${selectedPageSize?.height+toolbarHeightPt}pt`,
+      maxHeight: `${selectedPageSize?.height+toolbarHeightPt}pt`,
+      overflow: "hidden",
+    } : undefined}
+    >
       {/* Left Sidebar - Components */}
       <ResizableBox
         key={`left-sidebar-${leftSidebarWidth}`} 
@@ -2344,7 +2367,9 @@ const debouncedResize = useDebounce(
       {/* Main Design Area */}
       <div className="flex-1 flex flex-col bg-[#e5e7eb]" style={{ height: "100%" }}>
         {/* Toolbar */}
-        <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
+        <div 
+        ref={toolbarRef}
+        className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center">
             {!forCustomRows && (
               <div className=" ">
@@ -2432,7 +2457,14 @@ const debouncedResize = useDebounce(
             width={labelWidthPx}
             height={labelHeightPx}
             minConstraints={[ptToPx(50), ptToPx(50)]}
-            maxConstraints={[ptToPx(1200), ptToPx(800)]}
+           maxConstraints={
+            forCustomRows
+              ? [
+                  ptToPx(customePageWidth), 
+                  ptToPx(customePageMaxHeight)
+                ]
+              : [ptToPx(1200), ptToPx(800)]
+          }
             resizeHandles={[
               forCustomRows
                 ? "s"

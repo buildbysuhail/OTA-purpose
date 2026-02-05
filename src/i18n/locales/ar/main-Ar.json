@@ -779,6 +779,10 @@
   "leave_type": "نوع الإجازة",
   "employee_designations": "المسميات الوظيفية للموظفين",
   "employee": "الموظف",
-  "benefits_and_deductions": "الاستحقاقات والاستقطاعات"
+  "benefits_and_deductions": "الاستحقاقات والاستقطاعات",
+
+  "request_for_sales_quotation": "طلب عرض أسعار مبيعات",
+  "excess_stock/add_stock": "مخزون زائد / إضافة مخزون",
+  "shortage_stock/less_stock": "نقص المخزون / طرح مخزون"
 
 }

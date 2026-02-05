@@ -778,7 +778,11 @@
   "leave_type": "Leave Type",
   "employee_designations": "Employee Designations",
   "employee": "Employee",
-  "benefits_and_deductions": "Benefits & Deductions"
+  "benefits_and_deductions": "Benefits & Deductions",
+
+   "request_for_sales_quotation": "Request For Sales Quotation",
+   "excess_stock/add_stock": "Excess Stock / Add Stock",
+   "shortage_stock/less_stock": "Shortage Stock / Less Stock"
 
 
 }

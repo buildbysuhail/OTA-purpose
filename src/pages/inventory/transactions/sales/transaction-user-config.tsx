@@ -257,7 +257,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
           <div className="flex flex-row">
             <div className="flex flex-wrap space-y-1 px-4">
-              {[VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.SalesReturn, VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as VoucherType) &&
+              {[VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.SalesReturn, VoucherType.SalesOrder, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as VoucherType) &&
                 <>
                   <ERPCheckbox
                     id="useBarcode"

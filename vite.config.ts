@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
     ],
   },
   build: {
-    sourcemap: true,
+    // sourcemap: true,
     // outDir: 'C:\\inetpub\\wwwroot',
     outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
     //  outDir: 'build',

@@ -58,6 +58,7 @@ interface TransactionHeaderProps {
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null;
   loadAndSetTransVoucher: any;
+  initializeFormElements: any;
   t: any;
   handleLoadByRefNo: any;
   handleFieldChange: any;
@@ -90,6 +91,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   dispatch,
   handleKeyDown,
   loadAndSetTransVoucher,
+  initializeFormElements,
   t,
   handleLoadByRefNo,
   handleFieldChange,
@@ -560,7 +562,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}
-              loadAndSetTransVoucher={loadAndSetTransVoucher}
+              initializeFormElements={initializeFormElements}
               t={t}
             />
 
@@ -569,7 +571,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
               formState={formState}
               dispatch={dispatch}
               handleKeyDown={handleKeyDown}
-              loadAndSetTransVoucher={loadAndSetTransVoucher}
+              initializeFormElements={initializeFormElements}
               t={t}
             />
 
@@ -1113,7 +1115,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   formState={formState}
                   dispatch={dispatch}
                   handleKeyDown={handleKeyDown}
-                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                  initializeFormElements={initializeFormElements}
                   t={t}
                 />
                 <AccVoucherNo
@@ -1121,7 +1123,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   formState={formState}
                   dispatch={dispatch}
                   handleKeyDown={handleKeyDown}
-                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                  initializeFormElements={initializeFormElements}
                   t={t}
                 />
                 <ReferenceDate

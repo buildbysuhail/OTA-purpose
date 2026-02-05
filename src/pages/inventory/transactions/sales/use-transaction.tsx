@@ -75,6 +75,16 @@ export type LoadAndSetTransVoucherFn = (
   invokeUsingVoucherNumber?: boolean,
 ) => Promise<boolean | undefined>; // ✅ fix return type
 
+export type initializeFormElementsFn = (
+  voucherType: string,
+    voucherPrefix: string,
+    formType: string,
+    formCode: string,
+    title: string,
+    voucherNo: number,
+    transactionMasterID: number
+) => void // ✅ fix return type
+
 const api = new APIClient();
 export const useTransaction = (
   transactionType: string,
@@ -5880,14 +5890,14 @@ export const useTransaction = (
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
     , _voucherType || (formState.transaction.master.voucherType ?? "")
     , _formType || (formState.transaction.master.voucherForm ?? ""), t, formState) ?? []
-  const initializeFormElements = async (
-    voucherType: string,
-    voucherPrefix: string,
-    formType: string,
-    formCode: string,
-    title: string,
-    voucherNo: number,
-    transactionMasterID: number,
+  const initializeFormElements: initializeFormElementsFn = async (
+     voucherType,
+    voucherPrefix,
+    formType,
+    formCode,
+    title,
+    voucherNo,
+    transactionMasterID    
   ) => {
     debugger;
     const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(

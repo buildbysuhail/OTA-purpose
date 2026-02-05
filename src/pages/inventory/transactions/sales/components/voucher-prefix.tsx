@@ -9,7 +9,7 @@ import { VoucherElementProps } from "../../transaction-types";
 const api = new APIClient();
 
 interface VoucherNoPrefixProps extends VoucherElementProps {
-  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
+  initializeFormElements: LoadAndSetTransVoucherFn
   phone?: boolean;
 }
 
@@ -18,7 +18,7 @@ const AccVoucherPrefix = React.forwardRef<
   VoucherNoPrefixProps
 >(
   (
-    { formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone },
+    { formState, dispatch, handleKeyDown, initializeFormElements, t, phone },
     ref
   ) => {
     const { value, onChange } = useDebouncedInput(

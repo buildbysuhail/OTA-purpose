@@ -2,7 +2,7 @@ import ERPInput from "../../../../../components/ERPComponents/erp-input";
 import VoucherNumberDetailsSidebar from "../../../../transaction-base/Voucher-number-details";
 import React from "react";
 import { useDebouncedInput } from "../../../../../utilities/hooks/useDebounce";
-import { LoadAndSetTransVoucherFn } from "../use-transaction";
+import { initializeFormElementsFn, LoadAndSetTransVoucherFn } from "../use-transaction";
 import { formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
 
@@ -11,12 +11,12 @@ interface AccVoucherNoProps {
 }
 
 interface VoucherNoPrefixProps extends VoucherElementProps, AccVoucherNoProps {
-  loadAndSetTransVoucher: LoadAndSetTransVoucherFn
+  initializeFormElements: initializeFormElementsFn
 }
 
 const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
   (
-    { formState, dispatch, handleKeyDown, loadAndSetTransVoucher, t, phone },
+    { formState, dispatch, handleKeyDown, initializeFormElements, t, phone },
     ref
   ) => {
     const { value, onChange } = useDebouncedInput(
@@ -46,20 +46,14 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             onKeyUp={async(e) => {
               if(e.key == "Enter") {
                 debugger;
-                await loadAndSetTransVoucher(
-                  false,
-                  parseFloat(e.target?.value),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  e.mode == "down"
-                    ? "decrement"
-                    : e.mode == "up"
-                    ? "increment"
-                    : undefined,
-                  false,false,"","",""
+                await initializeFormElements(
+                  formState.transaction.master.voucherType??"",
+                  formState.transaction.master.voucherPrefix??"",
+                  formState.transaction.master.voucherForm??"",
+                  formState.formCode??"",
+                  formState.title??"",
+                  parseFloat(e.target?.value || "0"),
+                   0
                 );
               }
               handleKeyDown && handleKeyDown(e, "voucherNumber");
@@ -83,20 +77,14 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
             onChange={async (e: any) => {
                 debugger;
               if (e.isCustomNumberChangerEvent == true) {
-                const ret = await loadAndSetTransVoucher(
-                  false,
-                  parseFloat(e.target?.value),
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  e.mode == "down"
-                    ? "decrement"
-                    : e.mode == "up"
-                    ? "increment"
-                    : undefined,
-                  false,false,"","",""
+                const ret = await initializeFormElements(
+                  formState.transaction.master.voucherType??"",
+                  formState.transaction.master.voucherPrefix??"",
+                  formState.transaction.master.voucherForm??"",
+                  formState.formCode??"",
+                  formState.title??"",
+                  parseFloat(e.target?.value || "0"),
+                   0
                 );
               } else {
                 // Only update if the value is numeric or empty

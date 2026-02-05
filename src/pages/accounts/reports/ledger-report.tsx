@@ -342,7 +342,6 @@ const LedgerReport = () => {
       orientation:
         "portrait",
       data: { data: dataRef.current, filter: filter },
-      clickedItem: "statement",
     })
   };
   const { printStatement, printCB } = useReportPrint();
@@ -376,14 +375,7 @@ const LedgerReport = () => {
                   <li>
                     <button
                       className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                      onClick={() =>
-                        printCB({
-                          orientation:
-                            "portrait",
-                          data: filter.ledgerID,
-                          clickedItem: "customer_balance",
-                        })
-                      }
+                       onClick={() => printCB(filter.ledgerID)}
                     >
                       <FileUp className="pe-2" />
                       <span className="text-sm font-semibold ">

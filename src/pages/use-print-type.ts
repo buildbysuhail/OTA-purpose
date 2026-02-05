@@ -344,7 +344,7 @@ heading1: string;
   footer10: string;
 }
 export interface LedgerReportDataForPrint {
-ledgerId: number;
+  ledgerId: number;
   asOnDate?: Date;        // or string if coming as ISO string from API
   code: string;
   customerAccName: string;

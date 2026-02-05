@@ -651,7 +651,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               {t("choose_from_desktop")}</div>
           </label>
           {
-            templateData.activeTemplate.background_image &&
+            templateData?.activeTemplate?.background_image &&
             <>
               <div className="text-xs bg-amber-50 dark:bg-amber-950 px-2 py-2 rounded">{t("click_save_to_apply")}</div>
               {templateData.activeTemplate.background_image && <img src={templateData.activeTemplate.background_image} alt="background_image" height={100} width={100} className="size-5" />}

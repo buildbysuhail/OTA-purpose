@@ -3,40 +3,38 @@ import useCurrentBranch from "../../../utilities/hooks/use-current-branch";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 import { pdf, BlobProvider } from "@react-pdf/renderer";
-import { renderReportSelectedTemplate } from "./Download-report-pdf/report-renderSelected-template";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import moment from "moment";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import { de } from "date-fns/locale";
+import { useDirectPrint } from "../../../utilities/hooks/use-direct-print";
+import StatementTemplate from "./Download-report-pdf/statement-template";
+import { getOrFetchTemplate } from "../../../pages/use-print";
 
 interface printStatement {
     orientation:"portrait"|"landscape";
     data?:any;
-    clickedItem?:string;
+
   }
 
 export const useReportPrint = () => {
     const currentBranch = useCurrentBranch();
+      const { directPrint } = useDirectPrint();
     const userSession = useAppSelector((state: RootState) => state.UserSession);
-    const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-    const clientSession = useAppSelector(
-      (state: RootState) => state.ClientSession
-    );
 
    const { getFormattedValue } = useNumberFormat()
-  const handleDirectPrint = async ({orientation,data,clickedItem}:printStatement) => {
+  const handleDirectPrint = async ({orientation,data}:printStatement) => {
     let pdfDocument;
   console.log("data on ledger",data);
   
-    pdfDocument =  renderReportSelectedTemplate({
-        orientation:orientation,
-        data: data,
-        currentBranch: currentBranch,
-        userSession: userSession,
-        printCase:clickedItem,
-        getFormattedValue
-      });
+    pdfDocument =<StatementTemplate
+        orientation={orientation}
+        data={data}
+        currentBranch={currentBranch}
+        userSession={userSession}
+        getFormattedValue={getFormattedValue}
+        />
     try {
       // Create a PDF blob
       const blob = await pdf(pdfDocument).toBlob();
@@ -69,15 +67,17 @@ export const useReportPrint = () => {
   
 
   
-    const printStatement = async ({orientation,data,clickedItem}:printStatement) => {
-      await handleDirectPrint({orientation,data,clickedItem});
+    const printStatement = async ({orientation,data}:printStatement) => {
+      await handleDirectPrint({orientation,data});
     };
-    const printCB = async ({orientation,data ,clickedItem}:printStatement) => {
+
+    const printCB = async (ledger_ID:number) => {
       debugger;
       const api = new APIClient();
-      const rpt = await api.postAsync(Urls.get_customer_balance,{LedgerID: data, AsOnDate: moment().local().toDate() })
-      
-      await handleDirectPrint({orientation,data: rpt,clickedItem});
+      const rpt = await api.postAsync(Urls.get_customer_balance,{LedgerID: ledger_ID, AsOnDate: moment().local().toDate() })
+      const formattedData = {}
+      const template = await getOrFetchTemplate("CBR","","");
+      await directPrint({ template: template.template, data: rpt });
     };
     return {
      printStatement,

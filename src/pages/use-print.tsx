@@ -2177,7 +2177,6 @@ export function parseTemplateContent<T extends object>(
       formType: templateRes.formType,
       customerType: templateRes.customerType,
     };
-
     return _template as T;
   } catch (error) {
     console.error("Error parsing template content:", error);

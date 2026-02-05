@@ -1,3 +1,5 @@
+import { LedgerReportDataForPrint, PrintResponse } from "../../use-print-type";
+
 export const DummyInvoiceData = {
   created_at: "2023-01-21T08:36:41.448190Z",
   payment_terms: { name: "Payment term 2", id: 2, number_of_days: 2 },
@@ -179,22 +181,14 @@ export const DummyInvoiceData = {
   ],
 };
 
-// export const DummyVoucherData ={
-// asOnDate : 
-// "2025-06-03T00:00:00",
-// balance
-// : 
-// 6561.98,
-// code
-// : 
-// 10977,
-// customerAccName
-// : 
-// "  MUASSASA  ALGHILAL ALDHAHABIA",
-// ledgerID
-// : 
-// 10063
-// }
+export const DummyLedgerReportDataForPrint: LedgerReportDataForPrint = {
+  ledgerId: 10063,
+  asOnDate: new Date("2025-06-03T00:00:00"),
+  code: "10977",
+  customerAccName: "MUASSASA ALGHILAL ALDHAHABIA",
+  balance: 6561.98,
+};
+
 
 
 

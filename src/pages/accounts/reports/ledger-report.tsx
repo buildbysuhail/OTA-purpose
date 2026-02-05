@@ -12,6 +12,11 @@ import { APIClient } from "../../../helpers/api-client";
 import moment from "moment";
 import { FileUp } from "lucide-react";
 import { useReportPrint } from "../../../components/ERPComponents/reports/use-reports-print";
+import { popupDataProps } from "../../../redux/slices/popup-reducer";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import TemplatesPreView from "../../transaction-base/transaction-print-preview";
+import { useSelector } from "react-redux";
+import  { RootState } from "../../../redux/store";
 
 interface LedgerReport {
   from: Date;
@@ -20,13 +25,16 @@ interface LedgerReport {
 const api = new APIClient();
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
+    const popupData = useSelector((state: RootState) => state?.PopupData);
   const [data, setData] = useState<any[]>([]);
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(LedgerReportFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const rootState = useRootState();
+  const [prnitCustomerBalance, setPrnitCustomerBalance] = useState<popupDataProps>({
+    isOpen: false,
+    masterId: 0,
+  });
   const { getFormattedValue } = useNumberFormat();
   const onApplyFilter = useCallback((_filter: any) => { setFilter({ ..._filter }); }, []);
   const onCloseFilter = useCallback(() => {
@@ -375,7 +383,8 @@ const LedgerReport = () => {
                   <li>
                     <button
                       className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                       onClick={() => printCB(filter.ledgerID)}
+                       onClick={() => setPrnitCustomerBalance({ isOpen: true, masterId: filter.ledgerID ?? 0 })}
+                      
                     >
                       <FileUp className="pe-2" />
                       <span className="text-sm font-semibold ">
@@ -425,6 +434,27 @@ const LedgerReport = () => {
           </div>
         </div>
       </div>
+              
+                <ERPModal
+                  isOpen={prnitCustomerBalance?.isOpen??false}
+                  title={t("Template")}
+                  width={1000}
+                  height={700}
+                  isForm={true}
+                  isPrintButton={true}
+                  closeModal={() => {
+                    setPrnitCustomerBalance({ isOpen: false });
+                  }}
+                  content={
+                    <TemplatesPreView
+                      voucherType={"CBR"}
+                      printPreviwPopupInfo={prnitCustomerBalance}
+                      isInLedgerReport
+                      lastChooseTemp={popupData?.TemplateChooserModal?.lastChooseTemplateNotTransaction}
+                    />
+                  }
+                />
+        
     </Fragment>
   );
 };

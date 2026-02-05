@@ -125,7 +125,7 @@ function App() {
     });
   }, []);
 
-  
+
 
 
   useEffect(() => {
@@ -170,7 +170,7 @@ function App() {
       }
     };
     fetchSettings();
-  }, [isOnline,location.pathname]);
+  }, [isOnline, location.pathname]);
 
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
@@ -224,9 +224,9 @@ function App() {
   // Disable copy/paste on mobile - must be unconditional, use dependency to gate logic
   useEffect(() => {
     if (!deviceInfo?.isMobile) return;
-    
+
     const handler = (e: any) => e.preventDefault();
-    
+
     document.addEventListener("copy", handler);
     document.addEventListener("cut", handler);
     document.addEventListener("paste", handler);
@@ -327,7 +327,7 @@ function App() {
     }
   }, [deviceInfo?.isMobile]); // Run this effect when isMobile changes
   const { t } = useTranslation('main')
-  if ((isLoading || isOnline != true ) && !location.pathname.startsWith("/pdf/download")) {
+  if ((isLoading || isOnline != true) && !location.pathname.startsWith("/pdf/download")) {
     return <><Loader isOnline={isOnline} /></>;
   }
 
@@ -357,7 +357,7 @@ function App() {
         <Switcher />
         <AutoClicker />
         <div className={`page dark:!bg-dark-bg  `} onClick={Bodyclickk}>
-           <Suspense fallback={LoadingAnimation()}>
+          <Suspense fallback={LoadingAnimation()}>
 
             <Routes>
               <Route path="/pdf/download" element={<TwilioPdfDownloader />} />
@@ -367,15 +367,15 @@ function App() {
               <Route path="select-organization" element={<OrgSelect />} />
               <Route path="switch-organization" element={<OrgSelect />} />
               <Route path="pos" element={<TransactionForm
-                  voucherType="SI"
-                  voucherPrefix=""
-                  formType="VAT"
-                  formCode=""
-                  isPos={true}
-                  title="POS"
-                  drCr="CR"
-                  transactionType={"SalesInvoice"}
-                />} />
+                voucherType="SI"
+                voucherPrefix=""
+                formType="VAT"
+                formCode=""
+                isPos={true}
+                title="POS"
+                drCr="CR"
+                transactionType={"SalesInvoice"}
+              />} />
 
               {/* <Route path="create-organization" element={<Organization />} />
                */}
@@ -467,19 +467,45 @@ function App() {
               voucherType={popupData.TemplateChooserModal?.templateGroup ?? ""}
               formType={popupData.TemplateChooserModal?.formType ?? ""}
               customerType={popupData.TemplateChooserModal?.customerType ?? ''}
+              isInLedgerReport={popupData.TemplateChooserModal?.isInLedgerReport}
               onTemplateChoosed={(template: TemplateState<unknown>) => {
-                popupData.TemplateChooserModal?.isInv?
-                  dispatch(formStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
-                  :
-                  dispatch(accFormStateHandleFieldChange({fields:{lastChoosedTemplate: template}}))
-               }} 
+                const modal = popupData.TemplateChooserModal;
+
+                if (!modal) return;
+
+                // 🔹 Transaction / Invoice flow
+                if (modal.isInv) {
+                  dispatch(
+                    formStateHandleFieldChange({
+                      fields: { lastChoosedTemplate: template },
+                    })
+                  );
+                }
+                // 🔹 Account / non-invoice flow
+                else {
+                  dispatch(
+                    accFormStateHandleFieldChange({
+                      fields: { lastChoosedTemplate: template },
+                    })
+                  );
+                }
+
+                // 🔹 Ledger report flow (independent of transaction)
+                if (modal.isInLedgerReport) {
+                  dispatch(
+                    toggleTemplateChooserModal({
+                      lastChooseTemplateNotTransaction: template,
+                    })
+                  );
+                }
+              }}
               setIsOpen={() =>
                 dispatch(
                   toggleTemplateChooserModal({ isOpen: false, templateGroup: "", customerType: "", formType: "" })
                 )
-            }
-          />
-        )}
+              }
+            />
+          )}
         </ERPResizableSidebar>
       }
     </Fragment>

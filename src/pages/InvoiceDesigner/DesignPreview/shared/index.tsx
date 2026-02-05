@@ -17,11 +17,12 @@ export interface AccountTransactionProps {
   AmountToArabic?: any;
   isTemplateDesigner?: boolean
   isInvTrans?: boolean;
+  isInLedgerReport?: boolean;
 }
 export type TemplateChangeHandler = {
   openTemplateChooser: () => {}
 };
-const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans }: AccountTransactionProps) => {
+const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans, isInLedgerReport }: AccountTransactionProps) => {
   const headerState = template?.headerState;
   const isAutoHeight =template?.propertiesState?.isAutoHeight??false; 
   const propertiesState = template?.propertiesState;
@@ -136,7 +137,7 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDe
                 onClick={() => {
                   debugger;
                   dispatch(
-                    toggleTemplateChooserModal({ isOpen: true, templateGroup: template?.templateGroup, customerType: template?.customerType, formType: template?.formType, isInv: isInvTrans })
+                    toggleTemplateChooserModal({ isOpen: true, templateGroup: template?.templateGroup, customerType: template?.customerType, formType: template?.formType, isInv: isInvTrans,isInLedgerReport })
                   );
                 }}>
                 {/* Animated background gradient */}

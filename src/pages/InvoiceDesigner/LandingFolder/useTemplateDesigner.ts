@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 import { DesignerElementType, PlacedComponent, TemplateDto, TemplateState } from "../Designer/interfaces";
 
 import { debounce } from "lodash";
-import { DummyVoucherData } from "../constants/DummyData";
+import {  DummyLedgerReportDataForPrint, DummyVoucherData } from "../constants/DummyData";
 import { RootState } from "../../../redux/store";
 import { templateInitialState } from "../../../redux/reducers/TemplateReducer";
 import { designerSectionsConfig, designSections, DesignSectionType } from "./designSection";
@@ -20,10 +20,11 @@ import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
 import { fetchTemplateById, fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../../use-print";
 import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
-import { PrintDetailDto, PrintResponse } from "../../use-print-type";
+import { LedgerReportDataForPrint, PrintData, PrintDetailDto, PrintResponse } from "../../use-print-type";
 import { compressData } from "../../../utilities/compression";
 import { removeDefaults } from "../../../utilities/Utils";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import moment from "moment";
 
 const api = new APIClient();
 
@@ -53,6 +54,7 @@ interface UseTemplateDesignerProps<T = unknown> {
   voucherType?: string;
   isAppGlobal?: boolean;
   lastChoosedTemplate?: TemplateState<T>;
+  isInLedgerReport?: boolean;
 }
 
 export const useTemplateDesigner = <T=unknown,>({
@@ -80,7 +82,8 @@ export const useTemplateDesigner = <T=unknown,>({
   dbIdValue,
   voucherType,
   isAppGlobal,
-  lastChoosedTemplate
+  lastChoosedTemplate,
+  isInLedgerReport=false,
 }: UseTemplateDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
@@ -90,7 +93,19 @@ export const useTemplateDesigner = <T=unknown,>({
   let activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
  // State
   const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
-  const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
+  // const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
+  const [printData, setPrintData] = useState<PrintData>(() =>
+  isInLedgerReport
+    ? {
+        kind: "ledgerReport",
+        data: DummyLedgerReportDataForPrint,
+      }
+    : {
+        kind: "voucher",
+        data: DummyVoucherData as any,
+      }
+);
+
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
   const [loading, setLoading] = useState(false);
@@ -135,19 +150,52 @@ export const useTemplateDesigner = <T=unknown,>({
      activeTemplate?.propertiesState?.isAutoHeight,
   ]);
 
-  // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
-useEffect(() => {
-  let isActive = true;
-  // let data: PrintResponse= DummyVoucherData as any;
-  const loadData = async () => {
+  const setVoucherPrintData = (data: PrintResponse) => {
+    setPrintData({ kind: "voucher", data });
+  };
+
+const setLedgerPrintData = (data: LedgerReportDataForPrint) => {
+  setPrintData({ kind: "ledgerReport", data });
+};
+
+ 
+
+const loadPrintAndTemplateData = useCallback(
+  async (isActiveRef: { current: boolean }) => {
     if (!MasterIDParam) return;
 
     setLoading(true);
-    try {
-     
 
-     const data = await loadPrintData(
-        MasterIDParam??0,
+    try {
+      // -------------------------------
+      // LEDGER REPORT FLOW
+      // -------------------------------
+      if (isInLedgerReport) {
+        const ledgerData: LedgerReportDataForPrint =
+          await api.postAsync(Urls.get_customer_balance, {
+            LedgerID: MasterIDParam,
+            AsOnDate: moment().local().toDate(),
+          });
+
+        if (!isActiveRef.current) return;
+
+        setLedgerPrintData(ledgerData);
+
+        if (manuvalTemplateFeatch) {
+          const template = await getOrFetchTemplate("CBR", "", "");
+          if (!isActiveRef.current) return;
+          dispatch(setTemplate(template));
+          
+        }
+       autoTemplateResolvedRef.current = true;
+        return;
+      }
+
+      // -------------------------------
+      // VOUCHER FLOW
+      // -------------------------------
+      const voucherData = await loadPrintData(
+        MasterIDParam,
         voucherTypeParam ?? "",
         isInvTrans,
         isSalesView,
@@ -169,72 +217,80 @@ useEffect(() => {
         isAppGlobal
       );
 
-      if (!isActive) return;
-      setPrintData(data);
+      if (!isActiveRef.current) return;
 
-      if (manuvalTemplateFeatch && data) {
-        let _template = await getOrFetchTemplate(
-          data?.master?.voucherType,
-          data?.master?.voucherForm??"",
-          data?.master?.customerType??""
+      setVoucherPrintData(voucherData);
+
+      if (!manuvalTemplateFeatch) return;
+
+      let template = await getOrFetchTemplate(
+        voucherData.master?.voucherType,
+        voucherData.master?.voucherForm ?? "",
+        voucherData.master?.customerType ?? ""
+      );
+
+      if (
+        (!template || template.content == null) &&
+        appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing
+      ) {
+        template = await getOrFetchTemplate(
+          voucherData.master?.voucherType,
+          "",
+          ""
         );
-
-        if ((!_template || _template.content == null)&&
-            appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing) 
-         {
-          _template = await getOrFetchTemplate(
-            data?.master?.voucherType,
-            "",
-            ""
-          );
-        }
-        
-        if (!isActive) return;
-          dispatch(setTemplate(_template)); // or initial empty template
-          autoTemplateResolvedRef.current = true;
-  
       }
+
+      if (!isActiveRef.current) return;
+
+      dispatch(setTemplate(template));
+      autoTemplateResolvedRef.current = true;
     } catch (err) {
-      if (isActive) {
-        console.error("Error loading data:", err);
+      if (isActiveRef.current) {
+        console.error("Error loading print/template data:", err);
       }
     } finally {
-      if (isActive) {
+      if (isActiveRef.current) {
         setLoading(false);
       }
     }
-  };
+  },
+  [
+    MasterIDParam,
+    isInLedgerReport,
+    manuvalTemplateFeatch,
+    voucherTypeParam,
+    isInvTrans,
+    isSalesView,
+    isServiceTrans,
+    transDate,
+    printCopies,
+    isReprint,
+    isPOSPrinting,
+    isFromSalesReceipt,
+    isPackingSlipPrint,
+    warehouseID,
+    kitchenIDParam,
+    kitchenPrinterNameParam,
+    kitchenNameParam,
+    commonKitchenProductGroupIDParam,
+    transactionType,
+    dbIdValue,
+    voucherType,
+    isAppGlobal,
+    appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+  ]
+);
 
-  loadData();
+ // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
+useEffect(() => {
+  const isActiveRef = { current: true };
 
-  // ✅ CLEANUP
+  loadPrintAndTemplateData(isActiveRef);
+
   return () => {
-    isActive = false;
+    isActiveRef.current = false;
   };
-}, [
-  manuvalTemplateFeatch,
-  MasterIDParam,
-  transactionType,
-  voucherTypeParam,
-  isInvTrans,
-  isSalesView,
-  isServiceTrans,
-  transDate,
-  printCopies,
-  isReprint,
-  isPOSPrinting,
-  isFromSalesReceipt,
-  isPackingSlipPrint,
-  warehouseID,
-  kitchenIDParam,
-  kitchenPrinterNameParam,
-  kitchenNameParam,
-  commonKitchenProductGroupIDParam,
-  dbIdValue,
-  voucherType,
-  isAppGlobal,
-]);
-
+}, [loadPrintAndTemplateData]);
 
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
@@ -261,7 +317,7 @@ useEffect(() => {
 
         const props = {
           template: activeTemplate,
-          data: printData,
+          data: printData?.data,
           qrCodeImages: qrImages
         };
 
@@ -277,7 +333,7 @@ useEffect(() => {
   // Effect: Handle user template selection
 useEffect(() => {
 
-  ;if (!manuvalTemplateFeatch) return;
+  if (!manuvalTemplateFeatch) return;
     // Detect MasterIDParam change (new transaction)
   const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;
   
@@ -481,3 +537,65 @@ useEffect(() => {
     masterId: MasterIDParam,
   };
 };
+
+
+// INSERT INTO Templates (
+//     TemplateType,
+//     TemplateKind,
+//     TemplateGroup,
+//     TemplateName,
+//     Content,
+//     TemplateDescription,
+//     thumbImage,
+//     background_image,
+//     background_image_header,
+//     background_image_footer,
+//     signature_image,
+//     TaxType
+// )
+// SELECT
+//     v.TemplateType,
+//     v.TemplateKind,
+//     v.TemplateGroup,
+//     tn.TemplateName,
+//     v.Content,
+//     v.TemplateDescription,
+//     v.thumbImage,
+//     v.background_image,
+//     v.background_image_header,
+//     v.background_image_footer,
+//     v.signature_image,
+//     v.TaxType
+// FROM (
+//     VALUES
+//         (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+// ) AS v (
+//     TemplateType,
+//     TemplateKind,
+//     TemplateGroup,
+//     Content,
+//     TemplateDescription,
+//     thumbImage,
+//     background_image,
+//     background_image_header,
+//     background_image_footer,
+//     signature_image,
+//     TaxType
+// )
+// CROSS APPLY (
+//     SELECT
+//         CONCAT(
+//             v.TemplateGroup, '-',
+//             COALESCE(v.TaxType, 'DEF'), '-',
+//             CASE v.TemplateType
+//                 WHEN 'standard'  THEN 'STD'
+//                 WHEN 'universal' THEN 'UN'
+//             END, '-',
+//             UPPER(v.TemplateKind)
+//         ) AS TemplateName
+// ) tn
+// WHERE NOT EXISTS (
+//     SELECT 1
+//     FROM Templates t
+//     WHERE t.TemplateName = tn.TemplateName
+// );

@@ -21,9 +21,10 @@ interface TemplatesProps {
   formType: string;
   customerType: string;
   onTemplateChoosed?: (template: any) => void;
+  isInLedgerReport?: boolean;
 }
 
-export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherType, formType, customerType }: TemplatesProps) {
+export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherType, formType, customerType, isInLedgerReport=false }: TemplatesProps) {
 
   const { t } = useTranslation("system");
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
         // 2️⃣ Fallback: empty tax type (if enabled)
         if (
           (!response || response.length === 0) &&
-          appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing
+          appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing && !isInLedgerReport
         ) {
           response = await fetchFiltered("", "");
         }
@@ -87,6 +88,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
     formType,
     customerType,
     appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+    isInLedgerReport
   ]);
 
   const loadTemplateId = useCallback(

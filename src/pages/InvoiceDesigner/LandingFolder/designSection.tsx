@@ -184,7 +184,7 @@ export const designerSectionsConfig: Record<string, Record<string, string[]>> = 
     cheque: ["properties", "header",  "table", "footer", ],
   },
   CUSTOMERBALANCE: {
-    customerBalance: ["properties", "header",  "table", "footer", ],
+    customerBalance: ["properties", "header", "footer", ],
   },
 };
 

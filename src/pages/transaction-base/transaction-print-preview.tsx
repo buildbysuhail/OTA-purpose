@@ -27,15 +27,16 @@ export type TemplatesPreViewHandle = {
   // openTemplateChooser: () => {}
 };
 type TemplatesProps = {
-  voucherType: string;
+  voucherType?: string;
   isInvTrans?: boolean;
   printPreviwPopupInfo: popupDataProps;
-  transactionType: string;
+  transactionType?: string;
   lastChooseTemp: any;
+  isInLedgerReport?: boolean;
 };
 //  
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
-  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp }, ref) => {
+  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp,isInLedgerReport=false }, ref) => {
 
     const { t } = useTranslation();
     const {
@@ -47,7 +48,8 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       isInvTrans: isInvTrans,
       MasterIDParam: printPreviwPopupInfo.masterId ?? 0,
       transactionType: transactionType,
-      lastChoosedTemplate: lastChooseTemp
+      lastChoosedTemplate: lastChooseTemp,
+      isInLedgerReport: isInLedgerReport
     });
     const previewWidth = templateStyleProperties.previewWidth ?? 500;
     const previewHeight = templateStyleProperties.previewHeight ?? 500; // Can be number or "auto"
@@ -114,6 +116,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
                 isTemplateDesigner={false}
                 isInvTrans={isInvTrans}
+                isInLedgerReport={isInLedgerReport}
               />
 
 

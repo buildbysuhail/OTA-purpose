@@ -350,6 +350,16 @@ export interface LedgerReportDataForPrint {
   customerAccName: string;
   balance: number;
 }
+export type PrintData =
+  | {
+      kind: "voucher";
+      data: PrintResponse;
+    }
+  | {
+      kind: "ledgerReport";
+      data: LedgerReportDataForPrint;
+    };
+
 export interface PrintDetailDto {
   slNo: number;
   invTransactionDetailID: number;

@@ -15,7 +15,9 @@ export interface popupDataProps {
   templateGroup?: string
   customerType?: string
   formType?: string
-  isInv?:any
+  isInv?:boolean
+  isInLedgerReport?: boolean;
+  lastChooseTemplateNotTransaction?:TemplateState<unknown>;
 }
 interface popupData {
   printJobLoader: { isPrinting: boolean }

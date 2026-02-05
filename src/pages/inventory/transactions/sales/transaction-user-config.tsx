@@ -3,7 +3,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
@@ -71,6 +71,7 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultEx
 
 export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType, undoEditMode }) => {
   const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
   const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
@@ -303,9 +304,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     id="showRateBeforeTax"
                     label={t("show_rate_before_tax")}
                     data={formState.userConfig}
-                    checked={formState?.userConfig?.showRateBeforeTax}
+                    checked={applicationSettings?.productsSettings?.showRateBeforeTax ? true : formState?.userConfig?.showRateBeforeTax}
                     onChangeData={(e) => handleFieldChange("showRateBeforeTax", e.showRateBeforeTax)}
                     className="w-1/3"
+                    disabled={applicationSettings?.productsSettings?.showRateBeforeTax}
                   />
                 </>
               }

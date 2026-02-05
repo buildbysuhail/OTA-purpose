@@ -11,7 +11,7 @@ interface BillDiscountInputProps extends VoucherElementProps {
   dispatch: any;
   footerLayout?: "horizontal" | "vertical";
   applyDiscountsToItems?: () => void; // Add this line
-  applyTaxOnBillDiscount: (billDiscount: number) => void;
+  applyTaxOnBillDiscount?: (billDiscount: number) => void;
 }
 
 const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispatch, t, handleKeyDown, footerLayout, applyDiscountsToItems, applyTaxOnBillDiscount}) => {
@@ -23,8 +23,6 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
           const netAmount = formState.summary.total || 0;
           const discPerc = Number(debouncedValue);
           const billDisc = (netAmount * discPerc) / 100;
-         
-debugger;
           dispatch(
             formStateHandleFieldChange({
               fields: { billDiscountPerc: discPerc },

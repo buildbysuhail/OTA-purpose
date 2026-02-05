@@ -3395,7 +3395,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // Assign final value
-      formState.transaction.master.taxOnDiscount = taxOnBillDisc;
+      return taxOnBillDisc;
 
     } catch (err) {
       // swallow like C#
@@ -3426,8 +3426,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     formElements: FormElementsState,
     commonParams: CommonParams,
     isEdit: boolean = false
-  ) => {
-
+  ) => {    
     let { result } = commonParams;
     result = result
       ? result
@@ -3504,6 +3503,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
 
+debugger;
     // tax on bill discount handling (mirror C# Indian logic)
     let taxOnBilldisc = Number(master.taxOnDiscount ?? 0);
     let blnApplyTaxonDiscount = true;
@@ -3528,7 +3528,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         TaxableAmt_StdRate -= _BillDiscount;
 
         // taxOnBilldisc rounded to decimalPoints (as C# did)
-        // taxOnBilldisc = Number((_BillDiscount * TaxPerc / 100).toFixed(applicationSettings.mainSettings.decimalPoints));
+        taxOnBilldisc = Number((_BillDiscount * TaxPerc / 100).toFixed(applicationSettings.mainSettings.decimalPoints));
       } else if (_BillDiscount > _TotalNetValue && _BillDiscount > 0 && _TotalNetValue > 0) {
         // reset bill discount
         // caller said they will set master fields as needed; mirror C# by setting back
@@ -3555,9 +3555,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         tax = Number(tax.toFixed(applicationSettings.mainSettings.decimalPoints));
       }
 
-
       // update taxed value in result.master
       result.transaction!.master!.taxOnDiscount = taxOnBilldisc;
+      result.transaction!.master!.vatAmount = tax;
     }
 
     // For India: recalc tax breakdown source (if needed) and set totalTax

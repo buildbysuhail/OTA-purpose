@@ -42,6 +42,7 @@ import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import WareHouseStock from "./components/warehouse-stock";
 import PartiesManage from "../../../accounts/masters/parties/parties-manage";
 import { APIClient } from "../../../../helpers/api-client";
+import { DeepPartial } from "redux";
 
 const api = new APIClient();
 interface TransactionHeaderProps {
@@ -78,6 +79,7 @@ interface TransactionHeaderProps {
   userSession: any;
   inputRefs: Record<string, React.RefObject<HTMLInputElement>>
   partyNameRef: any;
+  getNextVoucherNumber: any;
 }
 // clientSession
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -106,7 +108,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   userSession,
   isAppGlobal,
   inputRefs,
-  partyNameRef
+  partyNameRef,
+  getNextVoucherNumber
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -356,6 +359,44 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
     )
   }
 
+  // The draft mode call is not need to run on the initial load
+  const isFirstRender = useRef(true); 
+  // When draft mode check box tick changes - change voucher number
+   useEffect(() => {
+      const onDraftModeChange = async (checked: boolean) => {
+      const isDraft = checked;
+      const vrForm = formState.transaction.master.voucherForm;
+      const vrType = formState.transaction.master.voucherType;
+      const vrPrefix = formState.transaction.master.voucherPrefix;
+      let nextVrNumber: any = null;
+      let nextActiveVrNumber: any = null;
+      if(isDraft){
+        //  nextActiveVrNumber = await GetNextActiveVoucherNumber(formState.initialFormType,"SID",  "",false);
+      }else{
+        nextVrNumber = await getNextVoucherNumber(vrForm,vrType,vrPrefix,false);
+      }
+      
+      const nextNo = isDraft ? nextActiveVrNumber.voucherNumber : nextVrNumber.voucherNumber; 
+      let out : DeepPartial<TransactionFormState> = {
+        transaction: {
+          master: {
+            voucherType: isDraft ? "SID" : formState.initialVrType,
+            voucherForm: isDraft ? "" : formState.initialFormType,
+            voucherPrefix: isDraft ? "" : formState.initialVrPrefix,
+            voucherNumber: nextNo,
+          },
+        },
+
+      }
+    }
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }else{
+      onDraftModeChange(formState.draftMode)
+    }
+  }, [formState.draftMode]);
+
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   const conditionalFooterComponents =
     footerLayout === "vertical" && isSmallHeight ? (
@@ -441,14 +482,14 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
     <div>
       {isDropDownOpen.open && (
         <div
-          className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30"
+          className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30 "
           onClick={toggleDropdown}
         />
       )}
       {!deviceInfo?.isMobile && (
         <div
           style={headerStyle}
-          className="fixed top-[110px] z-[39] dark:bg-dark-bg bg-white shadow-md transition-all duration-300"
+          className={`fixed top-[110px] z-[39] dark:bg-dark-bg ${formState.draftMode ? "bg-sky-200" : "bg-white"} shadow-md transition-all duration-300`}
         >
           <div ref={containerRef} className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
@@ -525,7 +566,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${isDropDownOpen.open ? "max-h-[50vh]" : "max-h-0"
               }`}
           >
-            <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
+            <div className={`p-4 md:p-2 dark:bg-dark-bg-card ${formState.draftMode ? "bg-sky-200" : "bg-white"} border-t dark:border-dark-border border-gray-300 shadow-lg`}>
               <div className="flex flex-wrap !items-end gap-1">
                 {/* <Employee
                   dispatch={dispatch}

@@ -37,7 +37,7 @@ import { formStateHandleFieldChangeKeysOnly, resetState, formStateHandleFieldCha
 import DeletingOverlay from "../transaction-deleting";
 import SavingOverlay from "../transaction-saving";
 import { initialUserConfig, transactionInitialData, TransactionFormStateInitialData, initialFormElements, initialInventoryTotals, initialTransactionDetailData } from "../transaction-type-data";
-import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel, GridQtyFactorsM, FormElementsState } from "../transaction-types";
+import { TransactionProps, UserConfig, TransactionDetail, TransactionFormState, TransactionData, SummaryItems, GridQtyFactors, ColumnModel, GridQtyFactorsM, FormElementsState, TransactionMaster, CommonParams } from "../transaction-types";
 import BatchEntryModal from "./batch-entry";
 import ObjectViewer from "./components/fomstate-view";
 import Header from "./components/header";
@@ -144,14 +144,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // const handleClearControls = () => {
-  //   clearControls(
-  //     formState.isEdit,
-  //     formState.transaction.master.invTransactionMasterID
-  //   );
-  //   // setTriggerEffect(prev => !prev); // Toggle the triggerEffect state
-  //   // setTriggerEffect(true);
-  // };
   const handleClearControls = async () => {
     // 1) Guard: check voucher locked
     if (formState?.transaction?.master?.isLocked) {
@@ -1616,7 +1608,44 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
 
 
-
+   useEffect(() => {
+      console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
+      async function calculateValues() {
+        console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
+        debugger;
+        await calculateTotal(
+        {
+          ...formState.transaction.master
+          , hasroundOff: formState.transaction.master.hasroundOff
+          , adjustmentAmount: formState.transaction.master.adjustmentAmount
+          , creditAmt: formState.transaction.master.creditAmt
+          , couponAmt: formState.transaction.master.couponAmt
+          , srAmount: formState.transaction.master.srAmount
+          , billDiscount: formState.transaction.master.billDiscount
+          , hasCashPaid: formState.transaction.master.hasCashPaid
+          ,bankAmt: formState.transaction.master.bankAmt
+        }, formState.summary, formState.formElements, {
+          result: {
+            transaction: {
+              master: {
+                hasroundOff: formState.transaction.master.hasroundOff,
+                adjustmentAmount: formState.transaction.master.adjustmentAmount,
+                creditAmt: formState.transaction.master.creditAmt,
+                couponAmt: formState.transaction.master.couponAmt,
+                srAmount: formState.transaction.master.srAmount,
+                billDiscount: formState.transaction.master.billDiscount,
+                hasCashPaid: formState.transaction.master.hasCashPaid,
+                bankAmt: formState.transaction.master.bankAmt
+              }
+            }
+          }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly
+      })
+      }
+      calculateValues();
+    }, [formState.transaction.master.hasCashPaid, formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff
+      , formState.transaction.master.adjustmentAmount, formState.transaction.master.bankAmt, formState.transaction.master.couponAmt
+      , formState.transaction.master.srAmount]);
+      
   return (
     <>
       { !isPos ?(
@@ -2080,6 +2109,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           <TransactionFooter
             transactionType={transactionType ?? ""}
             calculateTotal={calculateTotal}
+            applyDiscountsToItems={applyDiscountsToItems}
             formState={formState}
             dispatch={dispatch}
             t={t}
@@ -2093,7 +2123,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
             isAppGlobal={clientSession.isAppGlobal}
             toggleDropup={toggleFooterDropup}
             footerLayout={"horizontal"}
-            applyDiscountsToItems={applyDiscountsToItems}
             applicationSettings={applicationSettings}
             loadAndSetTransVoucher={loadAndSetTransVoucher}
             handleDiscountSlab={handleDiscountSlab}

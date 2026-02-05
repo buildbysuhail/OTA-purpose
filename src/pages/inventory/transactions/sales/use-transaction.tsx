@@ -131,7 +131,6 @@ export const useTransaction = (
     attachMaster,
     calculateSummary,
     calculateTotal,
-    // calculateTotal,
     disableControlsFn,
     refactorDetails,
     // getClosedDate,
@@ -163,7 +162,6 @@ export const useTransaction = (
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey) {

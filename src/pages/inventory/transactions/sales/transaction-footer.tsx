@@ -377,29 +377,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, [isSidebar]);
 
-  useEffect(() => {
-    calculateTotal(
-      {
-        ...formState.transaction.master
-        , hasroundOff: formState.transaction.master.hasroundOff
-        , adjustmentAmount: formState.transaction.master.adjustmentAmount
-        , creditAmt: formState.transaction.master.creditAmt
-        , couponAmt: formState.transaction.master.couponAmt
-        , srAmount: formState.transaction.master.srAmount
-      }, formState.summary, formState.formElements, {
-        result: {
-          transaction: {
-            master: {
-              hasroundOff: formState.transaction.master.hasroundOff,
-              adjustmentAmount: formState.transaction.master.adjustmentAmount,
-              creditAmt: formState.transaction.master.creditAmt,
-              couponAmt: formState.transaction.master.couponAmt,
-              srAmount: formState.transaction.master.srAmount,
-            }
-          }
-        }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly
-    })
-  }, [formState.transaction.master.hasCashPaid, formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff, formState.transaction.master.adjustmentAmount, formState.transaction.master.bankAmt, formState.transaction.master.couponAmt, formState.transaction.master.srAmount]);
+ 
 
   // Footer height measurement and reporting
   useLayoutEffect(() => {
@@ -1603,7 +1581,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     handleKeyDown={handleKeyDown}
                     footerLayout={footerLayout}
                     applyDiscountsToItems={applyDiscountsToItems}
-                    applyTaxOnBillDiscount={applyTaxOnBillDiscount}
                   />
                 </div>
               </div>
@@ -2023,7 +2000,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 t={t}
                 handleKeyDown={handleKeyDown}
                 applyDiscountsToItems={applyDiscountsToItems}
-                applyTaxOnBillDiscount={applyTaxOnBillDiscount}
               />
             </div>
             <ERPTextarea

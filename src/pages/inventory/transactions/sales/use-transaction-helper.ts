@@ -1764,14 +1764,27 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       /** ---------------- Dates ---------------- */
       transactionDate: m.transactionDate,
-      orderDate: m.orderDate,
-      quotationDate: m.quotationDate,
-      purchaseInvoiceDate: m.purchaseInvoiceDate,
+      orderDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.refDate
+        : m.orderDate,
+      quotationNumber: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? 0
+        : m.quotationNumber,
+      quotationDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.transactionDate
+        : m.quotationDate,
+        purchaseInvoiceNumber: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? ""
+        : m.purchaseInvoiceNumber,
+      purchaseInvoiceDate:[VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.refDate
+        : m.purchaseInvoiceDate,
       deliveryDate: m.refDate,
       despatchDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
       VoucherType.ServiceInvoice].includes(m.voucherType as any) ? m.refDate : m.despatchDate,
       dueDate: m.dueDate,
-      orderNumber: m.voucherType == VoucherType.SalesInvoice ? m.deliveryNoteNumber : m.voucherType == VoucherType.ServiceInvoice ? m.orderNumber : 0,
+      // orderNumber: m.voucherType == VoucherType.SalesInvoice ? m.orderNumber : m.voucherType == VoucherType.ServiceInvoice ? m.orderNumber : 0,
+      orderNumber: [VoucherType.SalesInvoice, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? m.orderNumber : 0,
       mannualInvoiceNumber: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,
       VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? m.mannualInvoiceNumber : "",
 

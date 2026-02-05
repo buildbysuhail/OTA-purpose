@@ -1250,7 +1250,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
       </div>
 
-      <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : "bg-white shadow-lg border dark:border-dark-border border-gray-200 overflow-hidden"}`}>
+      <div className={`dark:bg-dark-bg-card ${footerLayout === "vertical" ? "" : `${formState.draftMode ? "bg-sky-200" : "bg-white"} border dark:border-dark-border border-gray-200 overflow-hidden`}`}>
         {/* Vertical Layout Fields - show based on verticalVisibleFields count */}
         <div className={`${footerLayout === "vertical" ? "block" : "hidden"}`}>
           <div className="mb-2">
@@ -1627,7 +1627,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
           </div>
 
-          <div className="py-2 px-2 md:pl-2 md:pr-4 dark:bg-dark-bg-card bg-gray-50 border-t md:border-t-0 md:border-l dark:border-dark-border border-gray-200 min-w-0">
+          <div className={`py-2 px-2 md:pl-2 md:pr-4 dark:bg-dark-bg-card ${formState.draftMode ? "bg-sky-200" : "bg-gray-50"} border-t md:border-t-0 md:border-l dark:border-dark-border border-gray-200 min-w-0`}>
             <div className="flex flex-col gap-1 sm:gap-1.5 max-w-full lg:max-w-none">
               <NetAmountInput
                 formState={formState}
@@ -1713,9 +1713,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       </div>
     </div>
   );
-
   const dropdownContent = (
-    <div className="p-2 dark:bg-dark-bg-card bg-white border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none">
+    <div className={`p-2 dark:bg-dark-bg-card ${formState.draftMode ? "bg-sky-200" : "bg-white"} border border-gray-300 dark:border md:border-t md:border-r md:border-l md:border-b-0 md:rounded-t-lg rounded-lg md:rounded-none`}>
       <div className="flex items-end gap-2 flex-wrap">
         {/* <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
           <PriceCategoryCombobox
@@ -2039,7 +2038,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   );
 
   const minimalContent = (
-    <div className="p-2 mt-1 mb-2 sm:mb-3 dark:bg-dark-bg-card bg-gray-50 border dark:border-dark-border border-gray-200 rounded-lg overflow-hidden">
+    <div className={`p-2 mt-1 mb-2 sm:mb-3 dark:bg-dark-bg-card ${formState.draftMode ? "bg-sky-200" : "bg-gray-50"} border dark:border-dark-border border-gray-200 rounded-lg overflow-hidden`}>
       <div className="grid grid-cols-1 gap-1 sm:gap-1.5">
         <NetAmountInput
           formState={formState}

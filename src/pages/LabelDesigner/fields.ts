@@ -18,7 +18,7 @@ export const inventoryFields: OptionGroup[] = [
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
-  { groupName: 'LedgerReport', options: modelToListFromObject<LedgerReportDataForPrint>(initialLedgerReportDataForPrint, "ledgerReportDataForPrint___") },
+
 ];
 export const accountsFields: OptionGroup[] = [
   { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields, "custom___") },
@@ -28,6 +28,12 @@ export const accountsFields: OptionGroup[] = [
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'Customer',  options: modelToListFromObject<PartyDetailsForPrint>(initialPartyDetailsForPrint,"customer___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
+];
+
+export const ledgerReportFields: OptionGroup[] = [
+  { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
+  { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
+  { groupName: 'LedgerReport', options: modelToListFromObject<LedgerReportDataForPrint>(initialLedgerReportDataForPrint, "ledgerReportDataForPrint___") },
 ];
 export const barCodeField: OptionGroup[] = [
   { groupName: "BarCodeField", options: modelToListFromObject<BarcodeLabel>(initialProductData, "barcode___") }

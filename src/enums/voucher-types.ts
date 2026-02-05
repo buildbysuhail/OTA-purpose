@@ -60,6 +60,7 @@ enum VoucherType {
   ItemLoadRequest = "ILR", //not in vouchertable
   StockCount = "SC", //not in vouchertable
   ServiceInvoice = "SVI", //not in vouchertable
+  SalesInvoiceDraft = "SID",
 }
 
 export default VoucherType;

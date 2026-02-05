@@ -43,6 +43,9 @@ import WareHouseStock from "./components/warehouse-stock";
 import PartiesManage from "../../../accounts/masters/parties/parties-manage";
 import { APIClient } from "../../../../helpers/api-client";
 import { DeepPartial } from "redux";
+import { UserAction, useUserRights } from "../../../../helpers/user-right-helper";
+import moment from "moment";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 const api = new APIClient();
 interface TransactionHeaderProps {
@@ -128,6 +131,8 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     right: isRtl ? headerLeft : "0",
   };
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+  const { hasRight } = useUserRights();
+  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
 
   useEffect(() => {
     const handleResize = () => {
@@ -370,24 +375,58 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
       const vrPrefix = formState.transaction.master.voucherPrefix;
       let nextVrNumber: any = null;
       let nextActiveVrNumber: any = null;
+      const softwareDate = moment(clientSession.softwareDate,"DD/MM/YYYY").local();
+      let btnEditVisible = true;
+      let btnDeleteVisible = true;
       if(isDraft){
-        //  nextActiveVrNumber = await GetNextActiveVoucherNumber(formState.initialFormType,"SID",  "",false);
+        btnEditVisible = true;
+        btnDeleteVisible = true;
+        if (!hasRight(formState.formCode, UserAction.Edit)) {
+          btnEditVisible = false;
+        }
+        if (!hasRight(formState.formCode, UserAction.Delete)) {
+          btnDeleteVisible = false;
+        }
+        nextActiveVrNumber = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
+              `formType=${formState.initialFormType}&voucherType=${"SID"}&voucherPrefix=${""}&isVoucherPrefix=${false}`) ;
       }else{
+        btnEditVisible = false;
+        btnDeleteVisible = false;
+        if(formState.transaction.master.draftTransactionMasterID > 0){
+          dispatch(
+            formStateHandleFieldChange({
+              fields: { 
+                isEdit : false,
+               },
+            })
+          )
+        }
         nextVrNumber = await getNextVoucherNumber(vrForm,vrType,vrPrefix,false);
       }
-      
       const nextNo = isDraft ? nextActiveVrNumber.voucherNumber : nextVrNumber.voucherNumber; 
-      let out : DeepPartial<TransactionFormState> = {
+      let outResult : DeepPartial<TransactionFormState> = {
         transaction: {
           master: {
             voucherType: isDraft ? "SID" : formState.initialVrType,
             voucherForm: isDraft ? "" : formState.initialFormType,
             voucherPrefix: isDraft ? "" : formState.initialVrPrefix,
             voucherNumber: nextNo,
+            transactionDate: isDraft ? formState.transaction?.master?.transactionDate : softwareDate.toISOString(),
+            invTransactionMasterID: isDraft ? formState.transaction.master.invTransactionMasterID : formState.transaction.master.draftTransactionMasterID > 0 ? 0 : formState.transaction.master.invTransactionMasterID,
           },
         },
+        formElements: {
+          btnEdit: { disabled: btnEditVisible },
+          btnDelete: { disabled: btnDeleteVisible },
+          chkDraftMode: { disabled: !isDraft && formState.transaction.master.draftTransactionMasterID > 0}
 
+        },
       }
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: outResult
+        })
+      );
     }
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -755,7 +794,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   />
                 )}
 
-                {userSession.dbIdValue == "SEMAKA" && formState.transaction.master.voucherType == VoucherType.SalesInvoice && (
+                {userSession.dbIdValue == "SEMAKA" && (formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft ) && (
                   <div className="flex items-end gap-3 ml-2">
                     <ERPRadio
                       id="cash"
@@ -793,7 +832,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
-                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
+                {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
                   <div className="flex items-end gap-2">
                     <ERPCheckbox
                       localInputBox={formState?.userConfig?.inputBoxStyle}
@@ -828,6 +867,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                           <DraftMode
                             closeModal={handleDraftModeClose}
                             formState={formState}
+                            loadAndSetTransVoucher={loadAndSetTransVoucher}
                             t={t}
                           />
                         }
@@ -844,7 +884,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
                 
 
-                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
+                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
                   <div>
                     <ERPButton
                       title={t("more")}
@@ -855,7 +895,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     />
                   </div>
                 )}
-                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
+                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
                   isMoreModalOpen && (
                     <ERPModal
                       isOpen={isMoreModalOpen}
@@ -877,7 +917,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     />
                   )
                 )}
-                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
+                {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
 
                   <ERPButton
                     title={t("w_stock")}
@@ -887,7 +927,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     onClick={handleWStockList}
                   />
                 )}
-                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice &&
+                {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
                 <ManualInvNo
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     formState={formState}
@@ -1256,7 +1296,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
               <div className="flex items-center gap-2 mt-2">
                 
 
-                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any) &&
+                {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
 
                   <ERPButton
                     title={t("more")}

@@ -5,16 +5,17 @@ import Urls from "../../../../redux/urls";
 import { APIClient } from "../../../../helpers/api-client";
 import { TransactionFormState } from "../transaction-types";
 import { useDispatch } from "react-redux";
-import { formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "../reducer";
+import { LoadAndSetTransVoucherFn } from "./use-transaction";
 
   interface DraftModeProps {
+    loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
     closeModal: () => void;
     formState: TransactionFormState;
     t: any;
   }
 
   const api = new APIClient();
-  const VoucherDraftGrid: React.FC<DraftModeProps> = ({ closeModal, t, formState }) => {
+  const VoucherDraftGrid: React.FC<DraftModeProps> = ({ loadAndSetTransVoucher, closeModal, t, formState }) => {
   
   const [draftGridData, setDraftGridData] = useState<any[]>([])
   const [draftInitialized, setDraftInitialized] = useState(false);
@@ -53,59 +54,30 @@ import { formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } 
       grid.focus();
     }, []);
 
-//     {
-//   "si": 4,
-//   "voucherNumber": "42",
-//   "invTransactionMasterID": 600001144831,
-//   "partyName": "Cash Account almas - النقدية",
-//   "counterName": "AL MAS PLASTIC",
-//   "warehouse": "PRIMARY",
-//   "employee": "RAZAK CHOLAYIL",
-//   "userName": "adminr",
-//   "transactionDate": "2026-02-04T00:00:00",
-//   "createdDate": "2026-02-05T09:45:59.597",
-//   "gross": 306,
-//   "vat": 0,
-//   "grandTotal": 306,
-//   "address1": "",
-//   "address2": "",
-//   "address4": "12345",
-//   "remarks": ""
-// }
-
-    const handleKeyDown = useCallback((e: any) => {
+    const handleKeyDown = useCallback(async(e: any) => {
       const key = e.event?.key;
       if (key === "Enter") {
+        e.event.preventDefault();
+        e.event.stopPropagation();
         const grid = e.component;
         const focusedRowKey = grid.option("focusedRowKey");
         const rowIndex = grid.getRowIndexByKey(focusedRowKey);
         const rowData = grid.getVisibleRows()[rowIndex]?.data;
-        debugger;
-        dispatch(
-          formStateHandleFieldChangeKeysOnly({
-            fields: {  
-              transaction: {
-                master:{
-                  voucherNumber: rowData?.voucherNumber,
-                  invTransactionMasterID: rowData?.invTransactionMasterID,
-                  partyName: rowData?.partyName,
-                  counterName: rowData?.counterName,
-                  warehouse: rowData?.warehouse,
-                  employee: rowData?.employee,
-                  transactionDate: rowData?.transactionDate,
-                  createdDate: rowData?.createdDate,
-                  address1: rowData?.address1,
-                  address2: rowData?.address2,
-                  address4: rowData?.address4,
-                  userName: rowData?.userName,
-                  remarks: rowData?.remarks,
-                  // gross: rowData?.gross,
-                  // vat: rowData?.vat,
-                  // grandTotal: rowData?.grandTotal,
-              }
-            }},
-          })
-        )
+        await loadAndSetTransVoucher(
+          false,
+            rowData?.voucherNumber,
+            "",
+            "SID",
+            "",
+            "",
+            undefined,
+            undefined,
+            true,
+            false,
+            "",
+            "",
+            "",false,false, true
+          );
         closeModal();
       }
     }, []);

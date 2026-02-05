@@ -1275,7 +1275,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.ratePlusTax = row.rateWithTax;
       } else if ([VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(voucherType as any) && !clientSession.isAppGlobal) {
         detail.ratePlusTax = row.rateWithTax;
-      } else if ([VoucherType.SalesReturn, VoucherType.ServiceInvoice,VoucherType.GoodRequest].includes(voucherType as any)) {
+      } else if ([VoucherType.SalesReturn, VoucherType.ServiceInvoice, VoucherType.GoodRequest].includes(voucherType as any)) {
         detail.ratePlusTax =
           Math.round(
             Number(row.unitPrice) * (1 + Number(row.vatPercentage) / 100) * 100
@@ -1724,6 +1724,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     const m = formState.transaction.master;
     const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
+    let isRefund = false; //value from return global refund button click
+
     const privperc = applicationSettings.mainSettings.previlegeCardPerc;
     let master = {
       ...m,
@@ -1750,7 +1752,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           : applicationSettings.branchSettings.defaultSIBTAcc > 0 && m.voucherForm === "BT" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice
             ? applicationSettings.branchSettings.defaultSIBTAcc
             : [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any)
-              ? applicationSettings.inventorySettings.defaultSalesReturnAcc
+              ? m.inventoryLedgerID   //applicationSettings.inventorySettings.defaultSalesReturnAcc --in last with no condition invid passing
               : applicationSettings.inventorySettings.defaultSalesAcc,
 
 
@@ -1765,15 +1767,21 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       orderDate: m.orderDate,
       quotationDate: m.quotationDate,
       purchaseInvoiceDate: m.purchaseInvoiceDate,
-      deliveryDate: m.deliveryDate,
-      despatchDate: m.despatchDate,
+      deliveryDate: m.refDate,
+      despatchDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
+      VoucherType.ServiceInvoice].includes(m.voucherType as any) ? m.refDate : m.despatchDate,
       dueDate: m.dueDate,
-      // orderNumber:m.voucherType==VoucherType.SalesInvoice? m.orderNumber:m.voucherType==VoucherType.ServiceInvoice?m.refn,
-      mannualInvoiceNumber: m.mannualInvoiceNumber,
+      orderNumber: m.voucherType == VoucherType.SalesInvoice ? m.deliveryNoteNumber : m.voucherType == VoucherType.ServiceInvoice ? m.orderNumber : 0,
+      mannualInvoiceNumber: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,
+      VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? m.mannualInvoiceNumber : "",
 
       /** ---------------- Amounts ---------------- */
       adjustmentAmount: m.adjustmentAmount,
       adjustmentType: "Add",
+      stockUpdate: [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any)
+        ? m.stockUpdate : m.voucherType == VoucherType.GoodsDeliveryNote && userSession.dbIdValue == "CONTEMPORARY_QATAR"
+          ? false
+          : true,
       billDiscount: m.billDiscount,
       taxOnDiscount: m.taxOnDiscount,
       cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? 0 : m.cashReceived,
@@ -1787,19 +1795,24 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       /** ---------------- Cash / Bank ---------------- */
       cashAmt: m.cashReceived,
-      bankAmt:[VoucherType.SalesInvoice].includes(m.voucherType as any)? m.bankAmt:isCashOrBank && m.voucherType == VoucherType.SalesReturn
-      ? m.grandTotal - m.cashAmt:0,
-      couponAmt: m.couponAmt,
+      bankAmt: [VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
+      VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+        ? m.bankAmt : isCashOrBank && m.voucherType == VoucherType.SalesReturn
+          ? m.grandTotal - m.cashAmt
+          : 0,
+      couponAmt: m.voucherType == VoucherType.SalesInvoice ? m.couponAmt : 0,
       creditAmt:
-        isCashOrBank === false && !clientSession.isAppGlobal
+        (isCashOrBank === false && !clientSession.isAppGlobal)
+          || ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesQuotation,
+          VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any))
           ? Math.max(
             m.grandTotal -
             m.cashAmt -
             m.bankAmt -
-            m.couponAmt,
+            m.couponAmt, //no coupon amt for SR not added because not in UI
             0
           )
-          : isCashOrBank === false && clientSession.isAppGlobal ?
+          : isCashOrBank === false && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice ?
             Math.max(
               m.grandTotal -
               m.cashAmt -
@@ -1811,7 +1824,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       ,
 
       /** ---------------- Rounding ---------------- */
-      roundAmount: [VoucherType.SalesReturn, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? 0 : m.roundAmount,
+      roundAmount: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? 0 : m.roundAmount,
 
       /** ---------------- Warehouse ---------------- */
       fromWarehouseID: m.fromWarehouseID > 0 ? m.fromWarehouseID : [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesOrder, VoucherType.GoodRequest,
@@ -1830,11 +1843,20 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             : m.salesManIncentive,
 
       /** ---------------- Logistics ---------------- */
-      driverID: m.driverID,
-      deliveryManID: m.deliveryManID,
+      deliveryManID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.employeeID
+        : m.deliveryManID,
+      driverID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.deliveryManID
+        : m.driverID,
+
       vehicelID: m.vehicleID,
       gatePassNo: m.gatePassNo,
-      despatchDocumentNumber: applicationSettings.inventorySettings.enableDummyTransation && clientSession.isAppGlobal ? formState.userConfig?.dummyBill : m.despatchDocumentNumber,
+      despatchDocumentNumber: applicationSettings.inventorySettings.enableDummyTransation && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice
+        ? formState.userConfig?.dummyBill
+        : m.voucherType == VoucherType.ServiceInvoice
+          ? m.refDate
+          : [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(m.voucherType as any) ? "" : m.despatchDocumentNumber,
 
       /** ---------------- Voucher ---------------- */
       voucherNumber: m.voucherNumber,
@@ -1844,12 +1866,10 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       /** ---------------- Lock / Invoice ---------------- */
       isLocked: m.isLocked,
-      isInvoiced:
-        userSession.dbIdValue === "543140180640"
-          ? false
-          : true,
+      isInvoiced: m.isInvoiced,
 
-      tokenNumber: m.tokenNumber,
+
+      tokenNumber: m.voucherType == VoucherType.SalesInvoice || ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) && clientSession.isAppGlobal) ? m.tokenNumber : "",
 
       /** ---------------- Privilege ---------------- */
       // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
@@ -1866,27 +1886,27 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.master.privRedeem : 0,
 
       /** ---------------- Project / Cost ---------------- */
-      costCentreID: m.costCentreID,
+      costCentreID: [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) ? m.costCentreID : 0,
+      cashrOrCredit: m.voucherType == VoucherType.SalesInvoice ? m.cashrOrCredit : "",//already managed in source
       projectID: m.projectID || 0,
 
       /** ---------------- Advance ---------------- */
-      advanceAmt: formState.advanceAmtFromSo || 0,
+      advanceAmt: m.voucherType == VoucherType.SalesInvoice ? formState.advanceAmtFromSo : 0,
 
       /** ---------------- Customer ---------------- */
       customerType:
-        m.customerType ||
-        "B2C",
+        m.customerType,
 
       /** ---------------- Draft ---------------- */
       draftTransactionMasterID:
-        m.draftTransactionMasterID > 0
+        m.draftTransactionMasterID > 0 && m.voucherType == VoucherType.SalesInvoice
           ? m.draftTransactionMasterID
           : 0,
 
       /** ---------------- External API ---------------- */
       refInvTransactionMasterSOID:
         applicationSettings.miscellaneousSettings.enableExternalAPI &&
-          m.voucherPrefix === "ESI/"
+          m.voucherPrefix === "ESI/" && m.voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
           ? m.refInvTransactionMasterSOID ?? ""
           : "",
     };
@@ -1916,48 +1936,61 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(formState.transaction.master.voucherType as any)) {
       master.cashReturned = master.cashReceived;
     }
+    if (userSession.dbIdValue == "543140180640" && m.voucherType == VoucherType.SalesInvoice) {
+      master.creditAmt = master.grandTotal;
+      master.cashAmt = 0;
+    }
     if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt - m.srAmount
     }
     if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
       master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt;
     }
-    if (userSession.dbIdValue == "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
-      master.creditAmt = master.grandTotal;
-      master.cashAmt = 0;
-    }
+
     if (master.cashAmt > master.grandTotal && master.voucherType == VoucherType.SalesReturn && !clientSession.isAppGlobal) {
       master.cashAmt = master.grandTotal;
     }
     if (isCashOrBank && m.voucherType == VoucherType.SalesReturn && clientSession.isAppGlobal) {
       master.cashAmt = m.grandTotal;
     }
-     if(m.voucherType==VoucherType.SalesReturn && clientSession.isAppGlobal){
-      m.bankAmt=0;
-     }
+    if (m.voucherType == VoucherType.SalesReturn && clientSession.isAppGlobal) {
+      m.bankAmt = 0;
+    }
     if (m.voucherType == VoucherType.GoodsDeliveryNote || m.voucherType == VoucherType.ServiceInvoice) {
       m.cashAmt = 0;
+      m.bankAmt = 0;
+    }
+    if ((userSession.dbIdValue === "543140180640" && m.voucherType == VoucherType.SalesInvoice)
+      || (m.voucherType == VoucherType.SalesReturn && !clientSession.isAppGlobal)
+      || [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(m.voucherType as any)) {
+      m.isInvoiced = false;
+    }
+    else {
+      m.isInvoiced = true;
+    }
+    if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) && clientSession.isAppGlobal) {
+      m.isInvoiced = isRefund;
     }
 
-    /** ---------------- BT Exception ---------------- */
-    if (m.voucherForm === "BT") {
-      master.isLocked = false;
-      master.customerType = "";
-    }
+
 
     /** ---------------- KSA E-Invoice Rule ---------------- */
     if (
-      applicationSettings.branchSettings.maintainKSA_EInvoice &&
-      m.voucherForm === "VAT" &&
-      m.voucherType === "SI"
+      (applicationSettings.branchSettings.maintainKSA_EInvoice && m.voucherForm === "VAT" && m.voucherType == VoucherType.SalesInvoice)
+      || (applicationSettings.branchSettings.maintainKSA_EInvoice && m.voucherType == VoucherType.SalesReturn)
     ) {
-      if (new Date(m.transactionDate) >= new Date("2021-12-04")) {
+      if (new Date(m.transactionDate) >= new Date("2021-12-04") && m.voucherType == VoucherType.SalesInvoice) {
         master.isLocked = true;
       }
 
-      if (!master.customerType) {
+      if (master.customerType == "") {
         master.customerType = "B2C";
       }
+    }
+    /** ---------------- BT Exception ---------------- */
+    if (m.voucherForm === "BT" && m.voucherType == VoucherType.SalesInvoice) {
+      master.isLocked = false;
+      master.customerType = "";
     }
 
     return master;
@@ -3426,7 +3459,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     formElements: FormElementsState,
     commonParams: CommonParams,
     isEdit: boolean = false
-  ) => {    
+  ) => {
     let { result } = commonParams;
     result = result
       ? result
@@ -3503,7 +3536,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
 
-debugger;
+    debugger;
     // tax on bill discount handling (mirror C# Indian logic)
     let taxOnBilldisc = Number(master.taxOnDiscount ?? 0);
     let blnApplyTaxonDiscount = true;

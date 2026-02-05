@@ -314,9 +314,9 @@ export const useTransaction = (
 
   const loadAndSetTransVoucher: LoadAndSetTransVoucherFn = async (
     usingManualInvNumber = false,
-    voucherNumber=0,
-    voucherPrefix="",
-    voucherType="",
+    voucherNumber = 0,
+    voucherPrefix = "",
+    voucherType = "",
     formType,
     manualInvoiceNumber,
     transactionMasterID,
@@ -371,10 +371,10 @@ export const useTransaction = (
     debugger;
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
-      voucherNumber||formState.transaction.master.voucherNumber,
-      voucherPrefix||formState.transaction.master.voucherPrefix,
-      voucherType||formState.transaction.master.voucherType,
-      formType??formState.transaction.master.voucherForm,
+      voucherNumber || formState.transaction.master.voucherNumber,
+      voucherPrefix || formState.transaction.master.voucherPrefix,
+      voucherType || formState.transaction.master.voucherType,
+      formType ?? formState.transaction.master.voucherForm,
       manualInvoiceNumber,
       transactionMasterID,
       loadVType,
@@ -594,7 +594,7 @@ export const useTransaction = (
     sbCashReceived?: number | 0,
     sbBillDiscount?: number | 0,
   ) => {
-debugger;
+    debugger;
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
@@ -672,8 +672,8 @@ debugger;
         return false;
       }
     }
-let nextVoucher ={voucherPrefix:"",voucherNumber:0};
-debugger;
+    let nextVoucher = { voucherPrefix: "", voucherNumber: 0 };
+    debugger;
     if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
       if (vch.master?.invTransactionMasterID > 0) {
         // uncomment after check - show in 1050 - checkIt
@@ -725,7 +725,7 @@ debugger;
         voucherType: voucherType || (formState.transaction.master.voucherType ?? ""),
         voucherPrefix:
           loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ" ? nextVoucher.voucherPrefix : voucherPrefix || (formState.transaction.master.voucherPrefix ?? ""),
-        voucherForm: formType || (formState.transaction.master.voucherForm ?? "") ,
+        voucherForm: formType || (formState.transaction.master.voucherForm ?? ""),
         invTransactionMasterID: vch.master.invTransactionMasterID,
 
       };
@@ -775,6 +775,7 @@ debugger;
         ledgerID: sbLedgerID != null && sbLedgerID !== 0 ? sbLedgerID : vch.master.ledgerID,
         // inventoryLedgerID: vch.master.inventoryLedgerID,
         oldLedgerID: vch.master.ledgerID,
+        isInvoiced: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.GoodsDeliveryNote].includes(voucherType as any) ? vch.master.isInvoiced : false,
 
         // partyName: vch.master.partyName,
         // address1: vch.master.address1,
@@ -812,6 +813,8 @@ debugger;
                 ? getFormattedValueIgnoreRounding(vch?.master?.cashReceived)
                 : round(vch?.master?.cashReceived)
             : sbCashReceived,
+        refDate: [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
+          ? vch?.master?.OrderDate : vch?.master?.DeliveryDate,
 
         billDiscount: !isSalesBookingLoaded
           ? voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
@@ -1038,7 +1041,7 @@ debugger;
       `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
       }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""}&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false
       }`
-    ) ;
+    );
 
     const nextVoucherNumber = response || { voucherNumber: 1, voucherPrefix: "" };
 
@@ -1153,7 +1156,7 @@ debugger;
     }
 
     // CODE CHECKED########
-    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000) {  
+    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000) {
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1165,59 +1168,59 @@ debugger;
 
     // CODE CHECKED########  - Working Not checked/ Tested
     // ============ B2B/B2C Tax Reg Number Validation (KSA) ============
-      if (customerType === "B2B" && vatNumber.length !== 15 && !isIndia){    //For countryId === 1
+    if (customerType === "B2B" && vatNumber.length !== 15 && !isIndia) {    //For countryId === 1
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("b2b_invoice_15_digit_tax_reg_required"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // CODE CHECKED########  - Working Not checked/ Tested
+    if (customerType === "B2C" && vatNumber.length > 0 && !isIndia) {    // //For countryId === 1
+      await ERPAlert.show({
+        icon: "error",
+        title: t("validation_error"),
+        text: t("b2c_invoice_tax_reg_should_be_empty"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+
+    // CODE CHECKED########
+    // Tax Registration number format validation (15 digits, starts with 3, ends with 3)
+    if (vatNumber !== "" && !isIndia) {
+      if (vatNumber.length !== 15 || !vatNumber.startsWith("3") || !vatNumber.endsWith("3")) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
-          text: t("b2b_invoice_15_digit_tax_reg_required"),
+          text: `${t("invalid_tax_registration_number")} ${master.partyName} ${t("please_check")}`,
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+
+    // CODE CHECKED########
+    // E-Invoice: Transaction date should not be post-dated
+    if (isKSAEInvoice && formType === "VAT") {
+      const transDate = new Date(master.transactionDate);
+      const today = new Date();
+      transDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      if (transDate > today) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("transaction_date_should_not_be_post_dated"),
           confirmButtonText: t("ok"),
         });
         return false;
       }
 
-      // CODE CHECKED########  - Working Not checked/ Tested
-      if (customerType === "B2C" && vatNumber.length > 0 && !isIndia) {    // //For countryId === 1
-        await ERPAlert.show({
-          icon: "error",
-          title: t("validation_error"),
-          text: t("b2c_invoice_tax_reg_should_be_empty"),
-          confirmButtonText: t("ok"),
-        });
-        return false;
-      }
-
-      // CODE CHECKED########
-      // Tax Registration number format validation (15 digits, starts with 3, ends with 3)
-      if (vatNumber !== "" && !isIndia) {
-        if (vatNumber.length !== 15 || !vatNumber.startsWith("3") || !vatNumber.endsWith("3")) {
-          await ERPAlert.show({
-            icon: "error",
-            title: t("validation_error"),
-            text: `${t("invalid_tax_registration_number")} ${master.partyName} ${t("please_check")}`,
-            confirmButtonText: t("ok"),
-          });
-          return false;
-        }
-      }
-
-      // CODE CHECKED########
-      // E-Invoice: Transaction date should not be post-dated
-      if (isKSAEInvoice && formType === "VAT") {
-        const transDate = new Date(master.transactionDate);
-        const today = new Date();
-        transDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
-        if (transDate > today) {
-          await ERPAlert.show({
-            icon: "error",
-            title: t("validation_error"),
-            text: t("transaction_date_should_not_be_post_dated"),
-            confirmButtonText: t("ok"),
-          });
-          return false;
-        }
-
-        // E-Invoice: Grand total should be greater than zero
+      // E-Invoice: Grand total should be greater than zero
       //   if (grandTotal <= 0) {
       //     await ERPAlert.show({
       //       icon: "error",
@@ -1232,31 +1235,31 @@ debugger;
     // CODE CHECKED########
     // ============ Excess Card Amount Check ============ 
     if (cashReceived + cardAmount > grandTotal) {
-      if(cardAmount > 0){
-      if (formState.userConfig?.allowExcessCashReceipt) {
-        const confirmed = await ERPAlert.show({
-          icon: "error",
-          title: t("validation_error"),
-          text: t("excess_card_amount_entered, do_you_want_to_continue"),
-          confirmButtonText: t("yes"),
-          cancelButtonText: t("no"),
-        });
+      if (cardAmount > 0) {
+        if (formState.userConfig?.allowExcessCashReceipt) {
+          const confirmed = await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: t("excess_card_amount_entered, do_you_want_to_continue"),
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+          });
 
-        if (!confirmed) {
+          if (!confirmed) {
+            return false;
+          }
+        }
+        else {
+          await ERPAlert.show({
+            icon: "error",
+            title: t("validation_error"),
+            text: t("excess_card_amount_entered"),
+            confirmButtonText: t("ok"),
+            showCancelButton: false,
+          });
           return false;
         }
-      } 
-      else {
-        await ERPAlert.show({
-          icon: "error",
-          title: t("validation_error"),
-          text: t("excess_card_amount_entered"),
-          confirmButtonText: t("ok"),
-          showCancelButton: false,
-        });
-        return false;
       }
-    }
     }
 
     // CODE CHECKED########
@@ -1463,7 +1466,7 @@ debugger;
         });
         return false;
       }
-       // CODE CHECKED########
+      // CODE CHECKED########
       // Zero quantity/rate validation
       if ((row.free ?? 0) === 0 && row.gross === 0) {
         const confirm = await ERPAlert.show({
@@ -1570,8 +1573,8 @@ debugger;
         const isSchemeItem = row.isSchemeItem === "S";
 
         if (minSalePrice > 0 && minSalePrice * qty > netValue) {
-          if(userSession.dbIdValue === "SAMAPLASTICS"){
-            if(purchasePrice*qty > netValue && !isSchemeItem){
+          if (userSession.dbIdValue === "SAMAPLASTICS") {
+            if (purchasePrice * qty > netValue && !isSchemeItem) {
               await ERPAlert.show({
                 icon: "error",
                 title: t("validation_error"),
@@ -1588,20 +1591,20 @@ debugger;
             });
             let isAuthorized = false;
             const action = `"User tried to allow Sales Price Less than Min Sales Price ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
-            isAuthorized = await SalesAuthorization(action); 
+            isAuthorized = await SalesAuthorization(action);
             if (!isAuthorized) {
               return false;
             }
 
-          }else{
+          } else {
             await ERPAlert.show({
-            icon: "error",
-            title: t("validation_error"),
-            text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
-            confirmButtonText: t("ok"),
-          });
-          return false;
-          } 
+              icon: "error",
+              title: t("validation_error"),
+              text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
+              confirmButtonText: t("ok"),
+            });
+            return false;
+          }
         }
 
         if (purchasePrice * qty > netValue && minSalePrice === 0 && !isSchemeItem) {
@@ -1829,14 +1832,14 @@ debugger;
             })
           );
           // If clearDetailsAfterSave is checked, Then clear details, otherwise, disable pnl master
-          if(formState.userConfig?.clearDetailsAfterSave){
+          if (formState.userConfig?.clearDetailsAfterSave) {
             clearControls(true, true);
-          }else{
+          } else {
             dispatch(
               formStateHandleFieldChangeKeysOnly({
                 fields: {
                   formElements: {
-                    pnlMasters:{
+                    pnlMasters: {
                       disabled: true,
                     },
                   },
@@ -2275,10 +2278,10 @@ debugger;
               disabled: false,
             },
             // grandTotal, dxGrid  - both are included in pnlMaster, Just Added
-            grandTotal:{
+            grandTotal: {
               disabled: false,
             },
-            dxGrid:{
+            dxGrid: {
               disabled: false,
             }
           },
@@ -2324,30 +2327,30 @@ debugger;
         })
       );
     }
-     if(applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
-        setTimeout(() => {
-          transactionDateRef?.current?.focus();
-         }, 0);
-      } else if (formState.userConfig?.initialFocusToCustomer){
-          ledgerIdRef?.current?.focus();
-          ledgerIdRef?.current?.select();
-      }  else {
-          const editableColumns = formState.gridColumns?.filter(
-          (col) =>
-            col.visible != false &&
-            col.dataField != null &&
-            col.allowEditing == true &&
-            col.readOnly !== true
-        );
+    if (applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+      setTimeout(() => {
+        transactionDateRef?.current?.focus();
+      }, 0);
+    } else if (formState.userConfig?.initialFocusToCustomer) {
+      ledgerIdRef?.current?.focus();
+      ledgerIdRef?.current?.select();
+    } else {
+      const editableColumns = formState.gridColumns?.filter(
+        (col) =>
+          col.visible != false &&
+          col.dataField != null &&
+          col.allowEditing == true &&
+          col.readOnly !== true
+      );
 
-        if (focusFirstRow && editableColumns && editableColumns.length > 0) {
-          const res = focusColumn(0, editableColumns[0].dataField ?? "");
-          setCurrentCell(
-            res,
-            formState.transaction.details[0] as TransactionDetail,
-            true
-          );
-        }
+      if (focusFirstRow && editableColumns && editableColumns.length > 0) {
+        const res = focusColumn(0, editableColumns[0].dataField ?? "");
+        setCurrentCell(
+          res,
+          formState.transaction.details[0] as TransactionDetail,
+          true
+        );
+      }
     }
   };
   const handleRemoveItem = async (slNo: string) => {
@@ -5875,8 +5878,8 @@ debugger;
   };
   const gridCode = `grd_inv_transaction_${(_voucherType ?? "") + (_formType ?? "")}`
   const _purchaseGridCol: ColumnModel[] = purchaseGridCol(applicationSettings, userSession
-    , _voucherType || (formState.transaction.master.voucherType?? "")
-    , _formType || (formState.transaction.master.voucherForm?? ""), t, formState) ?? []
+    , _voucherType || (formState.transaction.master.voucherType ?? "")
+    , _formType || (formState.transaction.master.voucherForm ?? ""), t, formState) ?? []
   const initializeFormElements = async (
     voucherType: string,
     voucherPrefix: string,
@@ -6511,14 +6514,14 @@ debugger;
     const editableColumn = _formState.gridColumns?.find(
       (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
     );
-    if(applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
-        setTimeout(() => {
-          transactionDateRef?.current?.focus();
-         }, 0);
-      } else if (_formState.userConfig?.initialFocusToCustomer){
-          ledgerIdRef?.current?.focus();
-          ledgerIdRef?.current?.select();
-      } else {
+    if (applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+      setTimeout(() => {
+        transactionDateRef?.current?.focus();
+      }, 0);
+    } else if (_formState.userConfig?.initialFocusToCustomer) {
+      ledgerIdRef?.current?.focus();
+      ledgerIdRef?.current?.select();
+    } else {
       _formState.currentCell = {
         column: editableColumn?.dataField ?? "",
         data: formState.transaction.details[0],

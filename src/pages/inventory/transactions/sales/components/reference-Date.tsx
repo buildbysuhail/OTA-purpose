@@ -13,20 +13,18 @@ const AccReferenceDate = React.forwardRef<
   return (
     <>
       {formState.formElements.referenceDate.visible && (
-         <>
-                  {[VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn,VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any)?(
-                     <ERPDateInput
+         <ERPDateInput
                     localInputBox={formState.userConfig?.inputBoxStyle}
                     id="orderDate"
                     label={t(formState.formElements.referenceDate.label)}
                     fetching={formState.transactionLoading}
                     className="md:w-[150px]"
                     // required={true}
-                    value={ formState.transaction.master.orderDate}
+                    value={ formState.transaction.master.refDate}
                     onChange={(e) =>
                       dispatch(
                         formStateMasterHandleFieldChange({
-                          fields: { orderDate: e.target?.value },
+                          fields: { refDate: e.target?.value },
                         })
                       )
                     }
@@ -36,53 +34,7 @@ const AccReferenceDate = React.forwardRef<
                     }
                     
                   />
-                  ):( <ERPDateInput
-                    localInputBox={formState.userConfig?.inputBoxStyle}
-                    id="deliveryDate"
-                    label={t(formState.formElements.referenceDate.label)}
-                    fetching={formState.transactionLoading}
-                    className="md:w-[150px]"
-                    // required={true}
-                    value={ formState.transaction.master.deliveryDate}
-                    onChange={(e) =>
-                      dispatch(
-                        formStateMasterHandleFieldChange({
-                          fields: { deliveryDate: e.target?.value },
-                        })
-                      )
-                    }
-                    disabled={
-                      formState.formElements.referenceDate?.disabled ||
-                      formState.formElements.pnlMasters?.disabled
-                    }
-                    
-                  />)        }
-                  </>
-        // <ERPDateInput
-        //   localInputBox={formState.userConfig?.inputBoxStyle}
-        //   id="purchaseInvoiceDate"
-        //   fetching={formState.transactionLoading}
-        //   label={t(formState.formElements.referenceDate.label)}
-        //   className="md:w-[150px]"
-        //   value={formState.transaction.master.purchaseInvoiceDate}
-        //   disableEnterNavigation
-        //   onChange={(e) =>
-        //     dispatch(
-        //       formStateMasterHandleFieldChange({
-        //         fields: { purchaseInvoiceDate: e.target?.value },
-        //       })
-        //     )
-        //   }
-        //   onKeyDown={(e) => {
-            
-        //     handleKeyDown && handleKeyDown(e)
-        //   }}
-        //   disabled={
-        //     formState.formElements.referenceDate?.disabled ||
-        //     formState.formElements.pnlMasters?.disabled
-        //   }
-        // />
-      )}
+            )   } 
     </>
   );
 });

@@ -145,6 +145,7 @@ export interface TransactionMaster {
   dueDate: string;
   deliveryNoteNumber: string;
   deliveryDate: string;
+  refDate: string;
   purchaseInvoiceNumber: string;
   purchaseInvoiceDate: string;
   despatchDocumentNumber: string;

@@ -3,6 +3,46 @@
   "private": true,
   "version": "10.0.3",
   "type": "module",
+  "main": "electron/main.cjs",
+
+  "build": {
+    "appId": "com.polosys.desktop",
+    "productName": "Polosys",
+
+    "directories": {
+      "buildResources": "resources",
+      "output": "dist"
+    },
+
+    "files": [
+      "build/**",
+      "electron/**",
+      "package.json"
+    ],
+
+    "asar": true,
+
+    "win": {
+      "target": "nsis",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://raw.githubusercontent.com/mahirpolosys/live-update/main/windows/production"
+        }
+      ]
+    },
+
+    "mac": {
+      "target": "dmg",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://raw.githubusercontent.com/mahirpolosys/live-update/main/mac/production"
+        }
+      ]
+    }
+  },
+
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build --emptyOutDir",
@@ -12,8 +52,16 @@
     "sass": "sass ./src/assets/scss:./src/assets/css/",
     "sass-min": "sass ./src/assets/scss:./src/assets/css/ --style compressed",
     "release:ota": "node scripts/release-ota.js",
+    "release:android": "node scripts/release-android-ota.js",
+    "release:ios": "node scripts/release-ios-ota.js",
+    "release:win": "node scripts/release-win-ota.js",
+    "release:mac": "node scripts/release-mac-ota.js",
+
     "android": "npm run build && npx cap sync && npx cap open android",
-    "android:live": "npm run build && npx cap sync && npx cap run android -l --external"
+    "android:live": "npm run build && npx cap sync && npx cap run android -l --external",
+
+    "electron": "electron .",
+    "build:exe": "npm run build && electron-builder"
   },
   "dependencies": {
     "@capacitor-community/barcode-scanner": "^4.0.1",
@@ -61,6 +109,7 @@
     "devextreme-aspnet-data-nojquery": "^4.0.2",
     "devextreme-react": "24.1.4",
     "dinero.js": "^1.9.1",
+    "electron-updater": "^6.7.3",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "firebase": "^12.3.0",
@@ -133,6 +182,8 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "devextreme-themebuilder": "24.1.4",
+    "electron": "^40.1.0",
+    "electron-builder": "^26.7.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",

@@ -8,7 +8,9 @@ const GITHUB_OWNER = 'mahirpolosys';
 const GITHUB_REPO = 'live-update';
 const GITHUB_BRANCH = 'main';
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
-const METADATA_URL = `${GITHUB_API_BASE}/metadata.json?ref=${GITHUB_BRANCH}`;
+const OTA_PLATFORM = Capacitor.getPlatform() === 'ios' ? 'ios' : 'android';
+const OTA_CHANNEL = 'production';
+const METADATA_URL =`${GITHUB_API_BASE}/${OTA_PLATFORM}/${OTA_CHANNEL}/metadata.json?ref=${GITHUB_BRANCH}`;
 const BUNDLE_DIR = 'live-update-bundles';
 const CURRENT_BUNDLE_KEY = 'ota_current_bundle';
 const PENDING_BUNDLE_KEY = 'ota_pending_bundle';
@@ -79,7 +81,7 @@ function getBundleUrl(bundleFilename: string): string {
     return bundleFilename;
   }
   // Otherwise, construct GitHub API URL for the bundle file
-  return `${GITHUB_API_BASE}/bundles/${bundleFilename}?ref=${GITHUB_BRANCH}`;
+  return `${GITHUB_API_BASE}/${OTA_PLATFORM}/${OTA_CHANNEL}/bundles/${bundleFilename}?ref=${GITHUB_BRANCH}`;
 }
 
 // Check if auto-update is enabled from API
@@ -136,11 +138,18 @@ export async function isAutoUpdateEnabled(): Promise<boolean> {
 interface OTAMetadata {
   appId: string;
   channel: string;
-  version: string;      // APK version (e.g., "10.0.1") - only changes with new APK
-  bundleId?: string;    // OTA bundle identifier (e.g., "10.0.1-ota.1") - changes with every OTA update
+  version: string;
+  bundleId?: string;
   bundleUrl: string;
   checksum?: string;
+  rollback?: {
+    enabled: boolean;
+    reason?: string;
+    minSafeBundleId?: string;
+    forceRollback?: boolean;
+  };
 }
+
 
 // Sanitize JSON text - remove control characters and fix common issues
 function sanitizeJson(text: string): string {
@@ -539,6 +548,19 @@ export async function checkLiveUpdate(onProgress?: (percent: number) => void, fo
     // Step 2: Validate metadata
     console.log('');
     console.log('[OTA] STEP 2: Validating metadata...');
+
+    // 🔁 ROLLBACK CHECK (server-controlled, non-breaking)
+    if (metadata.rollback?.enabled && metadata.rollback?.forceRollback) {
+      console.warn('[OTA] Rollback forced by server:', metadata.rollback.reason);
+
+      await resetToDefaultBundle();
+
+      return {
+        available: false,
+        error: 'Rollback forced by server'
+      };
+    }
+
 
     if (metadata.appId !== 'com.polosys.app') {
       console.error('[OTA] VALIDATION FAILED: App ID mismatch');

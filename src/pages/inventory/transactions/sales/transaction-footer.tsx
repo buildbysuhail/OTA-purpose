@@ -43,6 +43,7 @@ import EinvoiceLabel from "./components/EinvoiceLabel";
 import EWBLabel from "./components/EWBLabel";
 import PostedTransactionLabel from "./components/PostedTransactionLabel";
 import SRAmountLabel from "./components/SRAmountLabel";
+import SalesReturnAmount from "./sales-return";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -68,6 +69,7 @@ interface TransactionFooterProps {
   giftOnBilling: any;
   costCenterRef?: any;
   onFooterHeightChange?: (height: number) => void;
+  handleLoadSr: any;
 }
 
 interface Confetti {
@@ -200,6 +202,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   applyTaxOnBillDiscount,
   costCenterRef,
   onFooterHeightChange,
+  handleLoadSr
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -502,11 +505,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
   const handleSalesReturnOpen = (type: string) => {
     setIsModalOpen({ visible: true, type: type });
-    // dispatch(
-    //   formStateHandleFieldChange({
-    //     fields: { srOpen: true }
-    //   })
-    // )
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { srOpen: true }
+      })
+    )
   }
 
   const handleSalesReturnClose = () => {
@@ -713,7 +716,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
+                formState.transaction.master.voucherType === VoucherType.SalesReturn) && isAppGlobal && (
                   // <ERPButton
                   //   title={t("sr")}
                   //   className="!h-[38px] !px-3"
@@ -799,14 +802,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 variant="custom"
                 customVariant="bg-[#ff0000] hover:bg-[#dd0000] text-white"
               /> */}
-              {/* {formState.srOpen && (
+              {formState.srOpen && (
                 <div>
-                  <SalesReturn
+                  <SalesReturnAmount
                     isOpen={formState.srOpen}
                     onClose={handleSalesReturnClose}
+                    handleLoadSr={handleLoadSr}
                     t={t} />
                 </div>
-              )} */}
+              )}
             </div>
           )}
           {(formState.transaction.master.voucherType === VoucherType.SalesQuotation) && showButtonsOutside && (
@@ -928,7 +932,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </div>
                 )}
                 {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                  formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
+                  formState.transaction.master.voucherType === VoucherType.SalesReturn) && isAppGlobal && (
                     // <ERPButton
                     //   title={t("sr")}
                     //   className="!h-[38px] !px-3"
@@ -1108,12 +1112,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         className="flex-1"
                       />
                     )}
-                    <BtnSr
+                    {isAppGlobal && (
+                      <BtnSr
                       formState={formState}
                       dispatch={dispatch}
                       srBtnClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
                       t={t}
                     />
+                    )}
                   </li>
                 )}
                 {/* Field 11: GRN Print Button */}
@@ -1421,12 +1427,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       />
                     </div>
                   )}
-                  <BtnSr
+                  {isAppGlobal && (
+                    <BtnSr
                     formState={formState}
                     dispatch={dispatch}
                     srBtnClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
                     t={t}
                   />
+                  )}  
                 </div>
               )}
               {/* Field 11: GRN Print Button */}
@@ -1810,7 +1818,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             )}
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-              formState.transaction.master.voucherType === VoucherType.SalesReturn) && (
+              formState.transaction.master.voucherType === VoucherType.SalesReturn) && isAppGlobal && (
                 // <ERPButton
                 //   title={t("sr")}
                 //   className="!h-[38px] !px-3"

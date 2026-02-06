@@ -1873,6 +1873,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       // clientSession={clientSession}
                        costCenterRef={costCenterRef}
                        onFooterHeightChange={handleFooterHeightChange}
+                       handleLoadSr={handleLoadSr}
                       />
                     )}
                 </div>
@@ -2085,6 +2086,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   }
                   costCenterRef={costCenterRef}
                   onFooterHeightChange={handleFooterHeightChange}
+                  handleLoadSr={handleLoadSr}
                 />
 
                 {/* Total Summary */}
@@ -2137,6 +2139,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
           // clientSession={clientSession}
             costCenterRef={costCenterRef}
             onFooterHeightChange={handleFooterHeightChange}
+            handleLoadSr={handleLoadSr}
           />
         )}
         {/* footer ends here */}

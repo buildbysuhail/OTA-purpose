@@ -1244,6 +1244,10 @@
   "negative_stock_in_row":"Negative Stock In Row -",
   "item_please_check_items_entered_in_multiple_rows_cannot_proceed":" item, Please check items entered in multiple rows. Cant Proceeds!",
   "sales_price_less_than_purchase_price_in_row":"Sales Price less than Purchase Price in Row:",
-  "sales_price_less_than_min_selling_price_in_row":"Sales Price less than Min Selling Price in Row:"
+  "sales_price_less_than_min_selling_price_in_row":"Sales Price less than Min Selling Price in Row:",
+
+  "sales_return_amount":"Sales Return Amount",
+  "voucher_not_fount_or_this_voucher_is_already_cleared":"Voucher not Found / This Voucher is already Cleared.",
+  "voucher_number_cannot_be_empty":"Voucher number cannot be empty!"
 
 }

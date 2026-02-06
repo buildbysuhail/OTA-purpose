@@ -5563,26 +5563,26 @@ debugger;
 
   const handleLoadSr = async ({ voucherNumber, voucherPrefix, voucherForm }: LoadSrParams) => {
     const voucherNum = Number(voucherNumber || 0);
-
     if (voucherNum > 0) {
       const api = new APIClient();
 
       const params = {
-        voucherNumber: voucherNumber,
-        voucherPrefix: voucherPrefix,
-        voucherType: "SR ",
-        voucherForm: voucherForm,
+        VoucherNumber: voucherNumber,
+        VoucherPrefix: voucherPrefix,
+        VoucherType: "SR",
+        VoucherForm: voucherForm,
       };
-      const query = new URLSearchParams(params).toString();
+      const query = new URLSearchParams(params as any).toString();
       let srAmount = 0;
-      const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/loadInvTransactionMasterByVouchNo}?${query}`);
-      if (response && !response.isInvoiced) {
-        srAmount = response.grandTotal;
+      const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/LoadSRAmount?${query}`);
+      if (response > 0) {
+        srAmount = response;
         dispatch(formStateMasterHandleFieldChange({
           fields: {
             srAmount: srAmount,
           },
         }));
+        return true;
       } else {
         dispatch(formStateMasterHandleFieldChange({
           fields: {
@@ -5592,8 +5592,9 @@ debugger;
         ERPAlert.show({
           icon: "warning",
           title: t("sales_return"),
-          text: t("This Voucher is already Cleared.."),
+          text: t("voucher_not_fount_or_this_voucher_is_already_cleared"),
           confirmButtonText: t("ok"),
+          showCancelButton: false
         });
       }
     } else {
@@ -5607,8 +5608,9 @@ debugger;
         title: t("sales_return"),
         text: t("voucher_number_cannot_be_empty"),
         confirmButtonText: t("ok"),
+        showCancelButton: false
       });
-      return null;
+      return false;
     }
   };
 

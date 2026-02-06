@@ -1755,10 +1755,14 @@ debugger;
               : applicationSettings.inventorySettings.defaultSalesAcc,
 
 
-      /** ---------------- Address ---------------- */
+   /** ---------------- Address ---------------- */
       address1: m.address1,
-      address2: m.address2,
-      address3: m.address3,
+      address2: [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+        ? ""
+        : m.address2,
+      address3: [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+        ? ""
+        : m.address3,
       address4: m.address4,
 
       /** ---------------- Dates ---------------- */
@@ -1772,16 +1776,24 @@ debugger;
       quotationDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? m.transactionDate
         : m.quotationDate,
-        purchaseInvoiceNumber: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+      purchaseInvoiceNumber: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? ""
         : m.purchaseInvoiceNumber,
-      purchaseInvoiceDate:[VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+      purchaseInvoiceDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? m.refDate
         : m.purchaseInvoiceDate,
-      deliveryDate: m.refDate,
+      deliveryNoteNumber: m.voucherType == VoucherType.ServiceInvoice
+        ? ""
+        : m.deliveryNoteNumber,
+      deliveryDate: m.voucherType == VoucherType.ServiceInvoice && !clientSession.isAppGlobal
+        ? m.transactionDate
+        : m.voucherType == VoucherType.ServiceInvoice && clientSession.isAppGlobal
+          ? ""
+          : [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+            ? m.deliveryDate
+            : m.refDate,
       despatchDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
       VoucherType.ServiceInvoice].includes(m.voucherType as any) ? m.refDate : m.despatchDate,
-      dueDate: m.dueDate,
       // orderNumber: m.voucherType == VoucherType.SalesInvoice ? m.orderNumber : m.voucherType == VoucherType.ServiceInvoice ? m.orderNumber : 0,
       orderNumber: [VoucherType.SalesInvoice, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? m.orderNumber : 0,
       mannualInvoiceNumber: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,
@@ -1795,7 +1807,10 @@ debugger;
           ? false
           : true,
       billDiscount: m.billDiscount,
-      taxOnDiscount: m.taxOnDiscount,
+      taxOnDiscount: [VoucherType.ServiceInvoice, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+        || (m.voucherType == VoucherType.GoodsDeliveryNote && !clientSession.isAppGlobal)
+        ? m.taxOnDiscount
+        : 0,
       cashReceived: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.ServiceInvoice].includes(m.voucherType as any) ? 0 : m.cashReceived,
       srAmount: [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) ? 0 : m.srAmount,
 
@@ -1803,8 +1818,15 @@ debugger;
       totalDiscount: m.totalDiscount,
       vatAmount: m.vatAmount,
       grandTotal: m.grandTotal,
-      totalProfit: m.totalProfit,
-
+      cardOrderNo: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.orderCardNo
+        : 0,
+      totalProfit: [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any)
+        || (m.voucherType == VoucherType.SalesQuotation && !clientSession.isAppGlobal)
+        ? m.totalProfit
+        : 0,
+      note1: m.voucherType == VoucherType.SalesQuotation ? m.note1 : "",
+      note2: m.voucherType == VoucherType.SalesQuotation ? m.note2 : "",
       /** ---------------- Cash / Bank ---------------- */
       cashAmt: m.cashReceived,
       bankAmt: [VoucherType.SalesInvoice, VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
@@ -1862,8 +1884,20 @@ debugger;
         ? m.deliveryManID
         : m.driverID,
 
-      vehicelID: m.vehicleID,
-      gatePassNo: m.gatePassNo,
+      vehicelID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? 0
+        : m.vehicleID,
+      gatePassNo: m.voucherType == VoucherType.ServiceInvoice
+        ? ""
+        : [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(m.voucherType as any)
+          ? "NotAccepted"
+          : m.gatePassNo,
+      dueDays: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? 0
+        : m.dueDays,
+      dueDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+        ? m.transactionDate
+        : m.dueDate,
       despatchDocumentNumber: applicationSettings.inventorySettings.enableDummyTransation && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice
         ? formState.userConfig?.dummyBill
         : m.voucherType == VoucherType.ServiceInvoice
@@ -1900,11 +1934,14 @@ debugger;
       /** ---------------- Project / Cost ---------------- */
       costCentreID: [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) ? m.costCentreID : 0,
       cashrOrCredit: m.voucherType == VoucherType.SalesInvoice ? m.cashrOrCredit : "",//already managed in source
-      projectID: m.projectID || 0,
+      projectID: (m.projectID > 0 && [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate,
+      VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.SalesQuotation,
+      VoucherType.GoodsDeliveryNote].includes(m.voucherType as any))
+        ? m.projectID
+        : 0,
 
       /** ---------------- Advance ---------------- */
       advanceAmt: m.voucherType == VoucherType.SalesInvoice ? formState.advanceAmtFromSo : 0,
-
       /** ---------------- Customer ---------------- */
       customerType:
         m.customerType,

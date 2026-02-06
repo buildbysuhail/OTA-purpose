@@ -222,7 +222,9 @@ export interface TransactionMaster {
   advAmntFroSO: number;
   refInvTransactionMasterSOID: number;
   itemTaxDetails: any;
-  taxableDetails:any;
+  taxableDetails: any;
+  note1: string;
+  note2: string;
 
   // stock
   stockCountPrefix?: string;
@@ -764,7 +766,7 @@ export interface TransactionFormState {
   isUserConfigOpen?: boolean;
   privConfig?: string;
   gatePassPrint?: boolean;
-  lastChoosedTemplate?:TemplateState<unknown>; // nizam
+  lastChoosedTemplate?: TemplateState<unknown>; // nizam
   itemPopup?: { isOpen?: boolean, index?: number }
   taxBreakdown?: { name: string, amount: number }[];
   billDiscountPerc?: number;
@@ -875,7 +877,7 @@ export interface LoadProductDetailsByAutoBarcodeProps {
   searchColumn: string;
   rowIndex: number;
   setFocusToNextColumn: boolean;
-    validateBarcode?: boolean;
+  validateBarcode?: boolean;
 }
 
 interface ProductBatchDetailsForAutoBarcodeData {

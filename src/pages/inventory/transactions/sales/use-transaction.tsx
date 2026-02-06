@@ -604,7 +604,6 @@ export const useTransaction = (
     sbCashReceived?: number | 0,
     sbBillDiscount?: number | 0,
   ) => {
-    debugger;
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
         ...formState,
@@ -1752,9 +1751,12 @@ export const useTransaction = (
     }
   };
   const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
+    debugger;
     const valid = await validate();
+    debugger;
     if (valid == true) {
       const tenderOk = await Tender()
+    debugger;
       if (!tenderOk) {
         return;
       }
@@ -1766,6 +1768,7 @@ export const useTransaction = (
         })
       );
       const master = await attachMaster(formState);
+    debugger;
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({
@@ -1793,8 +1796,8 @@ export const useTransaction = (
         });
         return false;
       }
-      let params = {
-        master: {
+debugger;
+      const sanitizedMaster = sanitizeDataAdvanced({
           ...master,
           voucherType:
             saveMode === "LPO"
@@ -1811,7 +1814,9 @@ export const useTransaction = (
               : master.customerType,
           transactionDate:
             master.transactionDate == "" ? null : master.transactionDate,
-        },
+        }, transactionInitialData.master);
+      let params = {
+        master: sanitizedMaster,
         details: dtRes.outputDetails,
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,
@@ -1821,8 +1826,7 @@ export const useTransaction = (
         upiDetails: formState.transaction.uPIDetails,
         bankCardDetails: formState.transaction.bankCardDetails
       };
-
-      params = sanitizeDataAdvanced(params, transactionInitialData);
+      // params = sanitizeDataAdvanced(params, transactionInitialData);
       try {
         const saveRes =
           formState.transaction.master.invTransactionMasterID > 0
@@ -2001,6 +2005,11 @@ export const useTransaction = (
     focusFirstRow: boolean = true
   ) => {
     // UndoEditMode
+    initializeFormElements(formState.transaction.master.voucherType ?? ""
+      , formState.transaction.master.voucherPrefix ?? "", formState.transaction.master.voucherForm ?? ""
+      ,formState.formCode ?? "",formState.title ?? "", 0,0
+    );
+    return;
     if ((formState.transaction.master.invTransactionMasterID ?? 0) > 0) {
       await undoEditMode(formState.isEdit, formState.transaction.master.invTransactionMasterID ?? 0);
     }
@@ -5920,8 +5929,8 @@ export const useTransaction = (
       userConfig = JSON.parse(JSON.stringify(await fetchUserConfig()));
     }
 
-    let _formState: TransactionFormState;
-    const isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
+    let _formState: TransactionFormState = {...TransactionFormStateInitialData};
+    let isInvoker = (voucherNo && voucherNo > 0) || (transactionMasterID && transactionMasterID > 0);
 
     const softwareDate = moment(
       clientSession.softwareDate,
@@ -5931,7 +5940,31 @@ export const useTransaction = (
     let employeeID = 0;
     let _voucherNo = 0;
     let _voucherPrefix = "";
-    if (!isInvoker) {
+ 
+
+    debugger;
+    if (isInvoker) {
+       _formState = (await loadTransVoucher(
+        false,
+        voucherNo,
+        voucherPrefix,
+        voucherType,
+        formType,
+        undefined,
+        transactionMasterID
+      )) as TransactionFormState;
+
+      _formState = {
+        ..._formState,
+        oldLedgerId:
+          _formState.transaction.master.ledgerID,
+        previousGrandTotal:
+          _formState.transaction.master.grandTotal,
+
+      }
+      isInvoker = (_formState.transaction.master.invTransactionMasterID && _formState.transaction.master.invTransactionMasterID > 0);
+    }
+       if (voucherNo == undefined || voucherNo == 0) {
       const vchrNoRslt = await getNextVoucherNumber(
         formType ?? "",
         voucherType ?? "",
@@ -5942,8 +5975,6 @@ export const useTransaction = (
       _voucherPrefix = vchrNoRslt.voucherPrefix;
 
     }
-
-    debugger;
 
     if (!isInvoker) {
       const voucher: TransactionData = {
@@ -5956,17 +5987,17 @@ export const useTransaction = (
         ...TransactionFormStateInitialData,
         initialFormType: formType ?? "",
         initialVrType: voucherType ?? "",
-        initialVrPrefix: _voucherPrefix ?? "",
+        initialVrPrefix: (voucherNo == undefined || voucherNo == 0) ? _voucherPrefix ?? "" : voucherPrefix ?? "",
         transaction: {
           ...voucher,
           master: {
             ...voucher.master,
             voucherType: voucherType ?? "",
-            voucherPrefix: _voucherPrefix ?? "",
+            voucherPrefix: (voucherNo == undefined || voucherNo == 0) ? _voucherPrefix ?? "" : voucherPrefix ?? "",
             voucherForm: formType ?? "",
             transactionDate: softwareDate.toISOString(),
             purchaseInvoiceDate: moment().local().toISOString(),
-            voucherNumber: _voucherNo,
+            voucherNumber: (voucherNo == undefined || voucherNo == 0) ? _voucherNo : voucherNo,
             inventoryLedgerID:
               voucherType == VoucherType.SalesReturn
                 ? applicationSettings.inventorySettings?.defaultSalesReturnAcc
@@ -6005,26 +6036,7 @@ export const useTransaction = (
       };
       _formState = await loadLedgerData(_formState) as any;
       _formState.isInitialLedger = true;
-    } else {
-      _formState = (await loadTransVoucher(
-        false,
-        voucherNo,
-        voucherPrefix,
-        voucherType,
-        formType,
-        undefined,
-        transactionMasterID
-      )) as TransactionFormState;
-
-      _formState = {
-        ..._formState,
-        oldLedgerId:
-          _formState.transaction.master.ledgerID,
-        previousGrandTotal:
-          _formState.transaction.master.grandTotal,
-
-      }
-    }
+    } 
     _formState.userConfig = userConfig ?? {};
     _formState.dataWarranty = dataWarranty;
     _formState.dataBrands = dataBrands;

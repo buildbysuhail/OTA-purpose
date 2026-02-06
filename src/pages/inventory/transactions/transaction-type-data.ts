@@ -233,6 +233,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   cost: 0,
   batchNo: '',
   mfdDate: '', // Use new Date() if you prefer Date type
+  mfgDate: '', // Use new Date() if you prefer Date type
   expDate: '',
   expDays: 0,
   bd: '',

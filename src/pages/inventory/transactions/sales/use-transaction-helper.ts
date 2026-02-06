@@ -1417,10 +1417,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         break;
       }
 
-      let detail = sanitizeDataAdvanced(
-        { ...rowDetail },
-        initialTransactionDetailData
-      );
+      let detail = { ...rowDetail }
       let outputRow: any = { ...detail };
 
       // Core transaction fields
@@ -1436,7 +1433,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.unitPrice = detail.unitPrice;
       outputRow.transDate = transDate;
       outputRow.unitID = detail.unitID;
-      outputRow.SalesManID = detail.SalesManID > 0 ? detail.SalesManID : formState.transaction.master.employeeID;
+      outputRow.SalesManID = detail.salesmanID > 0 ? detail.salesmanID : formState.transaction.master.employeeID;
 
       // Discounts
       outputRow.discountPer1 = detail.discPerc;
@@ -1585,7 +1582,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // outputRow.wareHouseID = detail.warehouse;
       outputRow.grandTotal = outputRow.grandTotal ?? 0;
 
-      outputDetails.push(outputRow);
+      const sanitizedOutputRow: TransactionDetail = sanitizeDataAdvanced(outputRow, initialTransactionDetailData);
+
+      outputDetails.push(sanitizedOutputRow);
     }
 
     return {
@@ -1721,11 +1720,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   };
 
   const attachMaster = async (formState: TransactionFormState) => {
-
+debugger;
     const m = formState.transaction.master;
     const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
     let isRefund = false; //value from return global refund button click
-
+debugger;
     const privperc = applicationSettings.mainSettings.previlegeCardPerc;
     let master = {
       ...m,
@@ -1967,22 +1966,22 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       master.cashAmt = m.grandTotal;
     }
     if (m.voucherType == VoucherType.SalesReturn && clientSession.isAppGlobal) {
-      m.bankAmt = 0;
+      master.bankAmt = 0;
     }
     if (m.voucherType == VoucherType.GoodsDeliveryNote || m.voucherType == VoucherType.ServiceInvoice) {
-      m.cashAmt = 0;
-      m.bankAmt = 0;
+      master.cashAmt = 0;
+      master.bankAmt = 0;
     }
     if ((userSession.dbIdValue === "543140180640" && m.voucherType == VoucherType.SalesInvoice)
       || (m.voucherType == VoucherType.SalesReturn && !clientSession.isAppGlobal)
       || [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(m.voucherType as any)) {
-      m.isInvoiced = false;
+      master.isInvoiced = false;
     }
     else {
-      m.isInvoiced = true;
+      master.isInvoiced = true;
     }
     if ([VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(m.voucherType as any) && clientSession.isAppGlobal) {
-      m.isInvoiced = isRefund;
+      master.isInvoiced = isRefund;
     }
 
 

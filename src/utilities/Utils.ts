@@ -1119,7 +1119,8 @@ export const sanitizeDataAdvanced = (
     defaultNumber?: number | undefined | null;
     preserveNull?: boolean;
     customConverter?: (value: any, initial: any) => any;
-  }
+  },
+  key?: any
 ): any => {
   const opts = {
     convertEmptyStrings: true,
@@ -1169,11 +1170,16 @@ export const sanitizeDataAdvanced = (
 
   // Handle objects
   const sanitized: any = {};
-  for (const key in data) {
+  const keys = Object.keys(data);
+  
+        debugger;
+  keys.forEach((_key: string) => {
+    let key = _key;
     if (data.hasOwnProperty(key)) {
       const value = data[key];
       const initialValue = initialState?.[key];
-      if (key == "qty") {
+      if (key == "mfgDate") {
+        debugger;
       }
       // Handle empty string to number conversion
       if (
@@ -1187,31 +1193,30 @@ export const sanitizeDataAdvanced = (
       }
       // Recursively sanitize nested structures
       else if (typeof value === "object" && value !== null) {
-        if (
-          value instanceof Date ||
-          (typeof key === "string" &&
-            (key.toLowerCase().includes("date") ||
-              key.toLowerCase().includes("Date") ||
-              key.toLowerCase().includes("finFrom") ||
-              key.toLowerCase().includes("finTo")))
-        ) {
-          // Keep as-is or normalize to valid date
-          sanitized[key] = value;
-        } else {
-          // Recursively sanitize nested objects
+        //  rsively sanitize nested objects
           sanitized[key] = sanitizeDataAdvanced(
             value,
-            initialValue?.[key] ?? {},
-            opts
+            initialState?.[key] ?? {},
+            opts,key
           );
-        }
       }
+      else if (
+          value == "" &&
+          (key.toLowerCase().includes("date") ||
+              key.toLowerCase().includes("Date") ||
+              key.toLowerCase().includes("finFrom") ||
+              key.toLowerCase().includes("finTo"))
+        ) {
+         
+          // Keep as-is or normalize to valid date
+          sanitized[key] = new Date(1990, 0, 1);
+        }
       // Handle primitive values
       else {
         sanitized[key] = value;
       }
     }
-  }
+  })
 
   return sanitized;
 };

@@ -320,6 +320,7 @@ export interface TransactionDetail {
   cost: number;
   batchNo: string;
   mfdDate: string; // or Date
+  mfgDate: string; // or Date
   expDate: string; // or Date
   expDays: number;
   bd: string;

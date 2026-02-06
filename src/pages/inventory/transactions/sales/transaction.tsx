@@ -889,7 +889,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   useEffect(() => {
     // if(voucherType??"" == "") return;
-   initializeFormElements(voucherType??"", voucherPrefix??"", formType??"",formCode??"",title??"",voucherNo??0,transactionMasterID??0);
+   initializeFormElements(voucherType??"", voucherPrefix??"", formType??"",formCode??"",title??"",voucherNo??0,transactionMasterID??0, true);  // IsInitial is true
   }, [voucherType, voucherPrefix, formType]);
 
   const onProcessSelected = useCallback(async (masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string, loadType: string = "GRN", voucherType: string) => {

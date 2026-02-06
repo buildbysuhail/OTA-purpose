@@ -82,7 +82,8 @@ export type initializeFormElementsFn = (
     formCode: string,
     title: string,
     voucherNo: number,
-    transactionMasterID: number
+    transactionMasterID: number,
+    isInitial?: boolean
 ) => void // ✅ fix return type
 
 const api = new APIClient();
@@ -5908,7 +5909,8 @@ debugger;
     formCode,
     title,
     voucherNo,
-    transactionMasterID    
+    transactionMasterID,
+    isInitial   
   ) => {
     debugger;
     const dataWarranty = voucherType != "LPO" ? await api.getWithCacheAsync(
@@ -6535,24 +6537,69 @@ debugger;
 
     } as any;
 
-    const editableColumn = _formState.gridColumns?.find(
-      (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
-    );
-    if (applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
-      setTimeout(() => {
-        transactionDateRef?.current?.focus();
-      }, 0);
-    } else if (_formState.userConfig?.initialFocusToCustomer) {
-      ledgerIdRef?.current?.focus();
-      ledgerIdRef?.current?.select();
-    } else {
-      _formState.currentCell = {
-        column: editableColumn?.dataField ?? "",
-        data: formState.transaction.details[0],
-        rowIndex: 0,
-        reCenterRow: false
+    const handleFocusItem = (e?: React.SyntheticEvent | Event) => {
+        e?.preventDefault();
+        const editableColumn = _formState.gridColumns?.find(
+          (col) =>
+            col.visible !== false &&
+            col.dataField != null &&
+            col.allowEditing === true &&
+            col.readOnly !== true
+        );
+        if (!isInitial && !_formState.userConfig?.holdSalesMan) {
+          setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+          setTimeout(() => {
+            employeeRef?.current?.focus();
+            employeeRef?.current?.select();
+          }, 100);
+
+        } else if (isInitial && _formState.userConfig?.initialFocusToCustomer) {
+          ledgerIdRef?.current?.focus();
+          ledgerIdRef?.current?.select();
+        } else if (applicationSettings.mainSettings.maintainBusinessType === "Distribution") {
+          setTimeout(() => {
+            transactionDateRef?.current?.focus();
+          }, 0);
+        } else if (_formState.userConfig?.initialFocusToCustomer) {
+          ledgerIdRef?.current?.focus();
+          ledgerIdRef?.current?.select();
+        } else {
+          _formState.currentCell = {
+            column: editableColumn?.dataField ?? "",
+            data: formState.transaction.details[0],
+            rowIndex: 0,
+            reCenterRow: false
+          };
+        }
       };
-    }
+      handleFocusItem();
+    // const editableColumn = _formState.gridColumns?.find(
+    //   (col) => col.visible !== false && col.dataField != null && col.allowEditing == true && col.readOnly !== true
+    // );
+    // if(!isInitial && !_formState.userConfig?.holdSalesMan){
+    //    setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+    //     setTimeout(() => {
+    //       employeeRef?.current?.focus();
+    //       employeeRef?.current?.select();
+    //     }, 100);
+    // }else if(isInitial && _formState.userConfig?.initialFocusToCustomer){
+    //   ledgerIdRef?.current?.focus();
+    //   ledgerIdRef?.current?.select();
+    // }else if (applicationSettings.mainSettings.maintainBusinessType == "Distribution") {
+    //   setTimeout(() => {
+    //     transactionDateRef?.current?.focus();
+    //   }, 0);
+    // } else if (_formState.userConfig?.initialFocusToCustomer) {
+    //   ledgerIdRef?.current?.focus();
+    //   ledgerIdRef?.current?.select();
+    // } else {
+    //   _formState.currentCell = {
+    //     column: editableColumn?.dataField ?? "",
+    //     data: formState.transaction.details[0],
+    //     rowIndex: 0,
+    //     reCenterRow: false
+    //   };
+    // }
     // if (_formState.formElements.cbDebitAccount ?? {})
     // }
 

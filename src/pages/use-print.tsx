@@ -17,6 +17,9 @@ import {
   CompanyDetailsForPrint,
   PartyDetailsForPrint,
   InvDetail2ForPrint,
+  LedgerReportDataForPrint,
+  PrintData,
+  ledgerDataPrint,
 } from "./use-print-type";
 import {
   initialPrintCustomFields,
@@ -838,32 +841,32 @@ export const getCommonValues = (
       }
       break;
     case "deliveryPhone":
-      v = getDeliveryAddressPart(data.custom.deliveryAddress3, 0);
+      v = getDeliveryAddressPart(data.custom?.deliveryAddress3, 0);
       break;
     case "deliveryStreet":
-      v = getDeliveryAddressPart(data.custom.deliveryAddress3, 1);
+      v = getDeliveryAddressPart(data.custom?.deliveryAddress3, 1);
       break;
     case "deliveryLandmark":
-      v = getDeliveryAddressPart(data.custom.deliveryAddress3, 2);
+      v = getDeliveryAddressPart(data.custom?.deliveryAddress3, 2);
       break;
     case "deliveryRemarks":
-      v = getDeliveryAddressPart(data.custom.deliveryAddress3, 3);
+      v = getDeliveryAddressPart(data.custom?.deliveryAddress3, 3);
       break;
     case "billNumberPrefBarcode":
-      v = data.custom.billNumberPrefBarcode;
+      v = data.custom?.billNumberPrefBarcode;
       break;
     case "tokenBarcode":
-      v = data.custom.tokenBarcode;
+      v = data.custom?.tokenBarcode;
       break;
     case "voucherNumberBarcode":
-      v = data.custom.voucherNumberBarcode;
+      v = data.custom?.voucherNumberBarcode;
       break;
       break;
     case "printTime":
       v = new Date().toLocaleTimeString();
       break;
     case "transactionTime":
-      v = data.custom.transactionTime;
+      v = data.custom?.transactionTime;
       break;
     case "printDate":
       v = new Date().toLocaleDateString();
@@ -872,7 +875,7 @@ export const getCommonValues = (
       v = new Date().toDateString();
       break;
     case "printCopyStatus":
-      switch (data.custom.noOfCopies) {
+      switch (data.custom?.noOfCopies) {
         case 1:
           v = "Original";
           break;
@@ -891,7 +894,7 @@ export const getCommonValues = (
       }
       break;
     case "printCopyStatus2":
-      switch (data.custom.noOfCopies) {
+      switch (data.custom?.noOfCopies) {
         case 1:
           v = "Customers Copy";
           break;
@@ -910,17 +913,17 @@ export const getCommonValues = (
       }
       break;
     case "salesBillNumbers":
-      v = data.custom.salesBillNumbers.slice(0, -1);
+      v = data.custom?.salesBillNumbers.slice(0, -1);
       break;
     case "salesRetBillNumbers":
-      v = data.custom.salesRetBillNumbers.slice(0, -1);
+      v = data.custom?.salesRetBillNumbers.slice(0, -1);
       break;
     case "billAmounts":
-      v = data.custom.billAmounts.slice(0, -1);
+      v = data.custom?.billAmounts.slice(0, -1);
       break;
     case "retBillAmounts":
-      v = data.custom.retBillAmounts
-        ? data.custom.retBillAmounts.slice(0, -1)
+      v = data.custom?.retBillAmounts
+        ? data.custom?.retBillAmounts.slice(0, -1)
         : "";
       break;
     // case "HEADER1":
@@ -948,24 +951,24 @@ export const getCommonValues = (
     //   v = getHeaderFooterValue(fieldNameUpper);
     //   break;
     case "totalItems":
-      v = data.custom.totalItems.toString();
+      v = data.custom?.totalItems.toString();
       break;
     case "sumOfQty":
-      v = data.custom.totalQty.toString();
+      v = data.custom?.totalQty.toString();
       break;
     case "pageTotalOfQty":
-      v = data.custom.totalPageQty.toString();
+      v = data.custom?.totalPageQty.toString();
       break;
     case "sumOfFree":
-      v = data.custom.totalFree.toString();
+      v = data.custom?.totalFree.toString();
       break;
     case "sumOfQtyFree":
     // case "totalQtyAndFree":
-    //   setTotalQtyFree(data.custom.totalFree + data.custom.totalQty);
-    //   v = data.custom.totalQtyFree.toString();
+    //   setTotalQtyFree(data.custom?.totalFree + data.custom?.totalQty);
+    //   v = data.custom?.totalQtyFree.toString();
     //   break;
     case "pageTotalOfFree":
-      v = data.custom.pageTotFree.toString();
+      v = data.custom?.pageTotFree.toString();
       break;
     // GST calculations
     case "sumOfCGST":
@@ -978,10 +981,10 @@ export const getCommonValues = (
       v = data.custom?.sumOfIGST.toString();
       break;
     case "sumOfCessAmt":
-      v = data.custom.sumOfCessAmt.toString();
+      v = data.custom?.sumOfCessAmt.toString();
       break;
     case "sumOfAddCessAmt":
-      v = data.custom.sumOfAddCessAmt.toString();
+      v = data.custom?.sumOfAddCessAmt.toString();
       break;
     case "sumOfGST":
       v = data.custom?.sumOfGST.toString();
@@ -990,311 +993,311 @@ export const getCommonValues = (
       v = data.custom?.sumGST.toString();
       break;
     case "totalTaxableValue0Percent":
-      v = data.custom.zeroTaxable.toString();
+      v = data.custom?.zeroTaxable.toString();
       break;
     case "sGST_0_Perc":
-      v = data.custom.sGST_0_Perc.toString();
+      v = data.custom?.sGST_0_Perc.toString();
       break;
     case "cGST_0_Perc":
-      v = data.custom.cGST_0_Perc.toString();
+      v = data.custom?.cGST_0_Perc.toString();
       break;
     case "iGST_0_Perc":
-      v = data.custom.iGST_0_Perc.toString();
+      v = data.custom?.iGST_0_Perc.toString();
       break;
     case "total_0_Perc":
-      v = data.custom.total_0_Perc.toString();
+      v = data.custom?.total_0_Perc.toString();
       break;
     case "taxable_3_Perc":
-      v = data.custom.taxable_3_Perc.toString();
+      v = data.custom?.taxable_3_Perc.toString();
       break;
     case "sGST_3_Perc":
-      v = data.custom.sGST_3_Perc.toString();
+      v = data.custom?.sGST_3_Perc.toString();
       break;
     case "cGST_3_Perc":
-      v = data.custom.cGST_3_Perc.toString();
+      v = data.custom?.cGST_3_Perc.toString();
       break;
     case "iGST_3_Perc":
-      v = data.custom.iGST_3_Perc.toString();
+      v = data.custom?.iGST_3_Perc.toString();
       break;
     case "total_3_Perc":
-      v = data.custom.total_3_Perc.toString();
+      v = data.custom?.total_3_Perc.toString();
       break;
     case "taxable_5_Perc":
-      v = data.custom.taxable_5_Perc.toString();
+      v = data.custom?.taxable_5_Perc.toString();
       break;
     case "sGST_5_Perc":
-      v = data.custom.sGST_5_Perc.toString();
+      v = data.custom?.sGST_5_Perc.toString();
       break;
     case "cGST_5_Perc":
-      v = data.custom.cGST_5_Perc.toString();
+      v = data.custom?.cGST_5_Perc.toString();
       break;
     case "iGST_5_Perc":
-      v = data.custom.iGST_5_Perc.toString();
+      v = data.custom?.iGST_5_Perc.toString();
       break;
     case "total_5_Perc":
-      v = data.custom.total_5_Perc.toString();
+      v = data.custom?.total_5_Perc.toString();
       break;
     case "taxable_12_Perc":
-      v = data.custom.taxable_12_Perc.toString();
+      v = data.custom?.taxable_12_Perc.toString();
       break;
     case "sGST_12_Perc":
-      v = data.custom.sGST_12_Perc.toString();
+      v = data.custom?.sGST_12_Perc.toString();
       break;
     case "cGST_12_Perc":
-      v = data.custom.cGST_12_Perc.toString();
+      v = data.custom?.cGST_12_Perc.toString();
       break;
     case "iGST_12_Perc":
-      v = data.custom.iGST_12_Perc.toString();
+      v = data.custom?.iGST_12_Perc.toString();
       break;
     case "total_12_Perc":
-      v = data.custom.total_12_Perc.toString();
+      v = data.custom?.total_12_Perc.toString();
       break;
     case "taxable_18_Perc":
-      v = data.custom.taxable_18_Perc.toString();
+      v = data.custom?.taxable_18_Perc.toString();
       break;
     case "sGST_18_Perc":
-      v = data.custom.sGST_18_Perc.toString();
+      v = data.custom?.sGST_18_Perc.toString();
       break;
     case "cGST_18_Perc":
-      v = data.custom.cGST_18_Perc.toString();
+      v = data.custom?.cGST_18_Perc.toString();
       break;
     case "iGST_18_Perc":
-      v = data.custom.iGST_18_Perc.toString();
+      v = data.custom?.iGST_18_Perc.toString();
       break;
     case "total_18_Perc":
-      v = data.custom.total_18_Perc.toString();
+      v = data.custom?.total_18_Perc.toString();
       break;
     case "taxable_28_Perc":
-      v = data.custom.taxable_28_Perc.toString();
+      v = data.custom?.taxable_28_Perc.toString();
       break;
     case "sGST_28_Perc":
-      v = data.custom.sGST_28_Perc.toString();
+      v = data.custom?.sGST_28_Perc.toString();
       break;
     case "cGST_28_Perc":
-      v = data.custom.cGST_28_Perc.toString();
+      v = data.custom?.cGST_28_Perc.toString();
       break;
     case "iGST_28_Perc":
-      v = data.custom.iGST_28_Perc.toString();
+      v = data.custom?.iGST_28_Perc.toString();
       break;
     case "total_28_Perc":
-      v = data.custom.total_28_Perc.toString();
+      v = data.custom?.total_28_Perc.toString();
       break;
     case "gST_0_Perc":
-      v = (data.custom.sGST_0_Perc + data.custom.cGST_0_Perc).toString();
+      v = (data.custom?.sGST_0_Perc + data.custom?.cGST_0_Perc).toString();
       break;
     case "gST_3_Perc":
-      v = (data.custom.sGST_3_Perc + data.custom.cGST_3_Perc).toString();
+      v = (data.custom?.sGST_3_Perc + data.custom?.cGST_3_Perc).toString();
       break;
     case "gST_5_Perc":
-      v = (data.custom.sGST_5_Perc + data.custom.cGST_5_Perc).toString();
+      v = (data.custom?.sGST_5_Perc + data.custom?.cGST_5_Perc).toString();
       break;
     case "gST_12_Perc":
-      v = (data.custom.sGST_12_Perc + data.custom.cGST_12_Perc).toString();
+      v = (data.custom?.sGST_12_Perc + data.custom?.cGST_12_Perc).toString();
       break;
     case "gST_18_Perc":
-      v = (data.custom.sGST_18_Perc + data.custom.cGST_18_Perc).toString();
+      v = (data.custom?.sGST_18_Perc + data.custom?.cGST_18_Perc).toString();
       break;
     case "gST_28_Perc":
-      v = (data.custom.sGST_28_Perc + data.custom.cGST_28_Perc).toString();
+      v = (data.custom?.sGST_28_Perc + data.custom?.cGST_28_Perc).toString();
       break;
     case "mrpTotal":
-      v = data.custom.mrpTotal.toString();
+      v = data.custom?.mrpTotal.toString();
       break;
     case "mrpDifference":
-      v = data.custom.mrpDifference.toString();
+      v = data.custom?.mrpDifference.toString();
       break;
     case "qrPay":
-      v = data.custom.qrPay.toString();
+      v = data.custom?.qrPay.toString();
       break;
     case "bankCard":
-      v = data.custom.bankCard.toString();
+      v = data.custom?.bankCard.toString();
       break;
     case "sumOfGross":
-      v = data.custom.sumOfGross.toString();
+      v = data.custom?.sumOfGross.toString();
       break;
     case "totalGrossFc":
-      v = data.custom.sumOfGrossfc.toString();
+      v = data.custom?.sumOfGrossfc.toString();
       break;
     case "sumOfDisc":
-      v = data.custom.sumOfDisc.toString();
+      v = data.custom?.sumOfDisc.toString();
       break;
     case "sumOfTax":
-      v = data.custom.sumOfTax.toString();
+      v = data.custom?.sumOfTax.toString();
       break;
     case "sumOfNetAmt":
-      v = data.custom.sumOfNetAmt.toString();
+      v = data.custom?.sumOfNetAmt.toString();
       break;
     case "sumOfVAT":
-      v = data.custom.sumOfVAT.toString();
+      v = data.custom?.sumOfVAT.toString();
       break;
     case "sumOfTotDisc":
-      v = data.custom.sumOfTotDisc.toString();
+      v = data.custom?.sumOfTotDisc.toString();
       break;
     case "sumOfCST":
-      v = data.custom.sumOfCST.toString();
+      v = data.custom?.sumOfCST.toString();
       break;
     case "sumOfNetValue":
-      v = data.custom.sumOfNetValue.toString();
+      v = data.custom?.sumOfNetValue.toString();
       break;
     case "sumOfMRP":
-      v = data.custom.sumOfMRP.toString();
+      v = data.custom?.sumOfMRP.toString();
       break;
     case "sumOfNosQty":
-      v = data.custom.sumOfNosQty.toString();
+      v = data.custom?.sumOfNosQty.toString();
       break;
     case "sumOfMRPRate":
-      v = data.custom.sumOfMRPRate.toString();
+      v = data.custom?.sumOfMRPRate.toString();
       break;
     case "sumOfSchemDisc":
-      v = data.custom.sumOfSchemDisc.toString();
+      v = data.custom?.sumOfSchemDisc.toString();
       break;
     case "sumOfNetWeight":
-      v = data.custom.sumOfNetWeight.toString();
+      v = data.custom?.sumOfNetWeight.toString();
       break;
     case "stateName":
-      v = data.custom.stateName;
+      v = data.custom?.stateName;
       break;
     case "stateCode":
-      v = data.custom.stateCode;
+      v = data.custom?.stateCode;
       break;
     // case "youSaved":
-    //   const bill = data.custom.totalNetAmount - data.custom.billDiscount;
-    //   setTotalSavedAmt(data.custom.mrpTotal - bill);
-    //   const roundSave = posRoundAmount(data.custom.totalSavedAmt);
+    //   const bill = data.custom?.totalNetAmount - data.custom?.billDiscount;
+    //   setTotalSavedAmt(data.custom?.mrpTotal - bill);
+    //   const roundSave = posRoundAmount(data.custom?.totalSavedAmt);
     //   v = roundSave.toString();
     //   break;
     // Page totals
     case "pageTotalofGross":
-      v = data.custom.pageTotalofGross.toString();
+      v = data.custom?.pageTotalofGross.toString();
       break;
     case "pageTotalofDisc":
-      v = data.custom.pageTotalofDisc.toString();
+      v = data.custom?.pageTotalofDisc.toString();
       break;
     case "pageTotalofTax":
-      v = data.custom.pageTotalofTax.toString();
+      v = data.custom?.pageTotalofTax.toString();
       break;
     case "pageTotalofNetAmt":
-      v = data.custom.pageTotalofNetAmt.toString();
+      v = data.custom?.pageTotalofNetAmt.toString();
       break;
     case "pageTotalofSchmeDisc":
-      v = data.custom.pageTotalofSchmeDisc.toString();
+      v = data.custom?.pageTotalofSchmeDisc.toString();
       break;
     case "pageTotalofVAT":
-      v = data.custom.pageTotalofVAT.toString();
+      v = data.custom?.pageTotalofVAT.toString();
       break;
     case "pageTotalofTotDisc":
-      v = data.custom.pageTotalofTotDisc.toString();
+      v = data.custom?.pageTotalofTotDisc.toString();
       break;
     case "pageTotalofCST":
-      v = data.custom.pageTotalofCST.toString();
+      v = data.custom?.pageTotalofCST.toString();
       break;
     case "pageTotalofNetValue":
-      v = data.custom.pageTotalofNetValue.toString();
+      v = data.custom?.pageTotalofNetValue.toString();
       break;
     case "pageTotalofNosQty":
-      v = data.custom.pageTotalofNosQty.toString();
+      v = data.custom?.pageTotalofNosQty.toString();
       break;
     case "pageNo":
-      v = data.custom.pageNo.toString();
+      v = data.custom?.pageNo.toString();
       break;
     case "pageNoOfM":
       v = `Page ${data.custom.pageNo} Of ${data.custom.noOfPages}`;
       break;
     case "noOfPages":
-      v = data.custom.noOfPages.toString();
+      v = data.custom?.noOfPages.toString();
       break;
     case "totalQty":
-      v = data.custom.totalQty.toString();
+      v = data.custom?.totalQty.toString();
       break;
     case "totalPageQty":
-      v = data.custom.totalPageQty.toString();
+      v = data.custom?.totalPageQty.toString();
       break;
     case "pageTotDebit":
-      v = data.custom.pageTotDebit.toString();
+      v = data.custom?.pageTotDebit.toString();
       break;
     case "totalNetAmount":
-      v = data.custom.totalNetAmount.toString();
+      v = data.custom?.totalNetAmount.toString();
       break;
     case "pageTotAmount":
-      v = data.custom.pageTotAmount.toString();
+      v = data.custom?.pageTotAmount.toString();
       break;
     case "freeString":
-      v = data.custom.freeString;
+      v = data.custom?.freeString;
       break;
     case "groupWiseSiNo":
     case "siNo":
-      v = data.custom.currentRow.toString();
+      v = data.custom?.currentRow.toString();
       break;
     case "productUnitRemarksOrProductName":
-      v = data.custom.productUnitRemarksOrProductName;
+      v = data.custom?.productUnitRemarksOrProductName;
       break;
     // case "partyNameLine2":
     //   const flen = fldLength || 0;
-    //   if (data.custom.partyName.length > flen) {
-    //     v = data.custom.partyName.substring(flen);
+    //   if (data.custom?.partyName.length > flen) {
+    //     v = data.custom?.partyName.substring(flen);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "productName2":
     //   let len = parseInt(fldLength || 0);
-    //   if (data.custom.prodName.length > len) {
-    //     v = data.custom.prodName.substring(len);
+    //   if (data.custom?.prodName.length > len) {
+    //     v = data.custom?.prodName.substring(len);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "productName3":
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.prodName.length > len * 2) {
-    //     v = data.custom.prodName.substring(len * 2);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.prodName.length > len * 2) {
+    //     v = data.custom?.prodName.substring(len * 2);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "productDescription2":
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.prodDescription.length > len) {
-    //     v = data.custom.prodDescription.substring(len);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.prodDescription.length > len) {
+    //     v = data.custom?.prodDescription.substring(len);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "productDescription3":
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.prodDescription.length > len * 2) {
-    //     v = data.custom.prodDescription.substring(len * 2);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.prodDescription.length > len * 2) {
+    //     v = data.custom?.prodDescription.substring(len * 2);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "productDescription4":
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.prodDescription.length > len * 3) {
-    //     v = data.custom.prodDescription.substring(len * 3);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.prodDescription.length > len * 3) {
+    //     v = data.custom?.prodDescription.substring(len * 3);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "productDescription5":
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.prodDescription.length > len * 4) {
-    //     v = data.custom.prodDescription.substring(len * 4);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.prodDescription.length > len * 4) {
+    //     v = data.custom?.prodDescription.substring(len * 4);
     //   } else {
     //     v = "";
     //   }
     //   break;
     case "productNameOrOpenProductName":
-      v = data.custom.prodName;
-      if (data.custom.productCode === "0") {
-        v = data.custom.modelNoKOT;
+      v = data.custom?.prodName;
+      if (data.custom?.productCode === "0") {
+        v = data.custom?.modelNoKOT;
       }
       break;
     case "productDescriptionOrName":
-      v = data.custom.prodDescription || data.custom.prodName;
+      v = data.custom?.prodDescription || data.custom?.prodName;
       break;
     // case "qtyDetails":
-    //   v = getProductStockDetails(data.custom.productBatchID.toString(), data.custom.invQty);
+    //   v = getProductStockDetails(data.custom?.productBatchID.toString(), data.custom?.invQty);
     //   break;
     case "inOutArabic":
       if (data.master) {
@@ -1311,89 +1314,89 @@ export const getCommonValues = (
       }
       break;
     // case "modeOfPayment":
-    //   if (isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     if (data.custom.grantTotal === data.custom.cashReceived) {
+    //   if (isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     if (data.custom?.grantTotal === data.custom?.cashReceived) {
     //       v = "CASH";
-    //     } else if (data.custom.grantTotal === data.custom.cashReturned) {
+    //     } else if (data.custom?.grantTotal === data.custom?.cashReturned) {
     //       v = "CASH";
-    //     } else if (data.custom.grantTotal === data.custom.bankAmt) {
+    //     } else if (data.custom?.grantTotal === data.custom?.bankAmt) {
     //       v = "BANK";
     //     } else {
     //       v = "CASH/BANK";
     //     }
-    //   } else if (checkIsLedgerUnderBank(data.custom.partyLedgerID)) {
+    //   } else if (checkIsLedgerUnderBank(data.custom?.partyLedgerID)) {
     //     v = "BANK";
-    //   } else if (data.custom.grantTotal === data.custom.cashReceived) {
+    //   } else if (data.custom?.grantTotal === data.custom?.cashReceived) {
     //     v = "CASH";
-    //   } else if (data.custom.grantTotal === data.custom.cashReturned) {
+    //   } else if (data.custom?.grantTotal === data.custom?.cashReturned) {
     //     v = "CASH";
-    //   } else if (data.custom.grantTotal === data.custom.bankAmt) {
+    //   } else if (data.custom?.grantTotal === data.custom?.bankAmt) {
     //     v = "BANK";
-    //   } else if (data.custom.grantTotal === data.custom.cashReceived + data.custom.bankAmt) {
+    //   } else if (data.custom?.grantTotal === data.custom?.cashReceived + data.custom?.bankAmt) {
     //     v = "CASH+BANK";
     //   } else {
     //     v = "CREDIT";
     //   }
     //   break;
     // case "modeOfPaymentArabic":
-    //   if (isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     if (data.custom.grantTotal === data.custom.cashReceived) {
+    //   if (isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     if (data.custom?.grantTotal === data.custom?.cashReceived) {
     //       v = "نقدي";
-    //     } else if (data.custom.grantTotal === data.custom.cashReturned) {
+    //     } else if (data.custom?.grantTotal === data.custom?.cashReturned) {
     //       v = "نقدي";
-    //     } else if (data.custom.grantTotal === data.custom.bankAmt) {
+    //     } else if (data.custom?.grantTotal === data.custom?.bankAmt) {
     //       v = "شبكة";
     //     } else {
     //       v = "نقدي/شبكة";
     //     }
-    //   } else if (checkIsLedgerUnderBank(data.custom.partyLedgerID)) {
+    //   } else if (checkIsLedgerUnderBank(data.custom?.partyLedgerID)) {
     //     v = "شبكة";
-    //   } else if (data.custom.grantTotal === data.custom.cashReceived) {
+    //   } else if (data.custom?.grantTotal === data.custom?.cashReceived) {
     //     v = "نقدي";
-    //   } else if (data.custom.grantTotal === data.custom.cashReceived + data.custom.bankAmt) {
+    //   } else if (data.custom?.grantTotal === data.custom?.cashReceived + data.custom?.bankAmt) {
     //     v = "نقدي+شبكة";
-    //   } else if (data.custom.grantTotal === data.custom.cashReturned) {
+    //   } else if (data.custom?.grantTotal === data.custom?.cashReturned) {
     //     v = "نقدي";
-    //   } else if (data.custom.grantTotal === data.custom.bankAmt) {
+    //   } else if (data.custom?.grantTotal === data.custom?.bankAmt) {
     //     v = "شبكة";
     //   } else {
     //     v = "آجل";
     //   }
     //   break;
     case "paidOrNot":
-      v = data.custom.cashReceived > 0 ? "Paid" : "Not Paid";
+      v = data.custom?.cashReceived > 0 ? "Paid" : "Not Paid";
       break;
     // Tax calculations with discount
     // case "totalTaxableValue_5_Perc":
-    //   const taxableAmt5 = getTaxableAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 5);
+    //   const taxableAmt5 = getTaxableAmountIncludingTaxOnDiscount(data.custom?.invTransactionMasterID, 5);
     //   if (taxableAmt5 > 0) {
     //     setTotal5PerctaxableValue(taxableAmt5);
     //   }
-    //   v = data.custom.total5PerctaxableValue.toString();
+    //   v = data.custom?.total5PerctaxableValue.toString();
     //   break;
     // case "totalTaxValue_5_Perc":
-    //   const taxAmt5 = getTaxAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 5);
+    //   const taxAmt5 = getTaxAmountIncludingTaxOnDiscount(data.custom?.invTransactionMasterID, 5);
     //   if (taxAmt5 > 0) {
     //     setTotal5PercTaxValue(taxAmt5);
     //   }
-    //   v = data.custom.total5PercTaxValue.toString();
+    //   v = data.custom?.total5PercTaxValue.toString();
     //   break;
     // case "totalTaxableValue_15_Perc":
-    //   const taxableAmt15 = getTaxableAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 15.0);
+    //   const taxableAmt15 = getTaxableAmountIncludingTaxOnDiscount(data.custom?.invTransactionMasterID, 15.0);
     //   if (taxableAmt15 > 0) {
     //     setTotal15PerctaxableValue(taxableAmt15);
     //   }
-    //   v = data.custom.total15PerctaxableValue.toString();
+    //   v = data.custom?.total15PerctaxableValue.toString();
     //   break;
     // case "totalTaxValue_15_Perc":
-    //   const taxAmt15 = getTaxAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 15.0);
+    //   const taxAmt15 = getTaxAmountIncludingTaxOnDiscount(data.custom?.invTransactionMasterID, 15.0);
     //   if (taxAmt15 > 0) {
     //     setTotal15PercTaxValue(taxAmt15);
     //   }
-    //   v = data.custom.total15PercTaxValue.toString();
+    //   v = data.custom?.total15PercTaxValue.toString();
     //   break;
     // case "totalTaxableValue_0_Perc":
-    //   const taxableAmt0 = getTaxableAmountIncludingTaxOnDiscount(data.custom.invTransactionMasterID, 0);
+    //   const taxableAmt0 = getTaxableAmountIncludingTaxOnDiscount(data.custom?.invTransactionMasterID, 0);
     //   if (taxableAmt0 > 0) {
     //     setZeroPercentTaxableValue(taxableAmt0);
     //   }
@@ -1405,87 +1408,87 @@ export const getCommonValues = (
     //   break;
     case "amountInWordsPayable":
       const payableAmount =
-        data.custom.grantTotal - (data.master ? data.master.srAmount || 0 : 0);
+        data.custom?.grantTotal - (data.master ? data.master.srAmount || 0 : 0);
       v = getAmountInWords(payableAmount);
       break;
     // Balance calculations
     // case "obCashRcvd":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //     v = (data.custom.openingBalance - data.custom.cashReceived).toString();
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //     v = (data.custom?.openingBalance - data.custom?.cashReceived).toString();
     //   }
     //   break;
     // case "runningBalance":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     const runningBal = getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate);
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     const runningBal = getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate);
     //     v = runningBal.toString();
     //   }
     //   break;
     // case "ledgerBalance":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     const ledgerBal = getLedgerBalance(data.custom.partyLedgerID);
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     const ledgerBal = getLedgerBalance(data.custom?.partyLedgerID);
     //     v = ledgerBal.toString();
     //   }
     //   break;
     // case "previousDayLedgerBalance":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
     //     if (getDBIDValue().trim() === "543140180640") {
-    //       if (getDefaultCustomerLedgerID() === data.custom.partyLedgerID) {
+    //       if (getDefaultCustomerLedgerID() === data.custom?.partyLedgerID) {
     //         v = "0";
     //       } else {
-    //         const ledgerBal = getPreviousDayLedgerBalance(data.custom.partyLedgerID, data.custom.transactionDate);
+    //         const ledgerBal = getPreviousDayLedgerBalance(data.custom?.partyLedgerID, data.custom?.transactionDate);
     //         v = ledgerBal.toString();
     //       }
     //     } else {
-    //       const ledgerBal = getPreviousDayLedgerBalance(data.custom.partyLedgerID, data.custom.transactionDate);
+    //       const ledgerBal = getPreviousDayLedgerBalance(data.custom?.partyLedgerID, data.custom?.transactionDate);
     //       v = ledgerBal.toString();
     //     }
     //   }
     //   break;
     // case "ledgerBalanceAndGrandTotal":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //     const adjustedBalance = data.custom.openingBalance - (data.custom.grantTotal - data.custom.cashReceived);
-    //     v = (Math.abs(adjustedBalance) + data.custom.grantTotal).toString();
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //     const adjustedBalance = data.custom?.openingBalance - (data.custom?.grantTotal - data.custom?.cashReceived);
+    //     v = (Math.abs(adjustedBalance) + data.custom?.grantTotal).toString();
     //   }
     //   break;
     // case "ledgerBalanceAmountInWords":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     const ledgerBal = getLedgerBalance(data.custom.partyLedgerID);
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     const ledgerBal = getLedgerBalance(data.custom?.partyLedgerID);
     //     v = getAmountInWords(Math.abs(ledgerBal));
     //   }
     //   break;
     case "currentBillBalance":
-      v = data.custom.cashReturned.toString();
+      v = data.custom?.cashReturned.toString();
       break;
     case "totalAdvance":
       v = (
-        data.custom.grantTotal -
-        data.custom.cashReceived -
-        data.custom.bankAmt
+        data.custom?.grantTotal -
+        data.custom?.cashReceived -
+        data.custom?.bankAmt
       ).toString();
       break;
     case "totNetValueBillDisc":
-      v = (data.custom.sumOfNetValue - data.custom.billDiscount).toString();
+      v = (data.custom?.sumOfNetValue - data.custom?.billDiscount).toString();
       break;
     case "grandTotalBillDisc":
-      v = (data.custom.grantTotal - data.custom.billDiscount).toString();
+      v = (data.custom?.grantTotal - data.custom?.billDiscount).toString();
       break;
     case "grandTotalCouponAmt":
       const couponAmt = data.master ? data.master.couponAmt || 0 : 0;
-      v = (data.custom.grantTotal - couponAmt).toString();
+      v = (data.custom?.grantTotal - couponAmt).toString();
       break;
     case "qtyWithUnit":
-      v = data.custom.qtyWithUnit;
+      v = data.custom?.qtyWithUnit;
       break;
     case "unitNetValue":
-      v = data.custom.unitNetValue.toString();
+      v = data.custom?.unitNetValue.toString();
       break;
     case "vehicleNumber":
       v = data.master ? data.master.vehicleData.vehicleNumber || "" : "";
       break;
     case "billDiscountPlusDiscount":
-      v = (data.custom.billDiscount + data.custom.sumOfDisc).toString();
+      v = (data.custom?.billDiscount + data.custom?.sumOfDisc).toString();
       break;
     case "partyDisplayName":
       v = data.master ? data.master.partyData.partyDisplayName || "" : "";
@@ -1517,81 +1520,81 @@ export const getCommonValues = (
       break;
     case "balanceAmtPayable":
       const srAmount = data.master ? data.master.srAmount || 0 : 0;
-      v = (data.custom.grantTotal - srAmount).toString();
+      v = (data.custom?.grantTotal - srAmount).toString();
       break;
     // case "privilageCardBalance":
-    //   v = data.custom.loyaltyCardNo.trim() === "" ? "0" : getLoyaltyCardBalance(data.custom.loyaltyCardNo).toString();
+    //   v = data.custom?.loyaltyCardNo.trim() === "" ? "0" : getLoyaltyCardBalance(data.custom?.loyaltyCardNo).toString();
     //   break;
     // Cheque printing fields
     case "chequeDate":
-      v = data.custom.chequeDate;
+      v = data.custom?.chequeDate;
       break;
     case "chequePaytoAccountName":
-      v = data.custom.chequePaytoAccountName;
+      v = data.custom?.chequePaytoAccountName;
       break;
     case "chequeAmount":
-      v = `***${parseFloat(data.custom.chequeAmount).toFixed(2)}/-***`;
+      v = `***${parseFloat(data.custom?.chequeAmount).toFixed(2)}/-***`;
       break;
     case "chequeRemarks":
-      v = data.custom.chequeRemarks;
+      v = data.custom?.chequeRemarks;
       break;
     case "chequeAmountInWordsLine":
-      v = `***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`;
+      v = `***${getAmountInWords(parseFloat(data.custom?.chequeAmount))}***`;
 
       break;
     // case "chequeAmountInWordsLine2":
     //   if (!data.custom.chequeAmountInWords) {
-    //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`);
+    //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom?.chequeAmount))}***`);
     //   }
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.chequeAmountInWords.length > len) {
-    //     v = data.custom.chequeAmountInWords.substring(len);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.chequeAmountInWords.length > len) {
+    //     v = data.custom?.chequeAmountInWords.substring(len);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "chequeAmountInWordsLine3":
     //   if (!data.custom.chequeAmountInWords) {
-    //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom.chequeAmount))}***`);
+    //     setChequeAmountInWords(`***${getAmountInWords(parseFloat(data.custom?.chequeAmount))}***`);
     //   }
-    //   len = parseInt(data.custom.fldLength || "0");
-    //   if (data.custom.chequeAmountInWords.length > len * 2) {
-    //     v = data.custom.chequeAmountInWords.substring(len * 2);
+    //   len = parseInt(data.custom?.fldLength || "0");
+    //   if (data.custom?.chequeAmountInWords.length > len * 2) {
+    //     v = data.custom?.chequeAmountInWords.substring(len * 2);
     //   } else {
     //     v = "";
     //   }
     //   break;
     // case "previousBalance":
     //   if (voucherType === "CP" || voucherType === "BP") {
-    //     if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //       setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //       const adjustedBalance = data.custom.openingBalance - data.custom.cashPaidOrRcvd;
+    //     if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //       setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //       const adjustedBalance = data.custom?.openingBalance - data.custom?.cashPaidOrRcvd;
     //       v = adjustedBalance.toString();
     //     }
     //   } else if (voucherType === "CR" || voucherType === "BR") {
-    //     if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //       setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //       const adjustedBalance = data.custom.openingBalance + data.custom.cashPaidOrRcvd;
+    //     if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //       setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //       const adjustedBalance = data.custom?.openingBalance + data.custom?.cashPaidOrRcvd;
     //       v = adjustedBalance.toString();
     //     }
     //   } else {
-    //     if (!isCashInHandLedger(data.custom.partyLedgerID)) {
+    //     if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
     //       if (voucherType === "SR") {
-    //         setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //         const adjustedBalance = data.custom.openingBalance + (data.custom.grantTotal + data.custom.cashReturned);
+    //         setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //         const adjustedBalance = data.custom?.openingBalance + (data.custom?.grantTotal + data.custom?.cashReturned);
     //         v = adjustedBalance.toString();
     //       } else {
-    //         setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //         const adjustedBalance = data.custom.openingBalance - (data.custom.grantTotal - data.custom.cashReceived);
+    //         setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //         const adjustedBalance = data.custom?.openingBalance - (data.custom?.grantTotal - data.custom?.cashReceived);
     //         v = adjustedBalance.toString();
     //       }
     //     }
     //   }
     //   break;
     // case "closingBalance":
-    //   if (!isCashInHandLedger(data.custom.partyLedgerID)) {
-    //     setOpeningBalance(getLedgerBalance(data.custom.partyLedgerID, data.custom.transDate));
-    //     v = data.custom.openingBalance.toString();
+    //   if (!isCashInHandLedger(data.custom?.partyLedgerID)) {
+    //     setOpeningBalance(getLedgerBalance(data.custom?.partyLedgerID, data.custom?.transDate));
+    //     v = data.custom?.openingBalance.toString();
     //   }
     //   break;
     case "invoiceStatus":
@@ -1599,41 +1602,41 @@ export const getCommonValues = (
       v = oldInvTrID === 0 ? "NEW" : "EDITED";
       break;
     case "netAmount":
-      v = (data.custom.grantTotal + data.custom.billDiscount).toString();
+      v = (data.custom?.grantTotal + data.custom?.billDiscount).toString();
       break;
     // case "grantTotal":
     //   if (isapp() && getBusinessType() === "Restaurant") {
-    //     v = posRoundAmount(data.custom.grantTotal).toString();
+    //     v = posRoundAmount(data.custom?.grantTotal).toString();
     //   } else {
-    //     v = data.custom.grantTotal.toString();
+    //     v = data.custom?.grantTotal.toString();
     //   }
     //   break;
     case "totalSalesValue":
-      v = data.custom.stockTransferTotalSalesValue.toString();
+      v = data.custom?.stockTransferTotalSalesValue.toString();
       break;
     case "pageTotalBarcode":
-      v = data.custom.pageTotalBarcode;
+      v = data.custom?.pageTotalBarcode;
       break;
     case "jvTotalDebit":
       v = data.custom?.jvTotalDebit.toString();
       break;
     case "jvTotalCredit":
-      v = data.custom.jvTotalCredit.toString();
+      v = data.custom?.jvTotalCredit.toString();
       break;
     case "invoiceNumberAndPageTotalBarcode":
-      v = data.custom.invoiceNumberAndPageTotalBarcode;
+      v = data.custom?.invoiceNumberAndPageTotalBarcode;
       break;
     case "width":
-      v = data.custom.pWidth;
+      v = data.custom?.pWidth;
       break;
     case "height":
-      v = data.custom.pHeight;
+      v = data.custom?.pHeight;
       break;
     case "nonHeightAndWidthUnit":
-      v = data.custom.nonHeightWidth;
+      v = data.custom?.nonHeightWidth;
       break;
     case "printCount":
-      v = data.custom.printCount;
+      v = data.custom?.printCount;
       break;
     // case "specialLedgerBalance":
     //   if (fileExistsSync("SpecialLedgerID.txt")) {
@@ -1823,99 +1826,231 @@ export const getCommonValues = (
   return v;
 };
 
+// export function bindDataForPrint(
+//   field: string,
+//   printData: PrintData,
+//   format: string = "NONE",
+//   convertAmountToEnglish?: (
+//     amount: number,
+//     currency?: Currencies | undefined
+//   ) => string,
+//   convertAmountToArabic?: (
+//     amount: number,
+//     currency?: Currencies | undefined
+//   ) => string,
+//   rowIndex: number = 0
+// ): any {
+//     if (!field) return "";
+//     if (!printData) return "";
+
+//   const splitData = field.split("___");
+//   const group = splitData[0] as any;
+//   const key = splitData[1];
+
+//   const master = printData?.master;
+//   const details = printData?.details;
+//   let val;
+
+//   if (!field?.includes("___")) {
+//     console.log(`col.field-1`);
+//     if (
+//       ![
+//         "cgst",
+//         "cgstPerc",
+//         "sgst",
+//         "sgstPerc",
+//         "igst",
+//         "igstPerc",
+//         "cessAmt",
+//         "cessPerc",
+//         "additionalCess",
+//         "additionalCessPerc",
+//         "gstPerc",
+//       ].includes(field)
+//     ) {
+//       console.log(`col.field-2`);
+//       if (group == "master") {
+//         val = master[field as keyof PrintMasterDto];
+//       } else if (group == "details") {
+//         val = details?.[rowIndex]?.[field as keyof PrintDetailDto];
+//       } else if (group == "details2") {
+//         val =
+//           details?.[rowIndex]?.detail2Data?.[field as keyof InvDetail2ForPrint];
+//       } else if (group == "custom") {
+//         val = getCommonValues(field as any, printData, convertAmountToArabic);
+//       }
+//       // else if (group == "branch") {
+//       //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
+//       // }
+//       else if (group == "org") {
+//         val = printData.companyDetails?.[field as keyof CompanyDetailsForPrint];
+//       } else if (group == "headerFooter") {
+//         val = printData.headerFooter?.[field as keyof HeaderFooter];
+//       } else if (group == "customer") {
+//         val =
+//           printData?.master?.partyData?.[field as keyof PartyDetailsForPrint];
+//       }
+//     } else {
+//       val =
+//         details?.[rowIndex]?.detail2Data?.[field as keyof InvDetail2ForPrint];
+//     }
+//   } else {
+//     if (group == "master") {
+//       val = master[key as keyof PrintMasterDto];
+//     } else if (group == "details") {
+//       val = details?.[rowIndex]?.[key as keyof PrintDetailDto];
+//     } else if (group == "details2") {
+//       val = details?.[rowIndex]?.detail2Data?.[key as keyof InvDetail2ForPrint];
+//     } else if (group == "custom") {
+//       val = getCommonValues(key as any, printData, convertAmountToArabic);
+//     }
+
+//     else if (group == "ledgerReportDataForPrint") {
+//      val = printData.led?.[key as keyof HeaderFooter];
+//     }
+//     else if (group == "org") {
+//       val = printData.companyDetails?.[key as keyof CompanyDetailsForPrint];
+//     } else if (group == "headerFooter") {
+//       val = printData.headerFooter?.[key as keyof HeaderFooter];
+//     } else if (group == "customer") {
+//       val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint];
+//     }
+  
+//   }
+//       if (isNullOrUndefinedOrEmpty(val)) {
+//       return "";
+//     }
+//    return  formatValue(val, format);
+// }
 export function bindDataForPrint(
   field: string,
-  printData: PrintResponse,
+  printData: PrintData,
   format: string = "NONE",
   convertAmountToEnglish?: (
     amount: number,
-    currency?: Currencies | undefined
+    currency?: Currencies
   ) => string,
   convertAmountToArabic?: (
     amount: number,
-    currency?: Currencies | undefined
+    currency?: Currencies
   ) => string,
   rowIndex: number = 0
 ): any {
+  debugger;
   if (!field) return "";
-  if (isNullOrUndefinedOrEmpty(printData?.master)) return "";
+  if (!printData) return "";
+
   const splitData = field.split("___");
-  const group = splitData[0] as any;
+  const group = splitData[0];
   const key = splitData[1];
 
-  const master = printData?.master;
-  const details = printData?.details;
-  let val;
+  let val: any;
 
-  if (!field?.includes("___")) {
-    console.log(`col.field-1`);
-    if (
-      ![
-        "cgst",
-        "cgstPerc",
-        "sgst",
-        "sgstPerc",
-        "igst",
-        "igstPerc",
-        "cessAmt",
-        "cessPerc",
-        "additionalCess",
-        "additionalCessPerc",
-        "gstPerc",
-      ].includes(field)
-    ) {
-      console.log(`col.field-2`);
-      if (group == "master") {
-        val = master[field as keyof PrintMasterDto];
-      } else if (group == "details") {
-        val = details?.[rowIndex]?.[field as keyof PrintDetailDto];
-      } else if (group == "details2") {
+  // ----------------------------
+  // VOUCHER FLOW
+  // ----------------------------
+  if (printData.kind === "voucher") {
+    const data = printData.data;
+    const master = data.master;
+    const details = data.details;
+
+    if (!field.includes("___")) {
+      if (
+        ![
+          "cgst",
+          "cgstPerc",
+          "sgst",
+          "sgstPerc",
+          "igst",
+          "igstPerc",
+          "cessAmt",
+          "cessPerc",
+          "additionalCess",
+          "additionalCessPerc",
+          "gstPerc",
+        ].includes(field)
+      ) {
+        if (group === "master") {
+          val = master?.[field as keyof PrintMasterDto];
+        } else if (group === "details") {
+          val = details?.[rowIndex]?.[field as keyof PrintDetailDto];
+        } else if (group === "details2") {
+          val =
+            details?.[rowIndex]?.detail2Data?.[
+              field as keyof InvDetail2ForPrint
+            ];
+        } else if (group === "custom") {
+          val = getCommonValues(field as any, data, convertAmountToArabic);
+        } else if (group === "org") {
+          val = data.companyDetails?.[
+            field as keyof CompanyDetailsForPrint
+          ];
+        } else if (group === "headerFooter") {
+          val = data.headerFooter?.[field as keyof HeaderFooter];
+        } else if (group === "customer") {
+          val =
+            master?.partyData?.[
+              field as keyof PartyDetailsForPrint
+            ];
+        }
+      } else {
         val =
-          details?.[rowIndex]?.detail2Data?.[field as keyof InvDetail2ForPrint];
-      } else if (group == "custom") {
-        val = getCommonValues(field as any, printData, convertAmountToArabic);
-      }
-      // else if (group == "branch") {
-      //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
-      // }
-      else if (group == "org") {
-        val = printData.companyDetails?.[field as keyof CompanyDetailsForPrint];
-      } else if (group == "headerFooter") {
-        val = printData.headerFooter?.[field as keyof HeaderFooter];
-      } else if (group == "customer") {
-        val =
-          printData?.master?.partyData?.[field as keyof PartyDetailsForPrint];
+          details?.[rowIndex]?.detail2Data?.[
+            field as keyof InvDetail2ForPrint
+          ];
       }
     } else {
-      val =
-        details?.[rowIndex]?.detail2Data?.[field as keyof InvDetail2ForPrint];
+      if (group === "master") {
+        val = master?.[key as keyof PrintMasterDto];
+      } else if (group === "details") {
+        val = details?.[rowIndex]?.[key as keyof PrintDetailDto];
+      } else if (group === "details2") {
+        val =
+          details?.[rowIndex]?.detail2Data?.[
+            key as keyof InvDetail2ForPrint
+          ];
+      } else if (group === "custom") {
+        val = getCommonValues(key as any, data, convertAmountToArabic);
+      } else if (group === "org") {
+        val =
+          data.companyDetails?.[
+            key as keyof CompanyDetailsForPrint
+          ];
+      } else if (group === "headerFooter") {
+        val = data.headerFooter?.[key as keyof HeaderFooter];
+      } else if (group === "customer") {
+        val =
+          master?.partyData?.[
+            key as keyof PartyDetailsForPrint
+          ];
+      }
     }
-  } else {
-    if (group == "master") {
-      val = master[key as keyof PrintMasterDto];
-    } else if (group == "details") {
-      val = details?.[rowIndex]?.[key as keyof PrintDetailDto];
-    } else if (group == "details2") {
-      val = details?.[rowIndex]?.detail2Data?.[key as keyof InvDetail2ForPrint];
-    } else if (group == "custom") {
-      val = getCommonValues(key as any, printData, convertAmountToArabic);
-    }
-    // else if (group == "branch") {
-    //   return userSession.currentBranchDetails?.[key as keyof BranchDetails]
-    // }
-    else if (group == "org") {
-      val = printData.companyDetails?.[key as keyof CompanyDetailsForPrint];
-    } else if (group == "headerFooter") {
-      val = printData.headerFooter?.[key as keyof HeaderFooter];
-    } else if (group == "customer") {
-      val = printData?.master?.partyData?.[key as keyof PartyDetailsForPrint];
-    }
-  
   }
-      if (isNullOrUndefinedOrEmpty(val)) {
-      return "";
+
+  // ----------------------------
+  // LEDGER REPORT FLOW
+  // ----------------------------
+  else if (printData.kind === "ledgerReport") {
+    debugger
+    const data = printData.data;
+
+    if (group === "ledgerReportDataForPrint") {
+      val = data.ledgerData?.[
+        key as keyof ledgerDataPrint
+      ];
+    } else if (group === "org") {
+      val =
+        data.companyDetails?.[
+          key as keyof CompanyDetailsForPrint
+        ];
+    } else if (group === "headerFooter") {
+      val = data.headerFooter?.[key as keyof HeaderFooter];
     }
-   return  formatValue(val, format);
+  }
+
+  if (isNullOrUndefinedOrEmpty(val)) return "";
+
+  return formatValue(val, format);
 }
 
 export const addTemplateToStore = async (
@@ -2222,108 +2357,317 @@ export const getOrFetchTemplate = async (
     return await fetchDefaultTemplate(voucherType, formType, customerType);
   }
 };
-export const formatValue = (value: any, format: string) => {
-  let t = "";
-  const ws = " ".repeat(400); // Same as long ws string in C#
-  // const { fldFont, fldAlign, fldLength } = opts;
+// export const formatValue = (value: any, format: string) => {
+//   let t = "";
+//   const ws = " ".repeat(400); // Same as long ws string in C#
+//   // const { fldFont, fldAlign, fldLength } = opts;
 
-  // QR Code fonts: return directly
-  // if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
-  if (!format) return value;
+//   // QR Code fonts: return directly
+//   // if (fldFont === 'QR Code-Polosys' || fldFont === 'QR Code-Polosys-2') return value;
+//   if (!format) return value;
+//   const fmt = format.toUpperCase();
+
+//   try {
+//     if (fmt === "C###0.00") {
+//       t = val(value).toFixed(2);
+//     } else if (fmt === "C###0.000") {
+//       t = val(value).toFixed(3);
+//     } else if (format.includes("#") && !format.includes("**")) {
+//       t = val(value).toString();
+//     } else if (fmt === "QTY") {
+//       t = val(value).toFixed(0);
+//     } else if (fmt === "QTY1") {
+//       const t1 = val(value);
+//       const t2 = Math.trunc(t1);
+//       t = t1 !== t2 ? t1.toFixed(1) : t1.toFixed(0);
+//     } else if (fmt === "QTY2") {
+//       const t1 = val(value);
+//       const t2 = Math.trunc(t1);
+//       t = t1 !== t2 ? t1.toFixed(2) : t1.toFixed(0);
+//     } else if (fmt === "QTY3") {
+//       const t1 = val(value);
+//       const t2 = Math.trunc(t1);
+//       t = t1 !== t2 ? t1.toFixed(3) : t1.toFixed(0);
+//     } else if (fmt === "AR_NUM") {
+//       t = getArabicNumber(val(value).toFixed(0));
+//     } else if (fmt === "SHRINK") {
+//       t = value;
+//     } else if (fmt === "AR_DIG2") {
+//       t = getArabicNumber(val(value).toFixed(2));
+//     } else if (fmt === "AR_DATE") {
+//       // const date = TransDate ? TransDate : new Date(value);
+//       // const formatted = date.toLocaleDateString('en-GB', {
+//       //   day: '2-digit',
+//       //   month: '2-digit',
+//       //   year: 'numeric',
+//       // });
+//       // t = GetArabicDateNumer(formatted.replace(/\//g, '-'));
+//     } else if (fmt === "AR_DIG3") {
+//       t = getArabicNumber(val(value).toFixed(3));
+//     } else if (
+//       format.includes("d") ||
+//       format.includes("M") ||
+//       format.includes("y") ||
+//       format.includes("H") ||
+//       format.includes("h") ||
+//       format.includes("m") ||
+//       format.includes("s")
+//     ) {
+//       const date = new Date(value);
+//       if (!isNaN(date.getTime())) {
+//         // interpret C#-style format tokens manually
+//         const pad = (n: number) => n.toString().padStart(2, "0");
+//         const replacements: Record<string, string> = {
+//           dd: pad(date.getDate()),
+//           MM: pad(date.getMonth() + 1),
+//           yyyy: date.getFullYear().toString(),
+//           HH: pad(date.getHours()),
+//           mm: pad(date.getMinutes()),
+//           ss: pad(date.getSeconds()),
+//         };
+//         t = format.replace(/dd|MM|yyyy|HH|mm|ss/g, (m) => replacements[m] || m);
+//       } else {
+//         t = value;
+//       }
+//     } else if (fmt === "NONE") {
+//       t = value;
+//     } else if (fmt === "BIZ") {
+//       const v = val(value);
+//       t = v === 0 ? "" : v.toFixed(2);
+//     } else {
+//       t = value;
+//     }
+
+//     // Apply alignment and field length
+//     // if (fldAlign === 'Left') {
+//     //   t = (t + ws).substring(0, fldLength);
+//     // } else if (fldAlign === 'Right' || fldAlign === 'Right Justify') {
+//     //   t = (ws + t).slice(-fldLength);
+//     // } else if (fldAlign === 'Center') {
+//     //   const total = ws + t + ws;
+//     //   const start = Math.max(0, Math.floor(total.length / 2 - fldLength / 2));
+//     //   t = total.substring(start, start + fldLength);
+//     // } else {
+//     //   try {
+//     //     t = (t + ws).substring(0, fldLength);
+//     //   } catch {
+//     //     // ignore
+//     //   }
+//     // }
+//   } catch {
+//     t = value;
+//   }
+
+//   return t;
+// };
+export const formatValue = (value: any, format: string) => {
+  if (!format || format === "NONE") return value?.toString() || "";
+  
   const fmt = format.toUpperCase();
 
   try {
+    // Handle null/undefined
+    if (value === null || value === undefined || value === "") {
+      return "";
+    }
+
+    // Number parsing helper
+    const parseNumber = (val: any): number => {
+      if (typeof val === 'number') return val;
+      const parsed = parseFloat(val);
+      return isNaN(parsed) ? 0 : parsed;
+    };
+
+    // Arabic number conversion helper
+    const getArabicNumber = (num: string): string => {
+      const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      return num.replace(/\d/g, (digit) => arabicDigits[parseInt(digit)]);
+    };
+
+    // Arabic date conversion helper
+    const getArabicDateNumber = (dateStr: string): string => {
+      const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      return dateStr.replace(/\d/g, (digit) => arabicDigits[parseInt(digit)]);
+    };
+
+    // NUMBER FORMATS
+    if (fmt === "###") {
+      return Math.round(parseNumber(value)).toString();
+    }
+    
+    if (fmt === "###0") {
+      return Math.round(parseNumber(value)).toString();
+    }
+    
+    if (fmt === "###0.0") {
+      return parseNumber(value).toFixed(1);
+    }
+    
+    if (fmt === "###0.00") {
+      return parseNumber(value).toFixed(2);
+    }
+    
     if (fmt === "C###0.00") {
-      t = val(value).toFixed(2);
-    } else if (fmt === "C###0.000") {
-      t = val(value).toFixed(3);
-    } else if (format.includes("#") && !format.includes("**")) {
-      t = val(value).toString();
-    } else if (fmt === "QTY") {
-      t = val(value).toFixed(0);
-    } else if (fmt === "QTY1") {
-      const t1 = val(value);
-      const t2 = Math.trunc(t1);
-      t = t1 !== t2 ? t1.toFixed(1) : t1.toFixed(0);
-    } else if (fmt === "QTY2") {
-      const t1 = val(value);
-      const t2 = Math.trunc(t1);
-      t = t1 !== t2 ? t1.toFixed(2) : t1.toFixed(0);
-    } else if (fmt === "QTY3") {
-      const t1 = val(value);
-      const t2 = Math.trunc(t1);
-      t = t1 !== t2 ? t1.toFixed(3) : t1.toFixed(0);
-    } else if (fmt === "AR_NUM") {
-      t = getArabicNumber(val(value).toFixed(0));
-    } else if (fmt === "SHRINK") {
-      t = value;
-    } else if (fmt === "AR_DIG2") {
-      t = getArabicNumber(val(value).toFixed(2));
-    } else if (fmt === "AR_DATE") {
-      // const date = TransDate ? TransDate : new Date(value);
-      // const formatted = date.toLocaleDateString('en-GB', {
-      //   day: '2-digit',
-      //   month: '2-digit',
-      //   year: 'numeric',
-      // });
-      // t = GetArabicDateNumer(formatted.replace(/\//g, '-'));
-    } else if (fmt === "AR_DIG3") {
-      t = getArabicNumber(val(value).toFixed(3));
-    } else if (
+      return parseNumber(value).toFixed(2);
+    }
+    
+    if (fmt === "###0.000") {
+      return parseNumber(value).toFixed(3);
+    }
+    
+    if (fmt === "###0.0000") {
+      return parseNumber(value).toFixed(4);
+    }
+    
+    if (fmt === "###,###0.00") {
+      const num = parseNumber(value);
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+    
+    if (fmt === "***###0.00/-***") {
+      const num = parseNumber(value);
+      const formatted = num.toFixed(2);
+      return num < 0 ? `***${formatted}/-***` : `***${formatted}***`;
+    }
+
+    // QUANTITY FORMATS
+    if (fmt === "QTY") {
+      return Math.round(parseNumber(value)).toString();
+    }
+    
+    if (fmt === "QTY1") {
+      const num = parseNumber(value);
+      const truncated = Math.trunc(num);
+      return num !== truncated ? num.toFixed(1) : truncated.toString();
+    }
+    
+    if (fmt === "QTY2") {
+      const num = parseNumber(value);
+      const truncated = Math.trunc(num);
+      return num !== truncated ? num.toFixed(2) : truncated.toString();
+    }
+    
+    if (fmt === "QTY3") {
+      const num = parseNumber(value);
+      const truncated = Math.trunc(num);
+      return num !== truncated ? num.toFixed(3) : truncated.toString();
+    }
+
+    // ARABIC NUMBER FORMATS
+    if (fmt === "AR_NUM") {
+      return getArabicNumber(Math.round(parseNumber(value)).toString());
+    }
+    
+    if (fmt === "AR_DIG2") {
+      return getArabicNumber(parseNumber(value).toFixed(2));
+    }
+    
+    if (fmt === "AR_DIG3") {
+      return getArabicNumber(parseNumber(value).toFixed(3));
+    }
+
+    // ARABIC DATE FORMAT
+    if (fmt === "AR_DATE") {
+      const date = value instanceof Date ? value : new Date(value);
+      if (!isNaN(date.getTime())) {
+        const formatted = date.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        });
+        return getArabicDateNumber(formatted.replace(/\//g, '-'));
+      }
+      return value?.toString() || "";
+    }
+
+    // DATE & TIME FORMATS
+    if (fmt === "HH:MM:SS TT" || fmt === "HH:MM:SS") {
+      const date = value instanceof Date ? value : new Date(value);
+      if (!isNaN(date.getTime())) {
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        
+        if (fmt === "HH:MM:SS TT") {
+          const period = hours >= 12 ? 'PM' : 'AM';
+          const displayHours = hours % 12 || 12;
+          return `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
+        } else {
+          return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }
+      return value?.toString() || "";
+    }
+
+    // Generic date/time format handling
+    if (
       format.includes("d") ||
       format.includes("M") ||
       format.includes("y") ||
       format.includes("H") ||
       format.includes("h") ||
       format.includes("m") ||
-      format.includes("s")
+      format.includes("s") ||
+      format.includes("t")
     ) {
-      const date = new Date(value);
+      const date = value instanceof Date ? value : new Date(value);
       if (!isNaN(date.getTime())) {
-        // interpret C#-style format tokens manually
         const pad = (n: number) => n.toString().padStart(2, "0");
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        
         const replacements: Record<string, string> = {
-          dd: pad(date.getDate()),
-          MM: pad(date.getMonth() + 1),
           yyyy: date.getFullYear().toString(),
-          HH: pad(date.getHours()),
-          mm: pad(date.getMinutes()),
-          ss: pad(date.getSeconds()),
+          yy: (date.getFullYear() % 100).toString().padStart(2, '0'),
+          MMM: date.toLocaleString('en-US', { month: 'short' }),
+          MM: pad(date.getMonth() + 1),
+          M: (date.getMonth() + 1).toString(),
+          dd: pad(date.getDate()),
+          d: date.getDate().toString(),
+          HH: pad(hours),
+          hh: pad(hours % 12 || 12),
+          h: (hours % 12 || 12).toString(),
+          mm: pad(minutes),
+          m: minutes.toString(),
+          ss: pad(seconds),
+          s: seconds.toString(),
+          tt: hours >= 12 ? 'PM' : 'AM',
         };
-        t = format.replace(/dd|MM|yyyy|HH|mm|ss/g, (m) => replacements[m] || m);
-      } else {
-        t = value;
+        
+        // Sort by length (longest first) to avoid partial replacements
+        const pattern = Object.keys(replacements)
+          .sort((a, b) => b.length - a.length)
+          .join('|');
+        
+        return format.replace(
+          new RegExp(pattern, 'g'),
+          (match) => replacements[match] || match
+        );
       }
-    } else if (fmt === "NONE") {
-      t = value;
-    } else if (fmt === "BIZ") {
-      const v = val(value);
-      t = v === 0 ? "" : v.toFixed(2);
-    } else {
-      t = value;
+      return value?.toString() || "";
     }
 
-    // Apply alignment and field length
-    // if (fldAlign === 'Left') {
-    //   t = (t + ws).substring(0, fldLength);
-    // } else if (fldAlign === 'Right' || fldAlign === 'Right Justify') {
-    //   t = (ws + t).slice(-fldLength);
-    // } else if (fldAlign === 'Center') {
-    //   const total = ws + t + ws;
-    //   const start = Math.max(0, Math.floor(total.length / 2 - fldLength / 2));
-    //   t = total.substring(start, start + fldLength);
-    // } else {
-    //   try {
-    //     t = (t + ws).substring(0, fldLength);
-    //   } catch {
-    //     // ignore
-    //   }
-    // }
-  } catch {
-    t = value;
-  }
+    // SPECIAL FORMATS
+    if (fmt === "BIZ") {
+      const num = parseNumber(value);
+      return num === 0 ? "" : num.toFixed(2);
+    }
+    
+    if (fmt === "SHRINK") {
+      return value?.toString() || "";
+    }
 
-  return t;
+    // Default: return as string
+    return value?.toString() || "";
+
+  } catch (error) {
+    console.error('Error formatting value:', error);
+    return value?.toString() || "";
+  }
 };
 
 const formatDate = (value: any, format: string) => {

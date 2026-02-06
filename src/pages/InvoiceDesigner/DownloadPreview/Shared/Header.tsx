@@ -2,17 +2,18 @@ import { View, Image, StyleSheet } from "@react-pdf/renderer";
 import {PlacedComponent, TemplateState } from "../../Designer/interfaces";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
 import { RenderComponentPDF } from "../customElement";
+import { PrintData } from "../../../use-print-type";
 
 
 interface ShardPrevHeaderPDFProps {
-  data: any;
+  printData: PrintData;
   template?: TemplateState<unknown>;
   qrCodes: { [key: string]: string };
   AmountToEnglish?: any;
   AmountToArabic?: any;
 }
 
-const ShardDowHeader = ({ data, template, qrCodes,AmountToEnglish,AmountToArabic }: ShardPrevHeaderPDFProps) => {
+const ShardDowHeader = ({ printData, template, qrCodes,AmountToEnglish,AmountToArabic }: ShardPrevHeaderPDFProps) => {
  
   const headerState = template?.headerState;
   const customElements: PlacedComponent[] = headerState?.customElements?.elements ?? [];
@@ -56,7 +57,7 @@ const ShardDowHeader = ({ data, template, qrCodes,AmountToEnglish,AmountToArabic
           <RenderComponentPDF
             key={component.id}
             component={component}
-            data={data}
+            printData={printData}
             qrCodeImages={qrCodes}
             convertAmountToArabic={AmountToArabic}
             convertAmountToEnglish={AmountToEnglish}

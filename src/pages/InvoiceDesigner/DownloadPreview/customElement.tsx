@@ -5,10 +5,11 @@ import { bindDataForPrint } from "../../use-print";
 import { containsArabicString } from "../utils/pdf-util";
 import { Height, Width } from "devextreme-react/cjs/chart";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
+import { PrintData } from "../../use-print-type";
 
 interface Props {
   component: PlacedComponent;
-  data?: any;
+  printData: PrintData;
   qrCodeImages?: { [key: string]: string };
   convertAmountToEnglish: any;
   convertAmountToArabic: any;
@@ -16,7 +17,7 @@ interface Props {
 
 export const RenderComponentPDF: React.FC<Props> = ({
   component,
-  data,
+  printData,
   qrCodeImages,
   convertAmountToEnglish,
   convertAmountToArabic,
@@ -92,7 +93,7 @@ const DEFAULT_FONT_CONFIG = {
       ? component.content
       : bindDataForPrint(
           component.content,
-          data,
+          printData,
           component.format,
           convertAmountToEnglish,
           convertAmountToArabic
@@ -148,7 +149,7 @@ const DEFAULT_FONT_CONFIG = {
 
   );  
     case DesignerElementType.image:
-      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component?.content, data);
+      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component?.content, printData);
       return (
         
       <View style={baseStyle}>     
@@ -211,7 +212,7 @@ const DEFAULT_FONT_CONFIG = {
             <RenderComponentPDF
               key={child.id}
               component={{ ...child, containerId: component.id }}
-              data={data}
+              printData={printData}
               qrCodeImages={qrCodeImages}
               convertAmountToEnglish={convertAmountToEnglish}
               convertAmountToArabic={convertAmountToArabic}

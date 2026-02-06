@@ -1,3 +1,5 @@
+import { TemplateState } from "./InvoiceDesigner/Designer/interfaces";
+
 export interface PrintMasterDto {
   invTransactionMasterID: number;
   branchID: number;
@@ -344,6 +346,19 @@ heading1: string;
   footer10: string;
 }
 export interface LedgerReportDataForPrint {
+
+  ledgerData: ledgerDataPrint;
+  companyDetails: CompanyDetailsForPrint  
+  headerFooter: HeaderFooter;
+}
+
+export interface StableTemplateProps {
+  template?: TemplateState<unknown>;
+  printData ?: PrintData;
+  qrCodeImages?: Record<string, string>;
+}
+
+export interface ledgerDataPrint {
   ledgerId: number;
   asOnDate?: Date;        // or string if coming as ISO string from API
   code: string;
@@ -558,6 +573,7 @@ export interface PrintDetailDto {
   fullAmountPaid: string;    // "Yes" | "No"
   accTransactionMasterID: number;
 }
+
 
 export interface InvDetail2ForPrint {
   cgst: number;

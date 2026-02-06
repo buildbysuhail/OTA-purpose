@@ -18,11 +18,12 @@ import SharedTemplatePreview from '../InvoiceDesigner/DesignPreview/shared';
 import { formStateHandleFieldChange } from '../inventory/transactions/reducer';
 import { popupDataProps, toggleTemplateChooserModal } from '../../redux/slices/popup-reducer';
 import { useAppSelector } from '../../utilities/hooks/useAppDispatch';
+import { PrintData } from '../use-print-type';
 
 export type TemplatesPreViewHandle = {
   getPrintData: () => {
-    template: any;
-    printData?: any
+    template: TemplateState<unknown>;
+    printData?: PrintData
   } | null;
   // openTemplateChooser: () => {}
 };
@@ -58,11 +59,11 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
 
     useImperativeHandle(ref, () => ({
       getPrintData: () => {
-        if (!stableTemplateProps?.data || !stableTemplateProps?.template) return null;
+        if (!stableTemplateProps?.printData || !stableTemplateProps?.template) return null;
 
         return {
           template: stableTemplateProps?.template,
-          data: stableTemplateProps.data,
+          printData: stableTemplateProps.printData,
         };
       },
       // openTemplateChooser: () =>
@@ -112,15 +113,12 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
 
               <SharedTemplatePreview
                 template={stableTemplateProps?.template}
-                data={stableTemplateProps?.data}
+                printData={stableTemplateProps?.printData}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
                 isTemplateDesigner={false}
                 isInvTrans={isInvTrans}
                 isInLedgerReport={isInLedgerReport}
               />
-
-
-
             </div>
           </div>
         </div>

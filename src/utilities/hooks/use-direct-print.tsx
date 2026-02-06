@@ -10,7 +10,7 @@ import {
 } from "jsprintmanager";
 import { useDispatch } from "react-redux";
 import { generateBarcodeDataUrl, generateBarcodePages } from "../barcode";
-import { DesignerElementType, PlacedComponent } from "../../pages/InvoiceDesigner/Designer/interfaces";
+import { DesignerElementType, PlacedComponent, TemplateState } from "../../pages/InvoiceDesigner/Designer/interfaces";
 import { BarcodePDFDocument } from "../../pages/LabelDesigner/download-preview-barcode";
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { printJobLoaderReducer, toggleSelectPrinterPopup } from "../../redux/slices/popup-reducer";
@@ -21,10 +21,11 @@ import { loadPrintData } from "../../pages/use-print";
 import { generateQRCodeDataUrl } from "../../pages/InvoiceDesigner/utils/qrSvgToImg";
 import { useNumberToWords } from "../number-to-words";
 import { saveAs } from "file-saver";
+import { PrintData } from "../../pages/use-print-type";
 interface DirectPrintArgs {
   
-  template?: any;
-  data?: any;
+  template?: TemplateState<unknown>;
+  data?: any
   page?: any;
   DefaultPrinterName?: string;
   masterIDParam?: number;
@@ -90,9 +91,9 @@ export const useDirectPrint = () => {
   const fetchTemplateData = async (params: DirectPrintArgs) => {
     try {
       debugger;
-      let printData = params.data;
+      let printData:PrintData = params.data;
       if (params.masterIDParam && params.masterIDParam !=0){
-        printData = (await loadPrintData(
+        const data = (await loadPrintData(
           params.masterIDParam ?? 0,
           params.voucherTypeParam ?? "",
           params.isInvTrans,
@@ -114,6 +115,10 @@ export const useDirectPrint = () => {
           params.voucherType,
           params.isAppGlobal
         )) as any;
+        printData={
+          data: data,
+          kind:"voucher"
+        }
       }
       // Generate QR codes
       const elements: PlacedComponent[] = [
@@ -178,7 +183,7 @@ export const useDirectPrint = () => {
             barcodeImages={barcodeImagesForPrint}
           />
         );
-      } else if (adviceTem.includes(template?.templateGroup)) {
+      } else if (adviceTem.includes(template?.templateGroup??"")) {
         // Handle advice templates
         // TODO: Implement advice template handling
         console.warn("Advice template handling not yet implemented");
@@ -197,7 +202,7 @@ export const useDirectPrint = () => {
         pdfDocument = (
           <SharedDownloadTemplate
             template={templateData.template}
-            data={templateData.data}
+            printData={templateData.data}
             qrCodeImages={templateData.qrCodeImages}
             AmountToArabic={templateData.amountInArabic}
             AmountToEnglish={templateData.amountInEnglish}
@@ -209,11 +214,11 @@ export const useDirectPrint = () => {
         if(params.isDirectDownload){
    
                 // 3️⃣ Download the file using FileSaver
-       const fileName =
-        template?.propertiesState?.fileName ||
-        `${template?.templateGroup || "document"}.pdf`;
-         saveAs(blob, fileName);
-        return { success: true };
+      //  const fileName =
+      //   template?.propertiesState?.fileName ||
+      //   `${template?.templateGroup || "document"}.pdf`;
+      //    saveAs(blob, fileName);
+      //   return { success: true };
         }
       
 

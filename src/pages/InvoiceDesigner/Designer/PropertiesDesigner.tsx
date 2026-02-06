@@ -166,7 +166,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
  
 
           
-
+       {   templateGroup !== "CBR"&& (
         <div className="flex gap-1">
           <ERPDataCombobox
             id="template_formType"
@@ -206,6 +206,8 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             label={t("customer_type")}
           />
         </div>
+       )}
+
 
         <ERPDataCombobox
           id="orientation"

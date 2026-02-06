@@ -4,7 +4,7 @@ import { initialHeaderFooter, initialLedgerReportDataForPrint } from "../../redu
 import { modelToListFromObject } from "../../utilities/Utils";
 import { TransactionMasterInitialData, initialTransactionDetailData, initialProductData } from "../inventory/transactions/transaction-type-data";
 import { TransactionMaster, TransactionDetail, BarcodeLabel } from "../inventory/transactions/transaction-types";
-import { CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, LedgerReportDataForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
+import { CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, ledgerDataPrint, LedgerReportDataForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
 import { initialCompanyDetailsForPrint, initialInvDetail2ForPrint, initialPartyDetailsForPrint, initialPrintCustomFields, initialPrintDetailDto, initialPrintMasterDto } from "../use-print-type-data";
 interface fdf {
   fdd: number
@@ -33,7 +33,7 @@ export const accountsFields: OptionGroup[] = [
 export const ledgerReportFields: OptionGroup[] = [
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
-  { groupName: 'LedgerReport', options: modelToListFromObject<LedgerReportDataForPrint>(initialLedgerReportDataForPrint, "ledgerReportDataForPrint___") },
+  { groupName: 'LedgerReport', options: modelToListFromObject<ledgerDataPrint>(initialLedgerReportDataForPrint, "ledgerReportDataForPrint___") },
 ];
 export const barCodeField: OptionGroup[] = [
   { groupName: "BarCodeField", options: modelToListFromObject<BarcodeLabel>(initialProductData, "barcode___") }

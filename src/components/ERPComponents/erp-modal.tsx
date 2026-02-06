@@ -457,7 +457,7 @@ const ERPModal = React.memo(
                                     //       printData.data,               // printData (the actual data)
                            
                                     //     );
-                                        await directPrint({ template: printData.template, data: printData.data,})
+                                        await directPrint({ template: printData.template, data: printData,})
                                   }
                                 }}
                               >

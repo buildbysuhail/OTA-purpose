@@ -3,14 +3,14 @@ import ShardPrevHeader from "./Header_Prv";
 import SharedPrvFooter from "./Footer_Prv";
 import { TemplateState } from "../../Designer/interfaces";
 import { useState, useRef, useEffect } from "react";
-import { PrintResponse } from "../../../use-print-type";
+import { PrintData, PrintResponse } from "../../../use-print-type";
 import { ChevronDown, RefreshCw, Settings } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { toggleTemplateChooserModal } from "../../../../redux/slices/popup-reducer";
 
 export interface AccountTransactionProps {
-  data?: PrintResponse;
+  printData?: PrintData;
   template?: TemplateState<unknown>;
   qrCodeImages?: { [key: string]: string };
   AmountToEnglish?: any;
@@ -18,11 +18,12 @@ export interface AccountTransactionProps {
   isTemplateDesigner?: boolean
   isInvTrans?: boolean;
   isInLedgerReport?: boolean;
+
 }
 export type TemplateChangeHandler = {
   openTemplateChooser: () => {}
 };
-const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans, isInLedgerReport }: AccountTransactionProps) => {
+const SharedTemplatePreview = ({ printData, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans, isInLedgerReport }: AccountTransactionProps) => {
   const headerState = template?.headerState;
   const isAutoHeight =template?.propertiesState?.isAutoHeight??false; 
   const propertiesState = template?.propertiesState;
@@ -72,8 +73,8 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDe
         }}
       >
         {/* Header */}
-        {headerState?.showHeader && (
-          <ShardPrevHeader data={data} template={template} qrCodes={qrCodeImages} />
+        {headerState?.showHeader && printData&&(
+          <ShardPrevHeader printData={printData} template={template} qrCodes={qrCodeImages} />
         )}
         {/* Main Content Container */}
         <div
@@ -87,7 +88,10 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDe
             boxSizing: "border-box",
           }}
         >
-          <SharedPrvTable data={data?.details ?? []} template={template} isAutoHeight={isAutoHeight} />
+          {printData?.kind === "voucher" && (
+          <SharedPrvTable data={printData?.data?.details ?? []} template={template} isAutoHeight={isAutoHeight} />
+
+          )}
         </div>
         {/* Hoverable Customize Button */}
         {!isTemplateDesigner && (
@@ -180,7 +184,9 @@ const SharedTemplatePreview = ({ data, template, qrCodeImages = {}, isTemplateDe
             </div>
           </div>
         )}
-        <SharedPrvFooter data={data} template={template} qrCodes={qrCodeImages} />
+        {printData&&(
+        <SharedPrvFooter printData={printData} template={template} qrCodes={qrCodeImages} />
+        )}
       </div>
     </>
   );

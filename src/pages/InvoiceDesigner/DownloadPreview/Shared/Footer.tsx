@@ -3,16 +3,17 @@ import { View, Image, Text,StyleSheet } from "@react-pdf/renderer";
 import { DesignerElementType, PlacedComponent, TemplateState } from "../../Designer/interfaces";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
 import { RenderComponentPDF } from "../customElement";
+import { PrintData } from "../../../use-print-type";
 
 interface Props {
-  data?: any;
+  printData: PrintData;
   template?: TemplateState<unknown>;
   qrCodes?: { [key: string]: string };
    AmountToEnglish?: any;
   AmountToArabic?: any;
 }
     
-const ShardDownFooter: React.FC<Props> = ({ data, template, qrCodes = {},AmountToEnglish,AmountToArabic }) => {
+const ShardDownFooter: React.FC<Props> = ({ printData, template, qrCodes = {},AmountToEnglish,AmountToArabic }) => {
  
   const footerState = template?.footerState;
   const customElements = footerState?.customElements?.elements ?? [];
@@ -56,7 +57,7 @@ const ShardDownFooter: React.FC<Props> = ({ data, template, qrCodes = {},AmountT
           <RenderComponentPDF
             key={component.id}
             component={component}
-            data={data}
+            printData={printData}
             qrCodeImages={qrCodes}
             convertAmountToArabic={AmountToArabic}
             convertAmountToEnglish={AmountToEnglish}

@@ -4,14 +4,15 @@ import { DesignerElementType, type PlacedComponent, type TemplateState, } from "
 import { generateQRCodeDataUrl } from "../../utils/qrSvgToImg";
 import { RenderPreviewComponent } from "../customPrvElement";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
+import { PrintData } from "../../../use-print-type";
 
 
 const ShardPrevHeader = ({
-  data,
+  printData,
   template,
   qrCodes
 }: {
-  data: any;
+  printData:PrintData;
   template?: TemplateState<unknown>
   qrCodes: { [key: string]: string } 
 }) => {
@@ -52,7 +53,7 @@ const ShardPrevHeader = ({
                     <RenderPreviewComponent
                       key={component.id}
                       component={component}
-                      data={data}
+                      printData={printData}
                       qrCodeImages={qrCodes}
                       convertAmountToArabic={convertAmountToArabic}
                       convertAmountToEnglish={convertAmountToEnglish}

@@ -20,7 +20,7 @@ import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
 import { fetchTemplateById, fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../../use-print";
 import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
-import { LedgerReportDataForPrint, PrintData, PrintDetailDto, PrintResponse } from "../../use-print-type";
+import { LedgerReportDataForPrint, PrintData, PrintDetailDto, PrintResponse, StableTemplateProps } from "../../use-print-type";
 import { compressData } from "../../../utilities/compression";
 import { removeDefaults } from "../../../utilities/Utils";
 import { Countries } from "../../../redux/slices/user-session/reducer";
@@ -92,7 +92,8 @@ export const useTemplateDesigner = <T=unknown,>({
   const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
   let activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
  // State
-  const [stableTemplateProps, setStableTemplateProps] = useState<any>(null);
+ const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps | null>(null);
+
   // const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
   const [printData, setPrintData] = useState<PrintData>(() =>
   isInLedgerReport
@@ -315,10 +316,10 @@ useEffect(() => {
           }
         }
 
-        const props = {
+        const props:StableTemplateProps = {
           template: activeTemplate,
-          data: printData?.data,
-          qrCodeImages: qrImages
+          printData : printData,
+          qrCodeImages: qrImages,
         };
 
         setStableTemplateProps(props)
@@ -450,7 +451,6 @@ useEffect(() => {
           template_group: templateGroup,
           template_kind: templateKind,
           template_type: designerType,
-
         },
 
       } as TemplateState<T>;
@@ -538,64 +538,3 @@ useEffect(() => {
   };
 };
 
-
-// INSERT INTO Templates (
-//     TemplateType,
-//     TemplateKind,
-//     TemplateGroup,
-//     TemplateName,
-//     Content,
-//     TemplateDescription,
-//     thumbImage,
-//     background_image,
-//     background_image_header,
-//     background_image_footer,
-//     signature_image,
-//     TaxType
-// )
-// SELECT
-//     v.TemplateType,
-//     v.TemplateKind,
-//     v.TemplateGroup,
-//     tn.TemplateName,
-//     v.Content,
-//     v.TemplateDescription,
-//     v.thumbImage,
-//     v.background_image,
-//     v.background_image_header,
-//     v.background_image_footer,
-//     v.signature_image,
-//     v.TaxType
-// FROM (
-//     VALUES
-//         (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
-// ) AS v (
-//     TemplateType,
-//     TemplateKind,
-//     TemplateGroup,
-//     Content,
-//     TemplateDescription,
-//     thumbImage,
-//     background_image,
-//     background_image_header,
-//     background_image_footer,
-//     signature_image,
-//     TaxType
-// )
-// CROSS APPLY (
-//     SELECT
-//         CONCAT(
-//             v.TemplateGroup, '-',
-//             COALESCE(v.TaxType, 'DEF'), '-',
-//             CASE v.TemplateType
-//                 WHEN 'standard'  THEN 'STD'
-//                 WHEN 'universal' THEN 'UN'
-//             END, '-',
-//             UPPER(v.TemplateKind)
-//         ) AS TemplateName
-// ) tn
-// WHERE NOT EXISTS (
-//     SELECT 1
-//     FROM Templates t
-//     WHERE t.TemplateName = tn.TemplateName
-// );

@@ -9,7 +9,7 @@ import { AccountTransactionProps } from "../../DesignPreview/shared"
 import ShardDownFooter from "./Footer"
 import { SharedDownTable } from "./Table"
 
-  const SharedDownloadTemplate = ({ data, template,qrCodeImages={},AmountToEnglish,AmountToArabic}: AccountTransactionProps) => {
+  const SharedDownloadTemplate = ({ printData, template,qrCodeImages={},AmountToEnglish,AmountToArabic}: AccountTransactionProps) => {
     const pageOrientation = template?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait"
     const paddingLeft = template?.propertiesState?.padding?.left || 10
     const paddingRight = template?.propertiesState?.padding?.right || 10
@@ -36,7 +36,9 @@ import { SharedDownTable } from "./Table"
            backgroundColor: template?.propertiesState?.bg_color || "#fff",
           }}>
           {/* Header */}
-          <ShardDowHeader data={data} template={template} qrCodes={qrCodeImages}AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic}/> 
+          {printData&&(
+          <ShardDowHeader printData={printData} template={template} qrCodes={qrCodeImages}AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic}/> 
+          )}
 
         {/* ✅ Main Content (Table) - padding applied ONLY here */}
         <View
@@ -61,13 +63,16 @@ import { SharedDownTable } from "./Table"
               }}
             />
           )}
-
-            <SharedDownTable data={data?.details ?? []} template={template} />
+          {printData?.kind =="voucher"&&(
+            <SharedDownTable data={printData?.data?.details ?? []} template={template} />
+          )}
      
         </View>
 
           {/* Footer */}
-          <ShardDownFooter data={data} template={template} qrCodes={qrCodeImages} AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic} />   
+          {printData&&(
+          <ShardDownFooter printData={printData} template={template} qrCodes={qrCodeImages} AmountToEnglish={AmountToEnglish}  AmountToArabic={AmountToArabic} />   
+          )}
         </Page>
       </Document>
     )

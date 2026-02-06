@@ -163,7 +163,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
                       {/* {React.cloneElement(templateComponent,  stableTemplateProps)} */}
                       <SharedTemplatePreview
                         template={stableTemplateProps?.template}
-                        data={stableTemplateProps?.data}
+                        printData={stableTemplateProps?.printData}
                         qrCodeImages={stableTemplateProps?.qrCodeImages}
                         isTemplateDesigner={true}
                       />

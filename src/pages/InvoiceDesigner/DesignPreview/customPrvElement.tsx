@@ -5,10 +5,11 @@ import {
 } from "../Designer/interfaces";
 import { bindDataForPrint } from "../../use-print";
 import { containsArabicString,  } from "../utils/pdf-util";
+import { PrintData } from "../../use-print-type";
 
 interface Props {
   component: PlacedComponent;
-  data?: any;
+  printData: PrintData;
   qrCodeImages?: { [key: string]: string };
   convertAmountToEnglish: any;
   convertAmountToArabic: any;
@@ -16,7 +17,7 @@ interface Props {
 
 export const RenderPreviewComponent: React.FC<Props> = ({
   component,
-  data,
+  printData,
   qrCodeImages,
   convertAmountToEnglish,
   convertAmountToArabic
@@ -61,7 +62,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
     const finalContent = 
       component.type === DesignerElementType.text 
         ? component.content 
-        : (bindDataForPrint(component.content, data,component.format, convertAmountToEnglish, convertAmountToArabic) );
+        : (bindDataForPrint(component.content, printData,component.format, convertAmountToEnglish, convertAmountToArabic) );
 
     const isArabic = containsArabicString(finalContent ?? "");
     const textDirection =  component.direction ?? isArabic ? "rtl" : "ltr";
@@ -125,7 +126,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
 
 
     case DesignerElementType.image:
-      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, data);
+      const imgUrl = component?.imgFromDevice ?component.content : bindDataForPrint(component.content, printData);
       return (
         <div key={component.id} style={baseStyle}>
           {imgUrl &&(
@@ -231,7 +232,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
             ...child,
             containerId: component.id,
           }}
-          data={data}
+          printData={printData}
           qrCodeImages={qrCodeImages}
           convertAmountToEnglish={convertAmountToEnglish}
           convertAmountToArabic={convertAmountToArabic}

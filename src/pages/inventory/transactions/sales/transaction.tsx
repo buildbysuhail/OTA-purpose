@@ -1690,7 +1690,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       style={headerStyle}
                     >
                       {/* - {t(formState.row.ledgerCode)}-  {t(formState.transaction.master.voucherType)}- {t(.toString())} */}
-                      {t(formState.title)}
+                      {formState.draftMode ? t(formState.title) + " - " + t("draft")  : t(formState.title)}
                       {!formState.formElements.lblPosted.visible && (
                         <div title={t("posted_transaction")}>
                           {/* <Info className="text-[#ef4444] w-4 h-4" /> */}

@@ -1324,7 +1324,7 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("select_valid_cost_centre"),
           confirmButtonText: t("ok"),
-          showCancelButton: true,
+          showCancelButton: false,
           onConfirm: () => {
             setTimeout(() => {
               costCenterRef?.current?.focus();
@@ -1344,7 +1344,7 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("select_valid_salesman"),
           confirmButtonText: t("ok"),
-          showCancelButton: true,
+          showCancelButton: false,
           onConfirm: () => {
             setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
             setTimeout(() => {
@@ -1446,7 +1446,7 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("please_enter_mobile_number"),
           confirmButtonText: t("ok"),
-          showCancelButton: true,
+          showCancelButton: false,
           onConfirm: () => {
             // Open the sales header dropdown and focus mobile number field
             setIsDropDownOpen?.({ open: true, autoAddressFocus: false });

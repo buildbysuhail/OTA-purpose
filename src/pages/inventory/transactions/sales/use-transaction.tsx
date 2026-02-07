@@ -1324,6 +1324,13 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("select_valid_cost_centre"),
           confirmButtonText: t("ok"),
+          showCancelButton: true,
+          onConfirm: () => {
+            setTimeout(() => {
+              costCenterRef?.current?.focus();
+              costCenterRef?.current?.click();
+            }, 100);
+          },
         });
         return false;
       }
@@ -1337,6 +1344,14 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("select_valid_salesman"),
           confirmButtonText: t("ok"),
+          showCancelButton: true,
+          onConfirm: () => {
+            setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+            setTimeout(() => {
+              employeeRef?.current?.focus();
+              employeeRef?.current?.click();
+            }, 100);
+          },
         });
         return false;
       }
@@ -1431,6 +1446,15 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("please_enter_mobile_number"),
           confirmButtonText: t("ok"),
+          showCancelButton: true,
+          onConfirm: () => {
+            // Open the sales header dropdown and focus mobile number field
+            setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+            setTimeout(() => {
+              mobileNumRef?.current?.focus();
+              mobileNumRef?.current?.select();
+            }, 100);
+          },
         });
         return false;
       }
@@ -1752,12 +1776,9 @@ export const useTransaction = (
     }
   };
   const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
-    debugger;
     const valid = await validate();
-    debugger;
     if (valid == true) {
       const tenderOk = await Tender()
-    debugger;
       if (!tenderOk) {
         return;
       }
@@ -1769,7 +1790,6 @@ export const useTransaction = (
         })
       );
       const master = await attachMaster(formState);
-    debugger;
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({
@@ -1797,7 +1817,14 @@ export const useTransaction = (
         });
         return false;
       }
-debugger;
+      // if(formState.isEdit === false){
+      //   if(formState.blnCreateCreditNoteAutomatically && formState.transaction.master.invTransactionMasterID > 0){
+      //     const voucherType = "SR"
+      //     const transactionMasterID = formState.invTransMasterId;
+      //     const voucherNumber = formState.transaction.master.voucherNumber;
+      //     const res = initializeFormElements(voucherType??"","", "","","",voucherNumber,transactionMasterID??0, false); 
+      //   }
+      // }
       const sanitizedMaster = sanitizeDataAdvanced({
           ...master,
           voucherType:
@@ -3232,6 +3259,16 @@ debugger;
           icon: "warning",
         });
       }
+      // if(applicationSettings.branchSettings?.createCreditNoteAutomaticallyOnSalesEdit && formState.transaction.master.voucherForm =="VAT" ){
+      //   dispatch(
+      //       formStateHandleFieldChange({
+      //         fields: {
+      //           isEdit: false,
+      //           blnCreateCreditNoteAutomatically: true
+      //         },
+      //       })
+      //     );
+      //   }
     } catch (error) {
       console.error("Error handling edit:", error);
     }
@@ -5617,7 +5654,7 @@ debugger;
 
   const handleDiscountSlab = async () => {
     if (
-      applicationSettings.inventorySettings.enableDiscountSlabOffer &&
+      applicationSettings.productsSettings.enableDiscountSlabOffer &&
       applicationSettings.accountsSettings.showTenderDialogInSales === false
     ) {
       try {
@@ -6432,7 +6469,7 @@ debugger;
     }
 
     if (
-      applicationSettings.inventorySettings?.enableDiscountSlabOffer &&
+      applicationSettings.productsSettings?.enableDiscountSlabOffer &&
       applicationSettings.accountsSettings?.showTenderDialogInSales === false
     ) {
       _formState.formElements = {

@@ -346,5 +346,6 @@
   "default_pi_bt_account":"Default PI-BT Account",
   "use_empty_tax_type_template_if_missing":"Use Empty Tax Type Template If Missing",
 
-  "allow_customer_creation_by_mobile_number":"Allow Customer Creation By MobileNumber"
+  "allow_customer_creation_by_mobile_number":"Allow Customer Creation By MobileNumber",
+  "enable_discount_slab_offer":"Enable Discount Slab Offer"
 }

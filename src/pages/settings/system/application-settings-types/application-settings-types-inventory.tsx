@@ -39,7 +39,7 @@ export interface ApplicationInventorySettings {
     setProductCostWithVATAmount: boolean;
     blockNonStockSerialSelling: boolean;
     showProductDuplicationMessage: boolean;
-    enableDiscountSlabOffer?: boolean;
+    // enableDiscountSlabOffer?: boolean;
     blockHoldItems: boolean;
     printInvAfterSave: boolean;
     needPOApprovalForPrintout: boolean;

@@ -516,6 +516,24 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
         />
       ),
     },
+    {
+      condition: filterComponent([t("enable_discount_slab_offer")], filterText),
+      element: (
+        <ERPCheckbox
+          id="enableDiscountSlabOffer"
+          checked={settings?.productsSettings?.enableDiscountSlabOffer}
+          data={settings?.productsSettings}
+          label={t("enable_discount_slab_offer")}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "productsSettings",
+              "enableDiscountSlabOffer",
+              data.enableDiscountSlabOffer
+            )
+          }
+        />
+      ),
+    },
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

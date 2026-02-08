@@ -738,7 +738,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   quantityFactorData: "",
   quantityFactorDataM: "",
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
-  serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
+  serialNoEntryData: { visible: false, data: "", rowIndex: -1, productName: "" },
   imfData: { visible: false, data: "", rowIndex: -1, slNo: 0 },
   productInfo: false,
   ShowProductBatchUnitDetails: false,

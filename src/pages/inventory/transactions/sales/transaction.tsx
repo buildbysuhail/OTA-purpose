@@ -739,7 +739,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     (state: RootState) => state.ApplicationSettings
   );
   const onSaveItem = async(item: TransactionDetail, mode:"Save" | "SaveAndNew") => {
-    debugger;
+    
     if(!(item.productBatchID > 0)) return;
     const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
                         if(exist) {
@@ -1612,7 +1612,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
       async function calculateValues() {
         console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
-        debugger;
+        
         await calculateTotal(
         {
           ...formState.transaction.master
@@ -2534,6 +2534,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             t={t}
             productId={null}
             rowIndex={formState.serialNoEntryData.rowIndex}
+            productName={formState.serialNoEntryData.productName}
           />
         )}
 

@@ -649,7 +649,7 @@ export interface TransactionFormState {
   showQuantityFactorsM: { visible: boolean; rowIndex: number; qtyDesc: string };
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
-  serialNoEntryData: { visible: boolean; data: string; rowIndex: number };
+  serialNoEntryData: { visible: boolean; data: string; rowIndex: number, productName: string };
   imfData: { visible: boolean, data: string, rowIndex: number, slNo: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;

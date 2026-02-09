@@ -503,10 +503,10 @@ export const useTemplateDesigner = <T = unknown,>({
           template_kind: templateKind,
           template_type: designerType,
             } as any);
-            //  dispatch(setTemplate(merged));
+        
           }
 
-          navigate(`/templates?template_group=${templateGroup}&form_type=${ tmpTemplate.propertiesState?.template_formType}&customer_type=${ tmpTemplate.propertiesState?.template_customerType}`);
+          navigate(`/templates?template_group=${templateGroup}&form_type=${ tmpTemplate.propertiesState?.template_formType??""}&customer_type=${ tmpTemplate.propertiesState?.template_customerType??""}`);
         });
       } catch (error) {
         console.error("Error saving template:", error);

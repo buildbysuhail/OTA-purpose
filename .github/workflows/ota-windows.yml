@@ -21,7 +21,7 @@ jobs:
 
       - name: Build Windows app
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.CDN_GITHUB_TOKEN }}
           NODE_OPTIONS: "--max-old-space-size=8192"
         run: |
           npm run build

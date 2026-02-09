@@ -1448,12 +1448,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.additionalExpense = detail.additionalExpense;
 
       // VAT handling
-      if(clientSession.isAppGlobal){
-        
-      outputRow.vatPercentage = detail.vatPerc;
-      outputRow.totalVatAmount = detail.vatAmount;
-  
-}
+      if (clientSession.isAppGlobal) {
+
+        outputRow.vatPercentage = detail.vatPerc;
+        outputRow.totalVatAmount = detail.vatAmount;
+
+      }
 
       // Financial calculations
       outputRow.grossValue = detail.gross;
@@ -1585,17 +1585,17 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.actualSalesPrice = detail.actualSalesPrice;
       // outputRow.wareHouseID = detail.warehouse;
       outputRow.grandTotal = outputRow.grandTotal ?? 0;
-      
-          outputRow.updateStdPurchasePrice = outputRow.updateStdPurchasePrice == true ? true : false
-          outputRow.updateStdPurchasePriceWithAvg = outputRow.updateStdPurchasePriceWithAvg == true ? true : false
-          outputRow.updateStdPurchasePriceWithCost = outputRow.updateStdPurchasePriceWithCost == true ? true : false
+
+      outputRow.updateStdPurchasePrice = outputRow.updateStdPurchasePrice == true ? true : false
+      outputRow.updateStdPurchasePriceWithAvg = outputRow.updateStdPurchasePriceWithAvg == true ? true : false
+      outputRow.updateStdPurchasePriceWithCost = outputRow.updateStdPurchasePriceWithCost == true ? true : false
 
 
       // UPdate fix
-      outputRow.updateModifiedDate=outputRow.updateModifiedDate==true?true:false;
-      outputRow.updateStdPurchasePrice=outputRow.updateStdPurchasePrice==true?true:false;
-      outputRow.updateStdPurchasePriceWithAvg=outputRow.updateStdPurchasePriceWithAvg==true?true:false;
-      outputRow.updateStdPurchasePriceWithCost=outputRow.updateStdPurchasePriceWithCost==true?true:false;
+      outputRow.updateModifiedDate = outputRow.updateModifiedDate == true ? true : false;
+      outputRow.updateStdPurchasePrice = outputRow.updateStdPurchasePrice == true ? true : false;
+      outputRow.updateStdPurchasePriceWithAvg = outputRow.updateStdPurchasePriceWithAvg == true ? true : false;
+      outputRow.updateStdPurchasePriceWithCost = outputRow.updateStdPurchasePriceWithCost == true ? true : false;
       const sanitizedOutputRow: TransactionDetail = sanitizeDataAdvanced(outputRow, initialTransactionDetailData);
 
       outputDetails.push(sanitizedOutputRow);
@@ -1734,11 +1734,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   };
 
   const attachMaster = async (formState: TransactionFormState) => {
-debugger;
+    debugger;
     const m = formState.transaction.master;
     const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
     let isRefund = false; //value from return global refund button click
-debugger;
+    debugger;
     const privperc = applicationSettings.mainSettings.previlegeCardPerc;
     let master = {
       ...m,
@@ -1769,7 +1769,7 @@ debugger;
               : applicationSettings.inventorySettings.defaultSalesAcc,
 
 
-   /** ---------------- Address ---------------- */
+      /** ---------------- Address ---------------- */
       address1: m.address1,
       address2: [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
         ? ""
@@ -1803,7 +1803,7 @@ debugger;
       deliveryDate: m.voucherType == VoucherType.ServiceInvoice && !clientSession.isAppGlobal
         ? m.transactionDate
         : m.voucherType == VoucherType.ServiceInvoice && clientSession.isAppGlobal
-          ? ""
+          ? m.transactionDate
           : [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
             ? m.deliveryDate
             : m.refDate,
@@ -1973,6 +1973,7 @@ debugger;
           m.voucherPrefix === "ESI/" && m.voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal
           ? m.refInvTransactionMasterSOID ?? ""
           : "",
+      // deliveryDate:m.deliveryDate? m.deliveryDate:m.transactionDate
     };
 
     /** ---------------- Cash Returned Adjustment ---------------- */
@@ -1986,6 +1987,10 @@ debugger;
       master.couponAmt -
       master.grandTotal;
 
+    debugger;
+    if (m.deliveryDate == null || m.deliveryDate == undefined) {
+      m.deliveryDate = m.transactionDate;
+    }
     if (master.voucherType == VoucherType.SalesInvoice && applicationSettings.branchSettings.maintainKSA_EInvoice && master.voucherForm == "VAT") {
       master = loadItemTaxDetails(master as any, formState.transaction.details.filter(x => x.productID > 0), master.billDiscount, false) as any
     }

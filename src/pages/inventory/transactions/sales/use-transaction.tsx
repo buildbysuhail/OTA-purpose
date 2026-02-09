@@ -33,6 +33,7 @@ import { SalesAuthorization } from "./components/AuthorizationSales";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { purchaseGridCol } from "./transaction-grid-cols";
+import DeliveryBoy from "../../../rpos/deliveryboy";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -1859,7 +1860,10 @@ export const useTransaction = (
             master.transactionDate == "" ? null : master.transactionDate,
         }, transactionInitialData.master);
       let params = {
-        master: sanitizedMaster,
+        master: {
+          ...sanitizedMaster,
+          deliveryDate: sanitizedMaster.deliveryDate ? sanitizedMaster.deliveryDate:sanitizedMaster.transactionDate 
+        },
         details: dtRes.outputDetails,
         attachments: attachments,
         invAccTransactions: formState.transaction.invAccTransactions,

@@ -1,0 +1,70 @@
+name: Windows OTA (Electron)
+
+on:
+  push:
+    tags:
+      - "win-ota-*"
+
+jobs:
+  windows-ota:
+    runs-on: windows-latest
+
+    env:
+      CDN_REPO: mahirpolosys/live-update
+      CDN_BRANCH: main
+      CHANNEL: production
+
+    steps:
+      # 1️⃣ Checkout app source
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      # 4️⃣ Build Electron app (Windows)
+      - name: Build Electron (Windows)
+        run: |
+          npm run build
+          npx electron-builder --win --publish never
+
+      # 5️⃣ Clone CDN repository
+      - name: Clone CDN repository
+        run: |
+          git clone https://x-access-token:${{ secrets.CDN_GITHUB_TOKEN }}@github.com/${{ env.CDN_REPO }}.git cdn
+
+      # 6️⃣ Publish Windows OTA artifacts
+      - name: Publish Windows OTA
+        run: |
+          mkdir -p cdn/windows/${{ env.CHANNEL }}
+
+          # Copy Electron auto-update files
+          cp dist/*.exe cdn/windows/${{ env.CHANNEL }}/
+          cp dist/latest.yml cdn/windows/${{ env.CHANNEL }}/
+
+          echo "📦 Published files:"
+          ls cdn/windows/${{ env.CHANNEL }}
+
+      # 7️⃣ Push to CDN repo
+      - name: Push OTA to CDN
+        run: |
+          cd cdn
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Windows OTA ${GITHUB_REF_NAME}"
+          git push origin ${{ env.CDN_BRANCH }}
+
+      # 8️⃣ Verify
+      - name: Verify deployment
+        run: |
+          echo "✅ Windows OTA published"
+          echo "➡ https://raw.githubusercontent.com/${{ env.CDN_REPO }}/${{ env.CDN_BRANCH }}/windows/${{ env.CHANNEL }}/latest.yml"

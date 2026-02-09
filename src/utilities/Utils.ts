@@ -1173,8 +1173,7 @@ export const sanitizeDataAdvanced = (
   const keys = Object.keys(data);
   
         debugger;
-  keys.forEach((_key: string) => {
-    let key = _key;
+   for (const key in data) {
     if (data.hasOwnProperty(key)) {
       const value = data[key];
       const initialValue = initialState?.[key];
@@ -1192,13 +1191,36 @@ export const sanitizeDataAdvanced = (
         sanitized[key] = opts.defaultNumber;
       }
       // Recursively sanitize nested structures
-      else if (typeof value === "object" && value !== null) {
-        //  rsively sanitize nested objects
+     else if (typeof value === "object" && value !== null) {
+      if (
+          value == "" &&
+          (key.toLowerCase().includes("date") ||
+              key.toLowerCase().includes("Date") ||
+              key.toLowerCase().includes("finFrom") ||
+              key.toLowerCase().includes("finTo"))
+        ) {
+         
+          // Keep as-is or normalize to valid date
+          sanitized[key] = new Date(1990, 0, 1);
+        }
+        else if (
+          value instanceof Date ||
+          (typeof key === "string" &&
+            (key.includes("date") ||
+              key.includes("Date") ||
+              key.includes("finFrom") ||
+              key.includes("finTo")))
+        ) {
+          // Keep as-is or normalize to valid date
+          sanitized[key] = value;
+        } else {
+          // Recursively sanitize nested objects
           sanitized[key] = sanitizeDataAdvanced(
             value,
-            initialState?.[key] ?? {},
-            opts,key
+            initialValue?.[key] ?? {},
+            opts
           );
+        }
       }
       else if (
           value == "" &&
@@ -1216,11 +1238,10 @@ export const sanitizeDataAdvanced = (
         sanitized[key] = value;
       }
     }
-  })
+  }
 
   return sanitized;
 };
-
 interface IdLabel {
   id: string;
   label: string;

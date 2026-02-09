@@ -18,12 +18,14 @@ interface BaseDesignerProps {
   designerType: string
   designerKind: string
   templateGroup: string
+  formType?: string;
+  customerType?: string;
   // templateComponent: React.ReactElement
   // sections: Record<string, React.ComponentType>
 }
 
 const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
-  ({ templateGroup, designerType, designerKind }) => {
+  ({ templateGroup,customerType,formType, designerType, designerKind }) => {
     const {
       t,
       navigate,
@@ -54,7 +56,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
         <div className="w-[80px] border-r dark:border-gray-700 h-full print:hidden dark:bg-dark-bg-card">
           <div className="flex flex-col">
             <div className="flex items-center justify-center border-b dark:border-gray-700 h-[70px]">
-              <button onClick={() => navigate(`/templates?template_group=${templateGroup || "SI"}`)} className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded-full transition-colors">
+              <button onClick={() => navigate(`/templates?template_group=${templateGroup || "SI"}&form_type=${formType}&customer_type=${customerType}`)} className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 p-2 rounded-full transition-colors">
                 <ArrowLeftIcon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
               </button>
             </div>
@@ -86,6 +88,8 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
             currentSection?.type === "properties" && (
               <PropertiesDesigner
                 templateGroup={templateGroup}
+                formType={formType}
+                customerType={customerType}
                 tempImages={{ templateImages, setTemplateImages }}
                 propertiesState={activeTemplate?.propertiesState}
                 onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}

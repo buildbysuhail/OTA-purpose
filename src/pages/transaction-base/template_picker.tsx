@@ -204,7 +204,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
             <span
               onClick={() => {
                 setIsOpen();
-                navigate(`/templates?template_group=${voucherType}`);
+                 navigate(`/templates?template_group=${voucherType}&form_type=${formType}&customer_type=${customerType}`);
               }}
               className="text-blue-600 hover:underline dark:text-blue-400"
             >

@@ -18,6 +18,8 @@ import Urls from "../../../redux/urls";
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
   templateGroup?: VoucherType | string;
+  formType?: string;  
+  customerType?: string;
   onChange?: (propertiesState: PropertiesState) => void;
   tempImages: {
     setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,
@@ -36,7 +38,7 @@ const pageSizeOptions = [
 ];
 
 
-const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup }) => {
+const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup ,formType,customerType}) => {
   /* ########################################################################################### */
   const templateData = useSelector((state: RootState) => state?.Template)
   const dispatch = useDispatch();
@@ -176,7 +178,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               valueKey: "name",
               labelKey: "name",
             }}
-            defaultValue={propertiesState?.template_formType ?? ""}
+            defaultValue={formType}
             value={propertiesState?.template_formType}
             data={propertiesState}
             onChangeData={(data: any) => {
@@ -192,6 +194,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               valueKey: "value",
               labelKey: "label",
             }}
+            defaultValue={customerType}
             value={propertiesState?.template_customerType}
             data={propertiesState}
             onChangeData={(data: any) => {

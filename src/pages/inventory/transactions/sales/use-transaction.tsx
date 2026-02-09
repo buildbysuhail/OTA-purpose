@@ -1153,6 +1153,21 @@ export const useTransaction = (
     const firstFreeRow = details.findIndex((x) => !x.productID || x.productID === 0);
     const validDetails = firstFreeRow === -1 ? details : details.slice(0, firstFreeRow);
 
+    // if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia )) {
+    //   const confirm = await ERPAlert.show({
+    //     icon: "info",
+    //     title: t("stock_update_warning"),
+    //     text: voucherType === "SI"
+    //       ? t("stock_cannot_be_updated_gd_already_deducted")
+    //       : t("stock_cannot_be_updated_gdr_already_updated"),
+    //     confirmButtonText: t("yes"),
+    //     cancelButtonText: t("no"),
+    //     showCancelButton: true,
+    //   });
+    //   if (!confirm) {
+    //     return false;
+    //   }
+    // }
     // CODE CHECKED########
     // ============ Cash/Card Amount Validations ============ 
     if (cashReceived < 0 || cardAmount < 0) {
@@ -1466,7 +1481,7 @@ export const useTransaction = (
 
       // CODE CHECKED########
       // Tax calculation validation
-      if ((row.vatPerc ?? 0) === 0 && (row.vatAmount ?? 0) > 0) {
+      if ((row.vatPerc ?? 0) === 0 && (row.vatAmount ?? 0) > 0&& !clientSession.isAppGlobal) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
@@ -4043,9 +4058,9 @@ export const useTransaction = (
           }
         }
         if ((applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "WARN" && data.minSalePrice > 0) &&
-          (formState.transaction.master?.voucherForm !== "BT" || applicationSettings.inventorySettings?.useCostForStockTransferToBranch === false ||
+          ((formState.transaction.master?.voucherForm !== "BT" || applicationSettings.inventorySettings?.useCostForStockTransferToBranch === false) ||
             (formState.transaction.master?.voucherForm == "BT" && formState.userConfig?.UserSalesPriceForTransfer))) {
-          if (data.salesPrice < data.minSalePrice) {
+          if (data.unitPrice < data.minSalePrice) {
             event.preventDefault();
             event.stopPropagation();
             const confirm = await ERPAlert.show({
@@ -4067,10 +4082,11 @@ export const useTransaction = (
             }
             return { ...result, handled: true, preventDefault: true };
           }
-        } else if (applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "WARN" && data.purchasePrice > 0 && data.minSalePrice === 0 &&
-          (formState.transaction.master?.voucherForm !== "BT" || applicationSettings.inventorySettings?.useCostForStockTransferToBranch === false ||
+        } 
+         if (applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "WARN" && data.purchasePrice > 0 && data.minSalePrice === 0 &&
+          ((formState.transaction.master?.voucherForm !== "BT" || applicationSettings.inventorySettings?.useCostForStockTransferToBranch === false) ||
             (formState.transaction.master?.voucherForm == "BT" && formState.userConfig?.UserSalesPriceForTransfer))) {
-          if (data.salesPrice < data.purchasePrice) {
+          if (data.unitPrice < data.purchasePrice) {
             event.preventDefault();
             event.stopPropagation();
             const confirm = await ERPAlert.show({
@@ -4092,8 +4108,9 @@ export const useTransaction = (
             }
             return { ...result, handled: true, preventDefault: true };
           }
-        } else if (applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "BLOCK" && data.minSalePrice > 0 && formState.transaction.master?.voucherForm !== "BT") {
-          if (data.salesPrice < data.minSalePrice) {
+        }  
+        if (applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "BLOCK" && data.minSalePrice > 0 && formState.transaction.master?.voucherForm !== "BT") {
+          if (data.unitPrice < data.minSalePrice) {
             event.preventDefault();
             event.stopPropagation();
             const confirm = await ERPAlert.show({
@@ -4115,8 +4132,9 @@ export const useTransaction = (
             }
             return { ...result, handled: true, preventDefault: true };
           }
-        } else if (applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "BLOCK" && data.purchasePrice > 0 && data.minSalePrice === 0 && formState.transaction.master?.voucherForm !== "BT") {
-          if ((data.salesPrice < data.purchasePrice) && data.isSchemeItem !== "S") {
+        } 
+         if (applicationSettings.inventorySettings?.showRateWarning.toUpperCase() == "BLOCK" && data.purchasePrice > 0 && data.minSalePrice === 0 && formState.transaction.master?.voucherForm !== "BT") {
+          if ((data.unitPrice < data.purchasePrice) && data.isSchemeItem !== "S") {
             event.preventDefault();
             event.stopPropagation();
             const confirm = await ERPAlert.show({

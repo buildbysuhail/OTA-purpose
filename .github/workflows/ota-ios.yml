@@ -1,12 +1,12 @@
-name: Android OTA
+name: iOS OTA
 
 on:
   push:
     tags:
-      - "android-ota-*"
+      - "ios-ota-*"
 
 jobs:
-  android-ota:
+  ios-ota:
     runs-on: ubuntu-latest
 
     env:
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      # 4️⃣ Install jq (required)
+      # 4️⃣ Install jq
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
@@ -46,7 +46,7 @@ jobs:
       - name: Generate OTA bundle
         run: |
           TAG="${GITHUB_REF_NAME}"
-          BUNDLE_ID="${TAG#android-ota-}"
+          BUNDLE_ID="${TAG#ios-ota-}"
           VERSION=$(echo "$BUNDLE_ID" | sed 's/-ota.*//')
 
           ZIP="polosys-${BUNDLE_ID}.zip"
@@ -61,19 +61,19 @@ jobs:
         run: |
           git clone https://x-access-token:${{ secrets.CDN_GITHUB_TOKEN }}@github.com/${CDN_REPO}.git cdn
 
-      # 8️⃣ Publish Android OTA (WITH ROLLBACK METADATA)
-      - name: Publish Android OTA
+      # 8️⃣ Publish iOS OTA (WITH ROLLBACK METADATA)
+      - name: Publish iOS OTA
         run: |
-          mkdir -p cdn/android/${CHANNEL}/bundles
-          mv "$ZIP" cdn/android/${CHANNEL}/bundles/
+          mkdir -p cdn/ios/${CHANNEL}/bundles
+          mv "$ZIP" cdn/ios/${CHANNEL}/bundles/
 
           jq -n \
             --arg appId "$APP_ID" \
-            --arg platform "android" \
+            --arg platform "ios" \
             --arg channel "$CHANNEL" \
             --arg version "$VERSION" \
             --arg bundleId "$BUNDLE_ID" \
-            --arg bundleUrl "android/${CHANNEL}/bundles/$ZIP" \
+            --arg bundleUrl "ios/${CHANNEL}/bundles/$ZIP" \
             '{
               appId: $appId,
               platform: $platform,
@@ -87,9 +87,9 @@ jobs:
                 minSafeBundleId: $bundleId,
                 forceRollback: false
               }
-            }' > cdn/android/${CHANNEL}/metadata.json
+            }' > cdn/ios/${CHANNEL}/metadata.json
 
-          cat cdn/android/${CHANNEL}/metadata.json
+          cat cdn/ios/${CHANNEL}/metadata.json
 
       # 9️⃣ Push OTA to CDN repo
       - name: Push OTA
@@ -98,14 +98,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Android OTA ${BUNDLE_ID}"
+          git commit -m "iOS OTA ${BUNDLE_ID}"
           git push origin ${CDN_BRANCH}
 
       # 🔟 Verify deployment
       - name: Verify deployment
         run: |
           echo "✅ OTA Bundle:"
-          echo "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/android/${CHANNEL}/bundles/${ZIP}"
+          echo "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/ios/${CHANNEL}/bundles/${ZIP}"
           echo "✅ Metadata:"
-          echo "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/android/${CHANNEL}/metadata.json"
+          echo "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/ios/${CHANNEL}/metadata.json"
           echo "📦 Bundle ID: ${BUNDLE_ID}"

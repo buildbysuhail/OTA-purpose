@@ -33,6 +33,7 @@ import {
   getPageDimensions,
 } from "../../InvoiceDesigner/utils/pdf-util";
 import { ERPScrollArea } from "../../../components/ERPComponents/erp-scrollbar";
+import { PrintData } from "../../use-print-type";
 const TwilioPdfDownloader = ({}) => {
   const { directPrint } = useDirectPrint();
   const location = useLocation();
@@ -115,9 +116,13 @@ const handlePrintPdf =async()=>{
           selectedPageSize,
           pageOrientation
         );
+        const PrintData:PrintData = {
+          data: data,
+          kind: "voucher",
+        }
         const props = {
           template,
-          data,
+          PrintData,
           qrCodeImages: qrImages,
           orientedDimensions,
         };
@@ -223,7 +228,7 @@ const handlePrintPdf =async()=>{
                       {TemplateProps?.template ? (
                         <SharedTemplatePreview
                           template={TemplateProps?.template}
-                          data={TemplateProps?.data}
+                          printData={TemplateProps?.PrintData}
                           qrCodeImages={TemplateProps?.qrCodeImages}
                         />
                       ) : (

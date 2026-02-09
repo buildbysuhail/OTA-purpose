@@ -44,17 +44,17 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
   const { searchQuery } = useSearch();
   const { t } = useTranslation("transaction");
   const { printVoucher, } = useCommenPrint();
-   const { directPrint } = useDirectPrint();
+  const { directPrint } = useDirectPrint();
   const formState = props?.isInvTrans
     ? useAppSelector((state: RootState) => state.InventoryTransaction)
     : useAppSelector((state: RootState) => state.AccTransaction);
 
-  const { 
+  const {
     stableTemplateProps,
     loading,
     templateStyleProperties
   } = useTemplateDesigner({
-    
+
     manuvalTemplateFeatch: true,
     isInvTrans: props.isInvTrans,
     MasterIDParam: props.transactionMasterID,
@@ -78,7 +78,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
       ? master.invTransactionMasterID || 0
       : master.accTransactionMasterID || 0;
     const vchtype = master.voucherType;
-    const voucherform = master.voucherForm  || "";
+    const voucherform = master.voucherForm || "";
     const prefix = master.voucherPrefix || "";
     const vchno = master.voucherNumber;
     const financialYearID = master.financialYearID || 0;
@@ -220,7 +220,7 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
 
               onClick={async () =>
-                await directPrint({ template:stableTemplateProps?.template, data: printData})
+                await directPrint({ template: stableTemplateProps?.template, data: printData })
               }
               title="PDF/Print"
               aria-label="PDF/Print"
@@ -286,23 +286,26 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
                         isInvTrans={props.isInvTrans}
                       />
                       : (
-                      <div className="flex items-center justify-center h-full italic">
-                        <span className="text-gray-500 dark:text-gray-400">
-                          ...No Template Found.&nbsp;
-                        </span>
+                        <div className="flex items-center justify-center h-full italic">
+                          <span className="text-gray-500 dark:text-gray-400">
+                            ...No Template Found.&nbsp;
+                          </span>
 
-                        <Link
-                          to={`/templates?template_group=${
-                            printData && printData.kind === "voucher"
-                              ? printData.data.master.voucherType
-                              : ""
-                          }`}
+                          <Link
+                            to={
+                              printData && printData.kind === "voucher"
+                                ? `/templates?template_group=${printData.data.master.voucherType}` +
+                                `&form_type=${printData.data.master?.voucherForm}` +
+                                `&customer_type=${printData.data.master.customerType}`
+                                : `/templates?template_group=${props.transactionType}`
+                            }
 
-                          className="text-blue-600 hover:underline dark:text-blue-400"
-                        >
-                          Create Template
-                        </Link>
-                      </div>
+
+                            className="text-blue-600 hover:underline dark:text-blue-400"
+                          >
+                            Create Template
+                          </Link>
+                        </div>
 
                       )
                   )}

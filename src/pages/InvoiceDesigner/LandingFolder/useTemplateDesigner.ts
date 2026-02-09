@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 import { DesignerElementType, PlacedComponent, TemplateDto, TemplateState } from "../Designer/interfaces";
 
 import { debounce } from "lodash";
-import {  DummyLedgerReportDataForPrint, DummyVoucherData } from "../constants/DummyData";
+import { DummyLedgerReportDataForPrint, DummyVoucherData } from "../constants/DummyData";
 import { RootState } from "../../../redux/store";
 import { templateInitialState } from "../../../redux/reducers/TemplateReducer";
 import { designerSectionsConfig, designSections, DesignSectionType } from "./designSection";
@@ -17,12 +17,12 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { APIClient } from "../../../helpers/api-client";
 import { getOrientedDimensions, getPageDimensions } from "../utils/pdf-util";
-import { fetchTemplateById, fetchTemplateFromApiById, getOrFetchTemplate, loadPrintData } from "../../use-print";
+import { addTemplateToStore, fetchTemplateById, fetchTemplateFromApiById, getOrFetchTemplate, getTemplateFromStore, loadPrintData, parseTemplateContent } from "../../use-print";
 import { merge } from 'lodash';
 import { generateQRCodeDataUrl } from "../utils/qrSvgToImg";
 import { LedgerReportDataForPrint, PrintData, PrintDetailDto, PrintResponse, StableTemplateProps } from "../../use-print-type";
-import { compressData } from "../../../utilities/compression";
-import { removeDefaults } from "../../../utilities/Utils";
+import { compressData, decompressData } from "../../../utilities/compression";
+import { isNullOrUndefinedOrEmpty, removeDefaults } from "../../../utilities/Utils";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import moment from "moment";
 
@@ -57,7 +57,7 @@ interface UseTemplateDesignerProps<T = unknown> {
   isInLedgerReport?: boolean;
 }
 
-export const useTemplateDesigner = <T=unknown,>({
+export const useTemplateDesigner = <T = unknown,>({
   templateGroup = "",
   templateKind = "",
   designerType = "",
@@ -83,7 +83,7 @@ export const useTemplateDesigner = <T=unknown,>({
   voucherType,
   isAppGlobal,
   lastChoosedTemplate,
-  isInLedgerReport=false,
+  isInLedgerReport = false,
 }: UseTemplateDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
@@ -91,21 +91,21 @@ export const useTemplateDesigner = <T=unknown,>({
   const dispatch = useDispatch();
   const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
   let activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
- // State
- const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps | null>(null);
+  // State
+  const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps | null>(null);
 
   // const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
   const [printData, setPrintData] = useState<PrintData>(() =>
-  isInLedgerReport
-    ? {
+    isInLedgerReport
+      ? {
         kind: "ledgerReport",
         data: DummyLedgerReportDataForPrint,
       }
-    : {
+      : {
         kind: "voucher",
         data: DummyVoucherData as any,
       }
-);
+  );
 
   const [designTabs, setDesignTabs] = useState<DesignSectionType[]>([]);
   const [currentSection, setCurrentSection] = useState<DesignSectionType | null>(null);
@@ -129,7 +129,7 @@ export const useTemplateDesigner = <T=unknown,>({
     const pageOrientation =
       activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
     const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
- const isAutoHeight = activeTemplate?.propertiesState?.isAutoHeight ?? false;
+    const isAutoHeight = activeTemplate?.propertiesState?.isAutoHeight ?? false;
     const selectedPageSize = getPageDimensions(
       pageSize,
       activeTemplate?.propertiesState?.width,
@@ -148,159 +148,159 @@ export const useTemplateDesigner = <T=unknown,>({
     activeTemplate?.propertiesState?.pageSize,
     activeTemplate?.propertiesState?.width,
     activeTemplate?.propertiesState?.height,
-     activeTemplate?.propertiesState?.isAutoHeight,
+    activeTemplate?.propertiesState?.isAutoHeight,
   ]);
 
   const setVoucherPrintData = (data: PrintResponse) => {
     setPrintData({ kind: "voucher", data });
   };
 
-const setLedgerPrintData = (data: LedgerReportDataForPrint) => {
-  setPrintData({ kind: "ledgerReport", data });
-};
+  const setLedgerPrintData = (data: LedgerReportDataForPrint) => {
+    setPrintData({ kind: "ledgerReport", data });
+  };
 
- 
 
-const loadPrintAndTemplateData = useCallback(
-  async (isActiveRef: { current: boolean }) => {
-    if (!MasterIDParam) return;
 
-    setLoading(true);
+  const loadPrintAndTemplateData = useCallback(
+    async (isActiveRef: { current: boolean }) => {
+      if (!MasterIDParam) return;
 
-    try {
-      // -------------------------------
-      // LEDGER REPORT FLOW
-      // -------------------------------
-      if (isInLedgerReport) {
-        const ledgerData: LedgerReportDataForPrint =
-          await api.postAsync(Urls.get_customer_balance, {
-            LedgerID: MasterIDParam,
-            AsOnDate: moment().local().toDate(),
-          });
+      setLoading(true);
+
+      try {
+        // -------------------------------
+        // LEDGER REPORT FLOW
+        // -------------------------------
+        if (isInLedgerReport) {
+          const ledgerData: LedgerReportDataForPrint =
+            await api.postAsync(Urls.get_customer_balance, {
+              LedgerID: MasterIDParam,
+              AsOnDate: moment().local().toDate(),
+            });
+
+          if (!isActiveRef.current) return;
+
+          setLedgerPrintData(ledgerData);
+
+          if (manuvalTemplateFeatch) {
+            const template = await getOrFetchTemplate("CBR", "", "");
+            if (!isActiveRef.current) return;
+            dispatch(setTemplate(template));
+
+          }
+          autoTemplateResolvedRef.current = true;
+          return;
+        }
+
+        // -------------------------------
+        // VOUCHER FLOW
+        // -------------------------------
+        const voucherData = await loadPrintData(
+          MasterIDParam,
+          voucherTypeParam ?? "",
+          isInvTrans,
+          isSalesView,
+          isServiceTrans,
+          transDate,
+          printCopies,
+          isReprint,
+          isPOSPrinting,
+          isFromSalesReceipt,
+          isPackingSlipPrint,
+          warehouseID,
+          kitchenIDParam,
+          kitchenPrinterNameParam,
+          kitchenNameParam,
+          commonKitchenProductGroupIDParam,
+          transactionType,
+          dbIdValue,
+          voucherType,
+          isAppGlobal
+        );
 
         if (!isActiveRef.current) return;
 
-        setLedgerPrintData(ledgerData);
+        setVoucherPrintData(voucherData);
 
-        if (manuvalTemplateFeatch) {
-          const template = await getOrFetchTemplate("CBR", "", "");
-          if (!isActiveRef.current) return;
-          dispatch(setTemplate(template));
-          
-        }
-       autoTemplateResolvedRef.current = true;
-        return;
-      }
+        if (!manuvalTemplateFeatch) return;
 
-      // -------------------------------
-      // VOUCHER FLOW
-      // -------------------------------
-      const voucherData = await loadPrintData(
-        MasterIDParam,
-        voucherTypeParam ?? "",
-        isInvTrans,
-        isSalesView,
-        isServiceTrans,
-        transDate,
-        printCopies,
-        isReprint,
-        isPOSPrinting,
-        isFromSalesReceipt,
-        isPackingSlipPrint,
-        warehouseID,
-        kitchenIDParam,
-        kitchenPrinterNameParam,
-        kitchenNameParam,
-        commonKitchenProductGroupIDParam,
-        transactionType,
-        dbIdValue,
-        voucherType,
-        isAppGlobal
-      );
-
-      if (!isActiveRef.current) return;
-
-      setVoucherPrintData(voucherData);
-
-      if (!manuvalTemplateFeatch) return;
-
-      let template = await getOrFetchTemplate(
-        voucherData.master?.voucherType,
-        voucherData.master?.voucherForm ?? "",
-        voucherData.master?.customerType ?? ""
-      );
-
-      if (
-        (!template || template.content == null) &&
-        appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing
-      ) {
-        template = await getOrFetchTemplate(
+        let template = await getOrFetchTemplate(
           voucherData.master?.voucherType,
-          "",
-          ""
+          voucherData.master?.voucherForm ?? "",
+          voucherData.master?.customerType ?? ""
         );
+
+        if (
+          (!template || template.content == null) &&
+          appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing
+        ) {
+          template = await getOrFetchTemplate(
+            voucherData.master?.voucherType,
+            "",
+            ""
+          );
+        }
+
+        if (!isActiveRef.current) return;
+
+        dispatch(setTemplate(template));
+        autoTemplateResolvedRef.current = true;
+      } catch (err) {
+        if (isActiveRef.current) {
+          console.error("Error loading print/template data:", err);
+        }
+      } finally {
+        if (isActiveRef.current) {
+          setLoading(false);
+        }
       }
+    },
+    [
+      MasterIDParam,
+      isInLedgerReport,
+      manuvalTemplateFeatch,
+      voucherTypeParam,
+      isInvTrans,
+      isSalesView,
+      isServiceTrans,
+      transDate,
+      printCopies,
+      isReprint,
+      isPOSPrinting,
+      isFromSalesReceipt,
+      isPackingSlipPrint,
+      warehouseID,
+      kitchenIDParam,
+      kitchenPrinterNameParam,
+      kitchenNameParam,
+      commonKitchenProductGroupIDParam,
+      transactionType,
+      dbIdValue,
+      voucherType,
+      isAppGlobal,
+      appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+    ]
+  );
 
-      if (!isActiveRef.current) return;
+  // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
+  useEffect(() => {
+    const isActiveRef = { current: true };
 
-      dispatch(setTemplate(template));
-      autoTemplateResolvedRef.current = true;
-    } catch (err) {
-      if (isActiveRef.current) {
-        console.error("Error loading print/template data:", err);
-      }
-    } finally {
-      if (isActiveRef.current) {
-        setLoading(false);
-      }
-    }
-  },
-  [
-    MasterIDParam,
-    isInLedgerReport,
-    manuvalTemplateFeatch,
-    voucherTypeParam,
-    isInvTrans,
-    isSalesView,
-    isServiceTrans,
-    transDate,
-    printCopies,
-    isReprint,
-    isPOSPrinting,
-    isFromSalesReceipt,
-    isPackingSlipPrint,
-    warehouseID,
-    kitchenIDParam,
-    kitchenPrinterNameParam,
-    kitchenNameParam,
-    commonKitchenProductGroupIDParam,
-    transactionType,
-    dbIdValue,
-    voucherType,
-    isAppGlobal,
-    appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
-  ]
-);
+    loadPrintAndTemplateData(isActiveRef);
 
- // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
-useEffect(() => {
-  const isActiveRef = { current: true };
-
-  loadPrintAndTemplateData(isActiveRef);
-
-  return () => {
-    isActiveRef.current = false;
-  };
-}, [loadPrintAndTemplateData]);
+    return () => {
+      isActiveRef.current = false;
+    };
+  }, [loadPrintAndTemplateData]);
 
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
     const updateProps = async () => {
-    //    if (!activeTemplate) {
-    //   setStableTemplateProps(null); 
-    //   return;
-    // }
-    // if (!printData) return;
+      //    if (!activeTemplate) {
+      //   setStableTemplateProps(null); 
+      //   return;
+      // }
+      // if (!printData) return;
 
       try {
         // Generate QR codes
@@ -316,9 +316,9 @@ useEffect(() => {
           }
         }
 
-        const props:StableTemplateProps = {
+        const props: StableTemplateProps = {
           template: activeTemplate,
-          printData : printData,
+          printData: printData,
           qrCodeImages: qrImages,
         };
 
@@ -332,33 +332,33 @@ useEffect(() => {
   }, [activeTemplate, printData]);
 
   // Effect: Handle user template selection
-useEffect(() => {
+  useEffect(() => {
 
-  if (!manuvalTemplateFeatch) return;
+    if (!manuvalTemplateFeatch) return;
     // Detect MasterIDParam change (new transaction)
-  const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;
-  
-  if (isMasterIdChanged) {
-    // New transaction - sync refs and skip fetch
-    currentMasterIdRef.current = MasterIDParam;
-    lastFetchedTemplateIdRef.current =  null;
-    autoTemplateResolvedRef.current = false; // 🔴 invalidate manual restore
-    return; // Let Effect 1 handle default template
-  }
+    const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;
+
+    if (isMasterIdChanged) {
+      // New transaction - sync refs and skip fetch
+      currentMasterIdRef.current = MasterIDParam;
+      lastFetchedTemplateIdRef.current = null;
+      autoTemplateResolvedRef.current = false; // 🔴 invalidate manual restore
+      return; // Let Effect 1 handle default template
+    }
     // 🔒 Block manual restore until auto-fetch finishes
-  if (!autoTemplateResolvedRef.current) return;
-  const newTemplateId = lastChoosedTemplate?.id ?? null;
-  
-  if (newTemplateId === null || newTemplateId === lastFetchedTemplateIdRef.current) return;
-  
-  lastFetchedTemplateIdRef.current = newTemplateId;
+    if (!autoTemplateResolvedRef.current) return;
+    const newTemplateId = lastChoosedTemplate?.id ?? null;
+
+    if (newTemplateId === null || newTemplateId === lastFetchedTemplateIdRef.current) return;
+
+    lastFetchedTemplateIdRef.current = newTemplateId;
     dispatch(setTemplate(lastChoosedTemplate));
 
-}, [
-  lastChoosedTemplate,
-  MasterIDParam,
-  manuvalTemplateFeatch,
-]);
+  }, [
+    lastChoosedTemplate,
+    MasterIDParam,
+    manuvalTemplateFeatch,
+  ]);
 
   // Set max height based on window size
   useEffect(() => {
@@ -384,14 +384,14 @@ useEffect(() => {
   // Fetch template data for existing templates
   const getPDFTemplateData = useCallback(async () => {
     if (id !== "new") {
-      
+
       try {
         setLoading(true);
-        
+
         const _template = await fetchTemplateFromApiById(id);
 
-          dispatch(setTemplate(_template));
-        
+        dispatch(setTemplate(_template));
+
       } catch (error) {
         console.error("Error fetching template data:", error);
         ERPToast.show(t("failed_to_fetch_template"));
@@ -433,14 +433,14 @@ useEffect(() => {
   const handleSave = useCallback(
     async (dataUrl: string) => {
       debugger
-       const thumbImage= dataUrl;
-       const backgroundImage= activeTemplate.background_image ?? "";
-       const backgroundImageHeader= activeTemplate.background_image_header ?? "";
-       const backgroundImageFooter= activeTemplate.background_image_footer ?? "";
-       const signatureImage= activeTemplate.signature_image ?? "";
+      const thumbImage = dataUrl;
+      const backgroundImage = activeTemplate.background_image ?? "";
+      const backgroundImageHeader = activeTemplate.background_image_header ?? "";
+      const backgroundImageFooter = activeTemplate.background_image_footer ?? "";
+      const signatureImage = activeTemplate.signature_image ?? "";
       const tmpTemplate = {
         ...activeTemplate,
-        content: null, 
+        content: null,
         background_image: "",
         thumbImage: "",
         backgroundImageHeader: "",
@@ -455,7 +455,7 @@ useEffect(() => {
 
       } as TemplateState<T>;
       console.log(tmpTemplate);
-      
+
       const compressedContent = await compressData(tmpTemplate);
       const activeTemplates: TemplateDto = {
         templateType: tmpTemplate.propertiesState?.template_type ?? "standard",
@@ -477,10 +477,36 @@ useEffect(() => {
 
       const initial = templateInitialState().activeTemplate;
       const cleanedTemplate = removeDefaults(activeTemplates, initial);
+      const currentLocalTemplate = await getTemplateFromStore(
+        cleanedTemplate.templateGroup,
+        cleanedTemplate.customerType,
+        cleanedTemplate.formType
+      );
       try {
         const res = await api.postAsync(Urls.templates, cleanedTemplate);
-        handleResponse(res, () => {
-          navigate(`/templates?template_group=${templateGroup}`);
+        handleResponse(res, async () => {
+          if (!isNullOrUndefinedOrEmpty(currentLocalTemplate)) {
+            //  const templateContent = await decompressData(cleanedTemplate.content);
+            //     const parsedTemplate = parseTemplateContent<TemplateState<unknown>>(
+            //       res,
+            //       templateContent
+            //     );
+            //     if (!parsedTemplate) {
+            //       console.warn("Failed to parse default template.");
+            //       return null;
+            //     }
+            //     const initial = templateInitialState().activeTemplate;
+            //     const merged = merge({}, initial, parsedTemplate);
+            
+            await addTemplateToStore({...activeTemplate,
+          template_group: templateGroup,
+          template_kind: templateKind,
+          template_type: designerType,
+            } as any);
+            //  dispatch(setTemplate(merged));
+          }
+
+          navigate(`/templates?template_group=${templateGroup}&form_type=${ tmpTemplate.propertiesState?.template_formType}&customer_type=${ tmpTemplate.propertiesState?.template_customerType}`);
         });
       } catch (error) {
         console.error("Error saving template:", error);
@@ -500,7 +526,7 @@ useEffect(() => {
     try {
       setLoading(true);
       const imageDataUrl = await capturePreviewAsImage();
-      
+
       await handleSave(imageDataUrl);
     } catch (error) {
       console.error("Error saving template:", error);

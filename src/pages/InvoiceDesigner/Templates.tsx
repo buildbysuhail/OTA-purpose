@@ -78,9 +78,9 @@ const Templates = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
-  const [formType, setFormType] = useState("")
-  const [customerType, setCustomerType] = useState("")
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(  (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",)
+  const [formType, setFormType] = useState<string>(  (searchParams?.get("form_type")! as string) ?? "",)
+  const [customerType, setCustomerType] = useState<string>(  (searchParams?.get("customer_type")! as string) ?? "",)
   const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
   const setDefaultTemplate = async (id: any) => {
     try {
@@ -121,6 +121,23 @@ const Templates = () => {
       }
     }
   }
+
+  const onFormTypeChange = (value: string) => {
+  const next = new URLSearchParams(searchParams);
+
+  // always keep the key, even if empty
+  next.set("form_type", value);
+
+  setSearchParams(next, { replace: true });
+};
+
+const onCustomerTypeChange = (value: string) => {
+  const next = new URLSearchParams(searchParams);
+
+  next.set("customer_type", value);
+
+  setSearchParams(next, { replace: true });
+};
 
   const getTemplates = async () => {
     setLoading(true)
@@ -251,7 +268,7 @@ const Templates = () => {
               onClick={() =>
                 templateGroup == "barcode"
                   ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
-                  : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
+                  : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}&form_type=${formType}&customer_type=${customerType}`, {
                     state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
                   })
               }
@@ -365,7 +382,7 @@ const Templates = () => {
                     e.stopPropagation()
                     templateGroup === 'barcode'
                       ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
-                      : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`, {
+                      : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}&form_type=${formType}&customer_type=${customerType}`, {
                         state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
                       })
                   }}
@@ -760,6 +777,8 @@ const Templates = () => {
               <ERPDataCombobox
                 id="Form Type"
                 labelDirection="horizontal"
+                value={formType}
+                defaultValue={formType}
                 field={{
                   id: "id",
                   getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
@@ -769,14 +788,17 @@ const Templates = () => {
 
                 onChange={(e: any) => {
                   setFormType(e.value ? e.name : "")
+                  onFormTypeChange(e.value ? e.name : "")
                 }}
-
               />
+
               <ERPDataCombobox
-                id="Customer Type"
+                id="Customer_Type"
                 labelDirection="horizontal"
+                defaultValue={customerType}
+                value={customerType}
                 field={{
-                  id: "id",
+                  id: "Customer_Type",
                   valueKey: "id",
                   labelKey: "name",
                 }}
@@ -788,6 +810,7 @@ const Templates = () => {
                 ]}
                 onChange={(e: any) => {
                   setCustomerType(e.value ? e.name : "")
+                  onCustomerTypeChange(e.value ? e.name : "")
                 }}
               />
             </div>
@@ -902,6 +925,8 @@ const Templates = () => {
         <ChooseTemplate
           templateGroup={templateGroup}
           setShowTemplateListing={setShowTemplateListing}
+          formtype={formType}
+          customerType={customerType}
           // tempData={tempCrmData}
         />
       )}

@@ -75,14 +75,20 @@ async function parseGitHubContent(response: Response): Promise<string> {
 }
 
 // Convert bundle filename to full GitHub API URL for download
-function getBundleUrl(bundleFilename: string): string {
-  // If already a full URL, return as-is
-  if (bundleFilename.startsWith('http://') || bundleFilename.startsWith('https://')) {
-    return bundleFilename;
-  }
-  // Otherwise, construct GitHub API URL for the bundle file
-  return `${GITHUB_API_BASE}/${OTA_PLATFORM}/${OTA_CHANNEL}/bundles/${bundleFilename}?ref=${GITHUB_BRANCH}`;
+// function getBundleUrl(bundleFilename: string): string {
+//   // If already a full URL, return as-is
+//   if (bundleFilename.startsWith('http://') || bundleFilename.startsWith('https://')) {
+//     return bundleFilename;
+//   }
+//   // Otherwise, construct GitHub API URL for the bundle file
+//   return `${GITHUB_API_BASE}/${OTA_PLATFORM}/${OTA_CHANNEL}/bundles/${bundleFilename}?ref=${GITHUB_BRANCH}`;
+// }
+
+function getBundleUrl(bundlePath: string): string {
+  // Always use GitHub Contents API (NO raw.githubusercontent.com)
+  return `${GITHUB_API_BASE}/${bundlePath}?ref=${GITHUB_BRANCH}`;
 }
+
 
 // Check if auto-update is enabled from API
 export async function isAutoUpdateEnabled(): Promise<boolean> {

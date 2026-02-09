@@ -1,48 +1,34 @@
 {
   "name": "polosys-erp",
   "private": true,
-  "version": "10.0.3",
+  "version": "10.0.7",
   "type": "module",
   "main": "electron/main.cjs",
-
   "build": {
     "appId": "com.polosys.desktop",
     "productName": "Polosys",
-
     "directories": {
       "buildResources": "resources",
       "output": "dist"
     },
-
     "files": [
       "build/**",
       "electron/**",
       "package.json"
     ],
-
     "asar": true,
-
     "win": {
       "target": "nsis",
       "publish": [
         {
-          "provider": "generic",
-          "url": "https://raw.githubusercontent.com/mahirpolosys/live-update/main/windows/production"
-        }
-      ]
-    },
-
-    "mac": {
-      "target": "dmg",
-      "publish": [
-        {
-          "provider": "generic",
-          "url": "https://raw.githubusercontent.com/mahirpolosys/live-update/main/mac/production"
+          "provider": "github",
+          "owner": "mahirpolosys",
+          "repo": "live-update",
+          "releaseType": "release"
         }
       ]
     }
   },
-
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build --emptyOutDir",
@@ -56,10 +42,8 @@
     "release:ios": "node scripts/release-ios-ota.js",
     "release:win": "node scripts/release-win-ota.js",
     "release:mac": "node scripts/release-mac-ota.js",
-
     "android": "npm run build && npx cap sync && npx cap open android",
     "android:live": "npm run build && npx cap sync && npx cap run android -l --external",
-
     "electron": "electron .",
     "build:exe": "npm run build && electron-builder"
   },
@@ -74,6 +58,7 @@
     "@capacitor/core": "^6.1.2",
     "@capacitor/device": "^6.0.1",
     "@capacitor/filesystem": "^6.0.4",
+    "@capacitor/ios": "^8.0.2",
     "@capacitor/live-updates": "^0.4.0",
     "@capacitor/preferences": "^6.0.4",
     "@capacitor/push-notifications": "^7.0.3",

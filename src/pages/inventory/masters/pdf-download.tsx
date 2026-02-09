@@ -223,7 +223,7 @@ const handlePrintPdf =async()=>{
                       {TemplateProps?.template ? (
                         <SharedTemplatePreview
                           template={TemplateProps?.template}
-                          data={TemplateProps?.data}
+                          printData={TemplateProps?.data}
                           qrCodeImages={TemplateProps?.qrCodeImages}
                         />
                       ) : (

@@ -1,0 +1,28 @@
+name: Windows OTA (Electron)
+
+on:
+  push:
+    tags:
+      - "win-ota-*"
+
+jobs:
+  windows-ota:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Windows app
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: |
+          npm run build
+          npx electron-builder --win --publish always

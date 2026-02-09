@@ -21,12 +21,14 @@ import { handlePlainResponse } from "../../utilities/HandleResponse"
 
 interface ChooseTemplateProps {
   templateGroup: VoucherType | string
+  formtype?: string;
+  customerType?: string;
   setShowTemplateListing: (show: boolean) => void
 }
 
 const api = new APIClient()
 
-const ChooseTemplate = ({ templateGroup, setShowTemplateListing }: ChooseTemplateProps) => {
+const ChooseTemplate = ({ templateGroup, setShowTemplateListing,formtype,customerType }: ChooseTemplateProps) => {
   const navigate = useNavigate()
   const appDispatch = useAppDispatch()
   const dispatch = useDispatch()
@@ -203,19 +205,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing }: ChooseTemplat
     }, {})
   }, [activeTab, filteredBySearch])
 
-  const handleUseTemplate = (template: TemplateState<unknown>) => {
-    appDispatch(setTemplate(template))
-    if (templateGroup === "barcode") {
-      navigate(`/label-designer/${template.id}?template_group=${templateGroup}`)
-    } else {
-      navigate(`/invoice_designer/${template.id}?template_group=${templateGroup}`, {
-        state: {
-          templateKind: template.templateKind,
-          templateType: template.templateType,
-        },
-      })
-    }
-  }
 
   const handleChooseTemplate = async (template: TemplateState<unknown>) => {
     const length = tempCrmData?.length || 0
@@ -246,9 +235,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing }: ChooseTemplat
 
     templateGroup == "barcode"
       ? navigate(`/label-designer/new?template_group=${templateGroup}`)
-      : navigate(`/invoice_designer/new?template_group=${templateGroup}`, { state })
+      : navigate(`/invoice_designer/new?template_group=${templateGroup}&form_type=${formtype}&customer_type=${customerType}`, { state })
   }
-
   const renderTemplateCard = (template: TemplateState<unknown>, index: number) => {
     const isDefault = template?.isCurrent
     const isPremium = template.templateType?.toLowerCase() === "premium"

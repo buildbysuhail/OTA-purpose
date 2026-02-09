@@ -37,7 +37,7 @@ type TemplatesProps = {
 };
 //  
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
-  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp,isInLedgerReport=false }, ref) => {
+  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp, isInLedgerReport = false }, ref) => {
 
     const { t } = useTranslation();
     const {
@@ -87,13 +87,21 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           <span className="text-gray-500 dark:text-gray-400">
             ...No Template Found.&nbsp;
           </span>
-        <Link
-          to={`/templates?template_group=${voucherType}`}
-          className="text-blue-600 hover:underline dark:text-blue-400"
-        >
-          Create Template
-        </Link>
-      </div>
+          <Link
+
+
+            to={
+              stableTemplateProps?.printData && stableTemplateProps?.printData?.kind === "voucher"
+                ? `/templates?template_group=${voucherType}` +
+                `&form_type=${stableTemplateProps?.printData?.data?.master?.voucherForm}` +
+                `&customer_type=${stableTemplateProps?.printData?.data?.master.customerType}`
+                : `/templates?template_group=${voucherType}`
+            }
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Create Template
+          </Link>
+        </div>
       );
     }
     return (

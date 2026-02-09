@@ -30,6 +30,8 @@ const InvoiceDesigner = () => {
   const rootState = useRootState();
   const tg = searchParams.get("template_group");
   const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType) ? (tg as VoucherType) : tg??"";
+  const formType = searchParams?.get("form_type")! as string ?? "";
+  const customerType = searchParams?.get("customer_type")! as string ?? "";
   const { templateKind, templateType } = (location.state as LocationState) || {};
 
   return (
@@ -38,6 +40,8 @@ const InvoiceDesigner = () => {
         designerType={templateType || "STANDARD"}
         designerKind={templateKind || "standard"}
         templateGroup={templateGroup}
+        formType={formType}
+        customerType={customerType}
       />
       
       <ERPModal

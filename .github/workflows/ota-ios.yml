@@ -1,0 +1,111 @@
+name: iOS OTA
+
+on:
+  push:
+    tags:
+      - "ios-ota-*"
+
+jobs:
+  ios-ota:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_ID: com.polosys.app
+      CHANNEL: production
+      CDN_REPO: mahirpolosys/live-update
+      CDN_BRANCH: main
+
+    steps:
+      # 1️⃣ Checkout source
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      # 4️⃣ Install jq
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      # 5️⃣ Build frontend
+      - name: Build frontend
+        run: npm run build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
+          STORAGE_FETCH_TOKEN: ${{ secrets.STORAGE_FETCH_TOKEN }}
+
+      # 6️⃣ Generate OTA bundle
+      - name: Generate OTA bundle
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          BUNDLE_ID="${TAG#ios-ota-}"
+          VERSION=$(echo "$BUNDLE_ID" | sed 's/-ota.*//')
+
+          ZIP="polosys-${BUNDLE_ID}.zip"
+          cd dist && zip -r "../$ZIP" .
+
+          echo "ZIP=$ZIP" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "BUNDLE_ID=$BUNDLE_ID" >> $GITHUB_ENV
+
+      # 7️⃣ Clone CDN repository
+      - name: Clone CDN repository
+        run: |
+          git clone https://x-access-token:${{ secrets.CDN_GITHUB_TOKEN }}@github.com/${CDN_REPO}.git cdn
+
+      # 8️⃣ Publish iOS OTA (WITH ROLLBACK METADATA)
+      - name: Publish iOS OTA
+        run: |
+          mkdir -p cdn/ios/${CHANNEL}/bundles
+          mv "$ZIP" cdn/ios/${CHANNEL}/bundles/
+
+          jq -n \
+            --arg appId "$APP_ID" \
+            --arg platform "ios" \
+            --arg channel "$CHANNEL" \
+            --arg version "$VERSION" \
+            --arg bundleId "$BUNDLE_ID" \
+            --arg bundleUrl "ios/${CHANNEL}/bundles/$ZIP" \
+            '{
+              appId: $appId,
+              platform: $platform,
+              channel: $channel,
+              version: $version,
+              bundleId: $bundleId,
+              bundleUrl: $bundleUrl,
+              rollback: {
+                enabled: true,
+                reason: "",
+                minSafeBundleId: $bundleId,
+                forceRollback: false
+              }
+            }' > cdn/ios/${CHANNEL}/metadata.json
+
+          cat cdn/ios/${CHANNEL}/metadata.json
+
+      # 9️⃣ Push OTA to CDN repo
+      - name: Push OTA
+        run: |
+          cd cdn
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "iOS OTA ${BUNDLE_ID}"
+          git push origin ${CDN_BRANCH}
+
+      # 🔟 Verify deployment
+      - name: Verify deployment
+        run: |
+          echo "✅ OTA Bundle:"
+          echo "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/ios/${CHANNEL}/bundles/${ZIP}"
+          echo "✅ Metadata:"
+          echo "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/ios/${CHANNEL}/metadata.json"
+          echo "📦 Bundle ID: ${BUNDLE_ID}"

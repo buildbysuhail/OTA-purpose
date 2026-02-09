@@ -1448,8 +1448,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.additionalExpense = detail.additionalExpense;
 
       // VAT handling
+      if(clientSession.isAppGlobal){
+        
       outputRow.vatPercentage = detail.vatPerc;
       outputRow.totalVatAmount = detail.vatAmount;
+  
+}
 
       // Financial calculations
       outputRow.grossValue = detail.gross;
@@ -1582,6 +1586,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // outputRow.wareHouseID = detail.warehouse;
       outputRow.grandTotal = outputRow.grandTotal ?? 0;
 
+
+      // UPdate fix
+      outputRow.updateModifiedDate=outputRow.updateModifiedDate==true?true:false;
+      outputRow.updateStdPurchasePrice=outputRow.updateStdPurchasePrice==true?true:false;
+      outputRow.updateStdPurchasePriceWithAvg=outputRow.updateStdPurchasePriceWithAvg==true?true:false;
+      outputRow.updateStdPurchasePriceWithCost=outputRow.updateStdPurchasePriceWithCost==true?true:false;
       const sanitizedOutputRow: TransactionDetail = sanitizeDataAdvanced(outputRow, initialTransactionDetailData);
 
       outputDetails.push(sanitizedOutputRow);
@@ -1766,7 +1776,8 @@ debugger;
       address4: m.address4,
 
       /** ---------------- Dates ---------------- */
-      transactionDate: m.transactionDate,
+      // transactionDate: m.transactionDate,
+      transactionDate: new Date().toLocaleDateString(),
       orderDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? m.refDate
         : m.orderDate,

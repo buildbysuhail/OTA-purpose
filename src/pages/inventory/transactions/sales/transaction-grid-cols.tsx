@@ -127,7 +127,7 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 130,
         alignment: "right",
-        decimalPoint:3,
+        decimalPoint: 3,
       },
       {
         dataField: "gross",
@@ -175,12 +175,12 @@ export const purchaseGridCol = (
         alignment: "right",
         readOnly: true,
         decimalPoint: applicationSettings?.mainSettings?.decimalPoints,
-       cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
           return <span className={'font-bold text-[#DC143C]'}>
             {cellElement.data.total}
           </span>
@@ -194,13 +194,13 @@ export const purchaseGridCol = (
         visible: false,
         width: 200,
         alignment: "left",
-       cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-          return (<span className={`${cellElement.data.stock < 0 ? 'font-bold text-[#DC143C]':''}`}>
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          return (<span className={`${cellElement.data.stock < 0 ? 'font-bold text-[#DC143C]' : ''}`}>
             {cellElement.data.stockDetails}
           </span>)
         }
@@ -358,13 +358,13 @@ export const purchaseGridCol = (
         visible: false,
         alignment: "right",
         decimalPoint: 4,
-      cellRender: (
-        cellElement: any,
-        cellInfo: any,
-        filter: any,
-        exportCell: any
-      ) => {
-          return (<span className={`${cellElement.data.stock < 0 ? 'font-bold text-[#DC143C]':''}`}>
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          return (<span className={`${cellElement.data.stock < 0 ? 'font-bold text-[#DC143C]' : ''}`}>
             {cellElement.data.stock}
           </span>)
         }
@@ -726,7 +726,7 @@ export const purchaseGridCol = (
         width: 140,
         readOnly: true,
         alignment: "right",
-        decimalPoint:applicationSettings?.mainSettings?.decimalPoints,
+        decimalPoint: applicationSettings?.mainSettings?.decimalPoints,
       },
       {
         dataField: "expDate",
@@ -979,6 +979,8 @@ export const purchaseGridCol = (
           "expDate",
           "unitPriceFC",
           "grossFC",
+
+
           //SR
           "sITransDetailID",
           //SO
@@ -986,6 +988,10 @@ export const purchaseGridCol = (
           //DR and GRR
           "refTransDtailId",
           "supplierReferenceProductCode",
+
+          //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       // ---------------- SALES RETURN INVOICE ----------------
@@ -1066,6 +1072,7 @@ export const purchaseGridCol = (
           "expDate",
           "unitPriceFC",
           "grossFC",
+         
           //sales
           "manualBarcode",
           "employeeCode",
@@ -1102,6 +1109,10 @@ export const purchaseGridCol = (
           //DR and GRR
           "refTransDtailId",
           "supplierReferenceProductCode",
+
+           //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       // ---------------- SALES QUOTATION ----------------
@@ -1221,6 +1232,10 @@ export const purchaseGridCol = (
           //DR and GRR
           "refTransDtailId",
           "supplierReferenceProductCode",
+
+           //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       // ---------------- SALES ORDER ----------------
@@ -1352,6 +1367,9 @@ export const purchaseGridCol = (
           //DR and GRR
           "refTransDtailId",
           "supplierReferenceProductCode",
+           //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       // ---------------- GOODS DELIVERY ----------------
@@ -1464,6 +1482,10 @@ export const purchaseGridCol = (
           //DR and GRR
           "refTransDtailId",
           "supplierReferenceProductCode",
+
+           //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       // ---------------- GOODS DELIVERY RETURN----------------
@@ -1577,6 +1599,9 @@ export const purchaseGridCol = (
           "sITransDetailID",
           //SO
           "adjQty",
+           //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       // ---------------- SERVICE INVOICE ----------------
@@ -1656,7 +1681,7 @@ export const purchaseGridCol = (
         ].includes(field);
       } else if (
         userSession.countryId == Countries.India &&
-      voucherType == VoucherType.ServiceInvoice
+        voucherType == VoucherType.ServiceInvoice
       ) {
         return ![
           //sales gcc only
@@ -1716,27 +1741,30 @@ export const purchaseGridCol = (
           //DR and GRR
           "refTransDtailId",
           "supplierReferenceProductCode",
+           //from web
+          "vatPerc",
+          "vatAmount",
         ].includes(field);
       }
       return true;
     })
     .map((mi) => {
-     const isVatField =
-  mi.dataField === "vatPerc" || mi.dataField === "vatAmount";
+      const isVatField =
+        mi.dataField === "vatPerc" || mi.dataField === "vatAmount";
 
-const isSalesInvoiceIndia =
-  voucherType === VoucherType.SalesInvoice &&
-  userSession.countryId === Countries.India;
+      const isSalesInvoiceIndia =
+        voucherType === VoucherType.SalesInvoice &&
+        userSession.countryId === Countries.India;
 
-const isOtherVoucherNonIndia =
-  voucherType !== VoucherType.SalesInvoice 
+      const isOtherVoucherNonIndia =
+        voucherType !== VoucherType.SalesInvoice
 
-if (isVatField && (isSalesInvoiceIndia || isOtherVoucherNonIndia)) {
-  return {
-    ...mi,
-    visible: false,
-  };
-}
+      if (isVatField && (isSalesInvoiceIndia || isOtherVoucherNonIndia)) {
+        return {
+          ...mi,
+          visible: false,
+        };
+      }
 
       if (
         userSession.countryId != Countries.India &&
@@ -1782,7 +1810,7 @@ if (isVatField && (isSalesInvoiceIndia || isOtherVoucherNonIndia)) {
       }
       if (
         (voucherType == VoucherType.ServiceInvoice &&
-        mi.dataField == "stdPurchasePrice")
+          mi.dataField == "stdPurchasePrice")
       ) {
         return {
           ...mi,

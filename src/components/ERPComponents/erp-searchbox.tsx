@@ -1247,16 +1247,11 @@ const handleBatchGridDoubleClick =async (e: any) => {
     // PHASE 2: Handle other keys when grid is visible
     // ============================================================
     if (
-      ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) &&
-      showProductGrid &&
-      dataGridRef.current &&
-      !isLoading
+      ["Enter"].includes(e.key) &&
+      !isLoading && searchType === "modal"
     ) {
       if (e.key === "Enter") {
-        if (searchType !== "modal") {
-          rest?.onKeyDown && rest?.onKeyDown(value, e);
-        } else {
-          if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+        if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
             if (searchKey == "product") {
               dispatch(
                 formStateHandleFieldChangeKeysOnly({
@@ -1285,6 +1280,42 @@ const handleBatchGridDoubleClick =async (e: any) => {
           } else {
             rest?.onKeyDown && rest?.onKeyDown(value, e);
           }
+      }
+     } else if (
+      ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) &&
+      showProductGrid &&
+      dataGridRef.current &&
+      !isLoading
+    ) {
+      if (e.key === "Enter") {
+         if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+            if (searchKey == "product") {
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    formElements: {
+                      productSearchPopupWindow: {
+                        visible: true,
+                        data: {
+                          searchColumn: searchKey,
+                          rowIndex: rowIndex,
+                          searchCriteria: searchKey,
+                          searchText: e.currentTarget.value,
+                          voucherType: formState.transaction.master.voucherType,
+                          warehouseId: 1,
+                          inSearch: formState.inSearch,
+                        },
+                      },
+                    },
+                  },
+                })
+              );
+              e.preventDefault();
+            } else {
+              rest?.onKeyDown && rest?.onKeyDown(value, e);
+            }
+          } else {
+            rest?.onKeyDown && rest?.onKeyDown(value, e);
         }
       } else if (e.key === "Escape") {
         setShowProductGrid(false);

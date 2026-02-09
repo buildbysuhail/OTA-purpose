@@ -73,7 +73,8 @@ jobs:
             --arg channel "$CHANNEL" \
             --arg version "$VERSION" \
             --arg bundleId "$BUNDLE_ID" \
-            --arg bundleUrl "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/android/${CHANNEL}/bundles/$ZIP" \
+            # --arg bundleUrl "https://raw.githubusercontent.com/${CDN_REPO}/${CDN_BRANCH}/android/${CHANNEL}/bundles/$ZIP" \
+              --arg bundleUrl "android/${CHANNEL}/bundles/$ZIP"
             '{
               appId: $appId,
               platform: $platform,

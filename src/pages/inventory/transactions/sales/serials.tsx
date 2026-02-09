@@ -25,9 +25,10 @@ interface SerialsProps {
   onClose: () => void;
   rowIndex: number;
   t: (key: string) => string;
+  productName: string;
 }
 
-const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, rowIndex, t }) => {
+const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, rowIndex, t ,productName}) => {
   const [serialData, setSerialData] = useState<SerialItem[]>([{ slNo: 1, serial: '' }]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
@@ -87,7 +88,6 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
       const lt = validSerials.length;
 
       const slNo = formState.transaction.details[rowIndex].slNo;
-      
       dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
@@ -208,8 +208,11 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
       isOpen={isOpen}
       closeModal={onClose}
       title={t("serials")}
+      width={200}
+      height={430}
       content={
         <>
+          <h6 className="text-blue-800 text-md font-bold">{productName}</h6>
           <div className="w-full flex flex-col gap-4 p-4">
             <DataGrid
               ref={dataGridRef}
@@ -223,7 +226,7 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
               rowAlternationEnabled={true}
               onEditorPreparing={onEditorPreparing}
               repaintChangesOnly={true}
-              height={300}
+              height={220}
             >
               <Editing
                 mode="cell"
@@ -247,7 +250,7 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
 
               <Column
                 dataField="serial"
-                width={170}
+                width={310}
                 caption={t("serials")}
                 allowEditing={true}
               />
@@ -288,8 +291,6 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
           </ERPSubmitButton>
         </div>
       }
-      width={300}
-      height={470}
       disableOutsideClickClose={false}
     />
   );

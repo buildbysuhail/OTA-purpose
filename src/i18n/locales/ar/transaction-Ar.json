@@ -1245,7 +1245,10 @@
 
   "sales_return_amount": "مبلغ مردودات المبيعات",
   "voucher_not_fount_or_this_voucher_is_already_cleared": "السند غير موجود أو تم تسويته مسبقاً.",
-  "voucher_number_cannot_be_empty": "لا يمكن أن يكون رقم السند فارغاً!"
+  "voucher_number_cannot_be_empty": "لا يمكن أن يكون رقم السند فارغاً!",
+  "draft": "مسودة",
+  "serials":"مسلسلات",
+  "skip_and_continue":"تخطي ومتابعة"
 
 }
 

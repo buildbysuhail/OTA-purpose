@@ -304,7 +304,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     id="showRateBeforeTax"
                     label={t("show_rate_before_tax")}
                     data={formState.userConfig}
-                    checked={applicationSettings?.productsSettings?.showRateBeforeTax ? true : formState?.userConfig?.showRateBeforeTax}
+                    checked={formState?.userConfig?.showRateBeforeTax}
                     onChangeData={(e) => handleFieldChange("showRateBeforeTax", e.showRateBeforeTax)}
                     className="w-1/3"
                     disabled={applicationSettings?.productsSettings?.showRateBeforeTax}

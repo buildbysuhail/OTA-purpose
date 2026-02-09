@@ -1248,6 +1248,9 @@
 
   "sales_return_amount":"Sales Return Amount",
   "voucher_not_fount_or_this_voucher_is_already_cleared":"Voucher not Found / This Voucher is already Cleared.",
-  "voucher_number_cannot_be_empty":"Voucher number cannot be empty!"
+  "voucher_number_cannot_be_empty":"Voucher number cannot be empty!",
+  "draft":"Draft",
+  "serials":"Serials",
+  "skip_and_continue":"Skip and Continue"
 
 }

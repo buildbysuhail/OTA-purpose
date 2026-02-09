@@ -46,6 +46,7 @@ export interface ApplicationProductsSettings {
     zeroMultiRateValidate: string;
     allowUpdateMultiRateinPurchase: boolean;
     showLabelHorizontally:boolean;
+    enableDiscountSlabOffer: boolean;
   }
 
 export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettings = {
@@ -96,4 +97,5 @@ export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettin
     zeroMultiRateValidate: "Warn",
     allowUpdateMultiRateinPurchase: false,
     showLabelHorizontally:true,
+    enableDiscountSlabOffer: false,
   };

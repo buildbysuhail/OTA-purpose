@@ -194,7 +194,9 @@ export const TransactionMasterInitialData: TransactionMaster = {
   refInvTransactionMasterSOID: 0,
   itemTaxDetails: null,
   taxableDetails: null,
-  refDate: ""
+  refDate: "",
+  note1: "",
+  note2: "",
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",
@@ -736,7 +738,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   quantityFactorData: "",
   quantityFactorDataM: "",
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
-  serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
+  serialNoEntryData: { visible: false, data: "", rowIndex: -1, productName: "" },
   imfData: { visible: false, data: "", rowIndex: -1, slNo: 0 },
   productInfo: false,
   ShowProductBatchUnitDetails: false,

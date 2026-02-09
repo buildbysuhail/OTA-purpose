@@ -374,7 +374,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
 
       // Discount slab offer behavior (exact mapping)
-      if (master.voucherType == VoucherType.SalesInvoice && settings?.inventorySettings?.enableDiscountSlabOffer) {
+      if (master.voucherType == VoucherType.SalesInvoice && settings?.productsSettings?.enableDiscountSlabOffer) {
         // C# checks for EnableDiscountSlabOffer and DiscPerc == 0 and (isEdit || TenderClosed)
         if ((DiscPerc === 0) && (isEdit || TenderClosed)) {
           if (DiscPerc !== Disc) {

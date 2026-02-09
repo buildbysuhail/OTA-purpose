@@ -26,7 +26,7 @@ import { sanitizeDataAdvanced } from "../../../../utilities/Utils";
 import { getStorageString, setStorageString, } from "../../../../utilities/storage-utils";
 import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement, } from "../reducer";
-import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, initialFormElements, TransactionFormStateInitialData, } from "../transaction-type-data";
+import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, initialFormElements, TransactionFormStateInitialData, TransactionMaster3InitialData, } from "../transaction-type-data";
 import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, ColumnModel, } from "../transaction-types";
 import PostedTransactionLabel from "./components/PostedTransactionLabel";
 import { SalesAuthorization } from "./components/AuthorizationSales";
@@ -341,7 +341,7 @@ export const useTransaction = (
     disablePnlMasters = true,
     invokeUsingVoucherNumber = true,
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -379,7 +379,7 @@ export const useTransaction = (
       );
     }
 
-    debugger;
+    
     let _formState = await loadTransVoucher(
       usingManualInvNumber,
       voucherNumber || formState.transaction.master.voucherNumber,
@@ -683,7 +683,7 @@ export const useTransaction = (
       }
     }
     let nextVoucher = { voucherPrefix: "", voucherNumber: 0 };
-    debugger;
+    
     if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
       if (vch.master?.invTransactionMasterID > 0) {
         // uncomment after check - show in 1050 - checkIt
@@ -1324,6 +1324,13 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("select_valid_cost_centre"),
           confirmButtonText: t("ok"),
+          showCancelButton: false,
+          onConfirm: () => {
+            setTimeout(() => {
+              costCenterRef?.current?.focus();
+              costCenterRef?.current?.click();
+            }, 100);
+          },
         });
         return false;
       }
@@ -1337,6 +1344,14 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("select_valid_salesman"),
           confirmButtonText: t("ok"),
+          showCancelButton: false,
+          onConfirm: () => {
+            setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+            setTimeout(() => {
+              employeeRef?.current?.focus();
+              employeeRef?.current?.click();
+            }, 100);
+          },
         });
         return false;
       }
@@ -1431,6 +1446,15 @@ export const useTransaction = (
           title: t("validation_error"),
           text: t("please_enter_mobile_number"),
           confirmButtonText: t("ok"),
+          showCancelButton: false,
+          onConfirm: () => {
+            // Open the sales header dropdown and focus mobile number field
+            setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+            setTimeout(() => {
+              mobileNumRef?.current?.focus();
+              mobileNumRef?.current?.select();
+            }, 100);
+          },
         });
         return false;
       }
@@ -1752,12 +1776,9 @@ export const useTransaction = (
     }
   };
   const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
-    debugger;
     const valid = await validate();
-    debugger;
     if (valid == true) {
       const tenderOk = await Tender()
-    debugger;
       if (!tenderOk) {
         return;
       }
@@ -1769,7 +1790,6 @@ export const useTransaction = (
         })
       );
       const master = await attachMaster(formState);
-    debugger;
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({
@@ -1797,7 +1817,14 @@ export const useTransaction = (
         });
         return false;
       }
-debugger;
+      // if(formState.isEdit === false){
+      //   if(formState.blnCreateCreditNoteAutomatically && formState.transaction.master.invTransactionMasterID > 0){
+      //     const voucherType = "SR"
+      //     const transactionMasterID = formState.invTransMasterId;
+      //     const voucherNumber = formState.transaction.master.voucherNumber;
+      //     const res = initializeFormElements(voucherType??"","", "","","",voucherNumber,transactionMasterID??0, false); 
+      //   }
+      // }
       const sanitizedMaster = sanitizeDataAdvanced({
           ...master,
           voucherType:
@@ -3232,6 +3259,16 @@ debugger;
           icon: "warning",
         });
       }
+      // if(applicationSettings.branchSettings?.createCreditNoteAutomaticallyOnSalesEdit && formState.transaction.master.voucherForm =="VAT" ){
+      //   dispatch(
+      //       formStateHandleFieldChange({
+      //         fields: {
+      //           isEdit: false,
+      //           blnCreateCreditNoteAutomatically: true
+      //         },
+      //       })
+      //     );
+      //   }
     } catch (error) {
       console.error("Error handling edit:", error);
     }
@@ -3451,6 +3488,68 @@ debugger;
     try {
       // const currentLedgerId = formState.row.ledgerID;
       // const currentMasterAccountId = formState.masterAccountID;
+      let LedgerIDSelected = formState.transaction.master.ledgerID;
+      let partyId = formState.transaction.master.ledgerID;
+      let costCenter = applicationSettings.accountsSettings.defaultCostCenterID;
+      let constCenterVisible = true;
+      let constCenterDisable = false;
+      let priceCategory = -2;
+      let priceCategoryDisabled = false;
+      if(formState.transaction.master.voucherForm =="BT"){
+        // cbParty.AccLedgerType = PolosysElements.AccLedgerCombo.LedgerType.Branch_Recv_Payable;
+      }
+      if(formState.formElements.pnlMasters.disabled === false){
+        partyId = -2;
+      }
+      let bankAccount = -2;
+      let wareHouse = -2;
+      let wareHouseDisabled = false;
+      // SET WAREHOUSE
+      if(formState.userConfig?.presetWarehouseId ?? 0 > 0){
+        wareHouse = formState.userConfig?.presetWarehouseId ?? 0;
+        wareHouseDisabled = true;
+      }else{
+        if(applicationSettings.mainSettings?.maintainBusinessType !== "Distribution"){
+          if(applicationSettings.accountsSettings?.allowSalesCounter && (formState.userConfig?.counterWiseWarehouseId ?? 0) > 0){
+             wareHouse = formState.userConfig?.counterWiseWarehouseId ?? 0;
+          }else{
+            wareHouse = applicationSettings.inventorySettings?.defaultWareHouse;
+          }
+        }
+      }
+      // REFRESH COMBO SECTION
+      let driver = -2;
+      let salesMan = 0;
+      let vehicle = -2;
+      if(formState?.userConfig?.presetCostenterId ?? 0 > 0 ){
+        costCenter = formState?.userConfig?.presetCostenterId ?? 0
+        constCenterDisable = true;
+      }
+      if(applicationSettings.accountsSettings?.maintainCostCenter){
+        constCenterVisible = true;
+      }
+      if(userSession.dbIdValue == "543140180640" || userSession.dbIdValue == "HANAPLASTICS"){
+        partyId = applicationSettings.accountsSettings.defaultCustomerLedgerID;
+      }
+      if(applicationSettings.accountsSettings.setDefaultCustomerInSales){
+        if(!formState.userConfig?.notSetDefaultCustomer){
+          partyId = applicationSettings.accountsSettings?.defaultCustomerLedgerID;
+        }
+      }
+      if(userSession.dbIdValue == "SAMAPLASTICS"){
+        if(formState?.userConfig?.presetCostenterId ?? 0 > 0 ){
+           priceCategory = formState?.userConfig?.presetCostenterId ?? 0;
+           priceCategoryDisabled = true;
+        }
+      }
+      let creditAccount = -2;
+      creditAccount = applicationSettings.inventorySettings.defaultSalesAcc;
+      if(applicationSettings.branchSettings?.defaultSIBTAcc >0 && formState.transaction.master.voucherForm =="BT"){
+        creditAccount = applicationSettings.branchSettings?.defaultSIBTAcc
+      }
+      if(LedgerIDSelected > 0){
+        partyId = LedgerIDSelected
+      }
 
       dispatch(
         formStateHandleFieldChangeKeysOnly({
@@ -3458,10 +3557,22 @@ debugger;
             formElements: {
               ledgerID: { reload: true },
               masterAccount: { reload: true },
+              cbCostCentre: { visible:constCenterVisible, disable: constCenterDisable },
+              priceCategory:{ disable: priceCategoryDisabled},
+              cbWarehouseID:{ disable: wareHouseDisabled}
             },
             transaction: {
               master: {
-                ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+                // ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+                ledgerID: partyId,
+                costCentreID: costCenter,
+                priceCategoryID: priceCategory,
+                creditAccount: creditAccount,   // This is currently not in UI, Check after set that value
+                bankAccount: bankAccount,  // This also need to check
+                fromWarehouseID: wareHouse,
+                vehicleID: vehicle,
+                driverID: driver,
+                employeeID: salesMan,
               },
             },
           },
@@ -3771,7 +3882,7 @@ debugger;
       unitID: outDetail.unitID,
       priceCategoryID: formState.transaction.master.priceCategoryID,
       ledgerID: formState.transaction.master.ledgerID,
-      vatPerc: outDetail.vatPerc ?? 0,
+      vatPerc: detail.vatPerc ?? 0,
       isCustomer_LSP_Visible: customer_LSPVisible,
       showRateBeforeTax: formState.userConfig?.showRateBeforeTax ?? false,
       userSalesPriceForTransfer: formState.userConfig?.UserSalesPriceForTransfer ?? false,
@@ -4415,7 +4526,7 @@ debugger;
             const unitID = units[nextUnitIndex].value;
             outDetail.unit = unitName;
             outDetail.unitID = unitID;
-            debugger;
+            
 
             handleChangeUnit(
               outDetail,
@@ -4467,7 +4578,7 @@ debugger;
               // const unitID = units[nextUnitIndex].value;
               // outDetail.unit = unitName;
               // outDetail.unitID = unitID;
-              // debugger;
+              // 
 
               // handleChangeUnit(
               //   outDetail,
@@ -4497,8 +4608,10 @@ debugger;
           break;
 
         case "Enter":
-          event.preventDefault();
-          event.stopPropagation();
+          if(columnName !=="serial" && columnName !=="imf"){  // Add another btn columns
+            event.preventDefault();
+            event.stopPropagation();
+          }
           let data = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
             if (!isNullOrUndefinedOrEmpty(value)) {
@@ -4923,6 +5036,7 @@ debugger;
                     visible: true,
                     data: rowData.productDescription,
                     rowIndex: rowIndex,
+                    productName: rowData.product,
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,
@@ -5617,7 +5731,7 @@ debugger;
 
   const handleDiscountSlab = async () => {
     if (
-      applicationSettings.inventorySettings.enableDiscountSlabOffer &&
+      applicationSettings.productsSettings.enableDiscountSlabOffer &&
       applicationSettings.accountsSettings.showTenderDialogInSales === false
     ) {
       try {
@@ -5827,7 +5941,7 @@ debugger;
     }
   };
   const applyTaxOnBillDiscount = async (billDiscount: number,) => {
-    debugger;
+    
     if (
       !applicationSettings.branchSettings.enableTaxOnBillDiscount
     ) {
@@ -5918,11 +6032,11 @@ debugger;
     ) : [];
     const dataBrands = voucherType != "LPO" ? await api.getWithCacheAsync(
       `${Urls.inv_transaction_base}${transactionType}/data/brands/`
-    ) : []; debugger;
+    ) : []; 
     const priceCategory = voucherType != "LPO" ? await api.getWithCacheAsync(
       `${Urls.inv_transaction_base}${transactionType}/Data/PriceCategories/`
     ) : [];
-    debugger;
+    
     const key = btoa(`${userSession.userId}-${transactionType}_LocalSettings`);
     const Utc = await getStorageString(key);
     let userConfig: UserConfig | undefined;
@@ -5946,7 +6060,7 @@ debugger;
     let _voucherPrefix = "";
  
 
-    debugger;
+    
     if (isInvoker) {
        _formState = (await loadTransVoucher(
         false,
@@ -6228,6 +6342,19 @@ debugger;
 
       _formState.transaction.master.priceCategoryID = priceCategory[0]?.id;
 
+      // Set WareHouse - Testing Needed
+      if(formState.userConfig?.presetWarehouseId ?? 0 > 0){
+        _formState.transaction.master.fromWarehouseID = formState.userConfig?.presetWarehouseId ?? 0;
+        _formState.formElements.cbWarehouse.disabled = true;
+      }else{
+        if(applicationSettings.mainSettings?.maintainBusinessType !== "Distribution"){
+          if(applicationSettings.accountsSettings?.allowSalesCounter && (formState.userConfig?.counterWiseWarehouseId ?? 0) > 0){
+             _formState.transaction.master.fromWarehouseID = formState.userConfig?.counterWiseWarehouseId ?? 0;
+          }else{
+            _formState.transaction.master.fromWarehouseID = applicationSettings.inventorySettings?.defaultWareHouse;
+          }
+        }
+      }
 
       // 4️⃣ Party assignment logic
       const g = userSession;
@@ -6288,6 +6415,7 @@ debugger;
 
 
       // 6️⃣ Checkbox defaults
+      _formState.userConfig!.showRateBeforeTax = applicationSettings?.productsSettings?.showRateBeforeTax ? true : _formState.userConfig?.showRateBeforeTax
       _formState.userConfig!.printOnSave = _formState.userConfig!.printOnSave ?? applicationSettings.inventorySettings.printInvAfterSave
 
       _formState.userConfig!.duplicationMessage = _formState.userConfig!.duplicationMessage ?? applicationSettings.inventorySettings.showProductDuplicationMessage
@@ -6432,7 +6560,7 @@ debugger;
     }
 
     if (
-      applicationSettings.inventorySettings?.enableDiscountSlabOffer &&
+      applicationSettings.productsSettings?.enableDiscountSlabOffer &&
       applicationSettings.accountsSettings?.showTenderDialogInSales === false
     ) {
       _formState.formElements = {
@@ -6603,7 +6731,7 @@ debugger;
     // if (_formState.formElements.cbDebitAccount ?? {})
     // }
 
-    // debugger;
+    // 
     //  
     // _formState = await loadLedgerData(_formState) as any;
     // _formState.isInitialLedger = true;

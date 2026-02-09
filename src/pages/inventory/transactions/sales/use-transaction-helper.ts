@@ -1780,8 +1780,8 @@ debugger;
       address4: m.address4,
 
       /** ---------------- Dates ---------------- */
-      // transactionDate: m.transactionDate,
-      transactionDate: new Date().toLocaleDateString(),
+      transactionDate: m.transactionDate,
+      // transactionDate: new Date().toLocaleDateString(),
       orderDate: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? m.refDate
         : m.orderDate,

@@ -6,7 +6,18 @@ const path = require("path");
 console.log("APP PATH:", process.cwd());
 
 app.whenReady().then(() => {
-  autoUpdater.checkForUpdatesAndNotify();
+  // autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
+
+  autoUpdater.on("update-available", () => {
+    log.info("Update available");
+  });
+
+  autoUpdater.on("update-downloaded", () => {
+    log.info("Update downloaded, restarting...");
+    autoUpdater.quitAndInstall();
+  });
+
 });
 
 // Allow renderer to read file:// assets when packaged.

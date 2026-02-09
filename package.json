@@ -21,17 +21,10 @@
       "target": "nsis",
       "publish": [
         {
-          "provider": "generic",
-          "url": "https://raw.githubusercontent.com/mahirpolosys/live-update/main/windows/production"
-        }
-      ]
-    },
-    "mac": {
-      "target": "dmg",
-      "publish": [
-        {
-          "provider": "generic",
-          "url": "https://raw.githubusercontent.com/mahirpolosys/live-update/main/mac/production"
+          "provider": "github",
+          "owner": "mahirpolosys",
+          "repo": "live-update",
+          "releaseType": "release"
         }
       ]
     }

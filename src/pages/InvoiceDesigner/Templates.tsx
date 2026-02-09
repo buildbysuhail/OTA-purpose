@@ -78,9 +78,9 @@ const Templates = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sortBy, setSortBy] = useState<"name" | "date" | "type">("name")
-  const [formType, setFormType] = useState("")
-  const [customerType, setCustomerType] = useState("")
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(  (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",)
+  const [formType, setFormType] = useState<string>(  (searchParams?.get("form_type")! as string) ?? "",)
+  const [customerType, setCustomerType] = useState<string>(  (searchParams?.get("customer_type")! as string) ?? "",)
   const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
   const setDefaultTemplate = async (id: any) => {
     try {
@@ -760,6 +760,7 @@ const Templates = () => {
               <ERPDataCombobox
                 id="Form Type"
                 labelDirection="horizontal"
+                value={formType}
                 field={{
                   id: "id",
                   getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
@@ -773,10 +774,11 @@ const Templates = () => {
 
               />
               <ERPDataCombobox
-                id="Customer Type"
+                id="Customer_Type"
                 labelDirection="horizontal"
+                value={customerType}
                 field={{
-                  id: "id",
+                  id: "Customer_Type",
                   valueKey: "id",
                   labelKey: "name",
                 }}

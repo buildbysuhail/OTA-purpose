@@ -1581,6 +1581,10 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.actualSalesPrice = detail.actualSalesPrice;
       // outputRow.wareHouseID = detail.warehouse;
       outputRow.grandTotal = outputRow.grandTotal ?? 0;
+      
+          outputRow.updateStdPurchasePrice = outputRow.updateStdPurchasePrice == true ? true : false
+          outputRow.updateStdPurchasePriceWithAvg = outputRow.updateStdPurchasePriceWithAvg == true ? true : false
+          outputRow.updateStdPurchasePriceWithCost = outputRow.updateStdPurchasePriceWithCost == true ? true : false
 
       const sanitizedOutputRow: TransactionDetail = sanitizeDataAdvanced(outputRow, initialTransactionDetailData);
 

@@ -1177,7 +1177,7 @@ export const sanitizeDataAdvanced = (
     if (data.hasOwnProperty(key)) {
       const value = data[key];
       const initialValue = initialState?.[key];
-      if (key == "mfgDate") {
+      if (key == "updateStdPurchasePrice") {
         debugger;
       }
       // Handle empty string to number conversion
@@ -1197,7 +1197,7 @@ export const sanitizeDataAdvanced = (
           (key.toLowerCase().includes("date") ||
               key.toLowerCase().includes("Date") ||
               key.toLowerCase().includes("finFrom") ||
-              key.toLowerCase().includes("finTo"))
+              key.toLowerCase().includes("finTo")) && !["updateStdPurchasePrice","updateStdPurchasePriceWithAvg","updateStdPurchasePriceWithCost","updateModifiedDate"].includes(key)
         ) {
          
           // Keep as-is or normalize to valid date
@@ -1209,7 +1209,7 @@ export const sanitizeDataAdvanced = (
             (key.includes("date") ||
               key.includes("Date") ||
               key.includes("finFrom") ||
-              key.includes("finTo")))
+              key.includes("finTo")) && !["updateStdPurchasePrice","updateStdPurchasePriceWithAvg","updateStdPurchasePriceWithCost","updateModifiedDate"].includes(key))
         ) {
           // Keep as-is or normalize to valid date
           sanitized[key] = value;
@@ -1227,7 +1227,7 @@ export const sanitizeDataAdvanced = (
           (key.toLowerCase().includes("date") ||
               key.toLowerCase().includes("Date") ||
               key.toLowerCase().includes("finFrom") ||
-              key.toLowerCase().includes("finTo"))
+              key.toLowerCase().includes("finTo")) && !["updateStdPurchasePrice","updateStdPurchasePriceWithAvg","updateStdPurchasePriceWithCost","updateModifiedDate"].includes(key)
         ) {
          
           // Keep as-is or normalize to valid date

@@ -35,6 +35,8 @@ jobs:
         run: |
           npm run build
           npx electron-builder --win --publish never
+          env:
+            NODE_OPTIONS: "--max-old-space-size=8192"
 
       # 5️⃣ Clone CDN repository
       - name: Clone CDN repository

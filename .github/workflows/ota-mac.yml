@@ -1,0 +1,35 @@
+name: macOS OTA (Electron)
+
+on:
+  push:
+    tags:
+      - "mac-ota-*"
+
+jobs:
+  mac-ota:
+    runs-on: macos-latest
+
+    steps:
+      # 1️⃣ Checkout source
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      # 4️⃣ Build & Publish macOS OTA
+      - name: Build macOS app
+        env:
+          GH_TOKEN: ${{ secrets.CDN_GITHUB_TOKEN }}
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: |
+          npm run build
+          npx electron-builder --mac --publish always

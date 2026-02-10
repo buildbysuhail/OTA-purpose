@@ -27,6 +27,17 @@
           "releaseType": "release"
         }
       ]
+    },
+    "mac": {
+      "target": ["dmg"],
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "mahirpolosys",
+          "repo": "live-update",
+          "releaseType": "release"
+        }
+      ]
     }
   },
   "scripts": {

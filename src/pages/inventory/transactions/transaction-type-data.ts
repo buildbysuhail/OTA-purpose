@@ -109,7 +109,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   voucherForm: "",
   orderNumber: 0,
   orderDate: new Date().toISOString(),
-  quotationNumber: "",
+  quotationNumber: 0,
   quotationDate: new Date().toISOString(),
   dueDate: new Date().toISOString(),
   deliveryNoteNumber: "",

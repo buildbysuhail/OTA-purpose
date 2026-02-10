@@ -1448,7 +1448,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       outputRow.additionalExpense = detail.additionalExpense;
 
       // VAT handling
-      if (clientSession.isAppGlobal) {
+      if (!clientSession.isAppGlobal) {
 
         outputRow.vatPercentage = detail.vatPerc;
         outputRow.totalVatAmount = detail.vatAmount;

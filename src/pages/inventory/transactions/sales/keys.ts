@@ -70,3 +70,6 @@
 //posted_transaction
 // Mark as shown?
 //   title: t("Confirmation"),
+//system_date_does_not_match_transaction_date. Do_you_want_to_update?
+//credit_note_sales_return
+//are_you_sure_want_to_create_credit_note_automatically

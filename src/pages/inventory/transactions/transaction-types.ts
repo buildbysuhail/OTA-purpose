@@ -140,7 +140,7 @@ export interface TransactionMaster {
   orderNumber?: number;
   gRNMasterID: number;
   orderDate: string;
-  quotationNumber: string;
+  quotationNumber: number;
   quotationDate: string;
   dueDate: string;
   deliveryNoteNumber: string;

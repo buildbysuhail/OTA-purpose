@@ -373,7 +373,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
       const onDraftModeChange = async (checked: boolean) => {
       const isDraft = checked;
       const vrForm = formState.transaction.master.voucherForm;
-      const vrType = formState.transaction.master.voucherType;
+      let vrType = formState.transaction.master.voucherType;
       const vrPrefix = formState.transaction.master.voucherPrefix;
       let nextVrNumber: any = null;
       let nextActiveVrNumber: any = null;
@@ -381,6 +381,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
       let btnEditVisible = true;
       let btnDeleteVisible = true;
       if(isDraft){
+        vrType = "SID"
         btnEditVisible = true;
         btnDeleteVisible = true;
         if (!hasRight(formState.formCode, UserAction.Edit)) {
@@ -389,9 +390,10 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
         if (!hasRight(formState.formCode, UserAction.Delete)) {
           btnDeleteVisible = false;
         }
-        nextActiveVrNumber = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
-              `formType=${formState.initialFormType}&voucherType=${"SID"}&voucherPrefix=${""}&isVoucherPrefix=${false}`) ;
+        nextActiveVrNumber = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/GetNextActiveVoucherNumber/`,
+              `formType=${formState.initialFormType}&voucherType=${vrType}&voucherPrefix=${""}&isVoucherPrefix=${false}`) ;
       }else{
+        vrType = "SI"
         btnEditVisible = false;
         btnDeleteVisible = false;
         if(formState.transaction.master.draftTransactionMasterID > 0){
@@ -405,7 +407,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
         }
         nextVrNumber = await getNextVoucherNumber(vrForm,vrType,vrPrefix,false);
       }
-      const nextNo = isDraft ? nextActiveVrNumber.voucherNumber : nextVrNumber.voucherNumber; 
+      const nextNo = isDraft ? nextActiveVrNumber : nextVrNumber.voucherNumber; 
       let outResult : DeepPartial<TransactionFormState> = {
         transaction: {
           master: {

@@ -4540,6 +4540,65 @@ if (
             }
           }
           break;
+          // Increase qty
+        case "+":
+          if (columnName === "barCode") {
+            event.preventDefault();
+            const data: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+            if(formState.userConfig?.autoIncrementQty){
+              if(rowIndex > 0){
+                let prevQuantity = data.qty;
+                let newQuantity = prevQuantity + 1;
+                const outRow = {
+                  qty : newQuantity
+                }
+                let sd = await calculateRowAmount(
+                  data,
+                  columnName,
+                  {
+                    result: {
+                      transaction: {
+                        details: [outRow],
+                      },
+                    },
+                    formStateHandleFieldChangeKeysOnly:
+                      formStateHandleFieldChangeKeysOnly,
+                  }, false, rowIndex
+                );
+                break;
+              }
+            }
+          }
+          // Decrease qty
+          case "-":
+          if (columnName === "barCode") {
+            event.preventDefault();
+            const data: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+            if(formState.userConfig?.autoIncrementQty){
+              if(rowIndex > 0){
+                let prevQuantity = data.qty;
+                if (prevQuantity <= 1) break;
+                let newQuantity = prevQuantity - 1;
+                const outRow = {
+                  qty : newQuantity
+                }
+                let sd = await calculateRowAmount(
+                  data,
+                  columnName,
+                  {
+                    result: {
+                      transaction: {
+                        details: [outRow],
+                      },
+                    },
+                    formStateHandleFieldChangeKeysOnly:
+                      formStateHandleFieldChangeKeysOnly,
+                  }, false, rowIndex
+                );
+                break;
+              }
+            }
+          }
         // case "M":
         // case "m":
         //   if (isCtrlPressed) {
@@ -4692,7 +4751,7 @@ if (
           break;
 
         case "Enter":
-          if (columnName !== "serial" && columnName !== "imf") {  // Add another btn columns
+          if(columnName !=="serial" && columnName !=="imf" && columnName!=="actionCol") {  // Add another btn columns
             event.preventDefault();
             event.stopPropagation();
           }

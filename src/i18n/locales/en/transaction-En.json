@@ -1251,6 +1251,8 @@
   "voucher_number_cannot_be_empty":"Voucher number cannot be empty!",
   "draft":"Draft",
   "serials":"Serials",
-  "skip_and_continue":"Skip and Continue"
+  "skip_and_continue":"Skip and Continue",
+  "duplicate_serial":"Duplicate Serial",
+  "serial_exist_in_row":"Serial exist in row :"
 
 }

@@ -1248,7 +1248,9 @@
   "voucher_number_cannot_be_empty": "لا يمكن أن يكون رقم السند فارغاً!",
   "draft": "مسودة",
   "serials":"مسلسلات",
-  "skip_and_continue":"تخطي ومتابعة"
+  "skip_and_continue":"تخطي ومتابعة",
+  "duplicate_serial": "رقم تسلسلي مكرر",
+  "serial_exist_in_row": "الرقم التسلسلي موجود في الصف:"
 
 }
 

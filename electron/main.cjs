@@ -63,7 +63,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  const buildRoot = path.join(app.getAppPath(), "build");
+  const buildRoot = path.join(app.getAppPath(), "dist");
 
   const ses = session.defaultSession;
   ses.webRequest.onHeadersReceived((details, callback) => {
@@ -77,23 +77,43 @@ app.whenReady().then(() => {
     callback({ responseHeaders: headers });
   });
 
+  // protocol.registerFileProtocol("app", (request, callback) => {
+  //   const url = new URL(request.url);
+  //   let pathname = decodeURIComponent(url.pathname || "/");
+  //   if (pathname === "/") {
+  //     pathname = "/index.html";
+  //   }
+
+  //   const resolvedPath = path.normalize(path.join(buildRoot, pathname));
+  //   const isInsideBuild = resolvedPath.startsWith(buildRoot + path.sep);
+  //   let filePath = isInsideBuild ? resolvedPath : path.join(buildRoot, "index.html");
+
+  //   if (!fs.existsSync(filePath)) {
+  //     filePath = path.join(buildRoot, "index.html");
+  //   }
+
+  //   callback({ path: filePath });
+  // });
+  app.whenReady().then(() => {
+  const distPath = path.join(app.getAppPath(), "dist");
+
   protocol.registerFileProtocol("app", (request, callback) => {
-    const url = new URL(request.url);
-    let pathname = decodeURIComponent(url.pathname || "/");
-    if (pathname === "/") {
-      pathname = "/index.html";
+    let urlPath = request.url.replace("app://./", "");
+    if (!urlPath || urlPath === "/") {
+      urlPath = "index.html";
     }
 
-    const resolvedPath = path.normalize(path.join(buildRoot, pathname));
-    const isInsideBuild = resolvedPath.startsWith(buildRoot + path.sep);
-    let filePath = isInsideBuild ? resolvedPath : path.join(buildRoot, "index.html");
+    const filePath = path.join(distPath, urlPath);
 
-    if (!fs.existsSync(filePath)) {
-      filePath = path.join(buildRoot, "index.html");
-    }
-
-    callback({ path: filePath });
+    callback({
+      path: fs.existsSync(filePath)
+        ? filePath
+        : path.join(distPath, "index.html"),
+    });
   });
+
+  createWindow();
+});
 
   createWindow();
 });

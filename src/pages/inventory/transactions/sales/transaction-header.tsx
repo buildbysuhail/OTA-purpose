@@ -532,6 +532,86 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
           style={headerStyle}
           className={`fixed top-[110px] z-[39] dark:bg-dark-bg ${formState.draftMode ? "bg-sky-200" : "bg-white"} shadow-md transition-all duration-300`}
         >
+          {/* {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
+          <ERPCheckbox
+            id="creditAccount"
+            label={t("credit_account")}
+            checked={formState.creditAccount}
+            onChange={(e) => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { creditAccount: e.target.checked },
+                })
+              );
+            }}
+          />
+          )} */}
+
+          {/* {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
+          <ERPDataCombobox
+            value={formState.creditAccount}
+             className="w-[950px]"
+            field={{
+              id: "creditAccountID",
+              required: true,
+              //  getListUrl: "",
+              //  valueKey: "",
+              //  labelKey: "",
+            }}
+            onChangeData={(data: any) => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: {creditAccount: data.ledgerID },
+                })
+              );
+            } }
+            label={t("credit_account")} id={""}
+            />
+            )} */}
+
+            {/* {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+          <ERPCheckbox
+            id="debitAccount"
+            label={t("debit_account")}
+            checked={formState.debitAccount}
+            onChange={(e) => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { debitAccount: e.target.checked },
+                })
+              );
+            }}
+          />
+          )}  */}
+
+
+          {/* {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+          <ERPDataCombobox
+            value={formState.debitAccount}
+            className="w-[800px]"
+            field={{
+              id: "debitAccountID",
+              required: true,
+              //  getListUrl: "",
+              //  valueKey: "",
+              //  labelKey: "",
+            }}
+            onChangeData={(data: any) => {
+              dispatch(
+                formStateHandleFieldChange({
+                  fields: { debitAccount: data.ledgerID },
+                })
+              );
+            } }
+            label={t("debit_account")} id={""}
+            
+            />
+            )} */}
+
+
+
+
+
           <div ref={containerRef} className="flex items-end gap-1 relative px-2 !pb-3">
             <PartyLedger
               ref={ledgerIdRef}
@@ -631,6 +711,142 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
                 {/* {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote && ( */}
+                 {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+                  <ERPInput
+                  id="SalesInvoice"
+                  label={t("Sales Invoice #")}
+                  placeholder={t("enter_Sales_Invoice_#")}
+                  className="w-[100px]"
+                  />
+                   
+                )} 
+
+                {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[100px]"
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+                  <ERPInput
+                    id="DRNO"
+                    label={t("DR_NO")}
+                    placeholder={t("enter_DR_NO")}
+                    className="w-[100px]"
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+                  <ERPButton
+                    title={t("...")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
+                  />
+                )}
+
+
+
+
+                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
+                  <ERPInput
+                    id="SQ"
+                    label={t("SQ #")}
+                    placeholder={t("enter_SQ_#")}
+                    className="w-[80px]"
+                    
+                  />
+                )}
+
+                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[100px]"
+                  />
+                )}
+
+                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
+                  <ERPButton
+                    title={t("Load")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg w-10 h-6"
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                  <ERPInput
+                    id="MQuotNo"
+                    label={t("M Quot.No#")}
+                    placeholder={t("enter_MQuot_No_#")}
+                    className="w-[80px]"
+                    
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                  <ERPButton
+                    title={t("...")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
+                  />
+                )}
+
+                 {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                  <ERPInput
+                    id="RFQ"
+                    label={t("RFQ #")}
+                    placeholder={t("enter_RFQ_#")}
+                    className="w-[80px]"
+                    
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                  <ERPButton
+                    title={t("Load")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg w-10 h-6"
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
+                  <ERPInput
+                    id="Ouot_No"
+                    label={t("Ouot_No")}
+                    placeholder={t("enter_Ouot_No")}
+                    className="w-[80px]"
+                    
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[150px]"
+                  />
+                )}
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
+                  <ERPButton
+                    title={t("...")}
+                    variant="secondary"
+                    disabled={formState.transactionLoading}
+                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
+                  />
+                )}
+
+
+
                 <Project
                   dispatch={dispatch}
                   formState={formState}
@@ -706,6 +922,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   }
                   disabled={formState.formElements.pnlMasters?.disabled}
                 /> */}
+                {(formState.transaction.master.voucherType !== VoucherType.SalesReturn &&
                 <ERPInput
                   localInputBox={formState?.userConfig?.inputBoxStyle}
                   disableEnterNavigation
@@ -729,6 +946,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   }
                   disabled={formState.formElements.pnlMasters?.disabled}
                 />
+                )}
 
                 {([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any) &&
                   <ERPInput
@@ -929,7 +1147,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     onClick={handleWStockList}
                   />
                 )}
-                {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
+                {([VoucherType.SalesInvoice,VoucherType.GoodsDeliveryNote, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
                 <ManualInvNo
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     formState={formState}

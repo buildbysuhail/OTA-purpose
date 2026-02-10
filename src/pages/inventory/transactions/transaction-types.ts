@@ -770,6 +770,8 @@ export interface TransactionFormState {
   itemPopup?: { isOpen?: boolean, index?: number }
   taxBreakdown?: { name: string, amount: number }[];
   billDiscountPerc?: number;
+  creditAccount?: boolean;
+  debitAccount?: boolean;
 
   // einvoiceLabel?: string;
   // eWBLabel?: string;

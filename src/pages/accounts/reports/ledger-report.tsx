@@ -26,7 +26,7 @@ const api = new APIClient();
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
     const popupData = useSelector((state: RootState) => state?.PopupData);
-  const [data, setData] = useState<any[]>([]);
+  const [selectedRowData, setSelectedRowData] = useState<any[]>([]);
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(LedgerReportFilterInitialState);
@@ -352,7 +352,13 @@ const LedgerReport = () => {
       data: { data: dataRef.current, filter: filter },
     })
   };
-  const { printStatement, printCB } = useReportPrint();
+      const handleRowClick = async (event: any) => {
+      try {
+        setSelectedRowData(event.data);
+      } catch (error) { }
+    };
+
+  const { printStatement } = useReportPrint();
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -428,6 +434,7 @@ const LedgerReport = () => {
                     isTransactionScreen: true,
                     drillDownCells: "vchNo,",
                   }}
+                  onRowClick={handleRowClick}
                 ></ErpDevGrid>
               </div>
             </div>

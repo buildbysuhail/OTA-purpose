@@ -71,15 +71,8 @@ export const useReportPrint = () => {
       await handleDirectPrint({orientation,data});
     };
 
-    const printCB = async (ledger_ID:number) => {
-      debugger;
-      const api = new APIClient();
-      const rpt = await api.postAsync(Urls.get_customer_balance,{LedgerID: ledger_ID, AsOnDate: moment().local().toDate() })
-      const template = await getOrFetchTemplate("CBR","","");
-      await directPrint({ template: template.template, data: rpt });
-    };
+
     return {
      printStatement,
-     printCB
     };
   };

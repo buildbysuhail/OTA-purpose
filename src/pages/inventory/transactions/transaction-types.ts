@@ -772,7 +772,7 @@ export interface TransactionFormState {
   billDiscountPerc?: number;
   creditAccount?: boolean;
   debitAccount?: boolean;
-
+  resetSearch?: string  // for Clear the inputs in filed(sf)
   // einvoiceLabel?: string;
   // eWBLabel?: string;
 

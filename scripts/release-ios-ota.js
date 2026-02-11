@@ -1,33 +1,45 @@
-#!/usr/bin/env node
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { execSync } from "child_process";
+import fs from "fs";
+import readline from "readline";
 
-const PLATFORM = 'ios';
-const TAG_PREFIX = 'ios-ota';
+const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+const version = pkg.version;
+const prefix = `ios-ota-${version}-ota.`;
 
-const BASE_VERSION = JSON.parse(
-  readFileSync('package.json', 'utf-8')
-).version;
+let existingTags = execSync("git tag", { encoding: "utf-8" })
+  .split("\n")
+  .filter(t => t.startsWith(prefix));
 
-execSync('git fetch --tags');
+let nextNumber = 1;
 
-const tags = execSync(
-  `git tag -l "${TAG_PREFIX}-${BASE_VERSION}-ota.*"`,
-  { encoding: 'utf-8' }
-)
-  .split('\n')
-  .filter(Boolean);
-
-let otaNum = 1;
-if (tags.length) {
-  otaNum =
-    Math.max(...tags.map(t => Number(t.split('.').pop()))) + 1;
+if (existingTags.length > 0) {
+  const numbers = existingTags.map(t => parseInt(t.split(".").pop()));
+  nextNumber = Math.max(...numbers) + 1;
 }
 
-const NEW_TAG = `${TAG_PREFIX}-${BASE_VERSION}-ota.${otaNum}`;
+const oldTag = existingTags.length > 0 ? existingTags.sort().pop() : "none";
+const newTag = `${prefix}${nextNumber}`;
 
-console.log(`Creating iOS OTA tag: ${NEW_TAG}`);
-execSync(`git tag ${NEW_TAG}`);
-execSync(`git push origin ${NEW_TAG}`);
+console.log("===================================");
+console.log(" IOS OTA RELEASE");
+console.log("-----------------------------------");
+console.log(` Base Version: ${version}`);
+console.log(` Old Tag: ${oldTag}`);
+console.log(` New Tag: ${newTag}`);
+console.log("===================================");
 
-console.log('✅ iOS OTA tag pushed');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+rl.question(`Create and push tag '${newTag}'? (y/N): `, answer => {
+  if (answer.toLowerCase() === "y") {
+    execSync(`git tag ${newTag}`);
+    execSync(`git push origin ${newTag}`);
+    console.log("✅ iOS OTA tag pushed");
+  } else {
+    console.log("❌ Cancelled");
+  }
+  rl.close();
+});

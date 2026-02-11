@@ -2863,6 +2863,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         //     }
         //   }
         // }
+        debugger;
         if (isSI && applicationSettings.productsSettings.maintainSchemes) {
           let schemeApplied = false;
 
@@ -2878,6 +2879,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             let loadSchemePrice = true;
 
             // Assign scheme details if exists
+            if (product.isCheckQtyLimit) {
+              outDetail.schemeQtyLimit = product.schemeQtyLimit;
+              outDetail.schemeFreeQty = product.schemeFreeQty;
+              outDetail.isSchemeProcessed = "N";
+            }
+            else{
             if (product.schemeID > 0) {
               outDetail.schemeQtyLimit = product.schemeQtyLimit;
               outDetail.schemeFreeQty = product.schemeFreeQty;
@@ -2890,6 +2897,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               outDetail.schemeType = "";
               outDetail.schemeID = 0;
             }
+          }
 
             // Check special scheme quantity limits
             if (

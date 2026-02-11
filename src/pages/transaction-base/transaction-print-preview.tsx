@@ -118,7 +118,6 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
             }}
           >
             <div className={`relative w-full ${isAutoHeight ? 'flex flex-col' : 'h-full'}`}>
-
               <SharedTemplatePreview
                 template={stableTemplateProps?.template}
                 printData={stableTemplateProps?.printData}

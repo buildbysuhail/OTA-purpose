@@ -257,8 +257,6 @@ const EditableCell: React.FC<EditableCellProps> = React.memo(
   }) => {
     const cbRef = useRef<ERPSimpleComboboxRef>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    console.log(appState);
-console.log(`safvan${column.dataField}`);
 
     const editCellComboBox: inputBox = formState?.userConfig?.inputBoxStyle;
     const gridBorderCol = formState?.userConfig?.gridBorderCol;
@@ -363,8 +361,6 @@ console.log(`safvan${column.dataField}`);
       ) => {
         let final = value;
         if (decimalPoint) {
-          console.log(decimalPoint);
-
           final =
             column.decimalPoint && value !== ""
               ? (() => {
@@ -407,9 +403,6 @@ console.log(`safvan${column.dataField}`);
         return;
       }
       setLocalValue(inputValue);
-      console.log("inputValue");
-
-      console.log(inputValue);
 
       debounceCellChange(
         inputValue as any,
@@ -996,8 +989,6 @@ const VirtualRow = React.memo(
               const isLastColumn = colIndex === columns.length - 1;
               const isFixed = isFirstColumn || isLastColumn;
               const showBorder = formState.userConfig?.showColumnBorder ?? true;
-              console.log("showBorder:",showBorder);
-              
               let options: any[] = [];
               if (fieldKey === "unit") {
                 options =
@@ -1489,13 +1480,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     ref: Ref<any>
   ) {
     const dispatch = useAppDispatch();
-    console.log("zIndexController:",zIndexController);
-    console.log("gridBorderColor:",gridBorderColor);
-
-    console.log("dgrowHeight:", rowHeight);
-    
-    
-    
     const formState = useAppSelector(
       (state: RootState) => state.InventoryTransaction
     );
@@ -1559,7 +1543,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const [hoverFieldHeader, setHoverFieldHeader] = useState<{column: string, hovered: boolean}>({column: '', hovered: false})
 
     const totalGridWidth = useMemo(() => {
-      console.log(columnWidths);
 
       return columnWidths.reduce(
         (sum, widthItems) => sum + widthItems?.width,
@@ -1934,10 +1917,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const filename = `${gridId}_export_${timestamp}.xlsx`;
 
         saveAs(blob, filename);
-
-        console.log("Excel export completed successfully!");
       } catch (error) {
-        console.error("Error exporting to Excel:", error);
       }
     };
     const focusCell = useCallback(
@@ -2118,8 +2098,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       formState.currentCell?.rowIndex ?? -1
     );
     useEffect(() => {
-      console.log("focusCell");
-
       setCurrentCell(formState.currentCell);
     }, [formState.currentCell]);
 
@@ -2156,7 +2134,6 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const scrollToCenter = useCallback(
       (rowIndex: number, column?: string, duration: number = 300) => {
         if (rowIndex < 0 || rowIndex >= formState.transaction.details.length) {
-          console.warn("Invalid row index:", rowIndex);
           return false;
         }
 
@@ -3172,11 +3149,8 @@ const hidColumns: string[] = [
                     column.dataType === "number" && value !== ""
                       ? (() => {
                           const num = parseFloat(value as any);
-                          console.log("Raw value:", value);
-                          console.log("Parsed num:", num);
 
                           if (isNaN(num)) {
-                            console.log("Result: empty string (NaN case)");
                             return "";
                           }
 
@@ -3185,13 +3159,11 @@ const hidColumns: string[] = [
                             false,
                             applicationSettings.mainSettings.decimalPoints ?? 2
                           );
-                          console.log("Rounded:", rounded);
 
                           return rounded;
                         })()
                       : value;
 
-                  console.log("Final:", final);
                   return (
                     <div
                       key={`footer-${column.dataField}`}

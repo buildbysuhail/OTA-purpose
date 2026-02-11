@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 // import { ColumnModel, TransactionDetail, CurrentCell } from "../../../pages/inventory/transactions/transaction-types";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
-import ERPProductSearch from "../erp-searchbox";
+import ERPProductSearchForGrid from "../erp-searchbox-for-grid";
 import ERPDataCombobox from "../erp-data-combobox";
 import { Info, Trash2 } from "lucide-react";
 import moment from "moment";
@@ -349,8 +349,6 @@ const GridCell: React.FC<GridCellProps> = React.memo(({
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   if (item.productID > 0 && fieldKey == "brand") {
-  console.log("SAFVAN:",cellValue);
-  console.log("SAFVAN:",fieldKey);
   }
   
 
@@ -576,7 +574,7 @@ const cellContentStyle = {...getCellContentStyle(column)}
       return (
         // <div className="erp-product-search-wrapper" style={{ border: "1px solid rgba(200, 200, 200, 1)" }}>
 
-        <ERPProductSearch
+        <ERPProductSearchForGrid
           showInputSymbol={true}
         //   customStyle={formState.userConfig?.inputBoxStyle}
           // customStyle={merge( {},  formState.userConfig?.inputBoxStyle, initialUserConfig.inputBoxStyle, { inputSize: "customize", fontColor: "0, 0, 0", borderColor: "200, 200, 200", showBorder: !isMobile_, rowHeight: "22px" })}

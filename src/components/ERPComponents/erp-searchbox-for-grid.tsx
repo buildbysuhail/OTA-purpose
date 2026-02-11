@@ -1,0 +1,1883 @@
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  forwardRef,
+  Fragment,
+} from "react";
+import { createPortal } from "react-dom";
+import { APIClient } from "../../helpers/api-client";
+import debounce from "lodash/debounce";
+import { DataGrid } from "devextreme-react";
+import {
+  Column,
+  KeyboardNavigation,
+  Paging,
+  Scrolling,
+  Selection,
+} from "devextreme-react/cjs/data-grid";
+import { useTranslation } from "react-i18next";
+import CustomStore from "devextreme/data/custom_store";
+import ERPInput from "../../components/ERPComponents/erp-input";
+import { isNullOrUndefinedOrEmpty } from "../../utilities/Utils";
+import ERPCheckbox from "./erp-checkbox";
+import ERPModal from "./erp-modal";
+import ProductModalGrid from "./erp-searchbox-modalContent";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import Urls from "../../redux/urls";
+import { inputBox } from "../../redux/slices/app/types";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { DevGridColumn } from "../types/dev-grid-column";
+import GridPreferenceChooser from "../../components/ERPComponents/erp-gridpreference";
+import usePreferenceData from "../../utilities/hooks/usePreference";
+import { SortDescriptor } from "devextreme/data";
+import { formStateHandleFieldChangeKeysOnly } from "../../pages/inventory/transactions/reducer";
+import { TransactionDetail } from "../../pages/inventory/transactions/transaction-types";
+import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
+interface InputProps {
+  id?: string;
+  inputId?: string;
+  label?: string;
+  productGridId?: string;
+  batchGridId?: string;
+  productDataUrl?: string;
+  closeIfNodata?: boolean;
+  batchDataUrl?: string;
+  keyId?: string;
+  onProductSelected?: (data: any) => void;
+  onRowSelected?: (data: any, rowValue?: string) => void;
+  onEnterKeyDown?: () => void;
+  onChange?: (e: any) => void;
+  onKeyDown?: (value: any, e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  className?: string;
+  checkboxLabel?: string;
+  value?: string;
+  clearAfterSelection?: boolean;
+  showCheckBox?: boolean;
+  searchType?: "grid" | "normal" | "modal";
+  placeholder?: string;
+  labelDirection?: "horizontal" | "vertical";
+  contextClassNametwo?: string;
+  noLabel?: boolean;
+  useInSearch?: boolean;
+  useCodeSearch?: boolean;
+  searchByCodeAndName?: boolean;
+  advancedProductSearching?: boolean;
+  searchKey?: string;
+  rowIndex?: number;
+  height?: number;
+  isMobileInput?:boolean;
+  gridHeightAdjust?:boolean;
+  textAlign?: "left" | "right" | "center";
+  onNextCellFind?: (
+    rowIndex: number,
+    column: string,
+    excludedColumns?: (keyof TransactionDetail)[]
+  ) => void;
+  customStyle?: inputBox;
+  appState?: any;
+  showInputSymbol?:boolean;
+  disabled?: boolean;
+  zIndexController?: number;
+  isMainPurchaseGrid?: boolean;  // This is for managing warehouseId passing in main purchase grid bachGrid dataUrl
+}
+
+interface LoadResult {
+  data: any[];
+  totalCount: number;
+  summary?: any;
+  groupCount?: number;
+}
+type FilterOperation =
+  | "="
+  | "<>"
+  | ">"
+  | ">="
+  | "<"
+  | "<="
+  | "startswith"
+  | "endswith"
+  | "contains"
+  | "notcontains"
+  | "between";
+const api = new APIClient();
+
+const createStore = async (
+  value: string,
+  payload: any,
+  productDataUrl?: string,
+  initialSort: SortDescriptor<any>[] = [],
+  initialFilters?: Array<{
+    field: string;
+    value: any;
+    operation: FilterOperation;
+  }>
+) => {
+  let isInitialLoad = true; // Track initial load
+  return new CustomStore({
+    key: "productID",
+    async load(loadOptions: any) {
+      if (
+        !loadOptions.sort ||
+        (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
+      ) {
+        loadOptions.sort = initialSort;
+      }
+      // if (
+      //     initialFilters &&
+      //     initialFilters.length > 0 &&
+      //     isInitialLoad &&
+      //     !loadOptions.filter
+      //   ) {
+
+      //   }
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
+      const queryString = paramNames
+        .filter(
+          (paramName) =>
+            loadOptions[paramName] !== undefined &&
+            loadOptions[paramName] !== null &&
+            loadOptions[paramName] !== ""
+        )
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
+        .join("&");
+
+      try {
+        const url = productDataUrl || "";
+        const response = await api.postAsync(
+          queryString && queryString !== ""
+            ? `${url}?${queryString}`
+            : `${url}?skip=0`,
+          payload
+        );
+        const result = response;
+        return result !== undefined && result !== null
+          ? {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+          : {
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
+      } catch (err) {
+        throw new Error("Data Loading Error");
+      }
+    },
+  });
+};
+
+const createStoreWithCache = async (
+  value: string,
+  payload: any,
+  productDataUrl?: string,
+  initialSort: SortDescriptor<any>[] = [],
+  closeIfNodata?: boolean
+) => {
+  // Shared Promise: concurrent load() calls with the SAME params await the same API request.
+  // Different params (pagination/scroll) make fresh API calls.
+  let fetchPromise: Promise<any> | null = null;
+  let cachedQueryKey: string | null = null;
+  const api = new APIClient();
+
+  return new CustomStore({
+    key: "productID",
+    async load(loadOptions: any) {
+      if (
+        !loadOptions.sort ||
+        (Array.isArray(loadOptions.sort) && loadOptions.sort.length === 0)
+      ) {
+        loadOptions.sort = initialSort;
+      }
+
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
+      const queryString = paramNames
+        .filter(
+          (paramName) =>
+            loadOptions[paramName] !== undefined &&
+            loadOptions[paramName] !== null &&
+            loadOptions[paramName] !== ""
+        )
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
+        .join("&");
+
+      // Only reuse cached promise if the query params match (concurrent init calls).
+      // Different skip/take (pagination/virtual scroll) must make fresh API calls.
+      if (fetchPromise && cachedQueryKey === queryString) {
+        const cachedResult = await fetchPromise;
+        return cachedResult !== undefined && cachedResult !== null
+          ? { data: cachedResult.data, totalCount: cachedResult.totalCount }
+          : { data: [], totalCount: 0 };
+      }
+
+      const url = productDataUrl || "";
+      cachedQueryKey = queryString;
+      fetchPromise = api.postAsync(
+        queryString && queryString !== ""
+          ? `${url}?${queryString}`
+          : `${url}?skip=0`,
+        payload
+      );
+
+      try {
+        const result = await fetchPromise;
+        return result !== undefined && result !== null
+          ? { data: result.data, totalCount: result.totalCount }
+          : { data: [], totalCount: 0 };
+      } catch (err) {
+        fetchPromise = null;
+        cachedQueryKey = null;
+        throw new Error("Data Loading Error");
+      }
+    },
+  });
+};
+
+const createBatchStore = async (productID: string, warehouseId: number, batchDataUrl?: string) => {
+  
+  return new CustomStore({
+    key: "productBatchID",
+    async load(loadOptions: any) {
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
+      const queryString = paramNames
+        .filter(
+          (paramName) =>
+            loadOptions[paramName] !== undefined &&
+            loadOptions[paramName] !== null &&
+            loadOptions[paramName] !== ""
+        )
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
+        .join("&");
+
+      try {
+        const url = `${batchDataUrl}${productID}/${warehouseId??1}` || "";
+        const response = await api.getAsync(
+          queryString && queryString !== ""
+            ? `${url}?${queryString}`
+            : `${url}?skip=0`
+        );
+        const result = response;
+        return result !== undefined && result !== null
+          ? {
+              data: result.data,
+              totalCount: result.totalCount,
+            }
+          : {
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
+      } catch (err) {
+        throw new Error("Batch Data Loading Error");
+      }
+    },
+  });
+};
+
+const createBatchStoreWithCache = async (
+  productID: string,
+  warehouseId: number,
+  batchDataUrl?: string,
+  isMainPurchaseGrid?: boolean,
+) => {
+  // Shared Promise: concurrent load() calls with the SAME params await the same API request.
+  // Different params (pagination/scroll) make fresh API calls.
+  let fetchPromise: Promise<any> | null = null;
+  let cachedQueryKey: string | null = null;
+  const api = new APIClient();
+
+  return new CustomStore({
+    key: isMainPurchaseGrid ? "productBatchID" : "guid",
+    async load(loadOptions: any) {
+      // Handling the issue in special scheme settings searchbox batch-grid
+      let filteredSort = loadOptions.sort;
+      if (Array.isArray(loadOptions.sort)) {
+        filteredSort = loadOptions.sort.filter(
+          (s: any) => s.selector !== "guid"
+        );
+        if (filteredSort.length === 0) {
+          filteredSort = [{selector:"productBatchID", desc:false}];
+        }
+      }
+      const modifiedLoadOptions = { ...loadOptions, sort: filteredSort };
+      const paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"];
+      const queryString = paramNames
+        .filter(
+          (paramName) =>
+            modifiedLoadOptions[paramName] !== undefined &&
+            modifiedLoadOptions[paramName] !== null &&
+            modifiedLoadOptions[paramName] !== ""
+        )
+        .map((paramName) => `${paramName}=${JSON.stringify(modifiedLoadOptions[paramName])}`)
+        .join("&");
+
+      // Only reuse cached promise if the query params match (concurrent init calls).
+      // Different skip/take (pagination/virtual scroll) must make fresh API calls.
+      if (fetchPromise && cachedQueryKey === queryString) {
+        const cachedResult = await fetchPromise;
+        return cachedResult !== undefined && cachedResult !== null
+          ? { data: cachedResult.data, totalCount: cachedResult.totalCount }
+          : { data: [], totalCount: 0 };
+      }
+
+      const url = isMainPurchaseGrid ? `${batchDataUrl}${productID}/${warehouseId ?? 1}` || "" : `${batchDataUrl}${productID}/` || "";
+      cachedQueryKey = queryString;
+      fetchPromise = api.getAsync(
+        queryString && queryString !== "" ? `${url}?${queryString}` : `${url}?skip=0`
+      );
+
+      try {
+        const result = await fetchPromise;
+        return result !== undefined && result !== null
+          ? { data: result.data, totalCount: result.totalCount }
+          : { data: [], totalCount: 0 };
+      } catch (err) {
+        fetchPromise = null;
+        cachedQueryKey = null;
+        throw new Error("Batch Data Loading Error");
+      }
+    },
+  });
+};
+
+const ERPProductSearchForGrid = forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      className,
+      id,
+      inputId,
+      label,
+      productDataUrl,
+      closeIfNodata,
+      batchDataUrl,
+      productGridId = "product-search-grid",
+      batchGridId = "batch-search-grid",
+      keyId,
+      onRowSelected,
+      onProductSelected,
+      onEnterKeyDown,
+      checkboxLabel,
+      onChange,
+      value,
+      placeholder,
+      noLabel,
+      labelDirection = "vertical",
+      contextClassNametwo,
+      clearAfterSelection = true,
+      showCheckBox = true,
+      searchType = "grid",
+      useInSearch = false,
+      useCodeSearch = false,
+      searchByCodeAndName = true,
+      advancedProductSearching = false,
+      searchKey = "",
+      rowIndex,
+      height,
+      isMobileInput,
+      gridHeightAdjust,
+      onNextCellFind,
+      textAlign,
+      customStyle,
+      appState,
+      showInputSymbol = true,
+      disabled = false,
+      zIndexController = 9999,
+      isMainPurchaseGrid = false,
+      ...rest
+    },
+    ref
+  ) => {
+    const { t } = useTranslation("inventory");
+   
+    const productColumns: DevGridColumn[] = useMemo(
+      () => [
+        // ====
+        {
+          dataField: "productName",
+          caption: t("product_name"),
+          dataType: "string",
+          minWidth: isMobileInput ? undefined : 150,
+          width: isMobileInput ? 150 : undefined,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          cellRender: (cellElement: any, cellInfo: any) => {
+            const modified = cellElement?.data?.productName.replace(/^\s+/, (m: any) => "\u00A0".repeat(m.length))
+            return (
+              <>{modified}</>
+            );
+          },
+        },
+        {
+          dataField: "productCode",
+          caption: t("product_code"),
+          dataType: "string",
+          width: 100,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "productID",
+          caption: t("productID"),
+          dataType: "number",
+          visible: false,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
+        },
+        {
+          dataField: "arabicName",
+          caption: t("arabic_name"),
+          dataType: "string",
+          width: 150,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "stock",
+          caption: t("stock"),
+          dataType: "number",
+          width: 100,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "stockDetails",
+          caption: t("stock_details"),
+          dataType: "string",
+          minWidth: isMobileInput ? undefined : 150,
+          width: isMobileInput ? 150 : undefined,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+      ],
+      [t]
+    );
+
+    const batchColumns: DevGridColumn[] = useMemo(
+      () => [
+        {
+          dataField: "productBatchID",
+          caption: t("product_batch_id"),
+          dataType: "number",
+          width: 150,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          sortIndex:0,
+        },
+        {
+          dataField: "productCode",
+          caption: t("product_code"),
+          dataType: "string",
+          width: 150,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "autoBarcode",
+          caption: t("auto_barcode"),
+          dataType: "string",
+          width: 150,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "sPrice",
+          caption: t("s_price"),
+          dataType: "number",
+          width: 100,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "pPrice",
+          caption: t("p_price"),
+          dataType: "number",
+          width: 100,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "mrp",
+          caption: t("mrp"),
+          dataType: "number",
+          width: 100,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "stock",
+          caption: t("stock"),
+          dataType: "number",
+          width: 100,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "unitID",
+          caption: t("unit_id"),
+          dataType: "number",
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "unit",
+          caption: t("unit"),
+          dataType: "string",
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "brandID",
+          caption: t("brandID"),
+          dataType: "number",
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "brandName",
+          caption: t("brand_name"),
+          dataType: "string",
+          minWidth: isMobileInput ? undefined : 100,
+          width: isMobileInput ? 100 : undefined,
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+      ],
+      [t]
+    );
+    const [store, setStore] = useState<any>();
+    const [showProductGrid, setShowProductGrid] = useState(false);
+    const [showBatchGrid, setShowBatchGrid] = useState(false);
+    const [productDetailStore, setProductDetailStore] = useState<any>();
+    const [inputValue, setInputValue] = useState({
+      searchValue: value,
+      searchByCode: false,
+    });
+      const [productGridReady, setProductGridReady] = useState<any>(false);
+    const dataGridRef = useRef<any>(null);
+    const batchGridRef = useRef<any>(null);
+    const productIDRef = useRef<number | undefined>(undefined);
+    const gridContainerRef = useRef<HTMLDivElement>(null);
+    const internalRef = useRef<HTMLInputElement>(null);
+    const inputRef = ref || internalRef;
+    const fetchInProgressRef = useRef(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [inputHasFocus, setInputHasFocus] = useState(false);
+
+    const [productInitialPreferences, setProductInitialPreferences] = useState<any>(null);
+    const [batchInitialPreferences, setBatchInitialPreferences] = useState<any>(null);
+
+    const dispatch = useDispatch();
+    const portalContainerRef = useRef<HTMLElement | null>(null);
+    const formState = useSelector(
+      (state: RootState) => state.InventoryTransaction
+    );
+    const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
+    const appStater = useAppSelector(
+      (state: RootState) => state?.AppState?.appState
+    );
+    // Use the hook for product grid preferences
+    const {
+      onApplyPreferences: onApplyProductPreferences,
+      gridCols: productGridCol,
+    } = usePreferenceData(productColumns, productGridId );
+
+    // Use the hook for batch grid preferences
+    const {
+      onApplyPreferences: onApplyBatchPreferences,
+      gridCols: batchGridCol,
+    } = usePreferenceData(batchColumns, batchGridId );
+
+    const preferenceChooserRef = useRef<{
+      handleDragStart: (e: React.DragEvent<HTMLElement>) => void;
+      handleDragEnd: (e: React.DragEvent<HTMLElement>) => void;
+      handleDropping: (eFromDataGrid?: boolean) => void;
+      handleColumnPreferenceChange: (
+        dataField: string,
+        key: string,
+        value: any,
+        eFromDataGrid?: boolean
+      ) => void;
+    }>(null);
+
+
+useEffect(() => {
+  const fetchProductPreferences = async () => {
+    try {
+      console.log("🔵 Fetching product preferences");
+      const productPref = await getInitialPreference(
+        productGridId,
+        productColumns,
+        new APIClient()
+      );
+      setProductInitialPreferences(productPref);
+      onApplyProductPreferences(productPref);
+    } catch (error) {
+      console.error("Failed to fetch product preferences:", error);
+    }
+  };
+
+  // Fetch on mount and when gridId changes
+  if (productGridId) {
+    fetchProductPreferences();
+  }
+}, [productGridId]);
+
+// STEP 3: Add listener for preference updates (when user saves)
+
+useEffect(() => {
+  if (productInitialPreferences) {
+    console.log("✅ Applying updated product preferences");
+    onApplyProductPreferences(productInitialPreferences);
+  }
+}, [productInitialPreferences]);
+// 4. Add this useEffect to fetch batch preferences when needed:
+
+useEffect(() => {
+  const fetchBatchPreferences = async () => {
+    // Only fetch if batch grid is showing AND we haven't fetched yet (avoid re-fetch on every open)
+    if (showBatchGrid && !batchInitialPreferences) {
+      try {
+        console.log("🔵 Fetching batch preferences");
+        const batchPref = await getInitialPreference(
+          batchGridId,
+          batchColumns,
+          new APIClient()
+        );
+        setBatchInitialPreferences(batchPref);
+        onApplyBatchPreferences(batchPref);
+      } catch (error) {
+        console.error("Failed to fetch batch preferences:", error);
+      }
+    }
+  };
+
+  fetchBatchPreferences();
+}, [showBatchGrid, batchGridId]);
+
+useEffect(() => {
+  if (batchInitialPreferences) {
+    console.log("✅ Applying updated batch preferences");
+    onApplyBatchPreferences(batchInitialPreferences);
+  }
+}, [batchInitialPreferences]);
+
+    // Initialize portal container
+    useEffect(() => {
+      portalContainerRef.current = document.getElementById("portal-root");
+      if (!portalContainerRef.current) {
+        // Create portal container if it doesn't exist
+        const portalDiv = document.createElement("div");
+        portalDiv.id = "portal-root";
+        document.body.appendChild(portalDiv);
+        portalContainerRef.current = portalDiv;
+      }
+    }, []);
+
+    useEffect(() => {
+      if (showBatchGrid == false) {
+        productIDRef.current = undefined;
+      }
+    }, [showBatchGrid]);
+
+    useEffect(() => {
+      const loadLedgerData = async () => {
+        if ((formState.batchGridShowKey ?? 0) > 0) {
+          productIDRef.current = formState.batchGridShowKey;
+          setBatchInitialized(false); // Reset so new batch grid auto-focuses row 0
+          dispatch(
+            formStateHandleFieldChangeKeysOnly({
+              fields: {
+                batchGridShowKey: 0,
+              },
+            })
+          );
+          const batchStore = await createBatchStoreWithCache(
+            (formState.batchGridShowKey ?? 0).toString(),
+            formState.transaction.master.fromWarehouseID,
+            batchDataUrl,
+            isMainPurchaseGrid,
+          );
+          // Set store BEFORE visibility to avoid rendering with stale/null data
+          setProductDetailStore(batchStore);
+          setShowBatchGrid(true);
+        }
+      };
+      loadLedgerData();
+    }, [formState.batchGridShowKey]);
+
+    useEffect(() => {
+      setInputValue((prev) => ({
+        ...prev,
+        searchValue: value,
+      }));
+    }, [value]);
+    useEffect(() => {
+      if(!isNullOrUndefinedOrEmpty(formState.resetSearch)){
+        setInputValue((prev) => ({
+        ...prev,
+        searchValue: "",
+      }));
+      // Making the resetSearch empty
+      // This is done for fixing the issue when data vanishing case in input filed in search box
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            resetSearch:"",
+          },
+        })
+      )
+      }
+    }, [formState.resetSearch]);
+
+    // Calculate position for the DataGrid
+    const getGridPosition = useCallback(() => {
+      if (
+        inputRef &&
+        "current" in inputRef &&
+        inputRef.current &&
+        gridContainerRef.current
+      ) {
+        const inputRect = inputRef.current.getBoundingClientRect();
+        const containerRect = gridContainerRef.current.getBoundingClientRect();
+        const isRtl = appStater?.dir === "rtl";
+        return {
+          top: inputRect.bottom + window.scrollY, // Position below input
+          left: containerRect.left + window.scrollX,
+          right: window.innerWidth - (containerRect.right + window.scrollX),
+          width: containerRect.width, // Match container width
+        };
+        
+      }
+      return { top: 0, left: 0, width: "100%" };
+    }, [inputRef]);
+
+    const debouncedFetch = useMemo(
+      () =>
+        debounce(async (value: string, byCode: boolean) => {
+      if (fetchInProgressRef.current) {
+        console.log("Fetch already in progress, skipping...");
+        return;
+      }
+         console.log("debouncedFetch called with:", value);
+
+          if (value.trim() == "" || value.trim() == "%") {
+            setIsLoading(false);
+            setShowProductGrid(false);
+            return;
+          }
+          fetchInProgressRef.current = true;
+          setIsLoading(true); // Start loading
+          try{
+            let payload: any = {};
+             if (searchType === "modal") {
+            setIsLoading(false);
+            fetchInProgressRef.current = false;
+            return;
+            } 
+             if (searchType === "grid") {
+            // Build payload based on searchKey
+            if (searchKey == "pCode") {
+              payload.searchByCode = true;
+              payload.searchByCodeAndName = false;
+              if (value.trim() === "%") {
+                setIsLoading(false);
+                fetchInProgressRef.current = false;
+                return ;
+              }
+
+              let searchText = "";
+
+              if (useInSearch && value.length > 2) {
+                searchText = "%" + value;
+              } else {
+                searchText = value;
+              }
+              payload.searchText = searchText;
+            } else if (searchKey == "product") {
+              payload.searchByCodeAndName = searchByCodeAndName;
+              payload.searchByCode = false;
+              if (value.trim() === "%") {
+                setIsLoading(false);
+                fetchInProgressRef.current = false;
+                return ;
+              }
+
+              let searchText = "";
+
+              if (useInSearch && value.length > 2) {
+                searchText = "%" + value;
+              } else {
+                searchText = value;
+              }
+
+              if (advancedProductSearching) {
+                searchText = searchText.replace(/ /g, "%");
+              }
+              payload.searchText = searchText;
+            } else {
+              payload.searchText = value;
+              payload.searchByCode = byCode;
+              payload.productName = value;
+            }
+
+    
+          // ⭐ CRITICAL CHANGE: Use createStoreWithCache instead of createStore
+          // This prevents the double-load issue
+          const store = await createStoreWithCache(
+            value,
+            payload,
+            productDataUrl,
+            [
+              {
+                selector:
+                  formState.formElements.productSearchPopupWindow.data
+                    .searchCriteria === "product"
+                    ? "productCode"
+                    : "productCode",
+                desc: true,
+              },
+            ],
+            closeIfNodata
+          );
+
+          //  CRITICAL CHANGE: Remove the manual store.load() call
+          // Just set the store and let DataGrid handle loading
+          setStore(store);
+          setShowProductGrid(true);        
+
+          }
+        } catch (error) {
+        console.error("Fetch error:", error);
+        setShowProductGrid(false);
+      } finally {
+        setIsLoading(false);
+        fetchInProgressRef.current = false;
+      }
+        }, 300),
+      [
+        productDataUrl,
+        searchType,
+        searchKey,
+        useInSearch,
+        searchByCodeAndName,
+        advancedProductSearching,
+        closeIfNodata,
+        formState.formElements.productSearchPopupWindow.data.searchCriteria
+      ]
+    );
+
+
+const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {    
+      if (disabled) return;
+      const value = e.target.value;
+    // Update input value immediately
+      setInputValue((prev) => ({
+        ...prev,
+        searchValue: value,
+      }));
+      // firstCall removed - shared Promise pattern handles concurrent loads
+    // Reset grid ready state
+      setProductGridReady(false);
+      setShowBatchGrid(false);
+      if (searchKey == "barCode") {
+        return;
+      }
+      
+      debouncedFetch.cancel();
+   // If input is empty or too short, immediately hide everything
+      if (!value || value.trim() === "" || value.length < 1) {
+        setIsLoading(false);
+        setShowProductGrid(false);
+        setShowBatchGrid(false);
+        setProductInitialized(false);
+        fetchInProgressRef.current = false;
+        setStore(null);
+        return;
+      };     
+      if (value.length >= 1 && !isNullOrUndefinedOrEmpty(value)  ) {    
+
+        if (searchType !== "modal") {
+           debouncedFetch(value, inputValue.searchByCode);
+          // Don't reset productInitialized here - it causes gridInstance.focus() to
+          // steal focus from the input on every keystroke when debounced search completes.
+          // productInitialized is reset when grid closes (Escape) or input clears.
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+
+            const val = inputRef.current.value;
+            inputRef.current.setSelectionRange(val.length, val.length);
+          }
+        }
+      } 
+      if (onChange) onChange(e);    
+    };
+
+// Add this useEffect to cleanup on unmount
+    useEffect(() => {
+      return () => {
+        debouncedFetch.cancel();
+        fetchInProgressRef.current = false;
+      };
+    }, [debouncedFetch]);
+
+    useEffect(() => {
+      if (inputRef && "current" in inputRef && inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.select();
+      }
+    }, [inputRef]);
+
+
+
+// Clear loading state when grid closes
+useEffect(() => {
+  if (!showProductGrid && !showBatchGrid) {
+    setIsLoading(false);
+  }
+}, [showProductGrid, showBatchGrid]);
+
+const handleEnterAction = async () => {
+  try {
+    console.log("🟡 handleEnterAction called");
+    console.log("🟡 dataGridRef.current:", !!dataGridRef.current);
+    const gridInstance = dataGridRef.current.instance();
+
+    // Focused row key
+    const focusedRowKey = gridInstance.option("focusedRowKey");
+    console.log("🟡 focusedRowKey:", focusedRowKey);
+
+    // Find row data
+    const items = gridInstance.getDataSource().items();
+    console.log("🟡 dataSource items count:", items?.length);
+    const focusedRowData = items.find((row: any) => row.productID === focusedRowKey);
+    console.log("🟡 focusedRowData from items:", focusedRowData?.productID);
+
+    let rowData = focusedRowData;
+
+    // Fallback 1: try getSelectedRowsData
+    if (!rowData) {
+      console.log("🟡 Fallback 1: trying getSelectedRowsData...");
+      const selectedRows = await gridInstance.getSelectedRowsData();
+      console.log("🟡 selectedRows count:", selectedRows?.length, "first:", selectedRows?.[0]?.productID);
+      rowData =
+        selectedRows && selectedRows.length > 0 ? selectedRows[0] : null;
+    }
+
+    // Fallback 2: get from visible rows at focusedRowIndex (works without DOM focus)
+    if (!rowData) {
+      console.log("🟡 Fallback 2: trying getVisibleRows...");
+      const focusedIndex = gridInstance.option("focusedRowIndex") ?? 0;
+      const visibleRows = gridInstance.getVisibleRows();
+      console.log("🟡 focusedIndex:", focusedIndex, "visibleRows count:", visibleRows?.length);
+      console.log("🟡 visibleRows[0] rowType:", visibleRows[0]?.rowType, "data:", visibleRows[0]?.data?.productID);
+      console.log("🟡 visibleRows[focusedIndex] rowType:", visibleRows[focusedIndex]?.rowType, "data:", visibleRows[focusedIndex]?.data?.productID);
+      rowData = visibleRows[focusedIndex]?.data || visibleRows[0]?.data || null;
+    }
+
+    console.log("🟡 Final rowData:", rowData?.productID, rowData?.productName);
+
+    if (rowData && rowData.productID > 0) {
+      if (onProductSelected) onProductSelected(rowData);
+
+      if (!isNullOrUndefinedOrEmpty(batchDataUrl)) {
+        // Focus input BEFORE hiding product grid to prevent focus going to body/Code cell
+        if (inputRef && "current" in inputRef && inputRef.current) {
+          inputRef.current.focus();
+        }
+        const batchStore = await createBatchStoreWithCache(
+          rowData.productID,
+          formState.transaction.master.fromWarehouseID,
+          batchDataUrl,
+          isMainPurchaseGrid
+        );
+        setProductDetailStore(batchStore);
+        setShowBatchGrid(true);
+        setShowProductGrid(false);
+      } else {
+        setShowProductGrid(false);
+
+        if (inputRef && "current" in inputRef && inputRef.current) {
+          if (isMobileInput) {
+            inputRef.current.blur();
+          } else {
+            inputRef.current.focus();
+          }
+        }
+      }
+    }
+  } catch (err) {
+    setShowProductGrid(false);
+    if (inputRef && "current" in inputRef && inputRef.current) {
+      if (isMobileInput) {
+        inputRef.current.blur();
+      } else {
+        inputRef.current.focus();
+      }
+    }
+  }
+};
+
+const handleBatchEnterAction = async () => {
+  try {
+          const gridInstance = batchGridRef.current.instance();
+          const allSelected = await gridInstance.getSelectedRowsData();
+          const selected = allSelected[0];
+          if (onRowSelected) {
+            onRowSelected(selected, inputValue.searchValue);
+          }
+          setShowBatchGrid(false);
+          if (clearAfterSelection) {
+            setInputValue((prev) => ({
+              ...prev,
+              searchValue: "",
+            }));
+          }
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            if (isMobileInput) {
+              inputRef.current.blur();
+            } else {
+              inputRef.current.focus();
+            }
+          }
+  } catch (err) {
+    console.log("batchselect",err);  
+  }
+};
+
+const handleGridDoubleClick =async (e: any) => {
+  if (disabled) return;
+  // Focus input before grid unmounts to prevent focus loss
+  if (inputRef && "current" in inputRef && inputRef.current) {
+    inputRef.current.focus();
+  }
+  await handleEnterAction();
+};
+
+const handleBatchGridDoubleClick =async (e: any) => {
+  if (disabled) return;
+  await handleBatchEnterAction();
+};
+
+    const handleGridKeyDown = useCallback(
+      async (e: any) => {
+        if (disabled) return;
+        const key = e.event?.key;
+        if (!key) {
+          return;
+        }
+        if (key === "ArrowLeft" || key === "ArrowRight") {
+          e.handled = true;
+          e.event.preventDefault();
+          e.event.stopPropagation();
+          return
+        }
+
+        if (key === "Enter" || key === "NumpadEnter") {
+          e.handled = true;
+          e.event.preventDefault();
+          e.event.stopPropagation();
+          // Focus input immediately to prevent focus loss when grid unmounts
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
+          await handleEnterAction();
+          return;
+        }
+         if (key === "Escape") {
+          e.handled = true;
+          setShowProductGrid(false);
+          setProductInitialized(false);
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+            const val = inputRef.current.value;
+            inputRef.current.setSelectionRange(val.length, val.length);
+          }
+           return;
+        } else {
+          if (
+            !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(key)
+          ) {
+            // setShowProductGrid(false);  // Commented for removing the grid blinking
+            setProductInitialized(false);
+
+            if (inputRef && "current" in inputRef && inputRef.current) {
+              inputRef.current.focus();
+              const val = inputRef.current.value;
+              inputRef.current.setSelectionRange(val.length, val.length);
+            }
+          }
+          // No action needed for arrow keys - shared Promise pattern handles concurrent loads
+        }
+      },
+      [batchDataUrl, onProductSelected, inputRef]
+    );
+// Setting the batch grid operation also like product grid, (solving issue in edge(enter clicking issue))
+    const handleBatchGridKeyDown = useCallback(async (e: any) => {
+        if (disabled) return;
+        const key = e.event?.key;
+        if (!key) return;
+
+        if (key === "ArrowLeft" || key === "ArrowRight") {
+          e.handled = true;
+          e.event.preventDefault();
+          e.event.stopPropagation();
+          return;
+        }
+
+        if (key === "Enter" || key === "NumpadEnter") {
+            e.handled = true;
+            e.event.preventDefault();
+            e.event.stopPropagation();
+            await handleBatchEnterAction()
+        }
+        else if (key === "Escape") {
+          e.handled = true;
+          setShowBatchGrid(false);
+          if (inputRef && "current" in inputRef && inputRef.current) {
+            inputRef.current.focus();
+          }
+          e.event.preventDefault();
+        }
+        else {
+          // Redirect printable characters back to the input (same as product grid)
+          if (!["ArrowUp", "ArrowDown"].includes(key)) {
+            if (inputRef && "current" in inputRef && inputRef.current) {
+              inputRef.current.focus();
+              const val = inputRef.current.value;
+              inputRef.current.setSelectionRange(val.length, val.length);
+            }
+          }
+        }
+      },
+      [onRowSelected, clearAfterSelection, inputRef, inputValue]
+    );
+
+    const [batchInitialized, setBatchInitialized] = useState(false);
+
+    const handleBatchContentReadyLatest = useCallback((e: any) => {
+    const gridInstance = e.component;
+    const dataSource = gridInstance.getDataSource();
+    const isStillLoading = dataSource && dataSource.isLoading();
+    const visibleRows = gridInstance.getVisibleRows();
+    const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productBatchID;
+
+    // Only close on no-data if the data source has FINISHED loading
+    // Prevents premature closure when onContentReady fires before load() completes
+    if (!hasValidData && closeIfNodata && visibleRows.length === 0 && !isStillLoading) {
+        setShowBatchGrid(false);
+        setIsLoading(false);
+        return;
+      }
+      if (hasValidData) {
+        if (!batchInitialized) {
+          if (!isMobileInput) {
+            gridInstance.option("focusedRowIndex", 0);
+            gridInstance.focus();
+          }
+          setBatchInitialized(true);
+        }
+      }
+
+    },[batchInitialized]);
+
+    // Old handleBatchContentReady, Found an issue in this in some browser
+    const handleBatchContentReady = useCallback((e: any) => {
+    if (!batchInitialized) {
+      const grid = e.component;
+      // focus and select row 0 on first open
+      const key = grid.getKeyByRowIndex(0);
+      grid.selectRows([key], false);
+      grid.option("focusedRowIndex", 0);
+      grid.focus();
+      setBatchInitialized(true);
+     }
+    },
+   [batchInitialized]
+    );
+
+    const handleBatchFocusedRowChanged = useCallback((e: any) => {
+      // whenever focus moves (via arrow keys), select that row
+      const gridInstance = e.component;
+      if (e?.row?.key !== undefined) {
+        gridInstance.selectRows([e.row.key], false);
+      }
+    }, []);
+
+    const handleInputKeyDown = useCallback(
+  async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (disabled) return;
+    const value = e.currentTarget.value;
+    console.log(`🔵 InputKeyDown: key="${e.key}" showProductGrid=${showProductGrid} showBatchGrid=${showBatchGrid} isLoading=${isLoading} searchType=${searchType}`);
+    
+    // ============================================================
+    // PHASE 1: Block arrow keys ONLY during loading/grid showing
+    // ============================================================
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+      if (isLoading || showProductGrid || showBatchGrid) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Handle grid navigation if NOT loading and grid is ready
+        if (!isLoading && showProductGrid && dataGridRef.current && productGridReady) {
+          if (e.key === "ArrowDown") {
+            const grid: any = dataGridRef.current.instance();
+            const rows = grid.getVisibleRows();
+            if (rows.length > 0) {
+              grid.selectRowsByIndexes([0]);
+              grid.navigateToRow(grid.getKeyByRowIndex(0));
+              grid.focus();
+            }
+          } else if (e.key === "ArrowUp") {
+            const grid: any = dataGridRef.current.instance();
+            const rows = grid.getVisibleRows();
+            if (rows.length > 0) {
+              grid.selectRowsByIndexes([0]);
+              grid.navigateToRow(grid.getKeyByRowIndex(0));
+              grid.option("focusedRowIndex", 0);
+              grid.focus();
+            }
+          }
+        }
+        
+        return; // Exit early
+      }
+    }
+    
+    // ============================================================
+    // PHASE 2: Handle other keys when grid is visible
+    // ============================================================
+    if (
+      ["Enter"].includes(e.key) &&
+      !isLoading && searchType === "modal"
+    ) {
+      if (e.key === "Enter") {
+        if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+            if (searchKey == "product") {
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    formElements: {
+                      productSearchPopupWindow: {
+                        visible: true,
+                        data: {
+                          searchColumn: searchKey,
+                          rowIndex: rowIndex,
+                          searchCriteria: searchKey,
+                          searchText: e.currentTarget.value,
+                          voucherType: formState.transaction.master.voucherType,
+                          warehouseId: 1,
+                          inSearch: formState.inSearch,
+                        },
+                      },
+                    },
+                  },
+                })
+              );
+              e.preventDefault();
+            } else {
+              rest?.onKeyDown && rest?.onKeyDown(value, e);
+            }
+          } else {
+            rest?.onKeyDown && rest?.onKeyDown(value, e);
+          }
+      }
+     } else if (
+      ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "Escape"].includes(e.key) &&
+      showProductGrid &&
+      dataGridRef.current &&
+      !isLoading
+    ) {
+      if (e.key === "Enter") {
+        // Product grid is visible — try selecting the focused/selected row
+        console.log("🔴 PHASE 2 Enter: showProductGrid=", showProductGrid, "isLoading=", isLoading, "productGridReady=", productGridReady, "searchType=", searchType, "searchKey=", searchKey);
+        e.preventDefault();
+        e.stopPropagation();
+        const gridInstance = dataGridRef.current?.instance?.();
+        let hasSelectedRow = false;
+        console.log("🔴 gridInstance exists:", !!gridInstance);
+        if (gridInstance) {
+          try {
+            const selectedRows = await gridInstance.getSelectedRowsData();
+            console.log("🔴 PHASE2 selectedRows:", selectedRows?.length, "first productID:", selectedRows?.[0]?.productID);
+            const visibleRows = gridInstance.getVisibleRows();
+            console.log("🔴 PHASE2 visibleRows:", visibleRows?.length, "first data:", visibleRows?.[0]?.data?.productID, "rowType:", visibleRows?.[0]?.rowType);
+            const focusedKey = gridInstance.option("focusedRowKey");
+            const focusedIdx = gridInstance.option("focusedRowIndex");
+            console.log("🔴 PHASE2 focusedRowKey:", focusedKey, "focusedRowIndex:", focusedIdx);
+            if (selectedRows?.length > 0 && selectedRows[0]?.productID > 0) {
+              hasSelectedRow = true;
+              console.log("🔴 Calling handleEnterAction...");
+              await handleEnterAction();
+            } else {
+              // Also try visibleRows directly
+              const vr = visibleRows[focusedIdx ?? 0]?.data || visibleRows[0]?.data;
+              if (vr?.productID > 0) {
+                hasSelectedRow = true;
+                console.log("🔴 selectedRows empty, but visibleRows has data. Calling handleEnterAction...");
+                await handleEnterAction();
+              }
+            }
+          } catch (err) {
+            console.log("🔴 PHASE2 error:", err);
+          }
+        }
+        // Fallback: no row selected — dispatch modal popup or forward to parent
+        console.log("🔴 hasSelectedRow:", hasSelectedRow);
+        if (!hasSelectedRow) {
+          console.log("🔴 FALLBACK: searchKey=", searchKey, "value=", e.currentTarget?.value);
+          if (!isNullOrUndefinedOrEmpty(e.currentTarget.value)) {
+            if (searchKey == "product") {
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: {
+                    formElements: {
+                      productSearchPopupWindow: {
+                        visible: true,
+                        data: {
+                          searchColumn: searchKey,
+                          rowIndex: rowIndex,
+                          searchCriteria: searchKey,
+                          searchText: e.currentTarget.value,
+                          voucherType: formState.transaction.master.voucherType,
+                          warehouseId: 1,
+                          inSearch: formState.inSearch,
+                        },
+                      },
+                    },
+                  },
+                })
+              );
+            } else {
+              rest?.onKeyDown && rest?.onKeyDown(value, e);
+            }
+          } else {
+            rest?.onKeyDown && rest?.onKeyDown(value, e);
+          }
+        }
+      } else if (e.key === "Escape") {
+        setShowProductGrid(false);
+        setShowBatchGrid(false);
+        setIsLoading(false);
+        e.preventDefault();
+        e.stopPropagation();
+      } else if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+        const input = e.target as HTMLInputElement;
+        const { selectionStart, selectionEnd, value } = input;
+        let shouldNavigate = true;
+        
+        if (
+          e.key === "ArrowRight" &&
+          (selectionStart !== value.length || selectionEnd !== value.length)
+        ) {
+          shouldNavigate = false;
+        } else if (
+          e.key === "ArrowLeft" &&
+          (selectionStart !== 0 || selectionEnd !== 0)
+        ) {
+          shouldNavigate = false;
+        }
+        
+        if (shouldNavigate && rest.onKeyDown) {
+          rest?.onKeyDown(value, e);
+          e.preventDefault();
+        }
+      }
+    } 
+    // ============================================================
+    // PHASE 3: Pass to parent — but NOT printable characters while search grid is open
+    // ============================================================
+    else {
+      if (rest.onKeyDown) {
+        if (!showProductGrid && !showBatchGrid) {
+          // No grid open → forward all keys to parent (normal cell navigation)
+          rest?.onKeyDown(value, e);
+        } else if (e.key.length > 1 || e.ctrlKey || e.altKey) {
+          // Grid is open but this is a special/modifier key (Tab, F2, Ctrl+I, etc.)
+          // → forward to parent for shortcuts
+          rest?.onKeyDown(value, e);
+        }
+        // else: Grid is open + printable character (space, letters, digits)
+        // → do NOT forward, let the character stay in the search input
+      }
+    }
+  },
+  [
+    disabled,
+    isLoading,
+    showProductGrid,
+    showBatchGrid,
+    productGridReady,
+    dataGridRef,
+    searchType,
+    rest.onKeyDown,
+    formState,
+    searchKey,
+    rowIndex,
+  ]
+);
+
+    useEffect(() => {
+      const handleFocusTrap = (e: KeyboardEvent) => {
+        if (!gridContainerRef.current || !showProductGrid) return;
+        const focusableElements = gridContainerRef.current.querySelectorAll(
+          'input, button, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[
+          focusableElements.length - 1
+        ] as HTMLElement;
+
+        if (e.key === "Tab") {
+          if (e.shiftKey && document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      };
+
+      document.addEventListener("keydown", handleFocusTrap);
+      return () => document.removeEventListener("keydown", handleFocusTrap);
+    }, [showProductGrid]);
+
+    const onClose = useCallback(() => {
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            formElements: {
+              productSearchPopupWindow: { visible: false, data: "" },
+            },
+          },
+        })
+      );
+    }, []);
+
+  
+    const handleProductFocusedRowChanged = useCallback((e: any) => {
+      const gridInstance = e.component;
+      if (e?.row?.key !== undefined) {
+        gridInstance.selectRows([e.row.key], false);
+      }
+    }, []);
+
+    const [productInitialized, setProductInitialized] = useState(false);
+    const [isGridInitializing, setIsGridInitializing] = useState(true);
+    
+
+    const handleProductGridContentReady = useCallback((e: any) => {
+         console.log("handleProductGridContentReady called")
+        const gridInstance = e.component;
+        const dataSource = gridInstance.getDataSource();
+        const isStillLoading = dataSource && dataSource.isLoading();
+        const visibleRows = gridInstance.getVisibleRows();
+        const hasValidData = visibleRows.length > 0 && visibleRows[0].data?.productID;
+        setBatchInitialized(false);  // For handling when click on wrong batch product - then i cant select the item in product grid issue fix
+
+    // Only close on no-data if the data source has FINISHED loading
+    // Prevents premature closure when onContentReady fires before load() completes
+    if (!hasValidData && closeIfNodata && visibleRows.length === 0 && !isStillLoading) {
+      setShowProductGrid(false);
+      setIsLoading(false);
+      setProductGridReady(false);
+      return;
+    }
+    // Only set ready if we have valid data
+    if (hasValidData) {
+      setProductGridReady(true);
+
+      if (!productInitialized) {
+        // Always highlight first row
+        gridInstance.option("focusedRowIndex", 0);
+        // Select row 0 so it's visually highlighted even when input retains DOM focus
+        const firstKey = gridInstance.getKeyByRowIndex(0);
+        console.log("🟢 ContentReady: selecting firstKey=", firstKey, "productInitialized was false");
+        if (firstKey !== undefined) {
+          gridInstance.selectRows([firstKey], false);
+        }
+        if (!isMobileInput) {
+          // Only steal focus to grid if input is NOT currently focused
+          // (user is NOT actively typing in the search input)
+          const inputHasFocus = inputRef && "current" in inputRef &&
+            inputRef.current === document.activeElement;
+          if (!inputHasFocus) {
+            gridInstance.focus();
+          }
+        }
+        setProductInitialized(true);
+      }
+    }
+      },
+      [productInitialized,closeIfNodata]
+    );
+      // It will helps to fix the product grid moving isSecureContext, check it 
+        useEffect(() => {
+          const handleKeyDown = (e:any) => {
+            if (isGridInitializing && e.key === "ArrowDown") {
+              e.preventDefault(); 
+            }
+          };
+          window.addEventListener("keydown", handleKeyDown);
+          return () => window.removeEventListener("keydown", handleKeyDown);
+        }, []);    
+
+    useEffect(() => {
+      const style = document.createElement("style");
+      style.textContent = `
+      .dx-error-row { display: none !important; }
+      .dx-datagrid .dx-error-row { display: none !important; }
+      .dx-error-message { display: none !important; }
+    `;
+      document.head.appendChild(style);
+
+      return () => {
+        document.head.removeChild(style);
+      };
+    }, []);
+  
+    // Render DataGrid components in a portal
+    const renderDataGridPortal = () => {
+      if (!portalContainerRef.current) return null;
+      const direction = appStater?.dir || "ltr";
+      const { top, left, right, width } = getGridPosition();
+      // build a positionStyle that uses left in LTR, right in RTL
+      const positionStyle: React.CSSProperties = {
+        top: `${top}px`,
+        width: "100%",
+        minWidth: "300px",
+        maxWidth: "800px",
+        minHeight: "200px",
+        maxHeight: "400px",
+        zIndex: zIndexController,
+        // conditionally assign left or right
+        ...(direction === "rtl"
+          ? { right: `${right}px`, left: undefined }
+          : { left: `${left}px`, right: undefined }),
+      };
+      return createPortal(
+        <>
+          {searchType === "grid" && (
+            <>
+              {showProductGrid && (
+                <Fragment>
+                  {/* {productGridReady.toString}safvan */}
+                  <div
+                    className="absolute mt-0 z-50 bg-white dark:bg-dark-bg shadow-lg"
+                    style={positionStyle}
+                    
+                  >
+                    <GridPreferenceChooser
+                      ref={preferenceChooserRef}
+                      columns={productColumns}
+                      gridId={productGridId}
+                      onApplyPreferences={onApplyProductPreferences}
+                      showChooserOnGridHead={true}
+                      initialPreferences={productInitialPreferences}
+                      eclipseClass={
+                        "absolute z-10 top-[-5px] left-[2px] pointer-events-auto"
+                      }
+                    />
+                    <DataGrid
+                      id={productGridId}
+                      ref={dataGridRef}
+                      className="custom-data-grid-dark-only"
+                      loadPanel={{ enabled: false }}
+                      rtlEnabled={appStater?.dir === "rtl"}
+                      dataSource={store}
+                      height={300}
+                      keyExpr={"productID"}
+                      allowColumnReordering={true}
+                      allowColumnResizing
+                      columnResizingMode={"widget"}
+                      columnAutoWidth={false}
+                      showBorders={true}
+                      showRowLines={true}
+                      remoteOperations={{
+                        filtering: true,
+                        paging: true,
+                        sorting: true,
+                        grouping: false,
+                        summary: false,
+                        groupPaging: false,
+                      }}
+                      focusedRowEnabled={true}
+                      onFocusedRowChanged={handleProductFocusedRowChanged}
+                      onContentReady={handleProductGridContentReady}
+                      onKeyDown={handleGridKeyDown}
+                      onCellDblClick={handleGridDoubleClick}
+                      tabIndex={0}
+                      width="100%"
+                    >
+                      <Selection mode="single" />
+                      <Paging pageSize={30} />
+                      <Scrolling mode="virtual" showScrollbar="always" />
+                      <KeyboardNavigation
+                        enabled={true}
+                        editOnKeyPress={false}
+                        enterKeyDirection="row"
+                      />
+                      {productGridCol.map((col) => (
+                        <Column key={col.dataField} {...col} />
+                      ))}
+                    </DataGrid>
+                  </div>
+                </Fragment>
+              )}
+              {showBatchGrid && !isNullOrUndefinedOrEmpty(batchDataUrl) && (             
+                <div
+                  className="absolute mt-1 !z-[100] bg-white dark:bg-dark-bg shadow-lg"
+                  style={positionStyle}
+                >
+                  <GridPreferenceChooser
+                    ref={preferenceChooserRef}
+                    columns={batchColumns}
+                    gridId={batchGridId}
+                    onApplyPreferences={onApplyBatchPreferences}
+                    showChooserOnGridHead={true}
+                    initialPreferences={batchInitialPreferences}
+                    eclipseClass={"absolute z-10 pointer-events-auto"}
+                  />
+                  <DataGrid
+                    // id={batchGridId}
+                    ref={batchGridRef}
+                    loadPanel={{ enabled: false }}
+                    rtlEnabled={appStater?.dir === "rtl"}
+                    className="custom-data-grid-dark-only"
+                    dataSource={productDetailStore}
+                    height={300}
+                    keyExpr={isMainPurchaseGrid ? "productBatchID" : "guid"}
+                    allowColumnReordering={true}
+                    allowColumnResizing
+                    columnResizingMode={"widget"}
+                    columnAutoWidth={false}
+                    showBorders={true}
+                    showRowLines={true}
+                    remoteOperations={{
+                      filtering: true,
+                      paging: true,
+                      sorting: true,
+                      grouping: false,
+                      summary: false,
+                      groupPaging: false,
+                    }}
+                    // paging={{}}
+                    focusedRowEnabled={true}
+                    onFocusedRowChanged={handleBatchFocusedRowChanged}
+                    onContentReady={handleBatchContentReadyLatest}
+                    onKeyDown={handleBatchGridKeyDown}
+                    onCellDblClick={handleBatchGridDoubleClick}
+                    tabIndex={0}
+                    width="100%"
+                  >
+                    <Scrolling
+                      mode="virtual"
+                      showScrollbar="always"
+                      renderAsync={false}
+                      useNative={"auto"}
+                      rowRenderingMode="virtual"
+                      preloadEnabled={true}
+                    />
+                    <KeyboardNavigation
+                      enabled={true}
+                      editOnKeyPress={false}
+                      enterKeyDirection="row"
+                    />
+                    <Paging pageSize={30} />
+                    <Selection mode="single" />
+                    {batchGridCol.map((col) => (
+                      <Column sortIndex={col.sortIndex} key={col.dataField} {...col} />
+                    ))}
+                  </DataGrid>
+                </div>              
+              )}
+            </>
+          )}
+        </>,
+        portalContainerRef.current
+      );
+    };
+
+    return (
+      <>
+        <div
+          className="flex items-center w-full"
+          style={{ width: "100%", minWidth: "100%", maxWidth: "100%" }}
+        >
+          <div className="relative flex-1" ref={gridContainerRef}>
+            {/* <p>mj233333333333-2</p> */}
+            <ERPInput
+              localInputBox={customStyle}
+              textAlignStyle={textAlign}
+              ignoreRandomId={isMobileInput ?false: true}
+              noLabel={noLabel}
+              height_={height}
+              // isMobileInput={isMobileInput}
+              isMobileInput={true}
+              gridHeightAdjust={gridHeightAdjust}
+              label={label}
+              type="text"
+              id={inputId || "test"}
+              placeholder={placeholder}
+              autoFocus={isMobileInput ? false : true }
+              labelDirection={labelDirection}
+              contextClassName={contextClassNametwo?.replace("!px-1", "")} // Remove !px-1 to avoid padding
+              value={inputValue.searchValue}
+              onChange={handleChange}
+              onKeyDown={handleInputKeyDown}
+              disableEnterNavigation
+              disabled={disabled}
+              ref={inputRef}
+              onFocus={(e) => {
+                setInputHasFocus(true);
+                if (rest.onFocus) {
+                  rest.onFocus(e);
+                }
+              }}
+              onBlur={(e) => {
+                setInputHasFocus(false);
+                if (rest.onBlur) {
+                  rest.onBlur(e);
+                }
+              }}
+              focused={showProductGrid } // || batchInitialized
+            />
+              {showInputSymbol && !inputHasFocus && (showProductGrid || showBatchGrid) &&(
+              <div className="absolute inset-0 flex items-center px-[0.85rem] pointer-events-none"
+                style={{ font: inputRef && "current" in inputRef && inputRef.current ? window.getComputedStyle(inputRef.current).font : '14px sans-serif' }}>
+                <span className="invisible" style={{ whiteSpace: 'pre' }}>{inputValue.searchValue}</span>
+                <span className="animate-blink text-black dark:text-white">|</span>
+              </div>
+              )}                   
+          </div>
+          {showCheckBox && (
+            <ERPCheckbox
+              id="searchByCode"
+              checked={inputValue.searchByCode}
+              label={checkboxLabel || t("Code")}
+              onChange={(e) =>
+                setInputValue((prev) => ({
+                  ...prev,
+                  searchByCode: e.target.checked,
+                }))
+              }
+            />
+          )}
+        </div>
+        {formState.formElements.productSearchPopupWindow.visible &&
+          searchType === "modal" && (
+            <ERPModal
+              isOpen={formState.formElements.productSearchPopupWindow.visible}
+              title={t("item_search")}
+              width={1000}
+              height={900}
+              isForm={true}
+              closeModal={onClose}
+              content={
+                <ProductModalGrid
+                  transactionType={formState.transactionType}
+                  userConfig={formState.userConfig}
+                  onNextCellFind={onNextCellFind}
+                  onClose={onClose}
+                  rowIndex={
+                    formState.formElements.productSearchPopupWindow.data
+                      .rowIndex
+                  }
+                  searchColumn={
+                    formState.formElements.productSearchPopupWindow.data
+                      .searchColumn
+                  }
+                  popupSearchUrl={`${Urls.inv_transaction_base}${formState.transactionType}/ItemPopUpSearch`}
+                  searchCriteria={
+                    formState.formElements.productSearchPopupWindow.data
+                      .searchCriteria
+                  }
+                  searchText={
+                    formState.formElements.productSearchPopupWindow.data
+                      .searchText
+                  }
+                  voucherType={
+                    formState.formElements.productSearchPopupWindow.data
+                      .voucherType
+                  }
+                  warehouseId={
+                    formState.formElements.productSearchPopupWindow.data
+                      .warehouseId
+                  }
+                  inSearch={
+                    formState.formElements.productSearchPopupWindow.data
+                      .inSearch
+                  }
+                />
+              }
+            />
+          )}
+        {renderDataGridPortal()}
+      </>
+    );
+  }
+);
+
+export default React.memo(ERPProductSearchForGrid);

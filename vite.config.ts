@@ -11,27 +11,9 @@ const packageJson = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 
 export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   const env = loadEnv(mode, process.cwd(), '')
-  const isDev = mode === 'development'
-
-  const csp = isDev
-    ? "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: blob: https://res.cloudinary.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self';"
-    : "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: blob: https://res.cloudinary.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: http: ws: wss:; frame-ancestors 'self';"
 
   return {
-    base: "./",
-    plugins: [
-      react(),
-      {
-        name: 'html-csp',
-        transformIndexHtml(html) {
-          if (html.includes('Content-Security-Policy')) {
-            return html
-          }
-          const meta = `<meta http-equiv="Content-Security-Policy" content="${csp}">`
-          return html.replace('</head>', `  ${meta}\n  </head>`)
-        }
-      }
-    ],
+    plugins: [react()],
     define: {
       __APP_VERSION__: JSON.stringify(packageJson.version),
       // Storage fetch token from .env file or environment variable (GitHub secret)
@@ -48,10 +30,11 @@ export default defineConfig(({ mode }) => {
     ],
   },
   build: {
+    // sourcemap: true,
     // outDir: 'C:\\inetpub\\wwwroot',
-    // outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
+    outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
     //  outDir: 'build',
-     outDir: 'dist',
+    //  outDir: 'dist',
     //  sourcemap: false,
     //  minify: "esbuild",
     //  target: "es2018",

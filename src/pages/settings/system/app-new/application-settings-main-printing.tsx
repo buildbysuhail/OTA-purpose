@@ -192,6 +192,7 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           options={[
             { value: "PrintDialog", label: "Print Dialog" },
             { value: "JSPrinter", label: "JS Printer" },
+            { value: "QZTray", label: "QZ Tray" },
           ]}
         />
       ),

@@ -5,6 +5,7 @@ export interface ApplicationPrintSettings {
     showReprintAuthorization: boolean;
     showReprintAuthorisation: boolean;
     useEmptyTaxTypeTemplateIfMissing: boolean;
+    directPrintMethodForBrowser: string;
 
 }
 
@@ -14,5 +15,6 @@ export const ApplicationPrintSettingsInitialState: ApplicationPrintSettings = {
     printSelectedGatePass: false,
     showReprintAuthorization: false,
     showReprintAuthorisation: false,
-    useEmptyTaxTypeTemplateIfMissing: false
+    useEmptyTaxTypeTemplateIfMissing: false,
+    directPrintMethodForBrowser: "PrintDialog"
 };

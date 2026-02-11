@@ -1135,8 +1135,10 @@ export const useTransaction = (
     };
   };
 
-  async function validate(): Promise<boolean> {
-    const master = formState.transaction.master;
+  async function validate(): Promise<{
+    master: TransactionMaster, isValid: boolean
+  }> {
+    const master = {...formState.transaction.master};
     const details = formState.transaction.details;
     const formType = master.voucherForm ?? "";
     const voucherType = master.voucherType ?? "";
@@ -1153,7 +1155,7 @@ export const useTransaction = (
     // Get first free row index (first row without a product)
     const firstFreeRow = details.findIndex((x) => !x.productID || x.productID === 0);
     const validDetails = firstFreeRow === -1 ? details : details.slice(0, firstFreeRow);
-
+debugger;
     if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
       const confirm = await ERPAlert.show({
         icon: "info",
@@ -1164,10 +1166,25 @@ export const useTransaction = (
         showCancelButton: true,
       });
       if (!confirm) {
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       } else {
-        master.transactionDate = clientSession.softwareDate;
-        master.refDate = clientSession.softwareDate;
+        master.transactionDate = moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString();
+        master.refDate = moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString();
+        dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            transaction: {
+              master: {
+                transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString(),
+                refDate: moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString()
+              }
+            }
+          }
+        })
+      );
       }
     }
     if (clientSession.isDemoVersion) {
@@ -1180,18 +1197,36 @@ export const useTransaction = (
       );
 
       if (diffInDays < 0 || diffInDays > 30) {
-        formState.formElements.dtpTransDate.disabled = true;
-        formState.formElements.btnSave.disabled = true;
-        formState.formElements.dgvInventory.disabled = true;
+        dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            formElements: {
+              dtpTransDate: {
+                disabled: true
+              },
+              btnSave: {
+                disabled: true
+              },
+              dgvInventory: {
+                disabled: true
+              }
+            }
+          }
+        })
+      );
 
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
           text: t("demo_expired_please_activate"),
           confirmButtonText: t("ok"),
+          showCancelButton: false
         });
 
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
     if (
@@ -1210,26 +1245,29 @@ export const useTransaction = (
       });
 
       if (!confirm) {
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
 
-    if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
-      const confirm = await ERPAlert.show({
-        icon: "info",
-        title: t("date_warning"),
-        text: t("system_date_does_not_match_transaction_date. Do_you_want_to_update?"),
-        confirmButtonText: t("yes"),
-        cancelButtonText: t("no"),
-        showCancelButton: true,
-      });
-      if (!confirm) {
-        return false;
-      } else {
-        master.transactionDate = clientSession.softwareDate;
-        master.refDate = clientSession.softwareDate;
-      }
-    }
+    // if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
+    //   const confirm = await ERPAlert.show({
+    //     icon: "info",
+    //     title: t("date_warning"),
+    //     text: t("system_date_does_not_match_transaction_date. Do_you_want_to_update?"),
+    //     confirmButtonText: t("yes"),
+    //     cancelButtonText: t("no"),
+    //     showCancelButton: true,
+    //   });
+    //   if (!confirm) {
+    //     return false;
+    //   } else {
+    //     master.transactionDate = clientSession.softwareDate;
+    //     master.refDate = clientSession.softwareDate;
+    //   }
+    // }
     // CODE CHECKED########
     // ============ Cash/Card Amount Validations ============ 
     if (cashReceived < 0 || cardAmount < 0) {
@@ -1239,7 +1277,10 @@ export const useTransaction = (
         text: t("invalid_cash_bank_amount_positive"),
         confirmButtonText: t("ok"),
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
     // CODE CHECKED########
@@ -1250,7 +1291,10 @@ export const useTransaction = (
         text: t("cash_card_exceeds_100_times_total"),
         confirmButtonText: t("ok"),
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
     // CODE CHECKED########  - Working Not checked/ Tested
@@ -1262,7 +1306,10 @@ export const useTransaction = (
         text: t("b2b_invoice_15_digit_tax_reg_required"),
         confirmButtonText: t("ok"),
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
     // CODE CHECKED########  - Working Not checked/ Tested
@@ -1273,7 +1320,10 @@ export const useTransaction = (
         text: t("b2c_invoice_tax_reg_should_be_empty"),
         confirmButtonText: t("ok"),
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
     // CODE CHECKED########
@@ -1286,7 +1336,10 @@ export const useTransaction = (
           text: `${t("invalid_tax_registration_number")} ${master.partyName} ${t("please_check")}`,
           confirmButtonText: t("ok"),
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
 
@@ -1304,7 +1357,10 @@ export const useTransaction = (
           text: t("transaction_date_should_not_be_post_dated"),
           confirmButtonText: t("ok"),
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
 
       // E-Invoice: Grand total should be greater than zero
@@ -1333,7 +1389,10 @@ export const useTransaction = (
           });
 
           if (!confirmed) {
-            return false;
+            return {
+          master: master,
+          isValid: false
+        };
           }
         }
         else {
@@ -1344,7 +1403,10 @@ export const useTransaction = (
             confirmButtonText: t("ok"),
             showCancelButton: false,
           });
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
     }
@@ -1355,7 +1417,10 @@ export const useTransaction = (
         const action = `Are you sure to allow discount : ${master.billDiscount} in  ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
         isAuthorized = await SalesAuthorization(action);
         if (!isAuthorized) {
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
     }
@@ -1368,7 +1433,10 @@ export const useTransaction = (
         text: t("wrong_value_or_discount"),
         confirmButtonText: t("ok"),
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
     // ============ Credit Stopped Validation ============
@@ -1398,7 +1466,10 @@ export const useTransaction = (
         showCancelButton: true,
       });
       if (!confirm) {
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
 
@@ -1419,7 +1490,10 @@ export const useTransaction = (
             }, 100);
           },
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
     // CODE CHECKED########
@@ -1440,7 +1514,10 @@ export const useTransaction = (
             }, 100);
           },
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
 
@@ -1454,7 +1531,10 @@ export const useTransaction = (
         text: t("please_verify_voucher_number_and_disable_it_before_save"),
         icon: "warning",
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
     // CODE CHECKED########
     // ============ Transaction Date Validation ============
@@ -1470,49 +1550,58 @@ export const useTransaction = (
         text: transDateValidation.message,
         icon: "warning",
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
-if (voucherType === VoucherType.SalesInvoice) {
-  const closedDateResult = await api.getAsync(
-    `${Urls.inv_transaction_base}GetClosedDate?type=Sales`
-  );
+// if (voucherType === VoucherType.SalesInvoice) {
+//   const closedDateResult = await api.getAsync(
+//     `${Urls.inv_transaction_base}GetClosedDate?type=Sales`
+//   );
 
-  const closedDate = new Date(closedDateResult);
-  const transDate = new Date(master.transactionDate);
+//   const closedDate = new Date(closedDateResult);
+//   const transDate = new Date(master.transactionDate);
 
-  // Normalize time
-  closedDate.setHours(0, 0, 0, 0);
-  transDate.setHours(0, 0, 0, 0);
+//   // Normalize time
+//   closedDate.setHours(0, 0, 0, 0);
+//   transDate.setHours(0, 0, 0, 0);
 
-  if (closedDate >= transDate) {
-    const confirm = await ERPAlert.show({
-      icon: "question",
-      title: t("day_closed"),
-      text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
-      confirmButtonText: t("yes"),
-      cancelButtonText: t("no"),
-      showCancelButton: true,
-    });
+//   if (closedDate >= transDate) {
+//     const confirm = await ERPAlert.show({
+//       icon: "question",
+//       title: t("day_closed"),
+//       text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
+//       confirmButtonText: t("yes"),
+//       cancelButtonText: t("no"),
+//       showCancelButton: true,
+//     });
 
-    if (!confirm) {
-      return false;
-    } else {
-      const today = new Date();
-      const softwareDate = new Date(clientSession.softwareDate);
-      today.setHours(0, 0, 0, 0);
-      softwareDate.setHours(0, 0, 0, 0);
-      if (today > softwareDate) {
-        clientSession.softwareDate = today.toString();
-        master.transactionDate = today.toString();
-      } else {
-        // TO do 
-        // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
-        master.transactionDate = clientSession.softwareDate;
-        return false;
-      }
-    }
-  }
-}
+//     if (!confirm) {
+//       return {
+//           master: master,
+//           isValid: false
+//         };
+//     } else {
+//       const today = new Date();
+//       const softwareDate = new Date(clientSession.softwareDate);
+//       today.setHours(0, 0, 0, 0);
+//       softwareDate.setHours(0, 0, 0, 0);
+//       if (today > softwareDate) {
+//         clientSession.softwareDate = today.toString();
+//         master.transactionDate = today.toString();
+//       } else {
+//         // TO do 
+//         // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
+//         master.transactionDate = clientSession.softwareDate;
+//         return {
+//           master: master,
+//           isValid: false
+//         };
+//       }
+//     }
+//   }
+// }
 
     // CODE CHECKED########  - Working Not checked/ Tested
     // ============ Credit Limit Check ============
@@ -1533,7 +1622,10 @@ if (voucherType === VoucherType.SalesInvoice) {
           confirmButtonText: t("ok"),
           showCancelButton: false
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
 
@@ -1547,7 +1639,10 @@ if (voucherType === VoucherType.SalesInvoice) {
             confirmButtonText: t("ok"),
             showCancelButton: false
           });
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
     }
@@ -1574,7 +1669,10 @@ if (voucherType === VoucherType.SalesInvoice) {
         confirmButtonText: t("ok"),
         showCancelButton: false
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
     // CODE CHECKED########
@@ -1596,7 +1694,10 @@ if (voucherType === VoucherType.SalesInvoice) {
             }, 100);
           },
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
     }
 
@@ -1613,7 +1714,10 @@ if (voucherType === VoucherType.SalesInvoice) {
           text: `${t("invalid_tax_calculation_in_row")} ${i + 1}`,
           confirmButtonText: t("ok"),
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
 
       // CODE CHECKED########
@@ -1626,7 +1730,10 @@ if (voucherType === VoucherType.SalesInvoice) {
           confirmButtonText: t("ok"),
           showCancelButton: false
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
       // CODE CHECKED########
       // Unit validation
@@ -1638,7 +1745,10 @@ if (voucherType === VoucherType.SalesInvoice) {
           confirmButtonText: t("ok"),
           showCancelButton: false
         });
-        return false;
+        return {
+          master: master,
+          isValid: false
+        };
       }
       // CODE CHECKED########
       // Zero quantity/rate validation
@@ -1655,7 +1765,10 @@ if (voucherType === VoucherType.SalesInvoice) {
           const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
           const res = focusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
 
@@ -1673,9 +1786,15 @@ if (voucherType === VoucherType.SalesInvoice) {
             const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
             const res = focusColumn(rowIndex, "qty");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
-            return false;
+            return {
+          master: master,
+          isValid: false
+        };
           }
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
 
@@ -1691,7 +1810,10 @@ if (voucherType === VoucherType.SalesInvoice) {
           showCancelButton: true,
         });
         if (!confirm) {
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
     }
@@ -1708,7 +1830,10 @@ if (voucherType === VoucherType.SalesInvoice) {
             confirmButtonText: t("ok"),
             showCancelButton: false
           });
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
     }
@@ -1728,7 +1853,10 @@ if (voucherType === VoucherType.SalesInvoice) {
               text: `${t("negative_stock_in_row")} ${i + 1}. ${t("item_please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
               confirmButtonText: t("ok"),
             });
-            return false;
+            return {
+          master: master,
+          isValid: false
+        };
           }
         }
       }
@@ -1755,7 +1883,10 @@ if (voucherType === VoucherType.SalesInvoice) {
                 text: `${t("sales_price_less_than_purchase_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
                 confirmButtonText: t("ok"),
               });
-              return false;
+              return {
+          master: master,
+          isValid: false
+        };
             }
             await ERPAlert.show({
               icon: "error",
@@ -1767,7 +1898,10 @@ if (voucherType === VoucherType.SalesInvoice) {
             const action = `"User tried to allow Sales Price Less than Min Sales Price ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
             isAuthorized = await SalesAuthorization(action);
             if (!isAuthorized) {
-              return false;
+              return {
+          master: master,
+          isValid: false
+        };
             }
 
           } else {
@@ -1777,7 +1911,10 @@ if (voucherType === VoucherType.SalesInvoice) {
               text: `${t("sales_price_less_than_min_selling_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
               confirmButtonText: t("ok"),
             });
-            return false;
+            return {
+          master: master,
+          isValid: false
+        };
           }
         }
 
@@ -1788,7 +1925,10 @@ if (voucherType === VoucherType.SalesInvoice) {
             text: `${t("sales_price_less_than_purchase_price_in_row")} ${i + 1}. ${t("cant_proceed!")}`,
             confirmButtonText: t("ok"),
           });
-          return false;
+          return {
+          master: master,
+          isValid: false
+        };
         }
       }
     }
@@ -1801,10 +1941,16 @@ if (voucherType === VoucherType.SalesInvoice) {
         text: t("voucher_number_cannot_be_zero"),
         confirmButtonText: t("ok"),
       });
-      return false;
+      return {
+          master: master,
+          isValid: false
+        };
     }
 
-    return true;
+    return {
+          master: master,
+          isValid: true
+        };
   }
 
   // const validateStatus = (accounts: TransactionRow[]): boolean => {
@@ -1916,9 +2062,9 @@ if (voucherType === VoucherType.SalesInvoice) {
     }
   };
   const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
-    // const valid = await validate();
-    const valid = true;
-    if (valid == true) {
+    const validationResult = await validate();
+    if (validationResult.isValid == true) {
+
       const tenderOk = await Tender()
       if (!tenderOk) {
         return;
@@ -1930,7 +2076,13 @@ if (voucherType === VoucherType.SalesInvoice) {
           },
         })
       );
-      const master = await attachMaster(formState);
+      const master = await attachMaster({
+        ...formState,
+        transaction:{
+          ...formState.transaction,
+          master:validationResult.master
+        }
+      });
       const attachments = formState.transaction.attachments
         ?.filter((x) => x.id > 0)
         ?.map((x) => ({
@@ -4285,6 +4437,10 @@ if (voucherType === VoucherType.SalesInvoice) {
             }
             return { ...result, handled: true, preventDefault: true };
           }
+        }else{
+           // Need to check is this will effecting other cases
+          const res = focusToNextColumn(rowIndex, columnName);
+          setCurrentCell(res, data, false);
         }
       }
       // Above Newly Adding in sales

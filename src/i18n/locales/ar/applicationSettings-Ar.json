@@ -347,5 +347,6 @@
   "use_empty_tax_type_template_if_missing": "استخدام قالب نوع ضريبة فارغ في حال فقدانه",
 
   "allow_customer_creation_by_mobile_number": "السماح بإنشاء حساب عميل بواسطة رقم الجوال",
-  "enable_discount_slab_offer": "تفعيل عرض شرائح الخصم"
+  "enable_discount_slab_offer": "تفعيل عرض شرائح الخصم",
+  "direct_print_method_for_browser": "طريقة الطباعة المباشرة للمتصفح"
 }

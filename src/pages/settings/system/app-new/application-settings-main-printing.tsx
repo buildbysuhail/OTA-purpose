@@ -169,6 +169,38 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         />
       ),
     },
+    {
+      condition: filterComponent([t("direct_print_method_for_browser")], filterText),
+      element: (
+        <ERPDataCombobox
+          isInModal={false}
+          id="directPrintMethodForBrowser"
+          data={settings?.printerSettings}
+          field={{
+            id: "directPrintMethodForBrowser",
+            valueKey: "value",
+            labelKey: "label",
+          }}
+          value={settings.printerSettings.directPrintMethodForBrowser}
+          onChangeData={(data: any) =>
+          {
+            debugger;
+            handleFieldChange(
+              "printerSettings",
+              "directPrintMethodForBrowser",
+              data.directPrintMethodForBrowser
+            )
+          }
+          }
+          label={t("direct_print_method_for_browser")}
+          options={[
+            { value: "PrintDialog", label: "Print Dialog" },
+            { value: "JSPrinter", label: "JS Printer" },
+            { value: "QZTray", label: "QZ Tray" },
+          ]}
+        />
+      ),
+    },
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

@@ -1253,6 +1253,9 @@
   "serials":"Serials",
   "skip_and_continue":"Skip and Continue",
   "duplicate_serial":"Duplicate Serial",
-  "serial_exist_in_row":"Serial exist in row :"
+  "serial_exist_in_row":"Serial exist in row :",
+  "date_warning":"Data Warning",
+  "system_date_doesn’t_match_transaction_date. Do_you_want_to_update?":"System date does not match the transaction date. Do you want to update it?",
+  "demo_expired_please_activate":"Demo expired. Please activate"
 
 }

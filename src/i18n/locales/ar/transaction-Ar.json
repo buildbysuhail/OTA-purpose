@@ -1250,7 +1250,10 @@
   "serials":"مسلسلات",
   "skip_and_continue":"تخطي ومتابعة",
   "duplicate_serial": "رقم تسلسلي مكرر",
-  "serial_exist_in_row": "الرقم التسلسلي موجود في الصف:"
+  "serial_exist_in_row": "الرقم التسلسلي موجود في الصف:",
+  "date_warning": "تحذير التاريخ",
+  "system_date_doesn’t_match_transaction_date. Do_you_want_to_update?": "تاريخ النظام لا يتطابق مع تاريخ المعاملة. هل تريد التحديث؟",
+  "demo_expired_please_activate": "انتهت صلاحية النسخة التجريبية، يرجى التفعيل"
 
 }
 

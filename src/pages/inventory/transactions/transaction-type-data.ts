@@ -194,7 +194,7 @@ export const TransactionMasterInitialData: TransactionMaster = {
   refInvTransactionMasterSOID: 0,
   itemTaxDetails: null,
   taxableDetails: null,
-  refDate: "",
+  refDate: new Date().toISOString(),
   note1: "",
   note2: "",
 }
@@ -493,7 +493,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnEinvoice: { visible: true, disabled: false, label: "" }, 
   einvoiceLabel: { visible: true, disabled: false, label: "" }, 
   postedTransactionLabel: { visible: false, disabled: false, label: "" }, 
-  sRAmountLabel: { visible: false, disabled: false, label: "" }, 
+  sRAmountLabel: { visible: false, disabled: false, label: "" },
+  dtpTransDate: { visible: true, disabled: false, label:""},
 
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },

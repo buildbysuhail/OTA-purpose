@@ -1170,51 +1170,51 @@ export const useTransaction = (
         master.refDate = clientSession.softwareDate;
       }
     }
-if (clientSession.isDemoVersion) {
-  const expiryDate = new Date(clientSession.demoExpiryDate);
-  const transDate = new Date(master.transactionDate); // make sure this is a valid date
+    if (clientSession.isDemoVersion) {
+      const expiryDate = new Date(clientSession.demoExpiryDate);
+      const transDate = new Date(master.transactionDate); // make sure this is a valid date
 
-  // Difference in days
-  const diffInDays = Math.floor(
-    (expiryDate.getTime() - transDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
+      // Difference in days
+      const diffInDays = Math.floor(
+        (expiryDate.getTime() - transDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
 
-  if (diffInDays < 0 || diffInDays > 30) {
-  formState.formElements.dtpTransDate.disabled = true;
-  formState.formElements.btnSave.disabled = true;
-  formState.formElements.dgvInventory.disabled = true;
+      if (diffInDays < 0 || diffInDays > 30) {
+        formState.formElements.dtpTransDate.disabled = true;
+        formState.formElements.btnSave.disabled = true;
+        formState.formElements.dgvInventory.disabled = true;
 
-    await ERPAlert.show({
-      icon: "error",
-      title: t("validation_error"),
-      text: t("demo_expired_please_activate"),
-      confirmButtonText: t("ok"),
-    });
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("demo_expired_please_activate"),
+          confirmButtonText: t("ok"),
+        });
 
-    return false;
-  }
-}
-if (
-  formState.blnCreateCreditNoteAutomatically &&
-  master.invTransactionMasterID > 0 &&
-  voucherType === VoucherType.SalesInvoice &&
-  !isIndia
-) {
-  const confirm = await ERPAlert.show({
-    icon: "question",
-    title: t("credit_note_sales_return"),
-    text: t("are_you_sure_want_to_create_credit_note_automatically"),
-    confirmButtonText: t("yes"),
-    cancelButtonText: t("no"),
-    showCancelButton: true,
-  });
+        return false;
+      }
+    }
+    if (
+      formState.blnCreateCreditNoteAutomatically &&
+      master.invTransactionMasterID > 0 &&
+      voucherType === VoucherType.SalesInvoice &&
+      !isIndia
+    ) {
+      const confirm = await ERPAlert.show({
+        icon: "question",
+        title: t("credit_note_sales_return"),
+        text: t("are_you_sure_want_to_create_credit_note_automatically"),
+        confirmButtonText: t("yes"),
+        cancelButtonText: t("no"),
+        showCancelButton: true,
+      });
 
-  if (!confirm) {
-    return false;
-  }
-}
+      if (!confirm) {
+        return false;
+      }
+    }
 
- if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
+    if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("date_warning"),
@@ -1321,7 +1321,7 @@ if (
 
     // CODE CHECKED########
     // ============ Excess Card Amount Check ============ 
-    if (cashReceived + cardAmount > grandTotal && [VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.SaleReturnEstimate].includes(voucherType as any) ) {
+    if (cashReceived + cardAmount > grandTotal && [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
       if (cardAmount > 0) {
         if (formState.userConfig?.allowExcessCashReceipt) {
           const confirmed = await ERPAlert.show({
@@ -1348,7 +1348,17 @@ if (
         }
       }
     }
-
+    // discount given . So it should be authorised
+    if (voucherType == VoucherType.SalesInvoice && applicationSettings.inventorySettings.blockBillDiscount == "If Authentication Fails") {
+      if (master.billDiscount > 0 && master.billDiscount > applicationSettings.inventorySettings.discontAuthorizationIfDiscountAbove) {
+        let isAuthorized = false;
+        const action = `Are you sure to allow discount : ${master.billDiscount} in  ${voucherType}:${formType}:${vrPrefix}${vrNumber}`;
+        isAuthorized = await SalesAuthorization(action);
+        if (!isAuthorized) {
+          return false;
+        }
+      }
+    }
     // CODE CHECKED########
     // ============ Grand Total Check ============
     if (grandTotal < 0) {
@@ -1381,8 +1391,8 @@ if (
         icon: "info",
         title: t("stock_update_warning"),
         text: voucherType === "SI"
-          ? t("stock_cannot_be_updated_gd_already_deducted")
-          : t("stock_cannot_be_updated_gdr_already_updated"),
+          ? t("stock_cannot_be_updated_gd_already_deducted . do_you_want_to_continue?")
+          : t("stock_cannot_be_updated_gdr_already_updated . do_you_want_to_continue?"),
         confirmButtonText: t("yes"),
         cancelButtonText: t("no"),
         showCancelButton: true,
@@ -1434,6 +1444,18 @@ if (
       }
     }
 
+    if(userSession.dbIdValue=="543140180640" 
+      && voucherType==VoucherType.SalesInvoice 
+      && !clientSession.isAppGlobal
+      && formState.voucherNumberLck==true){
+        //no warning in 1050 only block
+      await ERPAlert.show({
+        title: t("voucher_number_lock_checked"),
+        text: t("please_verify_voucher_number_and_disable_it_before_save"),
+        icon: "warning",
+      });
+      return false;
+    }
     // CODE CHECKED########
     // ============ Transaction Date Validation ============
     const transDateValidation = validateTransactionDate(
@@ -1450,6 +1472,47 @@ if (
       });
       return false;
     }
+if (voucherType === VoucherType.SalesInvoice) {
+  const closedDateResult = await api.getAsync(
+    `${Urls.inv_transaction_base}GetClosedDate?type=Sales`
+  );
+
+  const closedDate = new Date(closedDateResult);
+  const transDate = new Date(master.transactionDate);
+
+  // Normalize time
+  closedDate.setHours(0, 0, 0, 0);
+  transDate.setHours(0, 0, 0, 0);
+
+  if (closedDate >= transDate) {
+    const confirm = await ERPAlert.show({
+      icon: "question",
+      title: t("day_closed"),
+      text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
+      confirmButtonText: t("yes"),
+      cancelButtonText: t("no"),
+      showCancelButton: true,
+    });
+
+    if (!confirm) {
+      return false;
+    } else {
+      const today = new Date();
+      const softwareDate = new Date(clientSession.softwareDate);
+      today.setHours(0, 0, 0, 0);
+      softwareDate.setHours(0, 0, 0, 0);
+      if (today > softwareDate) {
+        clientSession.softwareDate = today.toString();
+        master.transactionDate = today.toString();
+      } else {
+        // TO do 
+        // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
+        master.transactionDate = clientSession.softwareDate;
+        return false;
+      }
+    }
+  }
+}
 
     // CODE CHECKED########  - Working Not checked/ Tested
     // ============ Credit Limit Check ============
@@ -4540,17 +4603,17 @@ if (
             }
           }
           break;
-          // Increase qty
+        // Increase qty
         case "+":
           if (columnName === "barCode") {
             event.preventDefault();
             const data: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
-            if(formState.userConfig?.autoIncrementQty){
-              if(rowIndex > 0){
+            if (formState.userConfig?.autoIncrementQty) {
+              if (rowIndex > 0) {
                 let prevQuantity = data.qty;
                 let newQuantity = prevQuantity + 1;
                 const outRow = {
-                  qty : newQuantity
+                  qty: newQuantity
                 }
                 let sd = await calculateRowAmount(
                   data,
@@ -4569,18 +4632,18 @@ if (
               }
             }
           }
-          // Decrease qty
-          case "-":
+        // Decrease qty
+        case "-":
           if (columnName === "barCode") {
             event.preventDefault();
             const data: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
-            if(formState.userConfig?.autoIncrementQty){
-              if(rowIndex > 0){
+            if (formState.userConfig?.autoIncrementQty) {
+              if (rowIndex > 0) {
                 let prevQuantity = data.qty;
                 if (prevQuantity <= 1) break;
                 let newQuantity = prevQuantity - 1;
                 const outRow = {
-                  qty : newQuantity
+                  qty: newQuantity
                 }
                 let sd = await calculateRowAmount(
                   data,
@@ -4751,7 +4814,7 @@ if (
           break;
 
         case "Enter":
-          if(columnName !=="serial" && columnName !=="imf" && columnName!=="actionCol") {  // Add another btn columns
+          if (columnName !== "serial" && columnName !== "imf" && columnName !== "actionCol") {  // Add another btn columns
             event.preventDefault();
             event.stopPropagation();
           }

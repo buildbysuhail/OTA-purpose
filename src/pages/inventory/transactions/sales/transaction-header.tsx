@@ -638,7 +638,21 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                 <Search className="w-4 h-4 dark:text-dark-text text-gray-700" />
               </button>
             </div>
-
+              <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="voucherNumberLck"
+                      className="text-left !m-0 dark:text-dark-text"
+                      noLabel={true}
+                      checked={formState.voucherNumberLck}
+                      onChange={(e) => {
+                        dispatch(
+                          formStateHandleFieldChange({
+                            fields: { voucherNumberLck: e.target.checked },
+                          })
+                        );
+                      }}
+                      disabled={formState.formElements.pnlMasters?.disabled}
+                    />
             <AccVoucherPrefix
               ref={voucherNumberRef}
               formState={formState}

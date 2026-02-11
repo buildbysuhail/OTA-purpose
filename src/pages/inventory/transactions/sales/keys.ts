@@ -73,3 +73,9 @@
 //system_date_does_not_match_transaction_date. Do_you_want_to_update?
 //credit_note_sales_return
 //are_you_sure_want_to_create_credit_note_automatically
+//stock_cannot_be_updated_gdr_already_updated . do_you_want_to_continue?
+//voucher_number_lock_checked
+//please_verify_voucher_number_and_disable_it_before_save
+//day_closed
+//day_closed_do_you_want_to_continue_with_next_transaction_date
+

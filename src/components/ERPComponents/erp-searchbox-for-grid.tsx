@@ -773,6 +773,23 @@ useEffect(() => {
         searchValue: value,
       }));
     }, [value]);
+    useEffect(() => {
+      if(!isNullOrUndefinedOrEmpty(formState.resetSearch)){
+        setInputValue((prev) => ({
+        ...prev,
+        searchValue: "",
+      }));
+      // Making the resetSearch empty
+      // This is done for fixing the issue when data vanishing case in input filed in search box
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            resetSearch:"",
+          },
+        })
+      )
+      }
+    }, [formState.resetSearch]);
 
     // Calculate position for the DataGrid
     const getGridPosition = useCallback(() => {

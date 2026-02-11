@@ -5,58 +5,50 @@ function run(cmd) {
   execSync(cmd, { stdio: "inherit" });
 }
 
-function ensureClean() {
-  const status = execSync("git status --porcelain").toString().trim();
-  if (status) {
-    console.log("❌ You have uncommitted changes.");
-    console.log("Please commit or stash them before releasing.");
-    process.exit(1);
-  }
-}
-
-function bumpVersion() {
-  const pkg = JSON.parse(fs.readFileSync("package.json", "utf-8"));
-  const parts = pkg.version.split(".");
-  parts[2] = parseInt(parts[2]) + 1;
-  const newVersion = parts.join(".");
-  pkg.version = newVersion;
-  fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
-  return newVersion;
+function getOutput(cmd) {
+  return execSync(cmd).toString().trim();
 }
 
 console.log("🚀 FULL RELEASE STARTING...");
 
-// 1️⃣ Ensure clean repo
-ensureClean();
+// 1️⃣ Check uncommitted changes
+const status = getOutput("git status --porcelain");
+if (status) {
+  console.log("❌ You have uncommitted changes.");
+  process.exit(1);
+}
 
-// 2️⃣ Sync remote safely
+// 2️⃣ Sync with remote safely
 console.log("🔄 Syncing with remote...");
 run("git pull origin main --rebase");
 
-// 3️⃣ Bump version
-const newVersion = bumpVersion();
-console.log("⬆ Version bumped:", newVersion);
+// 3️⃣ Auto bump PATCH version
+const pkg = JSON.parse(fs.readFileSync("package.json"));
+const parts = pkg.version.split(".");
+parts[2] = parseInt(parts[2]) + 1;
+pkg.version = parts.join(".");
+fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
 
-// 4️⃣ Commit version
+console.log(`⬆ Version bumped: ${pkg.version}`);
+
+// 4️⃣ Commit + push
 run("git add package.json");
-run(`git commit -m "chore: bump version to ${newVersion}"`);
-run("git push origin main");
+run(`git commit -m "chore: bump version to ${pkg.version}"`);
+run("git push");
 
-// 5️⃣ Create platform tags
-const tags = [
-  `android-ota-${newVersion}-ota.1`,
-  `ios-ota-${newVersion}-ota.1`,
-  `win-ota-${newVersion}-ota.1`,
-  `mac-ota-${newVersion}-ota.1`
-];
+// 5️⃣ Create OTA tags automatically
+const platforms = ["android", "ios", "win", "mac"];
 
-tags.forEach(tag => {
+platforms.forEach(platform => {
+  const tag = `${platform}-ota-${pkg.version}-ota.1`;
+
   try {
+    execSync(`git rev-parse ${tag}`);
+    console.log(`⚠ Tag already exists: ${tag}`);
+  } catch {
     run(`git tag ${tag}`);
     run(`git push origin ${tag}`);
-    console.log("✅ Tag created:", tag);
-  } catch {
-    console.log("⚠️ Tag already exists:", tag);
+    console.log(`✅ Tag created: ${tag}`);
   }
 });
 

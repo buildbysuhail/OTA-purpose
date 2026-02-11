@@ -25,6 +25,7 @@ import { compressData, decompressData } from "../../../utilities/compression";
 import { isNullOrUndefinedOrEmpty, removeDefaults } from "../../../utilities/Utils";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import moment from "moment";
+import { de } from "date-fns/locale";
 
 const api = new APIClient();
 
@@ -163,6 +164,7 @@ export const useTemplateDesigner = <T = unknown,>({
 
   const loadPrintAndTemplateData = useCallback(
     async (isActiveRef: { current: boolean }) => {
+      debugger;
       if (!MasterIDParam) return;
 
       setLoading(true);
@@ -296,6 +298,7 @@ export const useTemplateDesigner = <T = unknown,>({
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
     const updateProps = async () => {
+      debugger;
       //    if (!activeTemplate) {
       //   setStableTemplateProps(null); 
       //   return;
@@ -333,7 +336,8 @@ export const useTemplateDesigner = <T = unknown,>({
 
   // Effect: Handle user template selection
   useEffect(() => {
-
+    console.log("Running template selection effect");
+   debugger;
     if (!manuvalTemplateFeatch) return;
     // Detect MasterIDParam change (new transaction)
     const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;
@@ -349,13 +353,13 @@ export const useTemplateDesigner = <T = unknown,>({
     if (!autoTemplateResolvedRef.current) return;
     const newTemplateId = lastChoosedTemplate?.id ?? null;
 
-    if (newTemplateId === null || newTemplateId === lastFetchedTemplateIdRef.current) return;
+    if (isNullOrUndefinedOrEmpty(newTemplateId) || newTemplateId === lastFetchedTemplateIdRef.current) return;
 
     lastFetchedTemplateIdRef.current = newTemplateId;
     dispatch(setTemplate(lastChoosedTemplate));
 
   }, [
-    lastChoosedTemplate,
+    lastChoosedTemplate?.id,
     MasterIDParam,
     manuvalTemplateFeatch,
   ]);

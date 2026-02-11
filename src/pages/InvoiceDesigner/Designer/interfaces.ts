@@ -547,12 +547,15 @@ export interface ItemTableMasterState {
   showTableColBorder?: boolean;
   tableRowBorderColor?: string;
   tableColBorderColor?: string;
+  borderRowStyle?: "dashed" | "solid" | "dotted";
+  borderColStyle?: "dashed" | "solid" | "dotted";
+  tableRowBorderWidth?: number;
+  tableColBorderWidth?: number;
   /// Table Header
   headerRepeatOnPage?:boolean;
   showTableHeaderBg?: boolean;
   tableHeaderBgColor?: string;
   headerFontColor?: string;
-  borderStyle?: "dashed" | "solid" | "doted";
   headerFontSize?: number;
   headerFontWeight?: number;
   headerFontFamily?: string;

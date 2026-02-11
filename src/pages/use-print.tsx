@@ -1936,7 +1936,7 @@ export function bindDataForPrint(
   ) => string,
   rowIndex: number = 0
 ): any {
-  debugger;
+  
   if (!field) return "";
   if (!printData) return "";
 
@@ -2031,7 +2031,6 @@ export function bindDataForPrint(
   // LEDGER REPORT FLOW
   // ----------------------------
   else if (printData.kind === "ledgerReport") {
-    debugger
     const data = printData.data;
 
     if (group === "ledgerReportDataForPrint") {
@@ -2081,7 +2080,7 @@ export const addTemplateToStore = async (
       }
     })
     .filter((x) => x && x.startsWith(prnt));
-  debugger;
+  
   for (const x of keys ?? []) {
     if (!x) continue; // skip null or undefined
     const base64 = btoa(x);
@@ -2144,7 +2143,7 @@ export const fetchDefaultTemplateFromApi = async (
   formType?: string,
   customerType?: string
 ): Promise<TemplateState<unknown> | null> => {
-  debugger;
+  
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {
@@ -2189,7 +2188,7 @@ export const fetchTemplateById = async (
   formType: string
 ): Promise<TemplateState<unknown> | null> => {
   try {
-    debugger;
+    
     const template = await getTemplateFromStoreById(
       id,
       templateGroup,
@@ -2242,7 +2241,7 @@ export const fetchTemplateFromApiById = async (
   id: any
 ): Promise<TemplateState<unknown> | null> => {
   try {
-    debugger;
+    
     const api = new APIClient();
     const res = await api.getAsync(`${Urls.templates}${id}`);
     const templateContent = await decompressData(res.content);
@@ -2288,7 +2287,7 @@ export function parseTemplateContent<T extends object>(
       }
       return obj;
     };
-    debugger;
+    
     const camelCasedContent = convertToCamelCase(cc);
     const _template = {
       ...camelCasedContent,
@@ -2324,7 +2323,7 @@ export const fetchDefaultTemplate = async (
   formType?: string,
   customerType?: string
 ) => {
-   debugger;
+   
   try {
     const _template = await fetchDefaultTemplateFromApi(
       voucherType,
@@ -2345,7 +2344,7 @@ export const getOrFetchTemplate = async (
   formType?: string,
   customerType?: string
 ) => {
-  debugger;
+  
   const template = await getTemplateFromStore(
     voucherType,
     customerType,

@@ -7,7 +7,7 @@ import { formatValue } from "../../../use-print";
 
 const DEFAULT_COLUMN_WIDTH = "10%";
 const TABLE_CELL_PADDING = 4; // Must match PDF padding: 4
-const BORDER_WIDTH = 1; // Must match PDF borderWidth: 1
+ // Must match PDF borderWidth: 1
 
 type AccPrvTableProps = {
   data: PrintDetailDto[];
@@ -22,7 +22,13 @@ const SharedPrvTable: React.FC<AccPrvTableProps> = ({ data, template,isAutoHeigh
   const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily ?? "Amiri";
   const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
   const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily ?? "Amiri";
-
+  const ROW_BORDER_WIDTH= tableMasterState?.tableRowBorderWidth ?? 1;
+  const COL_BORDER_WIDTH= tableMasterState?.tableColBorderWidth ?? 1;
+  const COL_BORDER_STYLE= tableMasterState?.borderColStyle ?? "solid";
+  const ROW_BORDER_STYLE= tableMasterState?.borderRowStyle ?? "solid";
+  const ROW_BORDER_COLOR= tableMasterState?.tableRowBorderColor ?? "#000";
+  const COL_BORDER_COLOR= tableMasterState?.tableColBorderColor ?? "#000";
+  
   // label font preferences from propertiesState
   const HeaderFontBase: CSSProperties = {
     fontWeight: tableMasterState?.headerFontWeight ?? undefined,
@@ -56,16 +62,16 @@ const rows = useMemo(() => {
   // component-level styles (DOM-friendly)
   const styles = useMemo(() => {
     const borderTop = tableMasterState?.showTableRowBorder
-      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+      ? `${ROW_BORDER_WIDTH}pt  ${ROW_BORDER_STYLE}  ${ROW_BORDER_COLOR}`
       : undefined;
     const borderBottom = tableMasterState?.showTableRowBorder
-      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+      ? `${ROW_BORDER_WIDTH}pt  ${ROW_BORDER_STYLE}  ${ROW_BORDER_COLOR}`
       : undefined;
     const borderLeft = tableMasterState?.showTableColBorder
-      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableColBorderColor || "#000"}`
+      ? `${COL_BORDER_WIDTH}pt  ${COL_BORDER_STYLE}  ${COL_BORDER_COLOR}`
       : undefined;
     const borderRight = tableMasterState?.showTableColBorder
-      ? `${BORDER_WIDTH}pt  solid ${tableMasterState?.tableColBorderColor || "#000"}`
+      ? `${COL_BORDER_WIDTH}pt  ${COL_BORDER_STYLE}  ${COL_BORDER_COLOR}`
       : undefined;
 
     const commonTh: CSSProperties = {
@@ -105,7 +111,7 @@ const rows = useMemo(() => {
           : "#fff",
 
         borderBottom: tableMasterState?.showTableRowBorder
-          ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+          ? `${ROW_BORDER_WIDTH}pt ${ROW_BORDER_STYLE} ${ROW_BORDER_COLOR}`
           : undefined,
 
       } as CSSProperties,
@@ -152,7 +158,7 @@ const rows = useMemo(() => {
         {visibleColumns.map((col, idx) => {
           const borderRight =
             tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length
-              ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+              ? `${COL_BORDER_WIDTH}pt ${COL_BORDER_STYLE} ${COL_BORDER_COLOR}`
               : undefined;
           const text = col.label ?? String(col.field)
           const isArabic = containsArabicString(text)
@@ -216,13 +222,13 @@ const rows = useMemo(() => {
             style={{
               ...styles.tr,
               borderBottom: tableMasterState?.showTableRowBorder && rowIndex + 1 < data.length
-                ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableRowBorderColor || "#000"}`
+                ? `${ROW_BORDER_WIDTH}pt ${ROW_BORDER_STYLE} ${ROW_BORDER_COLOR}`
                 : undefined,
             }}>
             {visibleColumns.map((col, index) => {
               const borderRight =
                 tableMasterState?.showTableColBorder && index + 1 < visibleColumns.length
-                  ? `${BORDER_WIDTH}pt solid ${tableMasterState?.tableColBorderColor || "#000"}`
+                  ? `${COL_BORDER_WIDTH}pt ${COL_BORDER_STYLE} ${COL_BORDER_COLOR}`
                   : undefined;
               // Get cell value
               console.log(`col.field-${col.field}`);

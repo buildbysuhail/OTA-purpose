@@ -1,20 +1,34 @@
-#!/usr/bin/env node
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { getVersion } from "./utils/version.js";
+import { getNextOtaNumber, safeCreateTag } from "./utils/tag-helper.js";
+import readline from "readline";
 
-const PLATFORM = 'win';
-const TAG_PREFIX = 'win-ota';
+const version = getVersion();
+const nextOta = getNextOtaNumber("win-ota", version);
+const tag = `win-ota-${version}-ota.${nextOta}`;
 
-const BASE_VERSION = JSON.parse(
-  readFileSync('package.json', 'utf-8')
-).version;
+console.log(`
+===================================
+ WINDOWS OTA RELEASE
+-----------------------------------
+ Base Version: ${version}
+ New Tag: ${tag}
+===================================
+`);
 
-const TAG = `${TAG_PREFIX}-${BASE_VERSION}`;
+ask(tag);
 
-console.log(`Creating Windows OTA tag: ${TAG}`);
+function ask(tag) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
-execSync('git fetch --tags');
-execSync(`git tag ${TAG}`);
-execSync(`git push origin ${TAG}`);
-
-console.log('✅ Windows OTA tag pushed');
+  rl.question(`Create and push tag '${tag}'? (y/N): `, answer => {
+    if (answer.toLowerCase() === "y") {
+      safeCreateTag(tag);
+    } else {
+      console.log("❌ Cancelled");
+    }
+    rl.close();
+  });
+}

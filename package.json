@@ -1,7 +1,7 @@
 {
   "name": "polosys-erp",
   "private": true,
-  "version": "10.0.9",
+  "version": "10.0.13",
   "type": "module",
   "main": "electron/main.cjs",
   "build": {
@@ -29,7 +29,10 @@
       ]
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "publish": [
         {
           "provider": "github",
@@ -48,6 +51,7 @@
     "postcss": "sass ./src/assets/scss/style.scss ./src/assets/css/style.css && postcss ./src/assets/css/style.css -o ./src/assets/css/style.css",
     "sass": "sass ./src/assets/scss:./src/assets/css/",
     "sass-min": "sass ./src/assets/scss:./src/assets/css/ --style compressed",
+    "release:all": "node scripts/release-all.js",
     "release:ota": "node scripts/release-ota.js",
     "release:android": "node scripts/release-android-ota.js",
     "release:ios": "node scripts/release-ios-ota.js",

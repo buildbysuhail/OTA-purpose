@@ -17,7 +17,6 @@ export interface popupDataProps {
   formType?: string
   isInv?:boolean
   isInLedgerReport?: boolean;
-  lastChooseTemplateNotTransaction?:TemplateState<unknown>;
 }
 interface popupData {
   printJobLoader: { isPrinting: boolean }
@@ -89,6 +88,7 @@ interface popupData {
   CustomDesignerPopup: popupDataProps;
   IsPrintPreviewPopup: popupDataProps;
   TemplateChooserModal: popupDataProps;
+  lastChooseTemplate?: TemplateState<unknown>;
   configureEgs: popupDataProps;
   BenefitDiduction: popupDataProps;
   employee: popupDataProps;
@@ -406,6 +406,9 @@ const popupDataSlice = createSlice({
     toggleTemplateChooserModal: (state, action: PayloadAction<popupDataProps>) => {
       state.TemplateChooserModal = action.payload;
     },
+    toggleLastChooseTemplate: (state, action: PayloadAction<TemplateState<unknown> | undefined>) => {
+      state.lastChooseTemplate = action.payload;
+    },
     toggleConfigureEgs: (state, action: PayloadAction<popupDataProps>) => {
       state.configureEgs = action.payload;
     },
@@ -508,7 +511,8 @@ export const {
   toggleEmpDesignations,
   toggleLeavetype,
   toggleJobWorks,
-  toggleEmpDocuments
+  toggleEmpDocuments,
+  toggleLastChooseTemplate
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

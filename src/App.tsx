@@ -31,7 +31,7 @@ const Loader = React.lazy(() => import("./components/common/loader/loader"));
 import { modelToBase64 } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
-import { onCloseWithUnsavedChange, toggleSelectPrinterPopup, toggleTemplateChooserModal } from "./redux/slices/popup-reducer";
+import { onCloseWithUnsavedChange, toggleLastChooseTemplate, toggleSelectPrinterPopup, toggleTemplateChooserModal } from "./redux/slices/popup-reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 import AutoClicker from "./Nodevwatermark";
@@ -331,6 +331,7 @@ function App() {
     return <><Loader isOnline={isOnline} /></>;
   }
 
+
   return (
     <Fragment>
       {/* Status bar manager - handles status bar style based on route */}
@@ -472,7 +473,14 @@ function App() {
                 const modal = popupData.TemplateChooserModal;
 
                 if (!modal) return;
-
+                          // 🔹 Ledger report flow (independent of transaction)
+                if (modal.isInLedgerReport) {
+                  dispatch(
+                    toggleLastChooseTemplate(template)
+                    
+                  );
+                }
+                else{
                 // 🔹 Transaction / Invoice flow
                 if (modal.isInv) {
                   dispatch(
@@ -489,15 +497,8 @@ function App() {
                     })
                   );
                 }
-
-                // 🔹 Ledger report flow (independent of transaction)
-                if (modal.isInLedgerReport) {
-                  dispatch(
-                    toggleTemplateChooserModal({
-                      lastChooseTemplateNotTransaction: template,
-                    })
-                  );
                 }
+    
               }}
               setIsOpen={() =>
                 dispatch(

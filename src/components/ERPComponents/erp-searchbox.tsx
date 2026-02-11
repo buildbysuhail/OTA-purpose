@@ -759,7 +759,6 @@ useEffect(() => {
       const loadLedgerData = async () => {
         if ((formState.batchGridShowKey ?? 0) > 0) {
           productIDRef.current = formState.batchGridShowKey;
-          setShowBatchGrid(true);
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {
@@ -774,6 +773,7 @@ useEffect(() => {
             isMainPurchaseGrid,
           );
           setProductDetailStore(batchStore);
+          setShowBatchGrid(true);
         }
       };
       loadLedgerData();
@@ -785,6 +785,15 @@ useEffect(() => {
         searchValue: value,
       }));
     }, [value]);
+    // Clear the text in input field in formState.resetSearch case
+    useEffect(() => {
+      if(!isNullOrUndefinedOrEmpty(formState.resetSearch)){
+        setInputValue((prev) => ({
+        ...prev,
+        searchValue: "",
+      }));
+      }
+    }, [formState.resetSearch]);
 
     // Calculate position for the DataGrid
     const getGridPosition = useCallback(() => {

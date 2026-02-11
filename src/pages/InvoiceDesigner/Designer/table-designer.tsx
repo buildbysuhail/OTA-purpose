@@ -208,7 +208,8 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
       />
 
       {masterState?.showTableRowBorder && (
-        <ErpInput
+        <>
+          <ErpInput
           id="tableRowBorderColor"
           label={t("border_color")}
           type="color"
@@ -217,6 +218,41 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
             onChange?.({ ...masterState, tableRowBorderColor: e.target?.value })
           }
         />
+        <ERPStepInput
+        value={masterState?.tableRowBorderWidth}
+        onChange={(tableRowBorderWidth) =>
+          onChange?.({ ...masterState, tableRowBorderWidth })
+        }
+        label={t("size_(1-5)")}
+        id="tableRowBorderWidth"
+        defaultValue={1}
+        min={1}
+        max={5}
+        step={1}
+      />
+        <ERPDataCombobox
+        id="borderRowStyle"
+        label={t("row_border_style")}
+        field={{
+          id: "borderRowStyle",
+          required: true,
+          valueKey: "value",
+          labelKey: "label",
+        }}
+        data={masterState}
+        defaultValue={masterState?.borderRowStyle ?? "solid"}
+        value={masterState?.borderRowStyle ?? "solid"}
+        onChangeData={(data: any) => {
+          onChange?.({ ...masterState, borderRowStyle: data.borderRowStyle })
+        }}
+        options={[
+          { value: "dashed", label: "dashed" },
+          { value: "solid", label: "solid" },
+          { value: "dotted", label: "dotted" },
+        ]}
+      />
+        </>
+
       )}
 
       <ERPCheckbox
@@ -229,7 +265,8 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
       />
 
       {masterState?.showTableColBorder && (
-        <ErpInput
+        <>
+         <ErpInput
           id="tableColBorderColor"
           label={t("border_color")}
           type="color"
@@ -237,7 +274,43 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           onChange={(e) =>
             onChange?.({ ...masterState, tableColBorderColor: e.target?.value })
           }
-        />
+          
+        /> 
+            <ERPStepInput
+        value={masterState?.tableColBorderWidth}
+        onChange={(tableColBorderWidth) =>
+          onChange?.({ ...masterState, tableColBorderWidth })
+        }
+        label={t("size_(1-5)")}
+        id="tableColBorderWidth"
+        defaultValue={1}
+        min={1}
+        max={5}
+        step={1}
+      />
+        <ERPDataCombobox
+        id="borderColStyle"
+        label={t("col_border_style")}
+        field={{
+          id: "borderColStyle",
+          required: true,
+          valueKey: "value",
+          labelKey: "label",
+        }}
+        data={masterState}
+        defaultValue={masterState?.borderColStyle ?? "solid"}
+        value={masterState?.borderColStyle ?? "solid"}
+        onChangeData={(data: any) => {
+          onChange?.({ ...masterState, borderColStyle: data.borderColStyle })
+        }}
+        options={[
+          { value: "dashed", label: "dashed" },
+          { value: "solid", label: "solid" },
+          { value: "dotted", label: "dotted" },
+        ]}
+      />      
+        </>
+
       )}
 
       <h3 className="dark:!text-dark-text">{t("table_header")}</h3>
@@ -384,27 +457,6 @@ const LayoutEditor = ({ masterState, onChange, }: ItemTableLayoutDesignerProps) 
           onChange?.({ ...masterState, showTableHeaderBg: e.target.checked });
         }}
         checked={masterState?.showTableHeaderBg}
-      />
-        <ERPDataCombobox
-        id="borderStyle"
-        label={t("border_style")}
-        field={{
-          id: "borderStyle",
-          required: true,
-          valueKey: "value",
-          labelKey: "label",
-        }}
-        data={masterState}
-        defaultValue={masterState?.borderStyle ?? "Roboto"}
-        value={masterState?.borderStyle ?? "Roboto"}
-        onChangeData={(data: any) => {
-          onChange?.({ ...masterState, borderStyle: data.borderStyle })
-        }}
-        options={[
-          { value: "dashed", label: "dashed" },
-          { value: "solid", label: "solid" },
-          { value: "doted", label: "doted" },
-        ]}
       />
 
       {masterState?.showTableHeaderBg && (

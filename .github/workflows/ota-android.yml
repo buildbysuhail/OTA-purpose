@@ -97,8 +97,9 @@ jobs:
           cd cdn
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin ${CDN_BRANCH} --rebase || true
           git add .
-          git commit -m "Android OTA ${BUNDLE_ID}"
+          git commit -m "Android OTA ${BUNDLE_ID}" || echo "No changes"
           git push origin ${CDN_BRANCH}
 
       # 🔟 Verify deployment

@@ -1,33 +1,34 @@
-#!/usr/bin/env node
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { getVersion } from "./utils/version.js";
+import { getNextOtaNumber, safeCreateTag } from "./utils/tag-helper.js";
+import readline from "readline";
 
-const PLATFORM = 'ios';
-const TAG_PREFIX = 'ios-ota';
+const version = getVersion();
+const nextOta = getNextOtaNumber("ios-ota", version);
+const tag = `ios-ota-${version}-ota.${nextOta}`;
 
-const BASE_VERSION = JSON.parse(
-  readFileSync('package.json', 'utf-8')
-).version;
+console.log(`
+===================================
+ IOS OTA RELEASE
+-----------------------------------
+ Base Version: ${version}
+ New Tag: ${tag}
+===================================
+`);
 
-execSync('git fetch --tags');
+ask(tag);
 
-const tags = execSync(
-  `git tag -l "${TAG_PREFIX}-${BASE_VERSION}-ota.*"`,
-  { encoding: 'utf-8' }
-)
-  .split('\n')
-  .filter(Boolean);
+function ask(tag) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
-let otaNum = 1;
-if (tags.length) {
-  otaNum =
-    Math.max(...tags.map(t => Number(t.split('.').pop()))) + 1;
+  rl.question(`Create and push tag '${tag}'? (y/N): `, answer => {
+    if (answer.toLowerCase() === "y") {
+      safeCreateTag(tag);
+    } else {
+      console.log("❌ Cancelled");
+    }
+    rl.close();
+  });
 }
-
-const NEW_TAG = `${TAG_PREFIX}-${BASE_VERSION}-ota.${otaNum}`;
-
-console.log(`Creating iOS OTA tag: ${NEW_TAG}`);
-execSync(`git tag ${NEW_TAG}`);
-execSync(`git push origin ${NEW_TAG}`);
-
-console.log('✅ iOS OTA tag pushed');

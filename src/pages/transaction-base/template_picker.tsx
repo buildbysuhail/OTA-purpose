@@ -93,6 +93,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
 
   const loadTemplateId = useCallback(
     async (template: TemplateState<unknown> | null) => {
+      debugger
       setTemplateLoad(true)
       try {
         if (!template || isNullOrUndefinedOrEmpty(template.id)) return null;

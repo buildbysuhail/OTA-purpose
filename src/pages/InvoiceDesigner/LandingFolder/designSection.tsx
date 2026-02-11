@@ -165,26 +165,22 @@ export const designSections: DesignSectionType[] = [
 // Now nested by templateType -> templateKind -> section types
 export const designerSectionsConfig: Record<string, Record<string, string[]>> = {
   STANDARD: {
-    standard: ["properties", "header",  "table", "footer", ],
-  },
-  PREMIUM: {
-    premium: ["properties", "header",  "table", "footer", ],
+    "en-er": ["properties", "header",  "table", "footer", ],
   },
   UNIVERSAL: {
-    universal: ["properties", "header",  "table", "footer", ],
+    "en-er": ["properties", "header",  "table", "footer", ],
   },
   RETAIL: {
-    "retail-standard": ["properties", "header",  "table", "footer", ],
-    "2inch":["properties", "header",  "table", "footer", ],
+    "en-er": ["properties", "header",  "table", "footer", ],
   },
   ADVICE: {
-    advice: ["properties", "header",  "table", "footer", ],
+    "en-er": ["properties", "header",  "table", "footer", ],
   },
   CHEQUE: {
-    cheque: ["properties", "header",  "table", "footer", ],
+    "en-er": ["properties", "header",  "table", "footer", ],
   },
   CUSTOMERBALANCE: {
-    customerBalance: ["properties", "header", "footer", ],
+    "en-er": ["properties", "header", "footer", ],
   },
 };
 

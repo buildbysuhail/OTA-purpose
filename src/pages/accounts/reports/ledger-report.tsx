@@ -450,7 +450,7 @@ const LedgerReport = () => {
                       voucherType={"CBR"}
                       printPreviwPopupInfo={prnitCustomerBalance}
                       isInLedgerReport
-                      lastChooseTemp={popupData?.TemplateChooserModal?.lastChooseTemplateNotTransaction}
+                      lastChooseTemp={popupData?.lastChooseTemplate}
                     />
                   }
                 />

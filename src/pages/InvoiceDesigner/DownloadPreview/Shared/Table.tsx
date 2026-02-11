@@ -18,7 +18,13 @@ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) =>
   const arabicHeadFontFamily = tableMasterState?.arabicHeaderFontFamily ?? "Amiri";
   const rowFontFamily = tableMasterState?.itemRowFontFamily || "Roboto";
   const arabicrowFontFamily = tableMasterState?.arabicItemRowFontFamily ?? "Amiri";
-
+  const ROW_BORDER_WIDTH= tableMasterState?.tableRowBorderWidth ?? 1;
+  const COL_BORDER_WIDTH= tableMasterState?.tableColBorderWidth ?? 1;
+  const COL_BORDER_STYLE= tableMasterState?.borderColStyle ?? "solid";
+  const ROW_BORDER_STYLE= tableMasterState?.borderRowStyle ?? "solid";
+  const ROW_BORDER_COLOR= tableMasterState?.tableRowBorderColor ?? "#000";
+  const COL_BORDER_COLOR= tableMasterState?.tableColBorderColor ?? "#000";
+  
   // compute visible columns once
   const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
 
@@ -33,14 +39,18 @@ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) =>
       backgroundColor: tableMasterState?.showTableHeaderBg
         ? tableMasterState?.tableHeaderBgColor
         : "#fff",
-      borderTopWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
-      borderTopColor: tableMasterState?.tableRowBorderColor || "#000",
-      borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
-      borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
-      borderLeftWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
-      borderLeftColor: tableMasterState?.tableColBorderColor || "#000",
-      borderRightWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
-      borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+      borderTopWidth: tableMasterState?.showTableRowBorder ? ROW_BORDER_WIDTH : 0,
+      borderTopColor: ROW_BORDER_COLOR,
+      borderTopStyle:ROW_BORDER_STYLE,
+      borderBottomWidth: tableMasterState?.showTableRowBorder ? ROW_BORDER_WIDTH : 0,
+      borderBottomColor: ROW_BORDER_COLOR,
+      borderBottomStyle:ROW_BORDER_STYLE,
+      borderLeftWidth: (tableMasterState?.showTableColBorder) ? COL_BORDER_WIDTH : 0,
+      borderLeftColor: COL_BORDER_COLOR,
+      borderLeftStyle:COL_BORDER_STYLE,
+      borderRightWidth: (tableMasterState?.showTableColBorder) ? COL_BORDER_WIDTH : 0,
+      borderRightColor: COL_BORDER_COLOR,
+      borderRightStyle:COL_BORDER_STYLE,
 
     },
     th: {
@@ -55,12 +65,15 @@ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) =>
     },
     tr: {
       flexDirection: "row",
-      borderBottomWidth: tableMasterState?.showTableRowBorder ? 1 : 0,
-      borderBottomColor: tableMasterState?.tableRowBorderColor || "#000",
-      borderLeftWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
-      borderLeftColor: tableMasterState?.tableColBorderColor || "#000",
-      borderRightWidth: (tableMasterState?.showTableColBorder) ? 1 : 0,
-      borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+      borderBottomWidth: tableMasterState?.showTableRowBorder ? ROW_BORDER_WIDTH : 0,
+      borderBottomColor: ROW_BORDER_COLOR,
+      borderBottomStyle:ROW_BORDER_STYLE,
+      borderLeftWidth: (tableMasterState?.showTableColBorder) ? COL_BORDER_WIDTH : 0,
+      borderLeftColor: COL_BORDER_COLOR,
+      borderLeftStyle:COL_BORDER_STYLE,
+      borderRightWidth: (tableMasterState?.showTableColBorder) ? COL_BORDER_WIDTH : 0,
+      borderRightColor: COL_BORDER_COLOR,
+      borderRightStyle:COL_BORDER_STYLE,
       backgroundColor: tableMasterState?.showRowBg
         ? tableMasterState?.itemRowBgColor
         : "#fff",
@@ -90,8 +103,9 @@ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) =>
               width: col.width || DEFAULT_COLUMN_WIDTH,
               minWidth: col.width || DEFAULT_COLUMN_WIDTH,
               maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
-              borderRightWidth: (tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length) ? 1 : 0,
-              borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+              borderRightWidth: (tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length) ? COL_BORDER_WIDTH : 0,
+              borderRightColor: COL_BORDER_COLOR,
+              borderRightStyle: COL_BORDER_STYLE ,
 
             }}
           >
@@ -167,8 +181,9 @@ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) =>
                   width: col.width || DEFAULT_COLUMN_WIDTH,
                   minWidth: col.width || DEFAULT_COLUMN_WIDTH,
                   maxWidth: col.width || DEFAULT_COLUMN_WIDTH,
-                  borderRightWidth: tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? 1 : 0,
-                  borderRightColor: tableMasterState?.tableColBorderColor || "#000",
+                  borderRightWidth: tableMasterState?.showTableColBorder && idx + 1 < visibleColumns.length ? COL_BORDER_WIDTH : 0,
+                  borderRightColor: COL_BORDER_COLOR,
+                  borderRightStyle: COL_BORDER_STYLE,
                 }}
               >
                 <Text>{formatValue(cellValue, col.format)}</Text>

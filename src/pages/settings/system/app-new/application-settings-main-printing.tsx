@@ -174,19 +174,23 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       element: (
         <ERPDataCombobox
           isInModal={false}
-          id="direct_print_method_for_browser"
+          id="directPrintMethodForBrowser"
           data={settings?.printerSettings}
           field={{
             id: "directPrintMethodForBrowser",
             valueKey: "value",
             labelKey: "label",
           }}
+          value={settings.printerSettings.directPrintMethodForBrowser}
           onChangeData={(data: any) =>
+          {
+            debugger;
             handleFieldChange(
               "printerSettings",
               "directPrintMethodForBrowser",
               data.directPrintMethodForBrowser
             )
+          }
           }
           label={t("direct_print_method_for_browser")}
           options={[

@@ -444,19 +444,6 @@ const ERPModal = React.memo(
                                   const printData = printtRef.current?.getPrintData?.();
                                   console.log("printData:", printData);
                                   if (printData) {
-                                    // await printVoucher(
-                                    //       0,                           // masterID (not needed, data already loaded)
-                                    //       "",                          // transactionType (not needed)
-                                    //       "",                          // voucherType (not needed)
-                                    //       "",                          // formType (not needed)
-                                    //       "",                          // customerType (not needed)
-                                    //       false,                       // isInvTrans (not needed)
-                                    //       false,                       // printPreview (false to actually print/download)
-                                    //       printData.template,          // printTemplate (the actual template)
-                                    //       undefined,                   // transDate
-                                    //       printData.data,               // printData (the actual data)
-                           
-                                    //     );
                                         await directPrint({ template: printData.template, data: printData,})
                                   }
                                 }}

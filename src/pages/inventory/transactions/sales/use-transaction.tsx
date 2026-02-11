@@ -6354,7 +6354,7 @@ if (voucherType === VoucherType.SalesInvoice) {
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
-            : t(title) + "[" + formType + "]") ?? "",
+            : isInitial ? title + "[" + formType + "]" : title) ?? "",
 
         printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
       };
@@ -6822,14 +6822,14 @@ if (voucherType === VoucherType.SalesInvoice) {
           : clientSession.isAppGlobal ?
             getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
             :
-            t(title) + "[" + formType + "]") ?? "",
+            isInitial ? title + "[" + formType + "]" : title) ?? "",
       initialTitle:
         (formType == undefined || formType.trim() == ""
           ? t(title)
           : clientSession.isAppGlobal ?
             getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
             :
-            t(title) + "[" + formType + "]") ?? "",
+            isInitial? title + "[" + formType + "]" : title) ?? "",
     };
 
     _formState.gridColumns?.forEach((x: any) => {

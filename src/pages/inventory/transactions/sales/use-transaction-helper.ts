@@ -2434,7 +2434,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         if (
           product.autoBarcode != "" &&
           _index > -1 &&
-          formState.userConfig?.duplicationMessage
+          formState.userConfig?.duplicationMessage && !formState.userConfig?.autoIncrementQty
         ) {
           const confirm = await ERPAlert.show({
             icon: "info",
@@ -3060,19 +3060,234 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         let continueProcessing = false;
+        // At last we are focusing qty, so ignoreFocusToQty is used to ignore that case
+        let ignoreFocusToQty = false;
         // ------------------------------------
         // NORMAL FLOW (NO AUTO INCREMENT)
         // ------------------------------------
-        if (
-          !formState.userConfig?.qtyAfterBarcode &&
-          !formState.userConfig?.autoIncrementQty
-        ) {
-          continueProcessing = true;
+        if (!formState.userConfig?.qtyAfterBarcode && !formState.userConfig?.autoIncrementQty) {
+          if(outDetail.unitPrice ?? 0 > 0){
+            // Focus to the first editable column in the next row
+            const editableColumns = formState.gridColumns?.filter(
+              (col) =>
+                col.visible !== false &&
+                col.dataField != null &&
+                col.allowEditing === true &&
+                col.readOnly !== true
+            );
+            if (editableColumns && editableColumns.length > 0) {
+              const nextRowIndex = (formState.currentCell?.rowIndex ?? 0) + 1;
+              // Prevent overflow
+              if (nextRowIndex < formState.transaction.details.length) {
+                const res = focusColumn(
+                  nextRowIndex,
+                  editableColumns[0].dataField ?? ""
+                );
+                setCurrentCell(
+                  res,
+                  formState.transaction.details[nextRowIndex] as TransactionDetail,
+                  true
+                );
+              }
+              ignoreFocusToQty = true;
+            }
+          }else{
+            const currentRowIndex = formState.currentCell?.rowIndex ?? 0;
+            const res = focusColumn(currentRowIndex, "unitPrice");
+            setCurrentCell(
+              res,
+              formState.transaction.details[currentRowIndex] as TransactionDetail,
+              true
+            );
+            ignoreFocusToQty = true;
+          }
+        }else
+          {
+          let isWeighingScaleProduct = false;
+          if ((product.weighingQty || 0) > 0 || (product.weighingPrice || 0) > 0) {
+            isWeighingScaleProduct = true;
+          }
+
+          let details = [...formState.transaction.details];
+          const firstFreeRow = data.rowIndex;
+
+          if(formState.userConfig?.autoIncrementQty && !isWeighingScaleProduct && product.isSchemeProcessed == "") {
+            const serial = product.serialNumber || "";
+            const autoBarcode = product.autoBarcode;
+            const rowUnit = product.unitName;
+
+            for (let i = 0; i < firstFreeRow; i++) {
+              if (i === data.rowIndex) continue;
+
+              const row = details[i];
+              if (row.barCode === autoBarcode &&row.unit === rowUnit) {
+                // Case One - if serial is empty
+                if (serial === "") {
+                  let incrementValue = 1;
+
+                  if ((product.weighingQty || 0) > 0){
+                    incrementValue = product.weighingQty;
+                  } 
+
+                  const updatedRow = { ...row, qty: Number(row.qty || 0) + incrementValue };
+                  const outRow = await calculateRowAmount(updatedRow, "qty", {
+                    result: {
+                      transaction: {
+                        details: [{ ...updatedRow, slNo: row.slNo }]
+                      }
+                    }
+                  }, true, i);
+
+                  if (!outRow?.transaction?.details?.[0]) return null;
+                  const updatedDetails = [{...details[0]},{...initialTransactionDetailData, slNo:detail.slNo}];
+                  updatedDetails[i] = outRow.transaction.details[0] as TransactionDetail;
+                  const summaryRes = calculateSummary(updatedDetails, formState, { result: {} });
+                  const totalRes = await calculateTotal(
+                    formState.transaction.master,
+                    summaryRes.summary as SummaryItems,
+                    formState.formElements,
+                    { result: {} }
+                  );
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        
+                          resetSearch:generateUniqueKey(),
+                        ...totalRes, 
+                        summary: summaryRes.summary,
+                        transaction: {
+                          ...totalRes?.transaction,
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: i 
+                    })
+                  );
+                  return null;
+                // This else case is not tested - CheckIt
+                }else {
+                const desc = row.productDescription || "";
+                
+                if (!desc.includes(serial)) {
+                  let incrementValue = 1;
+                  if ((product.weighingQty || 0) > 0) {
+                    incrementValue = product.weighingQty;
+                  }
+
+                  const updatedRow = { 
+                    ...row, 
+                    qty: Number(row.qty || 0) + incrementValue,
+                    productDescription: desc ? `${desc},${serial}` : serial
+                  };
+
+                  const outRow = await calculateRowAmount(updatedRow, "qty", {
+                    result: {
+                      transaction: {
+                        details: [{ ...updatedRow, slNo: row.slNo }]
+                      }
+                    }
+                  }, true, i);
+
+                  if (!outRow?.transaction?.details?.[0]) return null;
+
+
+                  const updatedDetails = [{...details[0]},{...initialTransactionDetailData, slNo:detail.slNo}];
+                  updatedDetails[i] = outRow.transaction.details[0] as TransactionDetail;
+                  const summaryRes = calculateSummary(updatedDetails, formState, { result: {} });
+                  const totalRes = await calculateTotal(
+                    formState.transaction.master,
+                    summaryRes.summary as SummaryItems,
+                    formState.formElements,
+                    { result: {} }
+                  );
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch:generateUniqueKey(),
+                        ...totalRes,
+                        summary: summaryRes.summary,
+                        transaction: {
+                          ...totalRes?.transaction,
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: i
+                    })
+                  );
+                  return null;
+                // The else case is not tested - CheckIt
+                } else {
+                  await ERPAlert.show({
+                    icon: "warning",
+                    title: t("duplicate_serial"),
+                    text: `${t("serial_exist_in_row")}: ${i + 1}`,
+                    confirmButtonText: "OK",
+                  });
+
+                  const updatedDetails = [...details];
+                  updatedDetails[i] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[i].slNo
+                  };
+
+                  dispatch(
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      resetSearch: generateUniqueKey(),
+                      transaction: {
+                        details: updatedDetails
+                      }
+                    },
+                    updateOnlyGivenDetailsColumns: true,
+                    rowIndex: i
+                  })
+                );
+                  return null;
+                }
+              }
+
+              }
+            }
+          }
+          // Restore NLA sales price
+          // detail.nlaSalesPrice = product.nlaStdsalesPrice;
+
+          // ------------------------------------
+          // NEXT COLUMN NAVIGATION
+          // ------------------------------------
+          // let nextCol = getNextVisibleColumn(
+          //   "R",
+          //   productColumnIndex
+          // );
+
+          // if (
+          //   Number(detail.unitPrice || 0) > 0 &&
+          //   formState.formElements.chkAutoIncrement.checked
+          // ) {
+          //   nextCol = -1;
+          // }
+
+          // if (nextCol !== -1) {
+          //   focusCell(nextCol, rowIndex);
+          // } else {
+          //   if (Number(detail.unitPrice || 0) > 0) {
+          //     focusCell(
+          //       firstVisibleWritableColumnIndex,
+          //       details.length
+          //     );
+          //   } else {
+          //     focusCell(unitPriceColumnIndex, rowIndex);
+          //   }
+          // }
+
+          // dispatchUpdate(details);
         }
         // ------------------------------------
         // AUTO INCREMENT FLOW
         // ------------------------------------
-
 
         if (isSI || isSO) {
           // allow auto increment flow
@@ -3312,7 +3527,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             })
           );
         if (data.setFocusToNextColumn) {
-          const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
+          if(!ignoreFocusToQty){
+            const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
             "pCode",
             "product",
             "barCode",
@@ -3322,6 +3538,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             result.transaction!.details[0] as TransactionDetail,
             false
           );
+          }
         }
 
         return result;

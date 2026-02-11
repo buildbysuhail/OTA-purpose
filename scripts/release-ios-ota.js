@@ -1,33 +1,73 @@
-#!/usr/bin/env node
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { execSync } from "child_process";
+import readline from "readline";
+import fs from "fs";
 
-const PLATFORM = 'ios';
-const TAG_PREFIX = 'ios-ota';
+const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+const baseVersion = packageJson.version;
 
-const BASE_VERSION = JSON.parse(
-  readFileSync('package.json', 'utf-8')
-).version;
-
-execSync('git fetch --tags');
-
-const tags = execSync(
-  `git tag -l "${TAG_PREFIX}-${BASE_VERSION}-ota.*"`,
-  { encoding: 'utf-8' }
-)
-  .split('\n')
-  .filter(Boolean);
-
-let otaNum = 1;
-if (tags.length) {
-  otaNum =
-    Math.max(...tags.map(t => Number(t.split('.').pop()))) + 1;
+function run(cmd) {
+  return execSync(cmd, { encoding: "utf-8" }).trim();
 }
 
-const NEW_TAG = `${TAG_PREFIX}-${BASE_VERSION}-ota.${otaNum}`;
+function ask(question) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
-console.log(`Creating iOS OTA tag: ${NEW_TAG}`);
-execSync(`git tag ${NEW_TAG}`);
-execSync(`git push origin ${NEW_TAG}`);
+  return new Promise(resolve => {
+    rl.question(question, answer => {
+      rl.close();
+      resolve(answer);
+    });
+  });
+}
 
-console.log('✅ iOS OTA tag pushed');
+async function main() {
+  console.log("===================================");
+  console.log(" IOS OTA RELEASE");
+  console.log("-----------------------------------");
+  console.log(" Base Version:", baseVersion);
+
+  // Get latest ios-ota tag
+  let oldTag = "none";
+  let otaNumber = 1;
+
+  try {
+    const tags = run("git tag")
+      .split("\n")
+      .filter(t => t.startsWith(`ios-ota-${baseVersion}-ota.`));
+
+    if (tags.length > 0) {
+      const lastTag = tags.sort().pop();
+      oldTag = lastTag;
+
+      const lastNumber = parseInt(lastTag.split("ota.")[1]);
+      otaNumber = lastNumber + 1;
+    }
+  } catch (e) {}
+
+  const newTag = `ios-ota-${baseVersion}-ota.${otaNumber}`;
+
+  console.log(" Old Tag:", oldTag);
+  console.log(" New Tag:", newTag);
+  console.log("===================================");
+
+  const answer = await ask(`Create and push tag '${newTag}'? (y/N): `);
+
+  if (answer.toLowerCase() !== "y") {
+    console.log("❌ Cancelled");
+    process.exit(0);
+  }
+
+  try {
+    run(`git tag ${newTag}`);
+    run(`git push origin ${newTag}`);
+    console.log("✅ iOS OTA tag pushed");
+  } catch (error) {
+    console.error("❌ Error creating tag:", error.message);
+    process.exit(1);
+  }
+}
+
+main();

@@ -1,30 +1,38 @@
-#!/usr/bin/env node
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { execSync } from "child_process";
+import readline from "readline";
+import fs from "fs";
 
-const TAG_PREFIX = 'win-ota';
-const VERSION = JSON.parse(
-  readFileSync('package.json', 'utf-8')
-).version;
+const pkg = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+const version = pkg.version;
 
-const TAG = `${TAG_PREFIX}-${VERSION}`;
+const tag = `win-ota-${version}`;
 
-execSync('git fetch --tags');
+console.log("===================================");
+console.log(" WINDOWS OTA RELEASE");
+console.log("-----------------------------------");
+console.log(" Version:", version);
+console.log(" Tag:", tag);
+console.log("===================================");
 
-const existing = execSync(
-  `git tag -l "${TAG}"`,
-  { encoding: 'utf-8' }
-).trim();
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-if (existing) {
-  console.log(`⚠️ Windows OTA tag already exists: ${TAG}`);
-  console.log('ℹ️ Electron OTA supports ONE build per version.');
-  console.log('✅ If you need a new OTA, bump package.json version.');
-  process.exit(0);
-}
+rl.question(`Create and push tag '${tag}'? (y/N): `, (answer) => {
+  if (answer.toLowerCase() !== "y") {
+    console.log("❌ Aborted.");
+    rl.close();
+    process.exit(0);
+  }
 
-console.log(`Creating Windows OTA tag: ${TAG}`);
-execSync(`git tag ${TAG}`);
-execSync(`git push origin ${TAG}`);
+  try {
+    execSync(`git tag ${tag}`, { stdio: "inherit" });
+    execSync(`git push origin ${tag}`, { stdio: "inherit" });
+    console.log("✅ Windows OTA tag pushed");
+  } catch (err) {
+    console.error("❌ Error creating tag:", err.message);
+  }
 
-console.log('✅ Windows OTA tag pushed');
+  rl.close();
+});

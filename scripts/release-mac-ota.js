@@ -1,20 +1,38 @@
-#!/usr/bin/env node
-import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { execSync } from "child_process";
+import readline from "readline";
+import fs from "fs";
 
-const PLATFORM = 'mac';
-const TAG_PREFIX = 'mac-ota';
+const pkg = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+const version = pkg.version;
 
-const BASE_VERSION = JSON.parse(
-  readFileSync('package.json', 'utf-8')
-).version;
+const tag = `mac-ota-${version}`;
 
-const TAG = `${TAG_PREFIX}-${BASE_VERSION}`;
+console.log("===================================");
+console.log(" MACOS OTA RELEASE");
+console.log("-----------------------------------");
+console.log(" Version:", version);
+console.log(" Tag:", tag);
+console.log("===================================");
 
-console.log(`Creating macOS OTA tag: ${TAG}`);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-execSync('git fetch --tags');
-execSync(`git tag ${TAG}`);
-execSync(`git push origin ${TAG}`);
+rl.question(`Create and push tag '${tag}'? (y/N): `, (answer) => {
+  if (answer.toLowerCase() !== "y") {
+    console.log("❌ Aborted.");
+    rl.close();
+    process.exit(0);
+  }
 
-console.log('✅ macOS OTA tag pushed');
+  try {
+    execSync(`git tag ${tag}`, { stdio: "inherit" });
+    execSync(`git push origin ${tag}`, { stdio: "inherit" });
+    console.log("✅ macOS OTA tag pushed");
+  } catch (err) {
+    console.error("❌ Error creating tag:", err.message);
+  }
+
+  rl.close();
+});

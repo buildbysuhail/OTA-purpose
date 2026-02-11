@@ -1,73 +1,45 @@
 import { execSync } from "child_process";
-import readline from "readline";
 import fs from "fs";
+import readline from "readline";
 
-const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-const baseVersion = packageJson.version;
+const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+const version = pkg.version;
+const prefix = `ios-ota-${version}-ota.`;
 
-function run(cmd) {
-  return execSync(cmd, { encoding: "utf-8" }).trim();
+let existingTags = execSync("git tag", { encoding: "utf-8" })
+  .split("\n")
+  .filter(t => t.startsWith(prefix));
+
+let nextNumber = 1;
+
+if (existingTags.length > 0) {
+  const numbers = existingTags.map(t => parseInt(t.split(".").pop()));
+  nextNumber = Math.max(...numbers) + 1;
 }
 
-function ask(question) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+const oldTag = existingTags.length > 0 ? existingTags.sort().pop() : "none";
+const newTag = `${prefix}${nextNumber}`;
 
-  return new Promise(resolve => {
-    rl.question(question, answer => {
-      rl.close();
-      resolve(answer);
-    });
-  });
-}
+console.log("===================================");
+console.log(" IOS OTA RELEASE");
+console.log("-----------------------------------");
+console.log(` Base Version: ${version}`);
+console.log(` Old Tag: ${oldTag}`);
+console.log(` New Tag: ${newTag}`);
+console.log("===================================");
 
-async function main() {
-  console.log("===================================");
-  console.log(" IOS OTA RELEASE");
-  console.log("-----------------------------------");
-  console.log(" Base Version:", baseVersion);
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-  // Get latest ios-ota tag
-  let oldTag = "none";
-  let otaNumber = 1;
-
-  try {
-    const tags = run("git tag")
-      .split("\n")
-      .filter(t => t.startsWith(`ios-ota-${baseVersion}-ota.`));
-
-    if (tags.length > 0) {
-      const lastTag = tags.sort().pop();
-      oldTag = lastTag;
-
-      const lastNumber = parseInt(lastTag.split("ota.")[1]);
-      otaNumber = lastNumber + 1;
-    }
-  } catch (e) {}
-
-  const newTag = `ios-ota-${baseVersion}-ota.${otaNumber}`;
-
-  console.log(" Old Tag:", oldTag);
-  console.log(" New Tag:", newTag);
-  console.log("===================================");
-
-  const answer = await ask(`Create and push tag '${newTag}'? (y/N): `);
-
-  if (answer.toLowerCase() !== "y") {
-    console.log("❌ Cancelled");
-    process.exit(0);
-  }
-
-  try {
-    run(`git tag ${newTag}`);
-    run(`git push origin ${newTag}`);
+rl.question(`Create and push tag '${newTag}'? (y/N): `, answer => {
+  if (answer.toLowerCase() === "y") {
+    execSync(`git tag ${newTag}`);
+    execSync(`git push origin ${newTag}`);
     console.log("✅ iOS OTA tag pushed");
-  } catch (error) {
-    console.error("❌ Error creating tag:", error.message);
-    process.exit(1);
+  } else {
+    console.log("❌ Cancelled");
   }
-}
-
-main();
+  rl.close();
+});

@@ -34,6 +34,8 @@ import { getInitialPreference } from "../../../../utilities/dx-grid-preference-u
 import { LedgerType } from "../../../../enums/ledger-types";
 import { purchaseGridCol } from "./transaction-grid-cols";
 import DeliveryBoy from "../../../rpos/deliveryboy";
+import { SalesDateChange } from "./components/dateChange"
+import { setClientSession } from "../../../../redux/slices/client-session/reducer"
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -711,6 +713,17 @@ export const useTransaction = (
           vch.master.voucherPrefix = nextVoucher.voucherPrefix;
         }
       }
+    }
+    // invoice button manage - draft mode case
+    if (voucher.formElements.chkDraftMode?.visible && out_voucherType === "SID") {
+          voucher.formElements = {
+            ...voucher.formElements,
+            btnConvertToInvoice: {
+              ...voucher.formElements.btnConvertToInvoice,
+              visible: true,
+              disabled: voucher.formElements.btnEdit?.disabled,
+            },
+          };
     }
     // The above are newly added for sales
 
@@ -1555,10 +1568,9 @@ debugger;
           isValid: false
         };
     }
+  // WORKING NOT TESTED
 // if (voucherType === VoucherType.SalesInvoice) {
-//   const closedDateResult = await api.getAsync(
-//     `${Urls.inv_transaction_base}GetClosedDate?type=Sales`
-//   );
+//   const closedDateResult = await api.getAsync(`${Urls.inv_transaction_base}GetClosedDate?type=Sales`);
 
 //   const closedDate = new Date(closedDateResult);
 //   const transDate = new Date(master.transactionDate);
@@ -1593,7 +1605,12 @@ debugger;
 //       } else {
 //         // TO do 
 //         // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
-//         master.transactionDate = clientSession.softwareDate;
+//         // Opens Date Picker Modal
+//        const selectedDate = await SalesDateChange();
+//         if(selectedDate){
+//           dispatch(setClientSession({...clientSession,softwareDate: selectedDate}));
+//          }
+//         master.transactionDate = selectedDate;
 //         return {
 //           master: master,
 //           isValid: false
@@ -3544,6 +3561,7 @@ debugger;
               pnlMasters: { disabled: false },
               chkDraftMode1: { disabled: true },
               dxGrid: { disabled: true },
+              btnConvertToInvoice:{ visible: false}
             },
           })
         );
@@ -6510,7 +6528,7 @@ debugger;
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
-            : isInitial ? title + "[" + formType + "]" : title) ?? "",
+            : isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
 
         printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
       };
@@ -6978,14 +6996,14 @@ debugger;
           : clientSession.isAppGlobal ?
             getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
             :
-            isInitial ? title + "[" + formType + "]" : title) ?? "",
+            isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
       initialTitle:
         (formType == undefined || formType.trim() == ""
           ? t(title)
           : clientSession.isAppGlobal ?
             getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
             :
-            isInitial? title + "[" + formType + "]" : title) ?? "",
+            isInitial? t(title) + "[" + formType + "]" : t(title)) ?? "",
     };
 
     _formState.gridColumns?.forEach((x: any) => {

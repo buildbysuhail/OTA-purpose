@@ -46,6 +46,7 @@ import { DeepPartial } from "redux";
 import { UserAction, useUserRights } from "../../../../helpers/user-right-helper";
 import moment from "moment";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import BtnToInvoice from "./components/btnToInvoice";
 
 const api = new APIClient();
 interface TransactionHeaderProps {
@@ -208,6 +209,27 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     }))
   };
 
+  // Handle Invoice button Click
+  const handleInvoiceBtnClick =()=>{
+    dispatch(
+      formStateHandleFieldChangeKeysOnly({
+        fields: {
+          draftMode: false,
+          formElements: {
+            btnConvertToInvoice: {visible: false},
+            btnEdit: {disabled: true},
+            btnDelete: {disabled: true},
+            btnSave: {disabled: !hasRight(formState.formCode, UserAction.Add)},
+            // Below Are comes under enable controls
+            pnlMasters: {disabled: false},
+            dgvInventory: {disabled: false},
+            pnlAmountSummary: {disabled: false,},
+            lblGrandTotal: {disabled: false,}
+          },
+        },
+      })
+    );
+  }
   // Input navigation refs
   // const partyNameRef = React.useRef<HTMLInputElement | null>(null);
   const address1Ref = useRef<HTMLInputElement>(null);
@@ -1111,6 +1133,16 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     )}
                   </div>
                 )}
+
+                {/* Invoice Button - Draft mode checked and previous condition */}
+                {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
+                  <BtnToInvoice
+                    formState={formState}
+                    dispatch={dispatch}
+                    invoiceBtnClick={handleInvoiceBtnClick}
+                    t={t}
+                  />
+                  )}
 
 
                 

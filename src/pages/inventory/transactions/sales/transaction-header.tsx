@@ -47,6 +47,7 @@ import { UserAction, useUserRights } from "../../../../helpers/user-right-helper
 import moment from "moment";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import BtnToInvoice from "./components/btnToInvoice";
+import CreditAccount from "./components/cb-credit-account";
 
 const api = new APIClient();
 interface TransactionHeaderProps {
@@ -556,81 +557,6 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
           style={headerStyle}
           className={`fixed top-[110px] z-[39] dark:bg-dark-bg ${formState.draftMode ? "bg-sky-200" : "bg-white"} shadow-md transition-all duration-300`}
         >
-          {/* {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
-          <ERPCheckbox
-            id="creditAccount"
-            label={t("credit_account")}
-            checked={formState.creditAccount}
-            onChange={(e) => {
-              dispatch(
-                formStateHandleFieldChange({
-                  fields: { creditAccount: e.target.checked },
-                })
-              );
-            }}
-          />
-          )} */}
-
-          {/* {((formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) &&
-          <ERPDataCombobox
-            value={formState.creditAccount}
-             className="w-[950px]"
-            field={{
-              id: "creditAccountID",
-              required: true,
-              //  getListUrl: "",
-              //  valueKey: "",
-              //  labelKey: "",
-            }}
-            onChangeData={(data: any) => {
-              dispatch(
-                formStateHandleFieldChange({
-                  fields: {creditAccount: data.ledgerID },
-                })
-              );
-            } }
-            label={t("credit_account")} id={""}
-            />
-            )} */}
-
-            {/* {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
-          <ERPCheckbox
-            id="debitAccount"
-            label={t("debit_account")}
-            checked={formState.debitAccount}
-            onChange={(e) => {
-              dispatch(
-                formStateHandleFieldChange({
-                  fields: { debitAccount: e.target.checked },
-                })
-              );
-            }}
-          />
-          )}  */}
-
-
-          {/* {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
-          <ERPDataCombobox
-            value={formState.debitAccount}
-            className="w-[800px]"
-            field={{
-              id: "debitAccountID",
-              required: true,
-              //  getListUrl: "",
-              //  valueKey: "",
-              //  labelKey: "",
-            }}
-            onChangeData={(data: any) => {
-              dispatch(
-                formStateHandleFieldChange({
-                  fields: { debitAccount: data.ledgerID },
-                })
-              );
-            } }
-            label={t("debit_account")} id={""}
-            
-            />
-            )} */}
 
 
 
@@ -883,6 +809,33 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   />
                 )}
 
+                {/* Credit Account */}
+                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
+                  <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
+                      <CreditAccount
+                        dispatch={dispatch}
+                        transactionType={transactionType}
+                        formState={formState}
+                        t={t}
+                        handleKeyDown={handleKeyDown}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                      />
+                    </div>
+                  )}
+
+                  {/* Debit Account */}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesReturn) && (
+                  <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
+                      <DebitAccount
+                        transactionType={transactionType}
+                        dispatch={dispatch}
+                        formState={formState}
+                        t={t}
+                        handleKeyDown={handleKeyDown}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                      />
+                    </div>
+                  )}
 
 
                 <Project
@@ -1413,14 +1366,34 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   handleKeyDown={handleKeyDown}
                   handleFieldKeyDown={handleFieldKeyDown}
                 />
-                <DebitAccount
-                  transactionType={transactionType}
-                  dispatch={dispatch}
-                  formState={formState}
-                  t={t}
-                  handleKeyDown={handleKeyDown}
-                  handleFieldKeyDown={handleFieldKeyDown}
-                />
+
+                 {/* Credit Account */}
+                {(formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
+                  <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
+                      <CreditAccount
+                        dispatch={dispatch}
+                        transactionType={transactionType}
+                        formState={formState}
+                        t={t}
+                        handleKeyDown={handleKeyDown}
+                        handleFieldKeyDown={handleFieldKeyDown}
+                      />
+                    </div>
+                  )}
+
+                {/* Debit Account */}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesReturn) && (
+                  <div className={`${isRtl ? "mr-0 ml-3" : "mr-3 ml-0"}`}>
+                    <DebitAccount
+                      transactionType={transactionType}
+                      dispatch={dispatch}
+                      formState={formState}
+                      t={t}
+                      handleKeyDown={handleKeyDown}
+                      handleFieldKeyDown={handleFieldKeyDown}
+                    />
+                  </div>
+                  )}
                 {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote && (
                     <Project

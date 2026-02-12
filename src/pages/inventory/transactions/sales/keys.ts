@@ -78,4 +78,20 @@
 //please_verify_voucher_number_and_disable_it_before_save
 //day_closed
 //day_closed_do_you_want_to_continue_with_next_transaction_date
+//sales_route_credit_limit
+//current_credit_amount_is
+//sales_route_credit_limit_reached_do_you_want_to_continue
+//counter_not_opened
+//please_open_the_counter_for_transaction
+//counter_shift_required
+//please_close_old_counter_and_open_new_counter_for_transaction
+//shift_required
+//shift_opened_in_new_date_transaction_date_need_to_change_to
+//do_you_want_to_continue
+//shift_date
+//please_close_old_counter_and_open_new_counter_for_transaction
+//shift_user_mismatch
+//shift_duration_exceeded
+
+
 

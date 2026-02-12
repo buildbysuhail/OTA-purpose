@@ -3,26 +3,12 @@ const { app, BrowserWindow, protocol, session } = require("electron");
 const fs = require("fs");
 const path = require("path");
 
-console.log("APP PATH:", process.cwd());
+let mainWindow;
 
-app.whenReady().then(() => {
-  // autoUpdater.checkForUpdatesAndNotify();
-    autoUpdater.checkForUpdates();
-
-  autoUpdater.on("update-available", () => {
-    log.info("Update available");
-  });
-
-  autoUpdater.on("update-downloaded", () => {
-    log.info("Update downloaded, restarting...");
-    autoUpdater.quitAndInstall();
-  });
-
-});
-
-// Allow renderer to read file:// assets when packaged.
+// Allow file access
 app.commandLine.appendSwitch("allow-file-access-from-files");
-// Use a custom scheme to avoid file:// restrictions in packaged builds.
+
+// Register custom protocol BEFORE ready
 protocol.registerSchemesAsPrivileged([
   {
     scheme: "app",
@@ -30,75 +16,51 @@ protocol.registerSchemesAsPrivileged([
       standard: true,
       secure: true,
       supportFetchAPI: true,
-      corsEnabled: true
-    }
-  }
+      corsEnabled: true,
+    },
+  },
 ]);
 
 function createWindow() {
   const isDev = !app.isPackaged;
-  const devServerUrl =
-    process.env.VITE_DEV_SERVER_URL ||
-    process.env.ELECTRON_RENDERER_URL ||
-    process.env.DEV_SERVER_URL;
 
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     webPreferences: {
-        preload: path.join(__dirname, "preload.cjs"),
-        contextIsolation: true,
-        // Needed for file:// loads in some Windows setups.
-        allowFileAccessFromFileUrls: true
-    }
+      preload: path.join(__dirname, "preload.cjs"),
+      contextIsolation: true,
+    },
   });
 
   if (isDev) {
-    const url = devServerUrl || "http://localhost:5173";
-    win.loadURL(url);
+    mainWindow.loadURL("http://localhost:5173");
   } else {
-    win.loadURL("app://./index.html");
+    mainWindow.loadURL("app://./index.html");
   }
-  
 }
 
 app.whenReady().then(() => {
-  const buildRoot = path.join(app.getAppPath(), "dist");
 
-  const ses = session.defaultSession;
-  ses.webRequest.onHeadersReceived((details, callback) => {
+  // ✅ Auto updater
+  autoUpdater.checkForUpdatesAndNotify();
+
+  // ✅ Fix CORS for API
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const headers = details.responseHeaders || {};
     if (details.url.startsWith("https://api.poldev.work/")) {
       headers["Access-Control-Allow-Origin"] = ["app://."];
       headers["Access-Control-Allow-Credentials"] = ["true"];
-      headers["Access-Control-Allow-Methods"] = ["GET,POST,PUT,DELETE,OPTIONS"];
-      headers["Access-Control-Allow-Headers"] = ["*"];
     }
     callback({ responseHeaders: headers });
   });
 
-  // protocol.registerFileProtocol("app", (request, callback) => {
-  //   const url = new URL(request.url);
-  //   let pathname = decodeURIComponent(url.pathname || "/");
-  //   if (pathname === "/") {
-  //     pathname = "/index.html";
-  //   }
-
-  //   const resolvedPath = path.normalize(path.join(buildRoot, pathname));
-  //   const isInsideBuild = resolvedPath.startsWith(buildRoot + path.sep);
-  //   let filePath = isInsideBuild ? resolvedPath : path.join(buildRoot, "index.html");
-
-  //   if (!fs.existsSync(filePath)) {
-  //     filePath = path.join(buildRoot, "index.html");
-  //   }
-
-  //   callback({ path: filePath });
-  // });
-  app.whenReady().then(() => {
+  // ✅ PERFECT BrowserRouter support
   const distPath = path.join(app.getAppPath(), "dist");
 
   protocol.registerFileProtocol("app", (request, callback) => {
     let urlPath = request.url.replace("app://./", "");
+
     if (!urlPath || urlPath === "/") {
       urlPath = "index.html";
     }
@@ -108,12 +70,9 @@ app.whenReady().then(() => {
     callback({
       path: fs.existsSync(filePath)
         ? filePath
-        : path.join(distPath, "index.html"),
+        : path.join(distPath, "index.html"), // fallback for React routes
     });
   });
-
-  createWindow();
-});
 
   createWindow();
 });

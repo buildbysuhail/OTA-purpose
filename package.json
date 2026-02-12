@@ -33,6 +33,7 @@
         "dmg",
         "zip"
       ],
+      "minimumSystemVersion": "11.0",
       "publish": [
         {
           "provider": "github",

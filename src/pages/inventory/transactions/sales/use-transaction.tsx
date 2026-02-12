@@ -1583,56 +1583,57 @@ export const useTransaction = (
       };
     }
     // WORKING NOT TESTED
-    // if (voucherType === VoucherType.SalesInvoice) {
-    //   const closedDateResult = await api.getAsync(`${Urls.inv_transaction_base}GetClosedDate?type=Sales`);
+    if (voucherType === VoucherType.SalesInvoice) {
+       const closedDateResult = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetClosedDate/${"Sales"}`
+      );
+      const closedDate = new Date(closedDateResult);
+      const transDate = new Date(master.transactionDate);
 
-    //   const closedDate = new Date(closedDateResult);
-    //   const transDate = new Date(master.transactionDate);
+      // Normalize time
+      closedDate.setHours(0, 0, 0, 0);
+      transDate.setHours(0, 0, 0, 0);
 
-    //   // Normalize time
-    //   closedDate.setHours(0, 0, 0, 0);
-    //   transDate.setHours(0, 0, 0, 0);
+      if (closedDate >= transDate) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("day_closed"),
+          text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
 
-    //   if (closedDate >= transDate) {
-    //     const confirm = await ERPAlert.show({
-    //       icon: "question",
-    //       title: t("day_closed"),
-    //       text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
-    //       confirmButtonText: t("yes"),
-    //       cancelButtonText: t("no"),
-    //       showCancelButton: true,
-    //     });
-
-    //     if (!confirm) {
-    //       return {
-    //           master: master,
-    //           isValid: false
-    //         };
-    //     } else {
-    //       const today = new Date();
-    //       const softwareDate = new Date(clientSession.softwareDate);
-    //       today.setHours(0, 0, 0, 0);
-    //       softwareDate.setHours(0, 0, 0, 0);
-    //       if (today > softwareDate) {
-    //         clientSession.softwareDate = today.toString();
-    //         master.transactionDate = today.toString();
-    //       } else {
-    //         // TO do 
-    //         // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
-    //         // Opens Date Picker Modal
-    //        const selectedDate = await SalesDateChange();
-    //         if(selectedDate){
-    //           dispatch(setClientSession({...clientSession,softwareDate: selectedDate}));
-    //          }
-    //         master.transactionDate = selectedDate;
-    //         return {
-    //           master: master,
-    //           isValid: false
-    //         };
-    //       }
-    //     }
-    //   }
-    // }
+        if (!confirm) {
+          return {
+              master: master,
+              isValid: false
+            };
+        } else {
+          const today = new Date();
+          const softwareDate = new Date(clientSession.softwareDate);
+          today.setHours(0, 0, 0, 0);
+          softwareDate.setHours(0, 0, 0, 0);
+          if (today > softwareDate) {
+            clientSession.softwareDate = today.toString();
+            master.transactionDate = today.toString();
+          } else {
+            // TO do 
+            // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
+            // Opens Date Picker Modal
+           const selectedDate = await SalesDateChange();
+            if(selectedDate){
+              dispatch(setClientSession({...clientSession,softwareDate: selectedDate}));
+             }
+            master.transactionDate = clientSession.softwareDate;
+            return {
+              master: master,
+              isValid: false
+            };
+          }
+        }
+      }
+    }
 
     // CODE CHECKED########  - Working Not checked/ Tested
     // ============ Credit Limit Check ============

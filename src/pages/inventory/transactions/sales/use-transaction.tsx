@@ -1584,7 +1584,7 @@ export const useTransaction = (
     }
     // WORKING NOT TESTED
     if (voucherType === VoucherType.SalesInvoice) {
-       const closedDateResult = await api.getAsync(
+      const closedDateResult = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/GetClosedDate/${"Sales"}`
       );
       const closedDate = new Date(closedDateResult);
@@ -1606,9 +1606,9 @@ export const useTransaction = (
 
         if (!confirm) {
           return {
-              master: master,
-              isValid: false
-            };
+            master: master,
+            isValid: false
+          };
         } else {
           const today = new Date();
           const softwareDate = new Date(clientSession.softwareDate);
@@ -1621,10 +1621,10 @@ export const useTransaction = (
             // TO do 
             // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
             // Opens Date Picker Modal
-           const selectedDate = await SalesDateChange();
-            if(selectedDate){
-              dispatch(setClientSession({...clientSession,softwareDate: selectedDate}));
-             }
+            const selectedDate = await SalesDateChange();
+            if (selectedDate) {
+              dispatch(setClientSession({ ...clientSession, softwareDate: selectedDate }));
+            }
             master.transactionDate = clientSession.softwareDate;
             return {
               master: master,
@@ -1721,10 +1721,11 @@ export const useTransaction = (
       }
     }
 
-    //Counter Shift validate
-    if (
-      applicationSettings.accountsSettings.allowSalesCounter === true &&
-      userSession.isMaintainShift === true
+    //Counter Shift validate Gcc
+    if (applicationSettings.accountsSettings.allowSalesCounter === true
+      && userSession.isMaintainShift === true
+      && voucherType == VoucherType.SalesInvoice
+      && !isIndia
     ) {
 
       // 1️⃣ If shift not opened
@@ -1805,6 +1806,198 @@ export const useTransaction = (
         }
       }
     }
+    //Counter Shift India
+    if ([VoucherType.SalesInvoice,
+    VoucherType.SalesReturn, VoucherType.SaleReturnEstimate,
+    VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
+    VoucherType.SalesQuotation].includes(voucherType as any)
+      && isIndia) {
+      try {
+        if (
+          applicationSettings.accountsSettings.allowSalesCounter &&
+          userSession.isMaintainShift
+        ) {
+
+          // 1️⃣ Counter not opened
+          if (clientSession.counterShiftId === 0) {
+
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("counter_required"),
+              text: t("please_open_the_counter_for_transaction"),
+              confirmButtonText: t("ok"),
+            });
+            //To do
+            // await openCounterShiftDialog();
+            return {
+              isValid: false,
+              master: master
+            };
+          }
+
+          // 2️⃣ Get Shift Data
+          const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetShiftOpenedDate`
+      );
+
+          if (!response) return {
+            isValid: true,
+            master: master
+          };;
+
+          const openTime = new Date(response.openTime);
+          const transactionDate = new Date(response.transactionDate);
+          const openUserID = Number(response.openUserID);
+
+          const shift = new Date(transactionDate);
+          shift.setHours(
+            openTime.getHours(),
+            openTime.getMinutes(),
+            openTime.getSeconds()
+          );
+
+          const systemDate = new Date(master.transactionDate);
+          const timeDifference =
+            (systemDate.getTime() - shift.getTime()) / (1000 * 60 * 60);
+
+          // ===============================
+          // 🔹 Allow Minimum Shift Duration
+          // ===============================
+          if (applicationSettings.accountsSettings.allowMinimumShiftDuration) {
+
+            const minimumShiftDuration =
+              applicationSettings.accountsSettings.minimumShiftDuration;
+
+            if (timeDifference >= minimumShiftDuration) {
+
+              await ERPAlert.show({
+                icon: "warning",
+                title: t("shift_duration_exceeded"),
+                text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                confirmButtonText: t("ok"),
+              });
+              //To do
+              // await openCounterShiftDialog();
+              return {
+                isValid: false,
+                master: master
+              };
+            }
+
+            // 🔹 User validation
+            if (
+              userSession.userTypeCode !== "BA" &&
+              userSession.userTypeCode !== "CA"
+            ) {
+              if (userSession.userId !== openUserID) {
+
+                await ERPAlert.show({
+                  icon: "warning",
+                  title: t("shift_user_mismatch"),
+                  text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                  confirmButtonText: t("ok"),
+                });
+                //To do
+                // await openCounterShiftDialog();
+                return {
+                  isValid: false,
+                  master: master
+                };
+              }
+            }
+          }
+          // ===============================
+          // 🔹 Without Minimum Shift Duration
+          // ===============================
+          else {
+            if (!applicationSettings.accountsSettings.enable24Hours) {
+              const shiftOpenedTime = new Date(response.transactionDate);
+              const combined = new Date(shiftOpenedTime);
+              combined.setHours(combined.getHours() + 24);
+              const softwareDate = new Date(clientSession.softwareDate);
+              if (
+                shiftOpenedTime.toDateString() === softwareDate.toDateString() ||
+                (shiftOpenedTime >= softwareDate &&
+                  softwareDate <= combined)
+              ) {
+                if (
+                  userSession.userTypeCode !== "BA" &&
+                  userSession.userTypeCode !== "CA"
+                ) {
+                  if (userSession.userId !== openUserID) {
+
+                    await ERPAlert.show({
+                      icon: "warning",
+                      title: t("shift_user_mismatch"),
+                      text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                      confirmButtonText: t("ok"),
+                    });
+                    //TO do
+                    // await openCounterShiftDialog();
+                    return {
+                      isValid: false,
+                      master: master
+                    };
+                  }
+                }
+              }
+              else if (
+                shiftOpenedTime > softwareDate &&
+                softwareDate <= combined
+              ) {
+                const confirm = await ERPAlert.show({
+                  icon: "question",
+                  title: t("shift_date"),
+                  text: `${t("shift_opened_in_new_date_transaction_date_need_to_change_to")} ${shiftOpenedTime.toLocaleDateString()} ${t("do_you_want_to_continue")}`,
+                  confirmButtonText: t("yes"),
+                  cancelButtonText: t("no"),
+                  showCancelButton: true,
+                });
+                if (confirm) {
+                  clientSession.softwareDate = shiftOpenedTime.toString();
+                  master.transactionDate = shiftOpenedTime.toString();
+                }
+              }
+              else {
+
+                await ERPAlert.show({
+                  icon: "warning",
+                  title: t("shift_required"),
+                  text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                  confirmButtonText: t("ok"),
+                });
+                //To do
+                // await openCounterShiftDialog();
+                return {
+                  isValid: false,
+                  master: master
+                };
+              }
+            }
+          }
+        }
+        return {
+          isValid: true,
+          master: master
+        };
+      } catch (error) {
+
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("shift_error"),
+          text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+          confirmButtonText: t("ok"),
+        });
+
+        // To do
+        // await openCounterShiftDialog();
+        return {
+          isValid: false,
+          master: master
+        };
+      }
+    }
+
 
     // CODE CHECKED########
     // ============ Party Selection Check ============

@@ -2205,7 +2205,8 @@ export const useTransaction = (
     // CODE CHECKED########  - Working Not checked/ Tested (SAMA PLASTIC CASE, NEEDS TESTING)
     // ============ Rate Warning Check (Sales price less than purchase/min price) ============
     const showRateWarning = applicationSettings.inventorySettings?.showRateWarning;
-    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT") {
+    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT" && voucherType==VoucherType.SalesInvoice&& !isIndia) {
+      // please add password in master --master.AuthorizationPassword
       for (let i = 0; i < validDetails.length; i++) {
         const row = validDetails[i];
         const purchasePrice = row.purchasePrice ?? 0;

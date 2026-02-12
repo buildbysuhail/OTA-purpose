@@ -2,7 +2,7 @@ import React from "react";
 import "devextreme/dist/css/dx.light.css";
 import { Fragment, Suspense, useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import store, { RootState } from "./redux/store";
 import moment from "moment";
@@ -89,6 +89,17 @@ function App() {
       console.log('[App] Safe area insets initialized:', insets);
     });
   }, []);
+
+ useEffect(() => {
+    console.log("Current Full URL:", window.location.href);
+    console.log("Pathname:", window.location.pathname);
+    console.log("Hash:", window.location.hash);
+  }, []);
+
+
+  useEffect(() => {
+    console.log("Current Route:", location.pathname);
+  }, [location]);
 
   useEffect(() => {
     console.log('[App] ========================================');

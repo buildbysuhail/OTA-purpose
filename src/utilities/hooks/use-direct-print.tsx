@@ -226,49 +226,78 @@ export const useDirectPrint = () => {
         return { success: true };
       }
       // 2️⃣ Convert the React PDF document into a Blob
-      if (printMethodForBrowser === "PrintDialog") {
-        return await new Promise((resolve) => {
-          const blobURL = URL.createObjectURL(blob);
-          const printFrame = document.createElement("iframe");
+if (printMethodForBrowser === "PrintDialog") {
+  return await new Promise((resolve) => {
+    const blobURL = URL.createObjectURL(blob);
+    const printFrame = document.createElement("iframe");
 
-          Object.assign(printFrame.style, {
-            position: "fixed",
-            right: "0",
-            bottom: "0",
-            width: "0",
-            height: "0",
-            border: "none",
-          });
+    Object.assign(printFrame.style, {
+      position: "fixed",
+      right: "0",
+      bottom: "0",
+      width: "0",
+      height: "0",
+      border: "none",
+    });
 
-          printFrame.src = blobURL;
-          document.body.appendChild(printFrame);
+    printFrame.src = blobURL;
+    document.body.appendChild(printFrame);
 
-          printFrame.onload = () => {
-            const targetWindow = printFrame.contentWindow;
+    let cleanedUp = false;
+    
+    const cleanup = () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+      
+      setTimeout(() => {
+        URL.revokeObjectURL(blobURL);
+        if (document.body.contains(printFrame)) {
+          document.body.removeChild(printFrame);
+        }
+      }, 300);
+    };
 
-            if (!targetWindow) {
-              closePrintJob();
-              resolve({ success: false, reason: "window_null" });
-              return;
-            }
+    // ✅ Fallback timeout in case onafterprint doesn't fire
+    const fallbackTimeout = setTimeout(() => {
+      console.warn("Print dialog timeout - closing loader");
+      cleanup();
+      resolve({ success: true, reason: "timeout" });
+    }, 60000); // 60 seconds fallback
 
-            targetWindow.onafterprint = () => {
-              setTimeout(() => {
-                URL.revokeObjectURL(blobURL);
-                document.body.removeChild(printFrame);
+    printFrame.onload = () => {
+      const targetWindow = printFrame.contentWindow;
 
-                // ✅ CLOSE LOADER ONLY AFTER DIALOG CLOSES
-                closePrintJob();
-
-                resolve({ success: true, reason: "printed" });
-              }, 300);
-            };
-
-            targetWindow.focus();
-            targetWindow.print();
-          };
-        });
+      if (!targetWindow) {
+        clearTimeout(fallbackTimeout);
+        cleanup();
+        closePrintJob(); // ✅ Close on error
+        resolve({ success: false, reason: "window_null" });
+        return;
       }
+
+      targetWindow.onafterprint = () => {
+        clearTimeout(fallbackTimeout);
+        cleanup();
+        resolve({ success: true, reason: "printed" });
+      };
+
+      targetWindow.onbeforeunload = () => {
+        clearTimeout(fallbackTimeout);
+        cleanup();
+        resolve({ success: true, reason: "printed" });
+      };
+
+      // ✅ HIDE THE INDICATOR BEFORE SHOWING PRINT DIALOG
+      closePrintJob();
+      
+      // Small delay to ensure the indicator is hidden before print dialog shows
+      setTimeout(() => {
+        targetWindow.focus();
+        targetWindow.print();
+      }, 100);
+    };
+  });
+}
       else if (printMethodForBrowser === "JSPrinter") {
         // 2. If no printer detected, ask user
         if (!PrinterName || PrinterName.trim() === "") {

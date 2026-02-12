@@ -3559,6 +3559,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           })
         );
       } else if (forImport != true && data.searchColumn != "product") {
+        // Focus to next column - need to test
+        const res = focusToNextColumn(data.rowIndex, data.searchColumn);
+        setCurrentCell(res, data.detail as TransactionDetail, false,);
         // const res = focusToNextColumn(data.rowIndex, data.searchColumn, [
         //   "pCode",
         //   "product",

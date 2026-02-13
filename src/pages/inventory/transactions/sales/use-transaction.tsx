@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { usePurchasePrint } from "./use-print";
 import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -36,6 +35,7 @@ import { purchaseGridCol } from "./transaction-grid-cols";
 import DeliveryBoy from "../../../rpos/deliveryboy";
 import { SalesDateChange } from "./components/dateChange"
 import { setClientSession } from "../../../../redux/slices/client-session/reducer"
+import { usePurchasePrint } from "../../../transaction-base/use-commen-barcode-print";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;

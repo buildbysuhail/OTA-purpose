@@ -38,7 +38,6 @@ import type {
 import ERPProductSearch from "../erp-searchbox";
 import Urls from "../../../redux/urls";
 import { applyGridColumnPreferences } from "../../../utilities/dx-grid-preference-updater";
-import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import {
   generateUniqueKey,
   isNullOrUndefinedOrEmpty,
@@ -71,6 +70,7 @@ import ReactDOM from "react-dom";
 import BarcodeModalScanner from "../../barcode-scanner-modal";
 import { BarcodeScanResult } from "../../../utilities/barcode-scanner-service";
 import { Capacitor } from "@capacitor/core";
+import useDebounce from "../../../pages/transaction-base/use-debounce";
 
 type DataItem = Record<string, any>;
 export interface SummaryConfig<T = any> {

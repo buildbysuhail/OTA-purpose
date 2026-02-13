@@ -20,7 +20,8 @@ import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { base64ToModelUnicode, modelToBase64Unicode } from "../../../../../utilities/jsonConverter";
 import { setStorageString } from "../../../../../utilities/storage-utils";
 import { toggleTemplateChooserModal } from "../../../../../redux/slices/popup-reducer";
-import { usePurchasePrint } from "../use-print";
+import { usePurchasePrint } from "../../../../transaction-base/use-commen-barcode-print";
+
 
 const api = new APIClient();
 interface HeaderProps extends VoucherElementProps {
@@ -110,7 +111,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
     const [isPendingOrderOpen, setIsPendingOrderOpen] = useState({ open: false, type: "PO" });
     const [isImportExcelOpen, setIsImportExcelOpen] = useState(false)
-     const { printBarcode } = usePurchasePrint();
+    const { printBarcode } = usePurchasePrint();
     const popupStyle = {
       top: "45px",
       [isRtl ? "right" : "left"]: "-231px",

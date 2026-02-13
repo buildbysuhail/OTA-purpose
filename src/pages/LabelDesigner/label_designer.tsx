@@ -29,12 +29,12 @@ import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
 import { initialPrintMasterDto } from "../use-print-type-data";
-import useDebounce from "../inventory/transactions/purchase/use-debounce";
 import { hexToRgb } from "../../components/common/switcher/switcherdata/switcherdata";
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { fetchTemplateFromApiById } from "../use-print";
 import { useUndoRedo } from "../../utilities/hooks/use-undoRedo";
+import useDebounce from "../transaction-base/use-debounce";
 
 // Interfaces
 interface SaveDialogProps {

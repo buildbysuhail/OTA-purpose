@@ -257,6 +257,7 @@ const Urls = {
   acc_attachmentInfo_download: "/Core/AttachmentInfo/Download/",
   //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
+  acc_billwise_ledger: "/Accounts/RptLedgerReport/BillwiseDetails/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_cash_book_monthwise:
     "/Accounts/RptCashBook/CashBookMonthwiseSummary/",

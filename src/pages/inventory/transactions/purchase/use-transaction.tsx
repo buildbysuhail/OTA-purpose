@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { usePurchasePrint } from "./use-print";
 import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -88,6 +87,7 @@ import {
 } from "../transaction-types";
 import { fetchUserConfig } from "../transaction-utils";
 import { fi } from "date-fns/locale";
+import { usePurchasePrint } from "../../../transaction-base/use-commen-barcode-print";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;

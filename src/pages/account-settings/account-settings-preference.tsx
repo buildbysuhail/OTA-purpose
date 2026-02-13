@@ -22,8 +22,8 @@ import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { changeLanguage } from "../../utilities/languageUtils";
 import { useTranslation } from "react-i18next";
 import { setStorageString } from "../../utilities/storage-utils";
-import useDebounce from "../inventory/transactions/purchase/use-debounce";
 import ERPRadio from "../../components/ERPComponents/erp-radio";
+import useDebounce from "../transaction-base/use-debounce";
 
 interface AccountSettingsProps { }
 interface UserLanguage {

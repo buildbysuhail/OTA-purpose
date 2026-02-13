@@ -9,7 +9,7 @@ import { hexToRgb } from "../../components/common/switcher/switcherdata/switcher
 import { inputBox } from "../../redux/slices/app/types";
 import { useTranslation } from "react-i18next";
 import { CheckSquare, ChevronRight, Layout, Palette, Settings, Sliders, Type } from "lucide-react";
-import useDebounce from "../../pages/inventory/transactions/purchase/use-debounce";
+import useDebounce from "../../pages/transaction-base/use-debounce";
 
 interface InputBoxStylingProps {
   inputBox?: inputBox; // Pass the inputBox state

@@ -1,24 +1,16 @@
 import { useState } from "react";
-import { APIClient } from "../../../../helpers/api-client";
-import { useUserRights } from "../../../../helpers/user-right-helper";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import {
-  getPurchasePriceCode,
-  isNullOrUndefinedOrEmpty,
-  sanitizeDataAdvanced,
-} from "../../../../utilities/Utils";
-import { useDispatch } from "react-redux";
-import { DeepPartial } from "redux";
-import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
-import Urls from "../../../../redux/urls";
-import VoucherType from "../../../../enums/voucher-types";
+import { APIClient } from "../../helpers/api-client";
 import { useTranslation } from "react-i18next";
-import { useDirectPrint } from "../../../../utilities/hooks/use-direct-print";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
-import { initialProductData } from "../transaction-type-data";
-import { TransactionFormState, TransactionDetail, BarcodeLabel } from "../transaction-types";
-import { addTemplateToStore, fetchDefaultTemplateFromApi } from "../../../use-print";
+import { useDirectPrint } from "../../utilities/hooks/use-direct-print";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
+import { DeepPartial } from "redux";
+import { BarcodeLabel, TransactionDetail } from "../inventory/transactions/transaction-types";
+import { getPurchasePriceCode, isNullOrUndefinedOrEmpty, sanitizeDataAdvanced } from "../../utilities/Utils";
+import Urls from "../../redux/urls";
+import { initialProductData } from "../inventory/transactions/transaction-type-data";
+import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../inventory/transactions/reducer";
 
 const api = new APIClient();
 export const usePurchasePrint = () => {
@@ -40,8 +32,10 @@ export const usePurchasePrint = () => {
     partyLedgerId: number,
     wareHouseId: number,
     isDummyBill: boolean,
+    isInvTrans: boolean =true
 
   ): Promise<void> {
+    debugger;
     let modifiedDetails: DeepPartial<TransactionDetail>[] = [];
     let batchCreatedList = [];
     try {
@@ -127,18 +121,13 @@ export const usePurchasePrint = () => {
         const batch = batchCreatedList.find((x: any) => x.slNo == row?.slNo);
 
         // Skip empty product rows
-        if (!row?.productID || row?.productID === 0) break;
+        if (!row?.productID || row?.productID === 0) continue;
 
         // Process if not printed or if reprint is requested
         if (!row?.barcodePrinted || isReprint === true) {
           // Get sticker quantity
-          let stickerQty = 0;
-
-          // if ( row?.stickerQty === 0) continue;
-
-          stickerQty = row?.stickerQty;
-
-          barcode.invQty = row?.qty;
+          let stickerQty = row?.stickerQty;;
+           barcode.invQty = row?.qty;
 
           // If sticker quantity is 0, use the main quantity
           if (stickerQty === 0) {
@@ -211,27 +200,36 @@ export const usePurchasePrint = () => {
 
         }
       };
-      if(formState.userConfig?.barCodePrev){
-
-        dispatch(
-          formStateHandleFieldChange({ fields: {barcodeData:barcodeData,barcodePrevOpen:true }})
-        );
-      }else{
-             await directPrint({
-              template,
-              data:barcodeData,
-             });
-      };
-
-       dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                transaction: {
-                  details: modifiedDetails,
-                },
-              },updateOnlyGivenDetailsColumns: true
+      // ✅ Print ALL barcodes in ONE print job
+      if ( barcodeData.length > 0) {
+        if (formState.userConfig?.barCodePrev) {
+          dispatch(
+            formStateHandleFieldChange({ 
+              fields: { 
+                barcodeData: barcodeData, 
+                barcodePrevOpen: true 
+              } 
             })
           );
+        } else {
+          // ✅ This will print all barcodes continuously in one print job
+          await directPrint({
+            template,
+            data: barcodeData, 
+          });
+        }
+
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              transaction: {
+                details: modifiedDetails,
+              },
+            },
+            updateOnlyGivenDetailsColumns: true
+          })
+        );
+      }
 
       console.log(
         `Barcode printing completed. Labels added: ${barcodeLabelAdded}`

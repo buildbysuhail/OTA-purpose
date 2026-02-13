@@ -432,6 +432,7 @@ export const useTemplateDesigner = <T = unknown,>({
       throw err;
     }
   }, []);
+  //const userSession = useSelector((state: RootState) => state.UserSession);
 
   // Handle template saving
   const handleSave = useCallback(
@@ -486,6 +487,147 @@ export const useTemplateDesigner = <T = unknown,>({
         cleanedTemplate.customerType,
         cleanedTemplate.formType
       );
+
+
+
+// const taxType = userSession.countryId == Countries.India ? "GST" : "VAT"      
+// const templateViewToCopy: any = {
+//   TemplateType: activeTemplate.templateType ?? "standard",
+//   TemplateKind: activeTemplate.templateKind ?? "",
+//   TemplateGroup: activeTemplate.templateGroup ?? "",
+//   Content: compressedContent,
+//   thumbImage:thumbImage,
+//   TaxType: activeTemplate.formType ?? taxType,
+// };
+
+// // Helper function to escape single quotes for SQL
+// const sqlEscape = (value: any) => {
+//   if (value === null || value === undefined || value === '') return 'NULL';
+//   const escaped = String(value).replace(/'/g, "''");
+//   return `'${escaped}'`;
+// };
+
+// // Generate template name first (same logic as SQL CONCAT)
+// const templateName = `${templateViewToCopy.TemplateGroup || ''}-${templateViewToCopy.TaxType || 'DEF'}-${templateViewToCopy.TemplateType === 'standard' ? 'STD' : 'UN'}-${templateViewToCopy.TemplateKind.toUpperCase()}`;
+
+// // Build VALUES row - only 6 properties
+// const valuesRow = `${sqlEscape(templateViewToCopy.TemplateType)}, ${sqlEscape(templateViewToCopy.TemplateKind)}, ${sqlEscape(templateViewToCopy.TemplateGroup)}, ${sqlEscape(templateViewToCopy.Content)}, ${sqlEscape(templateViewToCopy.thumbImage)}, ${sqlEscape(templateViewToCopy.TaxType)}`;
+
+// // Generate SQL INSERT statement
+// const sqlContent = `INSERT INTO Templates (
+//     TemplateType,
+//     TemplateKind,
+//     TemplateGroup,
+//     TemplateName,
+//     Content,
+//     TemplateDescription,
+//     thumbImage,
+//     background_image,
+//     background_image_header,
+//     background_image_footer,
+//     signature_image,
+//     TaxType
+// )
+// SELECT
+//     v.TemplateType,
+//     v.TemplateKind,
+//     v.TemplateGroup,
+//     tn.TemplateName,
+//     v.Content,
+//     NULL,
+//     v.thumbImage,
+//     NULL,
+//     NULL,
+//     NULL,
+//     NULL,
+//     v.TaxType
+// FROM (
+//     VALUES
+//         (${valuesRow})
+// ) AS v (
+//     TemplateType,
+//     TemplateKind,
+//     TemplateGroup,
+//     Content,
+//     thumbImage,
+//     TaxType
+// )
+// CROSS APPLY (
+//     SELECT
+//         CONCAT(
+//             v.TemplateGroup, '-',
+//             COALESCE(v.TaxType, 'DEF'), '-',
+//             CASE v.TemplateType
+//                 WHEN 'standard'  THEN 'STD'
+//                 WHEN 'universal' THEN 'UN'
+//             END, '-',
+//             UPPER(v.TemplateKind)
+//         ) AS TemplateName
+// ) tn
+// WHERE NOT EXISTS (
+//     SELECT 1
+//     FROM Templates t
+//     WHERE t.TemplateName = tn.TemplateName
+// );`;
+
+// // Use template name as filename (sanitize for filesystem)
+// const fileName = `${templateName}.txt`;
+
+// try {
+//   // Check if File System Access API is supported
+//   if ('showSaveFilePicker' in window) {
+//     // Modern approach - User chooses location
+//     const handle = await (window as any).showSaveFilePicker({
+//       suggestedName: fileName,
+//       types: [{
+//         description: 'SQL File',
+//         accept: { 'text/plain': ['.txt'] }
+//       }]
+//     });
+    
+//     const writable = await handle.createWritable();
+//     await writable.write(sqlContent);
+//     await writable.close();
+    
+//     alert(`SQL file saved as: ${fileName}`);
+//   } else {
+//     // Fallback - Downloads folder
+//     const blob = new Blob([sqlContent], { type: 'text/plain;charset=utf-8' });
+//     const url = URL.createObjectURL(blob);
+//     const link = document.createElement('a');
+//     link.href = url;
+//     link.download = fileName;
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+//     URL.revokeObjectURL(url);
+    
+//     alert(`SQL file saved as: ${fileName}`);
+//   }
+// } catch (err) {
+//   console.error('Failed to save file:', err);
+//   // Fallback if user cancels
+//   const blob = new Blob([sqlContent], { type: 'text/plain;charset=utf-8' });
+//   const url = URL.createObjectURL(blob);
+//   const link = document.createElement('a');
+//   link.href = url;
+//   link.download = fileName;
+//   document.body.appendChild(link);
+//   link.click();
+//   document.body.removeChild(link);
+//   URL.revokeObjectURL(url);
+// }
+
+// // Also copy to clipboard
+// navigator.clipboard.writeText(sqlContent).catch(() => {
+//   console.warn("Clipboard copy failed");
+// });
+
+// console.log(`Template name: ${templateName}`);
+// console.log(`File saved as: ${fileName}`);
+// return;
+
+
       try {
         const res = await api.postAsync(Urls.templates, cleanedTemplate);
         handleResponse(res, async () => {

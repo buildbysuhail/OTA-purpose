@@ -47,7 +47,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     posRoundAmount,
     roundAmount,
     RoundAmountGlobal,
-    getFormattedValue
+    getFormattedValue,
+    roundAwayFromZero
   } = useNumberFormat();
 
   const { hasRight } = useUserRights();
@@ -1626,6 +1627,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     billDiscount: number,
     isRPOS = false
   ) => {
+    debugger;
     master.itemTaxDetails = [];
     master.taxableDetails = [];
 
@@ -3702,7 +3704,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
 
       const decimalPoints = applicationSettings.mainSettings.decimalPoints;
-
+debugger;
       let oldTaxOnBillDisc = formState.transaction.master.taxOnDiscount ?? 0;
       let taxPerc = getMaxTaxPercInItemList();
       let billDiscount = formState.transaction.master.billDiscount ?? 0;
@@ -3714,9 +3716,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       // Double rounding logic same as C#
       if (Math.abs(oldTaxOnBillDisc * 100 - taxOnBillDisc * 100) >= 0.75) {
-        taxOnBillDisc = Number(
-          taxOnBillDisc.toFixed(decimalPoints)
-        );
+        taxOnBillDisc =roundAwayFromZero(taxOnBillDisc,decimalPoints);
       } else {
         taxOnBillDisc = oldTaxOnBillDisc;
       }
@@ -3957,8 +3957,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         result.transaction!.master!.grandTotal = roundAmount(_grandTotal);
       }
     }
-
-
     result.transaction!.master!.roundAmount = round((result.transaction!.master!.grandTotal || 0) - _grandTotal);
     if (clientSession.isAppGlobal && formState.transaction.master.voucherType == VoucherType.SalesInvoice) {
       // TCS calculation (Indian SI uses TCS percentage if present)

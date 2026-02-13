@@ -7160,6 +7160,7 @@ debugger;
     fetchUserConfig, applyTaxOnBillDiscount,
     _purchaseGridCol,
     gridCode,
-    initializeFormElements
+    initializeFormElements,
+    calculateTaxOnDiscount
   };
 };

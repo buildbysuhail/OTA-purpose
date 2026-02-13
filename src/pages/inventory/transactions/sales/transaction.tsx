@@ -698,7 +698,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     applyTaxOnBillDiscount,
     _purchaseGridCol,
     gridCode,
-    initializeFormElements
+    initializeFormElements,
+    calculateTaxOnDiscount
 
   } = useTransaction(
     transactionType ?? "",
@@ -1642,10 +1643,34 @@ const TransactionForm: React.FC<TransactionProps> = ({
       })
       }
       calculateValues();
-    }, [formState.transaction.master.hasCashPaid, formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff
+    }, [formState.transaction.master.hasCashPaid, formState.transaction.master.hasroundOff
       , formState.transaction.master.adjustmentAmount, formState.transaction.master.bankAmt, formState.transaction.master.couponAmt
       , formState.transaction.master.srAmount]);
       
+   useEffect(() => {
+      console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
+      async function calculateValues() {
+        console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
+        let taxOnDisc=calculateTaxOnDiscount()
+        
+        await calculateTotal(
+        {
+          ...formState.transaction.master
+          , billDiscount: formState.transaction.master.billDiscount
+          , taxOnDiscount: taxOnDisc??0
+        }, formState.summary, formState.formElements, {
+          result: {
+            transaction: {
+              master: {
+                billDiscount: formState.transaction.master.billDiscount
+          , taxOnDiscount: taxOnDisc
+              }
+            }
+          }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly
+      })
+      }
+      calculateValues();
+    }, [formState.transaction.master.billDiscount]);
   return (
     <>
       { !isPos ?(

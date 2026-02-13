@@ -154,6 +154,7 @@ export const useDirectPrint = () => {
 
   const directPrint = useCallback(async (params: DirectPrintArgs) => {
     try {
+      debugger;
       startPrintJob();
       let pdfDocument;
       let noDefaultPrint: boolean = false;

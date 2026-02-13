@@ -1256,6 +1256,8 @@
   "serial_exist_in_row":"Serial exist in row :",
   "date_warning":"Data Warning",
   "system_date_doesn’t_match_transaction_date. Do_you_want_to_update?":"System date does not match the transaction date. Do you want to update it?",
-  "demo_expired_please_activate":"Demo expired. Please activate"
+  "demo_expired_please_activate":"Demo expired. Please activate",
+  "day_closed":"Day Closed",
+  "day_closed_do_you_want_to_continue_with_next_transaction_date":"Day closed. Do you want to continue with next transaction date?"
 
 }

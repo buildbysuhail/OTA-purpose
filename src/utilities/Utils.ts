@@ -1172,13 +1172,13 @@ export const sanitizeDataAdvanced = (
   const sanitized: any = {};
   const keys = Object.keys(data);
   
-        debugger;
+        
    for (const key in data) {
     if (data.hasOwnProperty(key)) {
       const value = data[key];
       const initialValue = initialState?.[key];
       if (key == "updateStdPurchasePrice") {
-        debugger;
+        
       }
       // Handle empty string to number conversion
       if (

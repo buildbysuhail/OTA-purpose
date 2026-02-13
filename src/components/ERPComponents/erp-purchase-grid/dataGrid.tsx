@@ -60,7 +60,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 import moment from "moment";
 import { setStorageString } from "../../../utilities/storage-utils";
-import { formStateDeleteDetails, formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionDetailsRowsAdd } from "../../../pages/inventory/transactions/reducer";
+import { formStateDeleteDetails, formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateTransactionDetailsRowsAdd, reOrderGridCols } from "../../../pages/inventory/transactions/reducer";
 import { initialTransactionDetails2, transactionInitialMoreDetails, initialTransactionDetailData, initialColumnModel } from "../../../pages/inventory/transactions/transaction-type-data";
 import { TransactionDetailKeys, ColumnModel, TransactionDetail, FormElementState, CurrentCell, TransactionFormState, TransactionDetails2, TransactionDetailsMore, SummaryItems } from "../../../pages/inventory/transactions/transaction-types";
 import { ERPScrollArea } from "../erp-scrollbar";
@@ -1627,6 +1627,41 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       setColumnWidths,
     ]);
 
+    // Virtual column reordering: swap barCode ↔ pCode when useBarcode changes
+    const prevUseBarcodeRef = useRef(formState.userConfig?.useBarcode);
+    useEffect(() => {
+      const currentUseBarcode = formState.userConfig?.useBarcode;
+      if (prevUseBarcodeRef.current === currentUseBarcode) return;
+      prevUseBarcodeRef.current = currentUseBarcode;
+
+      if (currentUseBarcode) {
+        // useBarcode ON: move barCode before pCode
+        dispatch(reOrderGridCols({ column: "barCode", toBefore: "pCode" }));
+      } else {
+        // useBarcode OFF: move pCode before barCode (restore original)
+        dispatch(reOrderGridCols({ column: "pCode", toBefore: "barCode" }));
+      }
+
+      // Also update local columnOrder and columnWidths for visible columns
+      setColumnOrder((prevOrder) => {
+        const barcodeIdx = prevOrder.findIndex((o) => o.field === "barCode");
+        const pcodeIdx = prevOrder.findIndex((o) => o.field === "pCode");
+        if (barcodeIdx === -1 || pcodeIdx === -1) return prevOrder;
+        const newOrder = [...prevOrder];
+        [newOrder[barcodeIdx], newOrder[pcodeIdx]] = [newOrder[pcodeIdx], newOrder[barcodeIdx]];
+        return newOrder;
+      });
+
+      setColumnWidths((prevWidths) => {
+        const barcodeIdx = prevWidths.findIndex((w) => w.field === "barCode");
+        const pcodeIdx = prevWidths.findIndex((w) => w.field === "pCode");
+        if (barcodeIdx === -1 || pcodeIdx === -1) return prevWidths;
+        const newWidths = [...prevWidths];
+        [newWidths[barcodeIdx], newWidths[pcodeIdx]] = [newWidths[pcodeIdx], newWidths[barcodeIdx]];
+        return newWidths;
+      });
+    }, [formState.userConfig?.useBarcode, dispatch, setColumnOrder, setColumnWidths]);
+
     const handleScroll = useCallback(
       (e: React.UIEvent<HTMLDivElement>) => {
         const target = e.currentTarget;
@@ -1923,7 +1958,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
     const focusCell = useCallback(
       (targetRow: number, targetColumnIndex: number) => {
         const visibleColumns =
-          formState.gridColumns?.filter(
+          columns?.filter(
             (col) => col.visible !== false && col.dataField != null
           ) ?? [];
         const itemCount = formState.transaction?.details.length || 0;
@@ -1938,12 +1973,12 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const targetColumn = visibleColumns[targetColumnIndex];
         return { column: targetColumn.dataField ?? "", rowIndex: targetRow };
       },
-      [formState.gridColumns, formState.transaction?.details.length, gridId]
+      [columns, formState.transaction?.details.length, gridId]
     );
 
     const focusCurrentColumn = useCallback(
       (rowIndex: number, column: string) => {
-        const visibleColumns = formState.gridColumns?.filter(
+        const visibleColumns = columns?.filter(
           (col) => col.visible !== false && col.dataField != null
         );
 
@@ -1962,11 +1997,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         }
         return null;
       },
-      [formState.gridColumns, focusCell]
+      [columns, focusCell]
     );
     const findCurrentEditableIndex = useCallback(
       (rowIndex: number, column: string) => {
-        const visibleColumns = formState.gridColumns?.filter(
+        const visibleColumns = columns?.filter(
           (col) => col.visible !== false && col.dataField != null
         );
 
@@ -1982,11 +2017,11 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           ? -1
           : editableColumns?.findIndex((col) => col.dataField === column);
       },
-      [formState.gridColumns, focusCell]
+      [columns, focusCell]
     );
     const focusColumn = useCallback(
       (rowIndex: number, column: string) => {
-        const visibleColumns = formState.gridColumns?.filter(
+        const visibleColumns = columns?.filter(
           (col) => col.visible !== false && col.dataField != null
         );
 
@@ -2012,7 +2047,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         }
         return null;
       },
-      [formState.gridColumns, focusCell]
+      [columns, focusCell]
     );
 
     const nextCellFind = useCallback(
@@ -2021,7 +2056,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         column: string,
         excludedColumns?: (keyof TransactionDetail)[]
       ) => {
-        const visibleColumns = formState.gridColumns?.filter(
+        const visibleColumns = columns?.filter(
           (col) => col.visible !== false && col.dataField != null
         );
 
@@ -2084,7 +2119,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         }
         return null;
       },
-      [formState.gridColumns, focusCell]
+      [columns, focusCell]
     );
 
     const [currentCell, setCurrentCell] = useState<CurrentCell | undefined>(
@@ -2094,11 +2129,15 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
   const _setCurrentCell = (data: any) =>  {
     setCurrentCell(data)
   };
-    const [prevCell, setPrevCell] = useState<number>(
-      formState.currentCell?.rowIndex ?? -1
-    );
+    // prevCell tracking moved to prevCellRef (below) to avoid state-driven re-renders during navigation
     useEffect(() => {
-      setCurrentCell(formState.currentCell);
+      // Only sync from Redux if the cell position actually changed
+      // to prevent infinite loop: local → Redux dispatch → sync back → local → ...
+      if (formState.currentCell?.rowIndex !== currentCell?.rowIndex ||
+          formState.currentCell?.column !== currentCell?.column ||
+          formState.currentCell?.key !== currentCell?.key) {
+        setCurrentCell(formState.currentCell);
+      }
     }, [formState.currentCell]);
 
    
@@ -2131,8 +2170,8 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       }
     }, [barcodeTargetRow, formState.currentCell?.rowIndex]);
 
-    const scrollToCenter = useCallback(
-      (rowIndex: number, column?: string, duration: number = 300) => {
+    const scrollToRow = useCallback(
+      (rowIndex: number, column?: string) => {
         if (rowIndex < 0 || rowIndex >= formState.transaction.details.length) {
           return false;
         }
@@ -2150,11 +2189,18 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         const currentVerticalScrollTop = container.scrollTop;
         const currentHorizontalScrollLeft = container.scrollLeft;
 
-        // Calculate target vertical position
+        // Calculate target vertical position - scroll just enough to keep row visible
         const rowTop = rowIndex * ITEM_HEIGHT;
-        const containerCenter = height / 2;
-        const targetVerticalScrollTop =
-          rowTop - containerCenter + ITEM_HEIGHT / 2;
+        const rowBottom = rowTop + ITEM_HEIGHT;
+        const visibleTop = currentVerticalScrollTop;
+        const visibleBottom = currentVerticalScrollTop + height;
+
+        let targetVerticalScrollTop = currentVerticalScrollTop;
+        if (rowBottom > visibleBottom) {
+          targetVerticalScrollTop = rowBottom - height;
+        } else if (rowTop < visibleTop) {
+          targetVerticalScrollTop = rowTop;
+        }
 
         const totalContentHeight =
           formState.transaction.details.length * ITEM_HEIGHT;
@@ -2207,35 +2253,10 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           }
         }
 
-        // Animate both scrolling
-        const startTime = performance.now();
-        const verticalDistance =
-          finalVerticalScrollTop - currentVerticalScrollTop;
-        const horizontalDistance =
-          finalHorizontalScrollLeft - currentHorizontalScrollLeft;
-
-        const animateScroll = (currentTime: number) => {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-
-          // Easing function (ease-out)
-          const easeOut = 1 - Math.pow(1 - progress, 3);
-
-          const newVerticalScrollTop =
-            currentVerticalScrollTop + verticalDistance * easeOut;
-          const newHorizontalScrollLeft =
-            currentHorizontalScrollLeft + horizontalDistance * easeOut;
-
-          container.scrollTop = newVerticalScrollTop;
-          container.scrollLeft = newHorizontalScrollLeft;
-          updateScroll(newVerticalScrollTop);
-
-          if (progress < 1) {
-            requestAnimationFrame(animateScroll);
-          }
-        };
-
-        requestAnimationFrame(animateScroll);
+        // Set scroll position instantly (no animation to avoid re-render blink)
+        container.scrollTop = finalVerticalScrollTop;
+        container.scrollLeft = finalHorizontalScrollLeft;
+        updateScroll(finalVerticalScrollTop);
         return true;
       },
       [
@@ -2249,31 +2270,36 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
       ]
     );
 
+    // Ref for debouncing side effects during rapid arrow key navigation
+    const deferredCellEffectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const prevCellRef = useRef<number>(formState.currentCell?.rowIndex ?? -1);
+
+    // Effect 1: IMMEDIATE — focus the DOM element only (no dispatches, no re-renders)
     useEffect(() => {
-      const runEffect = async () => {
-        if (
-          currentCell &&
-          currentCell.column !== "" &&
-          currentCell.rowIndex > -1
-        ) {
-          const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
-          const targetCell = document.getElementById(
-            targetCellId
-          ) as HTMLElement | null;
-          if (targetCell) {
-            if (
-              currentCell.column === "product" ||
-              currentCell.column === "pCode"
-            ) {
-              const erpSearchInput = targetCell.querySelector(
-                `input[id="${targetCellId}"]`
-              ) as HTMLInputElement | null;
-              if (erpSearchInput) {
-                erpSearchInput.focus();
-                erpSearchInput.select();
-                return;
-              }
+      if (
+        currentCell &&
+        currentCell.column !== "" &&
+        currentCell.rowIndex > -1
+      ) {
+        const targetCellId = `${gridId}_${currentCell.column}_${currentCell.rowIndex}`;
+        const targetCell = document.getElementById(
+          targetCellId
+        ) as HTMLElement | null;
+        if (targetCell) {
+          if (
+            currentCell.column === "product" ||
+            currentCell.column === "pCode"
+          ) {
+            const erpSearchInput = targetCell.querySelector(
+              `input[id="${targetCellId}"]`
+            ) as HTMLInputElement | null;
+            if (erpSearchInput) {
+              erpSearchInput.focus();
+              erpSearchInput.select();
+            } else {
+              targetCell.focus();
             }
+          } else {
             targetCell.focus();
             const input =
               targetCell.tagName === "INPUT"
@@ -2284,11 +2310,31 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             if (input) input.select();
           }
         }
-        if (currentCell?.reCenterRow) {
-          scrollToCenter(currentCell.rowIndex, currentCell.column);
+      }
+      if (currentCell?.reCenterRow) {
+        scrollToRow(currentCell.rowIndex, currentCell.column);
+      } else if (currentCell && currentCell.rowIndex > -1 && containerRef.current) {
+        // Only scroll when the row is actually outside the visible area
+        const rowTop = currentCell.rowIndex * ITEM_HEIGHT;
+        const rowBottom = rowTop + ITEM_HEIGHT;
+        const visibleTop = containerRef.current.scrollTop;
+        const visibleBottom = visibleTop + height;
+        if (rowBottom > visibleBottom || rowTop < visibleTop) {
+          scrollToRow(currentCell.rowIndex, currentCell.column);
         }
-        setPrevCell(currentCell?.rowIndex ?? -1);
-        if (prevCell !== currentCell?.rowIndex) {
+      }
+    }, [currentCell, currentCell?.rowIndex, currentCell?.key]);
+
+    // Effect 2: DEFERRED — Redux sync, row addition, storage writes (debounced to avoid re-render storms during rapid navigation)
+    useEffect(() => {
+      if (deferredCellEffectTimer.current) {
+        clearTimeout(deferredCellEffectTimer.current);
+      }
+      deferredCellEffectTimer.current = setTimeout(async () => {
+        const prevCellRow = prevCellRef.current;
+        prevCellRef.current = currentCell?.rowIndex ?? -1;
+
+        if (prevCellRow !== currentCell?.rowIndex) {
           const data = formState.transaction.details.filter(
             (x) => x.productID > 0
           );
@@ -2299,26 +2345,32 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
             );
           }
         }
-        // Need to verify - safwan sir
         dispatch(formStateHandleFieldChangeKeysOnly({fields:{currentCell: currentCell}}))
         if (
-          prevCell !== currentCell?.rowIndex &&
+          prevCellRow !== currentCell?.rowIndex &&
           isNullOrUndefinedOrZero(currentCell?.data?.productID
-          )&& !isMobile
+          ) && !isMobile
         ) {
           const rc =
             20 -
             formState.transaction.details.filter((x: any) =>
               isNullOrUndefinedOrZero(x.productID)
             ).length;
-          const rows = Array.from({ length: rc }, (_, index) => ({
-            ...initialTransactionDetailData,
-            slNo: generateUniqueKey(),
-          }));
-          dispatch(formStateTransactionDetailsRowsAdd(rows));
+          if (rc > 0) {
+            const rows = Array.from({ length: rc }, (_, index) => ({
+              ...initialTransactionDetailData,
+              slNo: generateUniqueKey(),
+            }));
+            dispatch(formStateTransactionDetailsRowsAdd(rows));
+          }
+        }
+      }, 150);
+
+      return () => {
+        if (deferredCellEffectTimer.current) {
+          clearTimeout(deferredCellEffectTimer.current);
         }
       };
-      runEffect();
     }, [currentCell, currentCell?.rowIndex, currentCell?.key]);
     React.useImperativeHandle(ref, () => ({
       focusCell,
@@ -2372,13 +2424,17 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           (col) => col.dataField === column?.dataField
         );
         if (ignoreKeyMovesInCell === true && column.dataField === "unitPrice") {
-          onKeyDown(
-            value,
-            e,
-            column.dataField as keyof TransactionDetail,
-            rowIndex
-          );
-          return;
+          // Only delegate non-arrow keys (Enter, Tab, etc.) to parent for rate validation
+          // Arrow keys are handled by the grid's own navigation (vertical + horizontal with cursor awareness)
+          if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+            onKeyDown(
+              value,
+              e,
+              column.dataField as keyof TransactionDetail,
+              rowIndex
+            );
+            return;
+          }
         }
 
         if (
@@ -2424,15 +2480,38 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
 
         e.preventDefault();
 
+        console.log(`[Grid Nav] key=${e.key} row=${rowIndex} col=${currentColumnIndex} (${column?.dataField}) totalCols=${visibleColumns.length} totalRows=${details?.length}`);
+
+        // Navigable columns for arrow keys (skip slNo which is a non-focusable display column)
+        const navigableColumns = visibleColumns.filter(
+          (col) => col.dataField !== "slNo"
+        );
+        const currentNavIndex = navigableColumns.findIndex(
+          (col) => col.dataField === column?.dataField
+        );
+
         switch (e.key) {
          case "ArrowRight":
           if (!details) return;
           if (rowIndex === undefined) return;
 
-          if (currentColumnIndex < visibleColumns.length - 1) {
-            const res = focusCell(rowIndex, currentColumnIndex + 1);
+          if (currentNavIndex >= 0 && currentNavIndex < navigableColumns.length - 1) {
+            // Navigate to next navigable column
+            const nextNav = navigableColumns[currentNavIndex + 1];
+            const nextVisibleIdx = visibleColumns.findIndex(
+              (col) => col.dataField === nextNav.dataField
+            );
+            const res = focusCell(rowIndex, nextVisibleIdx);
+            console.log(`[Grid Nav] ArrowRight -> next col: ${nextNav.dataField} result:`, res);
             if (res != null) {
               setCurrentCell({ ...res, data: details[rowIndex] });
+            }
+          } else {
+            // At last navigable column — re-assert focus on current cell
+            console.log(`[Grid Nav] ArrowRight -> at last column, re-asserting focus`);
+            const resCurR = focusCell(rowIndex, currentColumnIndex);
+            if (resCurR != null) {
+              setCurrentCell({ ...resCurR, data: details[rowIndex] });
             }
           }
           break;
@@ -2441,31 +2520,64 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
           if (!details) return;
           if (rowIndex === undefined) return;
 
-          if (currentColumnIndex > 0) {
-            const res = focusCell(rowIndex, currentColumnIndex - 1);
+          if (currentNavIndex > 0) {
+            // Navigate to previous navigable column
+            const prevNav = navigableColumns[currentNavIndex - 1];
+            const prevVisibleIdx = visibleColumns.findIndex(
+              (col) => col.dataField === prevNav.dataField
+            );
+            const res = focusCell(rowIndex, prevVisibleIdx);
+            console.log(`[Grid Nav] ArrowLeft -> prev col: ${prevNav.dataField} result:`, res);
             if (res != null) {
               setCurrentCell({ ...res, data: details[rowIndex] });
+            }
+          } else {
+            // At first navigable column — re-assert focus on current cell
+            console.log(`[Grid Nav] ArrowLeft -> at first column, re-asserting focus`);
+            const resCurL = focusCell(rowIndex, currentColumnIndex);
+            if (resCurL != null) {
+              setCurrentCell({ ...resCurL, data: details[rowIndex] });
             }
           }
           break;
 
         case "ArrowUp":
           if (!details) return;
-          if (rowIndex === undefined || rowIndex <= 0) return;
+          if (rowIndex === undefined) return;
 
-          const resUp = focusCell(rowIndex - 1, currentColumnIndex);
-          if (resUp != null) {
-            setCurrentCell({ ...resUp, data: details[rowIndex - 1] });
+          if (rowIndex > 0) {
+            const resUp = focusCell(rowIndex - 1, currentColumnIndex);
+            console.log(`[Grid Nav] ArrowUp -> row ${rowIndex - 1} result:`, resUp);
+            if (resUp != null) {
+              setCurrentCell({ ...resUp, data: details[rowIndex - 1] });
+            }
+          } else {
+            // At first row — re-assert focus on current cell
+            console.log(`[Grid Nav] ArrowUp -> at first row, re-asserting focus`);
+            const resCurU = focusCell(rowIndex, currentColumnIndex);
+            if (resCurU != null) {
+              setCurrentCell({ ...resCurU, data: details[rowIndex] });
+            }
           }
           break;
 
         case "ArrowDown":
           if (!details) return;
-          if (rowIndex === undefined || rowIndex >= details.length - 1) return;
+          if (rowIndex === undefined) return;
 
-          const resDown = focusCell(rowIndex + 1, currentColumnIndex);
-          if (resDown != null) {
-            setCurrentCell({ ...resDown, data: details[rowIndex + 1] });
+          if (rowIndex < details.length - 1) {
+            const resDown = focusCell(rowIndex + 1, currentColumnIndex);
+            console.log(`[Grid Nav] ArrowDown -> row ${rowIndex + 1} result:`, resDown);
+            if (resDown != null) {
+              setCurrentCell({ ...resDown, data: details[rowIndex + 1] });
+            }
+          } else {
+            // At last row — re-assert focus on current cell
+            console.log(`[Grid Nav] ArrowDown -> at last row, re-asserting focus`);
+            const resCurD = focusCell(rowIndex, currentColumnIndex);
+            if (resCurD != null) {
+              setCurrentCell({ ...resCurD, data: details[rowIndex] });
+            }
           }
           break;
 

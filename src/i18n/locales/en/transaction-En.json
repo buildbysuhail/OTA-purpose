@@ -1258,6 +1258,9 @@
   "system_date_doesn’t_match_transaction_date. Do_you_want_to_update?":"System date does not match the transaction date. Do you want to update it?",
   "demo_expired_please_activate":"Demo expired. Please activate",
   "day_closed":"Day Closed",
-  "day_closed_do_you_want_to_continue_with_next_transaction_date":"Day closed. Do you want to continue with next transaction date?"
+  "day_closed_do_you_want_to_continue_with_next_transaction_date":"Day closed. Do you want to continue with next transaction date?",
+  "sales_invoice#":"Sales Invoice#",
+  "load_sales_to_return":"Load Sales To Return",
+  "dr_no#":"DR No#"
 
 }

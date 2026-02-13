@@ -20,6 +20,7 @@ import { handleResponse } from "../../../../../utilities/HandleResponse";
 import { base64ToModelUnicode, modelToBase64Unicode } from "../../../../../utilities/jsonConverter";
 import { setStorageString } from "../../../../../utilities/storage-utils";
 import { toggleTemplateChooserModal } from "../../../../../redux/slices/popup-reducer";
+import { usePurchasePrint } from "../use-print";
 
 const api = new APIClient();
 interface HeaderProps extends VoucherElementProps {
@@ -109,7 +110,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const [isLoadMultiModalOpen, setIsLoadMultiModalOpen] = useState(false);
     const [isPendingOrderOpen, setIsPendingOrderOpen] = useState({ open: false, type: "PO" });
     const [isImportExcelOpen, setIsImportExcelOpen] = useState(false)
-
+     const { printBarcode } = usePurchasePrint();
     const popupStyle = {
       top: "45px",
       [isRtl ? "right" : "left"]: "-231px",
@@ -123,6 +124,22 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         })
       );
     };
+
+    const printMultiRowBarcode = async () => {
+      debugger;
+      const allSlNos = formState.transaction.details.filter(row => row.productID && row.productID > 0)
+      .map(row => row.slNo);
+
+      await  printBarcode(
+        allSlNos, // Multiple slNos
+        false,
+        true,
+        formState.transaction.master.ledgerID,
+        formState.transaction.master.fromWarehouseID,
+        false
+      );
+      closeMenuPopup();
+    }
 
     const selectTemplates = () => {
       dispatch(
@@ -623,7 +640,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 transition-all duration-200 rounded-md group text-left"
-                          onClick={() => { closeMenuPopup() }}>
+                          onClick={printMultiRowBarcode}>
                           <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 group-hover:scale-110 transition-all duration-200">
                             <Barcode className="h-4 w-4 text-amber-800 dark:text-amber-300" />
                           </div>

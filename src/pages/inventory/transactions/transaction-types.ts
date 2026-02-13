@@ -775,6 +775,7 @@ export interface TransactionFormState {
   resetSearch?: string  // for Clear the inputs in filed(sf)
   // einvoiceLabel?: string;
   // eWBLabel?: string;
+  enableCreditAccount: boolean;
   
   voucherNumberLck?:boolean; 
 

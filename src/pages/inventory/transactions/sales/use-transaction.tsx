@@ -34,6 +34,8 @@ import { getInitialPreference } from "../../../../utilities/dx-grid-preference-u
 import { LedgerType } from "../../../../enums/ledger-types";
 import { purchaseGridCol } from "./transaction-grid-cols";
 import DeliveryBoy from "../../../rpos/deliveryboy";
+import { SalesDateChange } from "./components/dateChange"
+import { setClientSession } from "../../../../redux/slices/client-session/reducer"
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -712,6 +714,17 @@ export const useTransaction = (
         }
       }
     }
+    // invoice button manage - draft mode case
+    if (voucher.formElements.chkDraftMode?.visible && out_voucherType === "SID") {
+      voucher.formElements = {
+        ...voucher.formElements,
+        btnConvertToInvoice: {
+          ...voucher.formElements.btnConvertToInvoice,
+          visible: true,
+          disabled: voucher.formElements.btnEdit?.disabled,
+        },
+      };
+    }
     // The above are newly added for sales
 
     if (vch == null || vch?.master == null) {
@@ -1138,7 +1151,7 @@ export const useTransaction = (
   async function validate(): Promise<{
     master: TransactionMaster, isValid: boolean
   }> {
-    const master = {...formState.transaction.master};
+    const master = { ...formState.transaction.master };
     const details = formState.transaction.details;
     const formType = master.voucherForm ?? "";
     const voucherType = master.voucherType ?? "";
@@ -1155,8 +1168,22 @@ export const useTransaction = (
     // Get first free row index (first row without a product)
     const firstFreeRow = details.findIndex((x) => !x.productID || x.productID === 0);
     const validDetails = firstFreeRow === -1 ? details : details.slice(0, firstFreeRow);
-debugger;
-    if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
+    const toLocalDateOnly = (date: string | Date) => {
+      const d = new Date(date);
+      return new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate()
+      ).toISOString().split("T")[0]; // yyyy-mm-dd
+    };
+    const softwareDate = toLocalDateOnly(
+      clientSession.softwareDate.split("/").reverse().join("-")
+    );
+    const transactionDate = toLocalDateOnly(master.transactionDate);
+    if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight
+      && (voucherType === VoucherType.SalesInvoice
+        && !isIndia)
+      && softwareDate != transactionDate) {
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("date_warning"),
@@ -1174,17 +1201,17 @@ debugger;
         master.transactionDate = moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString();
         master.refDate = moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString();
         dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {
-            transaction: {
-              master: {
-                transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString(),
-                refDate: moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString()
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              transaction: {
+                master: {
+                  transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString(),
+                  refDate: moment(clientSession.softwareDate, "DD/MM/YYYY").toISOString()
+                }
               }
             }
-          }
-        })
-      );
+          })
+        );
       }
     }
     if (clientSession.isDemoVersion) {
@@ -1198,22 +1225,22 @@ debugger;
 
       if (diffInDays < 0 || diffInDays > 30) {
         dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {
-            formElements: {
-              dtpTransDate: {
-                disabled: true
-              },
-              btnSave: {
-                disabled: true
-              },
-              dgvInventory: {
-                disabled: true
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              formElements: {
+                dtpTransDate: {
+                  disabled: true
+                },
+                btnSave: {
+                  disabled: true
+                },
+                dgvInventory: {
+                  disabled: true
+                }
               }
             }
-          }
-        })
-      );
+          })
+        );
 
         await ERPAlert.show({
           icon: "error",
@@ -1278,9 +1305,9 @@ debugger;
         confirmButtonText: t("ok"),
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     // CODE CHECKED########
@@ -1292,9 +1319,9 @@ debugger;
         confirmButtonText: t("ok"),
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     // CODE CHECKED########  - Working Not checked/ Tested
@@ -1307,9 +1334,9 @@ debugger;
         confirmButtonText: t("ok"),
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     // CODE CHECKED########  - Working Not checked/ Tested
@@ -1321,9 +1348,9 @@ debugger;
         confirmButtonText: t("ok"),
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     // CODE CHECKED########
@@ -1390,9 +1417,9 @@ debugger;
 
           if (!confirmed) {
             return {
-          master: master,
-          isValid: false
-        };
+              master: master,
+              isValid: false
+            };
           }
         }
         else {
@@ -1404,9 +1431,9 @@ debugger;
             showCancelButton: false,
           });
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
     }
@@ -1418,9 +1445,9 @@ debugger;
         isAuthorized = await SalesAuthorization(action);
         if (!isAuthorized) {
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
     }
@@ -1434,9 +1461,9 @@ debugger;
         confirmButtonText: t("ok"),
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     // ============ Credit Stopped Validation ============
@@ -1521,20 +1548,20 @@ debugger;
       }
     }
 
-    if(userSession.dbIdValue=="543140180640" 
-      && voucherType==VoucherType.SalesInvoice 
+    if (userSession.dbIdValue == "543140180640"
+      && voucherType == VoucherType.SalesInvoice
       && !clientSession.isAppGlobal
-      && formState.voucherNumberLck==true){
-        //no warning in 1050 only block
+      && formState.voucherNumberLck == true) {
+      //no warning in 1050 only block
       await ERPAlert.show({
         title: t("voucher_number_lock_checked"),
         text: t("please_verify_voucher_number_and_disable_it_before_save"),
         icon: "warning",
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
     // CODE CHECKED########
     // ============ Transaction Date Validation ============
@@ -1551,57 +1578,62 @@ debugger;
         icon: "warning",
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
-// if (voucherType === VoucherType.SalesInvoice) {
-//   const closedDateResult = await api.getAsync(
-//     `${Urls.inv_transaction_base}GetClosedDate?type=Sales`
-//   );
+    // WORKING NOT TESTED
+    if (voucherType === VoucherType.SalesInvoice) {
+      const closedDateResult = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetClosedDate/${"Sales"}`
+      );
+      const closedDate = new Date(closedDateResult);
+      const transDate = new Date(master.transactionDate);
 
-//   const closedDate = new Date(closedDateResult);
-//   const transDate = new Date(master.transactionDate);
+      // Normalize time
+      closedDate.setHours(0, 0, 0, 0);
+      transDate.setHours(0, 0, 0, 0);
 
-//   // Normalize time
-//   closedDate.setHours(0, 0, 0, 0);
-//   transDate.setHours(0, 0, 0, 0);
+      if (closedDate >= transDate) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("day_closed"),
+          text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
 
-//   if (closedDate >= transDate) {
-//     const confirm = await ERPAlert.show({
-//       icon: "question",
-//       title: t("day_closed"),
-//       text: t("day_closed_do_you_want_to_continue_with_next_transaction_date"),
-//       confirmButtonText: t("yes"),
-//       cancelButtonText: t("no"),
-//       showCancelButton: true,
-//     });
-
-//     if (!confirm) {
-//       return {
-//           master: master,
-//           isValid: false
-//         };
-//     } else {
-//       const today = new Date();
-//       const softwareDate = new Date(clientSession.softwareDate);
-//       today.setHours(0, 0, 0, 0);
-//       softwareDate.setHours(0, 0, 0, 0);
-//       if (today > softwareDate) {
-//         clientSession.softwareDate = today.toString();
-//         master.transactionDate = today.toString();
-//       } else {
-//         // TO do 
-//         // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
-//         master.transactionDate = clientSession.softwareDate;
-//         return {
-//           master: master,
-//           isValid: false
-//         };
-//       }
-//     }
-//   }
-// }
+        if (!confirm) {
+          return {
+            master: master,
+            isValid: false
+          };
+        } else {
+          const today = new Date();
+          const softwareDate = new Date(clientSession.softwareDate);
+          today.setHours(0, 0, 0, 0);
+          softwareDate.setHours(0, 0, 0, 0);
+          if (today > softwareDate) {
+            clientSession.softwareDate = today.toString();
+            master.transactionDate = today.toString();
+          } else {
+            // TO do 
+            // Set Software date popup and set that date as clientSession.softwareDate --frmDateChange() in 1050
+            // Opens Date Picker Modal
+            const selectedDate = await SalesDateChange();
+            if (selectedDate) {
+              dispatch(setClientSession({ ...clientSession, softwareDate: selectedDate }));
+            }
+            master.transactionDate = clientSession.softwareDate;
+            return {
+              master: master,
+              isValid: false
+            };
+          }
+        }
+      }
+    }
 
     // CODE CHECKED########  - Working Not checked/ Tested
     // ============ Credit Limit Check ============
@@ -1613,7 +1645,7 @@ debugger;
       formState.previousGrandTotal || 0
     );
 
-    if (creditMode === "Block") {
+    if (creditMode === "Block" && [VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote].includes(voucherType as any)) {
       if (creditRes.exceeded) {
         await ERPAlert.show({
           icon: "error",
@@ -1623,13 +1655,14 @@ debugger;
           showCancelButton: false
         });
         return {
-          master: master,
-          isValid: false
+          isValid: false,
+          master: master
         };
       }
     }
 
-    if (creditMode === "Allow Cash Sales") {
+    if ((creditMode === "Allow Cash Sales" && voucherType == VoucherType.SalesInvoice && !applicationSettings.accountsSettings.showTenderDialogInSales && isIndia)
+      || (creditMode === "Allow Cash Sales" && voucherType == VoucherType.SalesInvoice && !isIndia)) {
       if (creditRes.exceeded) {
         if (grandTotal > cashReceived + cardAmount) {
           await ERPAlert.show({
@@ -1640,14 +1673,17 @@ debugger;
             showCancelButton: false
           });
           return {
-          master: master,
-          isValid: false
-        };
+            isValid: false,
+            master: master
+          };
         }
       }
     }
 
-    if (creditMode === "Warn") {
+    if ((creditMode === "Warn" && voucherType == VoucherType.SalesInvoice && !applicationSettings.accountsSettings.showTenderDialogInSales && isIndia)
+      || (creditMode === "Warn" && voucherType == VoucherType.SalesInvoice && !isIndia)
+      || (creditMode === "Warn" && voucherType == VoucherType.GoodsDeliveryNote)
+    ) {
       if (creditRes.exceeded) {
         await ERPAlert.show({
           icon: "warning",
@@ -1658,6 +1694,310 @@ debugger;
         });
       }
     }
+    if (applicationSettings.mainSettings.maintainSalesRouteCreditLimit === true && [VoucherType.SalesInvoice, VoucherType.GoodsDeliveryNote].includes(voucherType as any)) {
+      const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/LoadSalesRouteCreditLimit/${master.ledgerID}`
+      );
+      if (response) {
+        const trnsAmount = Number(response.amount || 0);
+        const creditLimit = Number(response.creditLimit || 0);
+        const grandTotal = Number(master.grandTotal || 0); // replace if needed
+        if (creditLimit > 0 && (trnsAmount + grandTotal > creditLimit)) {
+          const confirm = await ERPAlert.show({
+            icon: "question",
+            title: t("sales_route_credit_limit"),
+            text: `${t("current_credit_amount_is")} ${trnsAmount}. ${t("sales_route_credit_limit_reached_do_you_want_to_continue")}`,
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+          });
+          if (!confirm) {
+            return {
+              isValid: false,
+              master: master,
+            };
+          }
+        }
+      }
+    }
+
+    //Counter Shift validate Gcc
+    if (applicationSettings.accountsSettings.allowSalesCounter === true
+      && userSession.isMaintainShift === true
+      && voucherType == VoucherType.SalesInvoice
+      && !isIndia
+    ) {
+
+      // 1️⃣ If shift not opened
+      if (clientSession.counterShiftId === 0) {
+
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("counter_not_opened"),
+          text: t("please_open_the_counter_for_transaction"),
+          confirmButtonText: t("ok"),
+        });
+        // To do
+        // await openCounterShiftDialog(); // equivalent to frmCounterShift().ShowDialog()
+        return {
+          isValid: false,
+          master: master
+        };
+      }
+
+      // 2️⃣ Shift is opened → Get Shift Opened Date
+      const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetShiftOpenedDate`
+      );
+
+      if (response) {
+
+        const shiftOpenedTime = new Date(response.transactionDate);
+        const transDate = new Date(master.transactionDate);
+
+        shiftOpenedTime.setHours(0, 0, 0, 0);
+        transDate.setHours(0, 0, 0, 0);
+
+        const combined = new Date(shiftOpenedTime);
+        combined.setHours(combined.getHours() + 29);
+
+        const nowHour = new Date().getHours();
+
+        // 3️⃣ Main Condition
+        if (
+          shiftOpenedTime.getTime() === transDate.getTime() ||
+          (
+            shiftOpenedTime <= transDate &&
+            transDate <= combined &&
+            nowHour < 5
+          )
+        ) {
+
+          if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight) {
+            clientSession.softwareDate = shiftOpenedTime.toString();
+          }
+
+          master.transactionDate = clientSession.softwareDate;
+
+        }
+        else if (
+          shiftOpenedTime > transDate &&
+          transDate <= combined
+        ) {
+          clientSession.softwareDate = shiftOpenedTime.toString();
+          master.transactionDate = clientSession.softwareDate;
+        }
+        else {
+          if (applicationSettings.accountsSettings.enable24Hours === false) {
+
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("counter_shift_required"),
+              text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+              confirmButtonText: t("ok"),
+            });
+            // TO DO
+            // await openCounterShiftDialog();
+            return {
+              isValid: false,
+              master: master
+            };
+          }
+        }
+      }
+    }
+    //Counter Shift India
+    if ([VoucherType.SalesInvoice,
+    VoucherType.SalesReturn, VoucherType.SaleReturnEstimate,
+    VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
+    VoucherType.SalesQuotation].includes(voucherType as any)
+      && isIndia) {
+      try {
+        if (
+          applicationSettings.accountsSettings.allowSalesCounter &&
+          userSession.isMaintainShift
+        ) {
+
+          // 1️⃣ Counter not opened
+          if (clientSession.counterShiftId === 0) {
+
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("counter_required"),
+              text: t("please_open_the_counter_for_transaction"),
+              confirmButtonText: t("ok"),
+            });
+            //To do
+            // await openCounterShiftDialog();
+            return {
+              isValid: false,
+              master: master
+            };
+          }
+
+          // 2️⃣ Get Shift Data
+          const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetShiftOpenedDate`
+      );
+
+          if (!response) return {
+            isValid: true,
+            master: master
+          };;
+
+          const openTime = new Date(response.openTime);
+          const transactionDate = new Date(response.transactionDate);
+          const openUserID = Number(response.openUserID);
+
+          const shift = new Date(transactionDate);
+          shift.setHours(
+            openTime.getHours(),
+            openTime.getMinutes(),
+            openTime.getSeconds()
+          );
+
+          const systemDate = new Date(master.transactionDate);
+          const timeDifference =
+            (systemDate.getTime() - shift.getTime()) / (1000 * 60 * 60);
+
+          // ===============================
+          // 🔹 Allow Minimum Shift Duration
+          // ===============================
+          if (applicationSettings.accountsSettings.allowMinimumShiftDuration) {
+
+            const minimumShiftDuration =
+              applicationSettings.accountsSettings.minimumShiftDuration;
+
+            if (timeDifference >= minimumShiftDuration) {
+
+              await ERPAlert.show({
+                icon: "warning",
+                title: t("shift_duration_exceeded"),
+                text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                confirmButtonText: t("ok"),
+              });
+              //To do
+              // await openCounterShiftDialog();
+              return {
+                isValid: false,
+                master: master
+              };
+            }
+
+            // 🔹 User validation
+            if (
+              userSession.userTypeCode !== "BA" &&
+              userSession.userTypeCode !== "CA"
+            ) {
+              if (userSession.userId !== openUserID) {
+
+                await ERPAlert.show({
+                  icon: "warning",
+                  title: t("shift_user_mismatch"),
+                  text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                  confirmButtonText: t("ok"),
+                });
+                //To do
+                // await openCounterShiftDialog();
+                return {
+                  isValid: false,
+                  master: master
+                };
+              }
+            }
+          }
+          // ===============================
+          // 🔹 Without Minimum Shift Duration
+          // ===============================
+          else {
+            if (!applicationSettings.accountsSettings.enable24Hours) {
+              const shiftOpenedTime = new Date(response.transactionDate);
+              const combined = new Date(shiftOpenedTime);
+              combined.setHours(combined.getHours() + 24);
+              const softwareDate = new Date(clientSession.softwareDate);
+              if (
+                shiftOpenedTime.toDateString() === softwareDate.toDateString() ||
+                (shiftOpenedTime >= softwareDate &&
+                  softwareDate <= combined)
+              ) {
+                if (
+                  userSession.userTypeCode !== "BA" &&
+                  userSession.userTypeCode !== "CA"
+                ) {
+                  if (userSession.userId !== openUserID) {
+
+                    await ERPAlert.show({
+                      icon: "warning",
+                      title: t("shift_user_mismatch"),
+                      text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                      confirmButtonText: t("ok"),
+                    });
+                    //TO do
+                    // await openCounterShiftDialog();
+                    return {
+                      isValid: false,
+                      master: master
+                    };
+                  }
+                }
+              }
+              else if (
+                shiftOpenedTime > softwareDate &&
+                softwareDate <= combined
+              ) {
+                const confirm = await ERPAlert.show({
+                  icon: "question",
+                  title: t("shift_date"),
+                  text: `${t("shift_opened_in_new_date_transaction_date_need_to_change_to")} ${shiftOpenedTime.toLocaleDateString()} ${t("do_you_want_to_continue")}`,
+                  confirmButtonText: t("yes"),
+                  cancelButtonText: t("no"),
+                  showCancelButton: true,
+                });
+                if (confirm) {
+                  clientSession.softwareDate = shiftOpenedTime.toString();
+                  master.transactionDate = shiftOpenedTime.toString();
+                }
+              }
+              else {
+
+                await ERPAlert.show({
+                  icon: "warning",
+                  title: t("shift_required"),
+                  text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+                  confirmButtonText: t("ok"),
+                });
+                //To do
+                // await openCounterShiftDialog();
+                return {
+                  isValid: false,
+                  master: master
+                };
+              }
+            }
+          }
+        }
+        return {
+          isValid: true,
+          master: master
+        };
+      } catch (error) {
+
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("shift_error"),
+          text: t("please_close_old_counter_and_open_new_counter_for_transaction"),
+          confirmButtonText: t("ok"),
+        });
+
+        // To do
+        // await openCounterShiftDialog();
+        return {
+          isValid: false,
+          master: master
+        };
+      }
+    }
+
 
     // CODE CHECKED########
     // ============ Party Selection Check ============
@@ -1670,9 +2010,9 @@ debugger;
         showCancelButton: false
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     // CODE CHECKED########
@@ -1766,9 +2106,9 @@ debugger;
           const res = focusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
 
@@ -1787,14 +2127,14 @@ debugger;
             const res = focusColumn(rowIndex, "qty");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
             return {
-          master: master,
-          isValid: false
-        };
+              master: master,
+              isValid: false
+            };
           }
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
 
@@ -1811,9 +2151,9 @@ debugger;
         });
         if (!confirm) {
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
     }
@@ -1831,9 +2171,9 @@ debugger;
             showCancelButton: false
           });
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
     }
@@ -1854,9 +2194,9 @@ debugger;
               confirmButtonText: t("ok"),
             });
             return {
-          master: master,
-          isValid: false
-        };
+              master: master,
+              isValid: false
+            };
           }
         }
       }
@@ -1865,7 +2205,8 @@ debugger;
     // CODE CHECKED########  - Working Not checked/ Tested (SAMA PLASTIC CASE, NEEDS TESTING)
     // ============ Rate Warning Check (Sales price less than purchase/min price) ============
     const showRateWarning = applicationSettings.inventorySettings?.showRateWarning;
-    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT") {
+    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT" && voucherType==VoucherType.SalesInvoice&& !isIndia) {
+      // please add password in master --master.AuthorizationPassword
       for (let i = 0; i < validDetails.length; i++) {
         const row = validDetails[i];
         const purchasePrice = row.purchasePrice ?? 0;
@@ -1884,9 +2225,9 @@ debugger;
                 confirmButtonText: t("ok"),
               });
               return {
-          master: master,
-          isValid: false
-        };
+                master: master,
+                isValid: false
+              };
             }
             await ERPAlert.show({
               icon: "error",
@@ -1899,9 +2240,9 @@ debugger;
             isAuthorized = await SalesAuthorization(action);
             if (!isAuthorized) {
               return {
-          master: master,
-          isValid: false
-        };
+                master: master,
+                isValid: false
+              };
             }
 
           } else {
@@ -1912,9 +2253,9 @@ debugger;
               confirmButtonText: t("ok"),
             });
             return {
-          master: master,
-          isValid: false
-        };
+              master: master,
+              isValid: false
+            };
           }
         }
 
@@ -1926,9 +2267,9 @@ debugger;
             confirmButtonText: t("ok"),
           });
           return {
-          master: master,
-          isValid: false
-        };
+            master: master,
+            isValid: false
+          };
         }
       }
     }
@@ -1942,15 +2283,15 @@ debugger;
         confirmButtonText: t("ok"),
       });
       return {
-          master: master,
-          isValid: false
-        };
+        master: master,
+        isValid: false
+      };
     }
 
     return {
-          master: master,
-          isValid: true
-        };
+      master: master,
+      isValid: true
+    };
   }
 
   // const validateStatus = (accounts: TransactionRow[]): boolean => {
@@ -2078,9 +2419,9 @@ debugger;
       );
       const master = await attachMaster({
         ...formState,
-        transaction:{
+        transaction: {
           ...formState.transaction,
-          master:validationResult.master
+          master: validationResult.master
         }
       });
       const attachments = formState.transaction.attachments
@@ -3544,6 +3885,7 @@ debugger;
               pnlMasters: { disabled: false },
               chkDraftMode1: { disabled: true },
               dxGrid: { disabled: true },
+              btnConvertToInvoice: { visible: false }
             },
           })
         );
@@ -4437,8 +4779,8 @@ debugger;
             }
             return { ...result, handled: true, preventDefault: true };
           }
-        }else{
-           // Need to check is this will effecting other cases
+        } else {
+          // Need to check is this will effecting other cases
           const res = focusToNextColumn(rowIndex, columnName);
           setCurrentCell(res, data, false);
         }
@@ -6510,7 +6852,7 @@ debugger;
         title:
           (formType == undefined || formType.trim() == ""
             ? t(title)
-            : isInitial ? title + "[" + formType + "]" : title) ?? "",
+            : isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
 
         printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
       };
@@ -6978,14 +7320,14 @@ debugger;
           : clientSession.isAppGlobal ?
             getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
             :
-            isInitial ? title + "[" + formType + "]" : title) ?? "",
+            isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
       initialTitle:
         (formType == undefined || formType.trim() == ""
           ? t(title)
           : clientSession.isAppGlobal ?
             getCustomerTypeAndTitle(_formState.transaction.master.voucherForm, _formState.title, clientSession.isAppGlobal, applicationSettings.branchSettings.maintainKSA_EInvoice).formTitle
             :
-            isInitial? title + "[" + formType + "]" : title) ?? "",
+            isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
     };
 
     _formState.gridColumns?.forEach((x: any) => {

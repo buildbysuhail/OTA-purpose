@@ -495,6 +495,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   postedTransactionLabel: { visible: false, disabled: false, label: "" }, 
   sRAmountLabel: { visible: false, disabled: false, label: "" },
   dtpTransDate: { visible: true, disabled: false, label:""},
+  btnConvertToInvoice: { visible: false, disabled: false, label:""},
+  chkCreditAccount: { visible: true, disabled: false, label: "credit_account" },
+  cbCreditAccount: { visible: true, disabled: false, label: "" },
 
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },
@@ -622,6 +625,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   isPostedTransaction: false,
   isInv: false,
   billDiscountPerc: 0,
+  enableCreditAccount: false,
   summaryConfig: [
     {
       column: "qty",

@@ -65,6 +65,7 @@ import { fetchUserConfig } from "../transaction-utils";
 import MQtyFactorsModal from "./mqty-factors";
 import { merge } from "lodash";
 import { AuthorizationModal } from "./components/AuthorizationSales";
+import DateChangeModal from "./components/dateChange";
 
 interface BilledItem {
   id?: number;
@@ -2737,6 +2738,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
       {/* Authorization Modal for edit authorization */}
       <AuthorizationModal />
+      {/* Date Picker Modal */}
+      <DateChangeModal />
     </>
   );
 };

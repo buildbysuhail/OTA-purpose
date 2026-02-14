@@ -516,6 +516,8 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnLoadExcel: { visible: false, disabled: false, label: "" }, // load excel button, two button are found, need to manage that
   txtILRRefNo: { visible: true, disabled: false, label: "" }, //Item load request
 
+  einvoiceCheckBox: { visible: true, disabled: false, label: "" },
+
 };export const initialUserConfig: UserConfig = {
     clearDetailsAfterSaveAccounts: true,
     keepNarrationForJV: true,

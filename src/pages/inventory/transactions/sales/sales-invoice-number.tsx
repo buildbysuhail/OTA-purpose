@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { initialTransactionDetailData } from "../transaction-type-data";
 import { generateUniqueKey } from "../../../../utilities/Utils";
 import { RootState } from "../../../../redux/store";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface SalesInvoiceNumberProps {
   t: (key: string) => string;
@@ -142,7 +143,11 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
       gridRef.current?.instance()?.getSelectedRowsData("all") || [];
 
     if (selectedData.length === 0) {
-      alert(t("please_select_items"));
+      ERPAlert.show({
+        title: t("warning"),
+        text: t("please_select_items"),
+        icon: "warning",
+      });
       return;
     }
     const rows = selectedData.map((row: any) => ({
@@ -209,16 +214,280 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
         dataType: "string",
         width: 100,
         allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "autoBarcode",
+        caption: t("auto_barcode"),
+        dataType: "string",
+        width: 100,
+        allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
       },
+
+
+      {
+        dataField: "quantity",
+        caption: t("quantity"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField:"unitName",
+        caption: t("unit_name"),
+        dataType: "string",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "unitPrice",
+        caption: t("unit_price"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "grossValue",
+        caption: t("gross_value"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "free",
+        caption: t("free"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "netValue",
+        caption: t("net_value"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "quantity",
+        caption: t("qtyToReturn"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "productID",
+        caption: t("productID"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "invTransactionDetailID",
+        caption: t("invTransaction_detail_ID"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "invTransactionMasterID",
+        caption: t("invTransaction_master_ID"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "productBatchID",
+        caption: t("product_batch_ID"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "productDescription",
+        caption: t("product_description"),
+        dataType: "string",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "unitID",
+        caption: t("unitID"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "netAmount",
+        caption: t("net_Amount"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "batchNo",
+        caption: t("batchNo"),
+        dataType: "string",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+      {
+        dataField: "vatPercentage",
+        caption: t("vatperc"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "totalVatAmount",
+        caption: t("vatAmt"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "adjQty",
+        caption: t("returnedQty"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "valuationPrice",
+        caption: t("valuation_Price"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+        visible: false
+      },
+
+      {
+        dataField: "DiscountPer1",
+        caption: t("disc%"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+      {
+        dataField: "discount",
+        caption: t("discount"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+        visible: false
+      },
+
+      {
+        dataField: "ratePlusTax",
+        caption: t("ratePlusTax"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+      },
+
+
+       {
+        dataField: "purchasePrice",
+        caption: t("Purchase_Price"),
+        dataType: "number",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+        visible: false
+      },
+
+      {
+        dataField: "warehouse",
+        caption: t("warehouse"),
+        dataType: "string",
+        width: 100,
+        allowSorting: true,
+        allowSearch: false,
+        allowFiltering: true,
+        visible: false
+      },
+
       {
         dataField: "productID",
         caption: t("productID"),
         dataType: "number",
         visible: false,
         allowSorting: true,
-        allowSearch: true,
+        allowSearch: false,
         allowFiltering: true,
       },
       {
@@ -227,8 +496,9 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
         dataType: "string",
         width: 150,
         allowSorting: true,
-        allowSearch: true,
+        allowSearch: false,
         allowFiltering: true,
+        visible: false
       },
       {
         dataField: "stock",
@@ -236,8 +506,9 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
         dataType: "number",
         width: 100,
         allowSorting: true,
-        allowSearch: true,
+        allowSearch: false,
         allowFiltering: true,
+        visible: false
       },
     ],
     [t]
@@ -312,7 +583,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
                   ref={gridRef}
                   columns={columns}
                   dataSource={gridData}
-                  gridId={`grd_pending_orders_${voucherType}`}
+                  gridId={`grd_load_sales_to_return_${voucherType}`}
                   height={400}
                   hideGridAddButton={true}
                   enableScrollButton={false}
@@ -322,6 +593,12 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
                   allowExport={false}
                   allowSearching={false}
                   hideToolbar={true}
+                  scrolling={{
+                    mode: 'virtual',
+                    useNative: true,
+                    showScrollbar: 'always'
+                  }}
+                  showChooserOnGridHead
                 />
               </div>
             </div>

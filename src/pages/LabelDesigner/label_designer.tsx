@@ -2894,7 +2894,7 @@ const getFieldContent = () => {
                 )}
 
                 <Box sx={{ mb: 1 }}>
-                  <ERPInput
+                  <ERPInput 
                     id="x"
                     type="number"
                     label={t("position_x")}

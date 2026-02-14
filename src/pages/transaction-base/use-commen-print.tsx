@@ -71,54 +71,10 @@ export const useCommenPrint = () => {
   appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
   ]);
 
-  const printPaymentReceiptAdvice = async (voucherType: string) => {
 
-    // voucherType = isNullOrUndefinedOrEmpty(voucherType) ? formState.transaction.master.voucherType : voucherType
-    // const voucherTypes = ["CP", "BP", "CQP"].includes(voucherType)
-    //   ? "PARP"
-    //   : ["CR", "BR", "CQR"].includes(voucherType)
-    //     ? "RARP"
-    //     : ""
-    // const template = await getOrFetchTemplate(voucherTypes,"","")
-    // if (template?.id == 0) {
-    //   ERPToast.showWith("Please Set Template For Print", "warning");
-    //   return
-    // }
-    // await directPrint({template})
-  }
-
-  const printCheque = async (voucherType: string, voucher?: AccTransactionFormState) => {
-    // voucher = voucher == undefined ? formState : voucher
-    // const voucherTypes = "Cheque"
-    // // Filter details that satisfy the condition
-    // const chequeDetails = voucher.transaction.details.filter(
-    //   (detail) =>
-    //     !isNullOrUndefinedOrEmpty(detail.ledgerID) &&
-    //     (detail.chequeNumber !== undefined || detail.chequeNumber !== null),
-    // )
-
-    // // Only proceed if there are cheque details
-    // if (chequeDetails.length > 0) {
-    //   // Get the template
-    //   const template = await getOrFetchTemplate(voucherTypes,"","")
-
-    //   // Pass all cheque details at once to directPrint
-    //   if (template?.id == 0) {
-    //     ERPToast.showWith("Please Set Template For Print", "warning");
-    //     return
-    //   }
-    //   await directPrint({
-    //         template,
-    //         data: chequeDetails,
-    //       });
-
-    // }
-  }
 
   return {
     printVoucher,
-    printCheque,
-    printPaymentReceiptAdvice,
   }
 }
 

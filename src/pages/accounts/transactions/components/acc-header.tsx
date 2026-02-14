@@ -44,7 +44,7 @@ interface AccHeaderProps extends AccVoucherElementProps {
   goToPreviousPage: () => void;
   isHistorySidebarOpen: boolean;
   phone?: boolean;
-  printPaymentReceiptAdvice: (voucherType?: any) => Promise<void>
+  
 }
 
 const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
@@ -72,7 +72,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
       goToPreviousPage,
       isHistorySidebarOpen,
       phone = false,
-      printPaymentReceiptAdvice,
+
     },
     ref
   ) => {
@@ -109,6 +109,7 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
         toggleTemplateChooserModal({ isOpen: true, templateGroup: formState.transaction.master?.voucherType, customerType: formState.transaction.master?.customerType, formType: formState.transaction.master?.formType,isInv:false })
       );
     }, [formState.transaction.master?.voucherType]);
+
     const handleFieldChange = (field: keyof AccUserConfig, value: any) => {
       const updatedUserConfig = {
         ...formState.userConfig,
@@ -116,6 +117,15 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
       };
       dispatch(accFormStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
     };
+    const enablePrintPaymentAdvice = () => {
+    
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: { enablePrintPaymentAdvice: true },
+        })
+      );
+    };
+
     return (
       <div className={`!overflow-visible flex items-center ${phone ? 'justify-evenly' : 'justify-end'}  space-x-2 p-1 w-full overflow-x-auto ${phone ? 'bg-[#f9fafb]' : ''} ${phone ? '' : ''} ${phone ? '' : ''}`}>
         {/* Load Temp Rows */}
@@ -237,12 +247,15 @@ const AccHeader = React.forwardRef<HTMLInputElement, AccHeaderProps>(
             <div ref={popupRef} className="absolute rounded-md dark:bg-dark-bg dark:text-dark-text bg-gray-100 shadow-md border border-gray-300 p-4 z-50" style={popupStyle}>
               <nav className="w-full dark:bg-dark-bg dark:text-dark-text bg-gray-100 text-black">
                 <ul className="space-y-1">
+                  {formState.transaction.master.accTransactionMasterID>0 && (
                   <li>
-                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={(e) => { printPaymentReceiptAdvice(voucherType=="CP"); }}>
+                    <button className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-400 hover:text-black transition-colors rounded-sm" onClick={enablePrintPaymentAdvice}>
                       <Printer className="h-4 w-4" />
                       <span>{t("print_payment_advise")}</span>
                     </button>
                   </li>
+                  )}
+
 
                   {formState.formElements.lnkUnlockVoucher.visible && (
                     <li>

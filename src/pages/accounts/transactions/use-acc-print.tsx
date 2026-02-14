@@ -15,21 +15,6 @@ export const useAccPrint = () => {
   const { directPrint } = useDirectPrint();
   const formState = useAppSelector((state: RootState) => state.AccTransaction)
 
-  const printPaymentReceiptAdvice = async (voucherType: string) => {
-
-    voucherType = isNullOrUndefinedOrEmpty(voucherType) ? formState.transaction.master.voucherType : voucherType
-    const voucherTypes = ["CP", "BP", "CQP"].includes(voucherType)
-      ? "PARP"
-      : ["CR", "BR", "CQR"].includes(voucherType)
-        ? "RARP"
-        : ""
-    const template = await getOrFetchTemplate(voucherTypes,"","")
-    if (template?.id == 0) {
-      ERPToast.showWith("Please Set Template For Print", "warning");
-      return
-    }
-    await directPrint({template})
-  }
 
   const printCheque = async (voucherType: string, voucher?: AccTransactionFormState) => {
     voucher = voucher == undefined ? formState : voucher
@@ -60,8 +45,8 @@ export const useAccPrint = () => {
   }
 //this is use to spasific for acc transAction print  else are use useCommen in based-transation
   return {
-    // printCheque,
-    // printPaymentReceiptAdvice,
+    printCheque,
+
   }
 }
 

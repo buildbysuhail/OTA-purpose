@@ -234,6 +234,7 @@ const Urls = {
     "/Core/BarcodePrint/GetBarcodePrintGridFromTransaction/",
   // Accounts Start
   // Masters
+   acc_advice_payment: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
   hide_Ledger: "/Accounts/HideLedger/",
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",

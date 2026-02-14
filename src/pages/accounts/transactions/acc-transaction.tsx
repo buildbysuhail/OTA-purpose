@@ -166,6 +166,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     `grd_acc_transaction_${(formState.transaction.master?.voucherType ?? "") + (formType ?? "")
     }`
   );
+  const adviceReportPopupData = {
+                        masterId: formState.transaction.master?.accTransactionMasterID ?? 0 
+                        };
   const btnSaveRef = useRef<HTMLButtonElement>(null);
   const btnAddRef = useRef<HTMLButtonElement>(null);
   const ledgerCodeRef = useRef<HTMLInputElement>(null);
@@ -273,7 +276,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     clearControls,
     printCheque,
     printVoucher,
-    printPaymentReceiptAdvice,
     handleLoadByRefNo,
     unlockVoucher,
     handleRefresh,
@@ -1858,7 +1860,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   showValidation={showValidation}
                   goToPreviousPage={goToPreviousPage}
                   isHistorySidebarOpen={isHistorySidebarOpen}
-                  printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+              
                 />
               </div>
             </div>
@@ -2629,7 +2631,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               showValidation={showValidation}
               goToPreviousPage={goToPreviousPage}
               isHistorySidebarOpen={isHistorySidebarOpen}
-              printPaymentReceiptAdvice={printPaymentReceiptAdvice}
+             
               phone={true}
             />
 
@@ -3273,7 +3275,34 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div>
       </div>
 
-          {formState.transaction && (
+        
+            <ERPModal
+              isOpen={(formState?.enablePrintPaymentAdvice ?? false)}
+              title={t("Payment Receipt Advice")}
+              width={1000}
+              height={700}
+              isForm={true}
+              isPrintButton={true}
+
+              closeModal={() => {
+                dispatch(
+                  accFormStateHandleFieldChange({
+                    fields: { enablePrintPaymentAdvice: false},
+                  })
+                );
+              }}
+
+              content={
+                <TemplatesPreView
+                  voucherType={formState.transaction.master?.voucherType ?? ""}
+                  printPreviwPopupInfo={adviceReportPopupData}
+                  isAccAdviceReport
+                />
+              }
+            />
+       
+
+            {formState.transaction && (
             <ERPModal
               isOpen={(formState.userConfig?.printPreview ?? false) && (popupData.IsPrintPreviewPopup.isOpen ?? false)}
               title={t("Template")}
@@ -3289,7 +3318,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   voucherType={formState.transaction.master?.voucherType ?? ""}
                   printPreviwPopupInfo={popupData.IsPrintPreviewPopup}
                   transactionType={formState.transactionType}
-                  isInvTrans={false}
                   lastChooseTemp={formState.lastChoosedTemplate}
                 />
               }

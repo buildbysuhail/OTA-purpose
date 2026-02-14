@@ -56,6 +56,8 @@ interface UseTemplateDesignerProps<T = unknown> {
   isAppGlobal?: boolean;
   lastChoosedTemplate?: TemplateState<T>;
   isInLedgerReport?: boolean;
+  isTemplateDesigner?: boolean;
+  isAccAdviceReport?: boolean;
 }
 
 export const useTemplateDesigner = <T = unknown,>({
@@ -85,6 +87,8 @@ export const useTemplateDesigner = <T = unknown,>({
   isAppGlobal,
   lastChoosedTemplate,
   isInLedgerReport = false,
+  isTemplateDesigner = false,
+  isAccAdviceReport=false
 }: UseTemplateDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
@@ -193,7 +197,26 @@ export const useTemplateDesigner = <T = unknown,>({
           autoTemplateResolvedRef.current = true;
           return;
         }
+        // -------------------------------
+        // ACC-ADVICE-DATA FLOW
+        // -------------------------------
+       if(isAccAdviceReport) {
+          const adviceData = await api.getAsync(`${Urls.acc_advice_payment}?masterId=${MasterIDParam}`)
+          if (!isActiveRef.current) return;
+          setVoucherPrintData(adviceData);
+           if (!manuvalTemplateFeatch) return;
 
+        const adviceVoucherTyp =  ["CP", "BP", "CQP"].includes(voucherType??"")
+      ? "PARP"
+      : ["CR", "BR", "CQR"].includes(voucherType??"")
+        ? "RARP"
+        : ""
+         const template = await getOrFetchTemplate(adviceVoucherTyp,"","")
+           dispatch(setTemplate(template));
+            // autoTemplateResolvedRef.current = true;
+        return
+       }
+       
         // -------------------------------
         // VOUCHER FLOW
         // -------------------------------
@@ -260,6 +283,7 @@ export const useTemplateDesigner = <T = unknown,>({
     [
       MasterIDParam,
       isInLedgerReport,
+      isAccAdviceReport,
       manuvalTemplateFeatch,
       voucherTypeParam,
       isInvTrans,
@@ -281,19 +305,21 @@ export const useTemplateDesigner = <T = unknown,>({
       voucherType,
       isAppGlobal,
       appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+      
     ]
   );
 
   // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
   useEffect(() => {
     const isActiveRef = { current: true };
-
+   if(!isTemplateDesigner){
     loadPrintAndTemplateData(isActiveRef);
+   }
 
     return () => {
       isActiveRef.current = false;
     };
-  }, [loadPrintAndTemplateData]);
+  }, [loadPrintAndTemplateData,isTemplateDesigner]);
 
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
@@ -332,10 +358,12 @@ export const useTemplateDesigner = <T = unknown,>({
     };
 
     updateProps();
+
   }, [activeTemplate, printData]);
 
   // Effect: Handle user template selection
   useEffect(() => {
+   if(!isTemplateDesigner && !isAccAdviceReport){
     console.log("Running template selection effect");
    debugger;
     if (!manuvalTemplateFeatch) return;
@@ -357,11 +385,14 @@ export const useTemplateDesigner = <T = unknown,>({
 
     lastFetchedTemplateIdRef.current = newTemplateId;
     dispatch(setTemplate(lastChoosedTemplate));
+   } 
 
   }, [
     lastChoosedTemplate?.id,
     MasterIDParam,
     manuvalTemplateFeatch,
+    isTemplateDesigner,
+    isAccAdviceReport
   ]);
 
   // Set max height based on window size
@@ -372,7 +403,7 @@ export const useTemplateDesigner = <T = unknown,>({
 
   // Filter design sections based on designer type
   useEffect(() => {
-    if (templateGroup) {
+    if (templateGroup && isTemplateDesigner ) {
       const typeKey = designerType.toUpperCase();
       const validKinds = designerSectionsConfig[typeKey] || {};
       const sectionsForKind = validKinds[templateKind] || validKinds[Object.keys(validKinds)[0]] || [];
@@ -406,7 +437,7 @@ export const useTemplateDesigner = <T = unknown,>({
   }, [id, dispatch, t]);
 
   useEffect(() => {
-    if (!manuvalTemplateFeatch) {
+    if (!manuvalTemplateFeatch && isTemplateDesigner) {
       getPDFTemplateData();
     }
   }, [getPDFTemplateData, manuvalTemplateFeatch]);

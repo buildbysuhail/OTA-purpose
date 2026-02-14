@@ -32,12 +32,13 @@ type TemplatesProps = {
   isInvTrans?: boolean;
   printPreviwPopupInfo: popupDataProps;
   transactionType?: string;
-  lastChooseTemp: any;
+  lastChooseTemp?: any;
   isInLedgerReport?: boolean;
+  isAccAdviceReport?: boolean;
 };
 //  
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
-  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp, isInLedgerReport = false }, ref) => {
+  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp, isInLedgerReport = false, isAccAdviceReport = false }, ref) => {
 
     const { t } = useTranslation();
     const {
@@ -49,8 +50,10 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       isInvTrans: isInvTrans,
       MasterIDParam: printPreviwPopupInfo.masterId ?? 0,
       transactionType: transactionType,
+      voucherType: voucherType,
       lastChoosedTemplate: lastChooseTemp,
-      isInLedgerReport: isInLedgerReport
+      isInLedgerReport: isInLedgerReport,
+      isAccAdviceReport: isAccAdviceReport
     });
     const previewWidth = templateStyleProperties.previewWidth ?? 500;
     const previewHeight = templateStyleProperties.previewHeight ?? 500; // Can be number or "auto"
@@ -125,6 +128,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
                 isTemplateDesigner={false}
                 isInvTrans={isInvTrans}
                 isInLedgerReport={isInLedgerReport}
+                isAccAdviceReport={isAccAdviceReport}
               />
             </div>
           </div>

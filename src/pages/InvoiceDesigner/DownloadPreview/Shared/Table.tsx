@@ -26,7 +26,8 @@ export const SharedDownTable: React.FC<DownTableProps> = ({ data, template }) =>
   const COL_BORDER_COLOR= tableMasterState?.tableColBorderColor ?? "#000";
   
   // compute visible columns once
-  const visibleColumns = accTableState?.filter((c) => c.show) ?? [];
+  const visibleColumns = accTableState?.filter(c => c.show !== false) ?? [];
+
 
   const styles = StyleSheet.create({
     container: {

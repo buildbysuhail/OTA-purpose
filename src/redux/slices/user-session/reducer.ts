@@ -184,6 +184,7 @@ export interface UserModel {
   systemName: string | "";
   counter_vr_prefix?: string | "";
   asUpdate?: boolean;
+  maxDiscPercAllowed: number;
 }
 export const initialUserSessionData: UserModel = {
   userId: 0,
@@ -229,7 +230,8 @@ export const initialUserSessionData: UserModel = {
   },
   currentCompanyDetails: initialCompanyDetails,
   currentBranchDetails: initialBranchDetails,
-  asUpdate: true
+  asUpdate: true,
+  maxDiscPercAllowed: 0,
 };
 
   // let ass =await getStorageString("up");

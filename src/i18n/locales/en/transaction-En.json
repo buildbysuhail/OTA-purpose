@@ -1262,6 +1262,7 @@
   "sales_invoice#":"Sales Invoice#",
   "load_sales_to_return":"Load Sales To Return",
   "dr_no#":"DR No#",
-  "sq_no#":"SQ No#"
+  "sq_no#":"SQ No#",
+  "please_select_items":"please_select_items!"
 
 }

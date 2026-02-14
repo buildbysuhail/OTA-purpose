@@ -634,6 +634,9 @@ export const useTransaction = (
       loadVType = "GD"
       url = url + "/LoadGDQuotation";
     }
+     if(loadVType == "SQinSO"){
+      loadVType = "SQ"    // Need to check is this method is good or not SQinSO
+    }
     if (!usingManualInvNumber) {
       if (voucherNumber == undefined || voucherNumber <= 0) {
         return voucher;

@@ -247,7 +247,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
     <div>
       <label className="text-secondary">{t("sales_invoice#")}</label>
 
-      <div className="grid grid-cols-[160px_1fr_80px] gap-3 items-center">
+      <div className="grid grid-cols-[160px_1fr_0px] gap-1 items-center">
         <div className="flex gap-1">
           <ERPInput
             id="prefix"

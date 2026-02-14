@@ -706,33 +706,6 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
 
 
-                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
-                  <ERPInput
-                    id="SQ"
-                    label={t("SQ #")}
-                    placeholder={t("enter_SQ_#")}
-                    className="w-[80px]"
-                    
-                  />
-                )}
-
-                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
-                  <ERPInput
-                    id=""
-                    label={t("")}
-                    placeholder={t("")}
-                    className="w-[100px]"
-                  />
-                )}
-
-                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
-                  <ERPButton
-                    title={t("Load")}
-                    variant="secondary"
-                    disabled={formState.transactionLoading}
-                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg w-10 h-6"
-                  />
-                )}
 
                 {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
                   <ERPInput
@@ -1154,7 +1127,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   {(formState.transaction.master.voucherType == VoucherType.SalesReturn && (
                     <SalesInvoiceNumber
                       t={t}
-                      voucherType="SI"
+                      voucherType="SI"  // This is type of voucher type using while load
                       formState={formState}
                       refactorDetails={refactorDetails}
                       calculateTotal={calculateTotal}
@@ -1167,10 +1140,22 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     <VoucherNumberLoad
                       t={t}
                       loadAndSetTransVoucher={loadAndSetTransVoucher}
-                      voucherType="DR"
+                      loadVoucherType="DR"
+                      voucherType = {formState.transaction.master.voucherType}
                       formState={formState}
+                      title="dr_no#"
                     />
                   ))} 
+                  {(formState.transaction.master.voucherType == VoucherType.SalesOrder && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinSO"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="sq_no#"
+                    />
+                  ))}
                 {formState.wStockListOpen && (
                   <ERPModal
                     isOpen={formState.wStockListOpen}

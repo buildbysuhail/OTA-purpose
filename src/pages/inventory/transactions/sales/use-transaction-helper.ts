@@ -3584,7 +3584,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
       };
-      debugger;
       let billDisc = 0,
         totalGross = 0,
         itemGross = 0,
@@ -3598,13 +3597,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       billDisc = formState.transaction.master.billDiscount;
       outState.transaction!.master!.billDiscount = 0;
       // Calculate total gross for items with productID > 0
-      totalGross = formState.summary.gross;
+      totalGross = formState.summary.total;
       // Apply discount to each item with productID > 0
       let updatedRows: DeepPartial<TransactionDetail>[] = [];
       if (details.length > 0) {
         for (let i = 0; i < details.length; i++) {
           const item = details[i];
-          itemGross = item.gross ?? 0;
+          itemGross = item.total ?? 0;
           grossPerc = (itemGross / totalGross) * 100;
           itemDisc = (billDisc * grossPerc) / 100;
           discPerc = round((itemDisc / itemGross) * 100, 5);
@@ -3624,7 +3623,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
           details[i] = { ...item, ...updatedRow.transaction!.details![0] };
         }
-
         const summaryRes = await calculateSummary(details, formState, {
           result: {},
         });

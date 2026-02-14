@@ -1901,7 +1901,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         ? m.deliveryManID
         : m.driverID,
 
-      vehicelID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+      vehicleID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? 0
         : m.vehicleID,
       gatePassNo: m.voucherType == VoucherType.ServiceInvoice
@@ -1938,14 +1938,14 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
       // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
       // privilageRedeem: m.privilageRedeem,
-      privilageCardId: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
+      privCardID: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
       VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.privilegeCardDetails.privilegeCardsID : 0,
-      privilageAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0
+      privAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0
         ? m.grandTotal * (privperc / 100)
         : [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
           ? formState.transaction.master.privAddAmount
           : 0,
-      privilageRedeem: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
+      privRedeem: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
       VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.master.privRedeem : 0,
 
       /** ---------------- Project / Cost ---------------- */
@@ -3700,15 +3700,14 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     return maxTaxPerc;
   }
-  function calculateTaxOnDiscount() {
+  async function calculateTaxOnDiscount(inputBillDiscount?: number) {
     try {
       if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
 
       const decimalPoints = applicationSettings.mainSettings.decimalPoints;
-debugger;
       let oldTaxOnBillDisc = formState.transaction.master.taxOnDiscount ?? 0;
       let taxPerc = getMaxTaxPercInItemList();
-      let billDiscount = formState.transaction.master.billDiscount ?? 0;
+      let billDiscount = inputBillDiscount??formState.transaction.master.billDiscount ?? 0;
 
       // First calculation (3 decimal rounding)
       let taxOnBillDisc = Number(
@@ -3721,7 +3720,21 @@ debugger;
       } else {
         taxOnBillDisc = oldTaxOnBillDisc;
       }
-
+        await calculateTotal(
+        {
+          ...formState.transaction.master
+          , billDiscount: formState.transaction.master.billDiscount
+          , taxOnDiscount: taxOnBillDisc??0
+        }, formState.summary, formState.formElements, {
+          result: {
+            transaction: {
+              master: {
+                billDiscount: formState.transaction.master.billDiscount
+          , taxOnDiscount: taxOnBillDisc
+              }
+            }
+          }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly
+      })
       // Assign final value
       return taxOnBillDisc;
 

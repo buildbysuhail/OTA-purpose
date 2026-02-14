@@ -2715,20 +2715,73 @@ export const useTransaction = (
         transactionDate:
           master.transactionDate == "" ? null : master.transactionDate,
       }, transactionInitialData.master);
+
       let params = {
-        master: {
-          ...sanitizedMaster,
-          deliveryDate: sanitizedMaster.deliveryDate ? sanitizedMaster.deliveryDate : sanitizedMaster.transactionDate
-        },
-        details: dtRes.outputDetails,
-        attachments: attachments,
-        invAccTransactions: formState.transaction.invAccTransactions,
-        pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
-        PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs,
-        couponDetails: formState.transaction.couponDetails,
-        upiDetails: formState.transaction.uPIDetails,
-        bankCardDetails: formState.transaction.bankCardDetails
-      };
+                    master: {
+                      ...sanitizedMaster,
+                      deliveryDate: sanitizedMaster.deliveryDate
+                        ? sanitizedMaster.deliveryDate
+                        : sanitizedMaster.transactionDate
+                    },
+
+                    details: dtRes.outputDetails,
+
+                    invAccTransactions: formState.transaction.invAccTransactions ?? [],
+
+                    attachments: attachments ?? [],
+
+                    couponDetails: formState.transaction.couponDetails ?? [],
+
+                    bankCardDetails: formState.transaction.bankCardDetails ?? [],
+
+                    upiDetails: formState.transaction.uPIDetails ?? [],
+
+                    // batchesUnits: formState.transaction.batchesUnits ?? [],
+
+                    privilegeCardDetails: formState.transaction.privilegeCardDetails ?? null,
+
+                    // 🔹 Boolean Flags
+                    // isDummyBill: formState.userConfig.isDummyBill ?? false,
+                    allowStockUpdate: formState.allowStockUpdate ?? true,
+                    isConsoldateSO: formState.isConsolidateSo ?? false,
+
+                    isGatePassPrint: applicationSettings.printerSettings.printGatePass ?? false,
+                    isPrintGatepassChecked: formState.gatePassPrint ?? false,
+
+                    lsAlowExcessCashReceipt: formState.userConfig?.allowExcessCashReceipt ?? false,
+                    lsBlockZeroFigureEntry: formState.userConfig?.blockZeroFigureEntry ?? false,
+                    lsBlockNonStockItemInSO: formState.userConfig?.blockNonStockItemsSO ?? false,
+                    // TODO: Ashar
+                    // isEwayBillChecked: formState.userConfig.isEwayBillChecked ?? false,
+                    // isEwayBillAutomationChecked: formState.transaction.isEwayBillAutomationChecked ?? false,
+                    // isEInvoiceChecked: formState.userConfig.isEInvoiceChecked ?? false,
+
+                    // 🔹 Strings
+                    pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs ?? null,
+                    pendingOrderListBranchIDs: formState.pendingOrdListBranchIDs ?? null,
+                    // sr_SalesInvoiceNumber: formState.sr_SalesInvoiceNumber ?? null,
+                    // sr_SIPrefix: formState.transaction.sr_SIPrefix ?? null,
+
+                    eInvoiceStatus: formState.transaction.eInvoiceStatus ?? "",
+                    ewbStatus: formState.transaction.ewbStatus ?? "",
+
+                    // 🔹 GatePass Items
+                    // gatePassItems: formState.transaction.gatePassItems ?? []
+                  };
+      // let params = {
+      //   master: {
+      //     ...sanitizedMaster,
+      //     deliveryDate: sanitizedMaster.deliveryDate ? sanitizedMaster.deliveryDate : sanitizedMaster.transactionDate
+      //   },
+      //   details: dtRes.outputDetails,
+      //   attachments: attachments,
+      //   invAccTransactions: formState.transaction.invAccTransactions,
+      //   pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
+      //   PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs,
+      //   couponDetails: formState.transaction.couponDetails,
+      //   upiDetails: formState.transaction.uPIDetails,
+      //   bankCardDetails: formState.transaction.bankCardDetails
+      // };
       // params = sanitizeDataAdvanced(params, transactionInitialData);
       try {
         const saveRes =

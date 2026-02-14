@@ -46,6 +46,11 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
     vType = "SQinSO"   // Load VType
 
   }
+  if(loadVoucherType === "RFQ"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "RFQ"
+  }
 
   const handleLoadBtnClick = async () => {
     try {

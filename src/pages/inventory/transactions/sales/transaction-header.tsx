@@ -707,7 +707,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
 
 
-                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                {/* {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
                   <ERPInput
                     id="MQuotNo"
                     label={t("M Quot.No#")}
@@ -724,9 +724,9 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.transactionLoading}
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
                   />
-                )}
+                )} */}
 
-                 {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                 {/* {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
                   <ERPInput
                     id="RFQ"
                     label={t("RFQ #")}
@@ -743,7 +743,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.transactionLoading}
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg w-10 h-6"
                   />
-                )}
+                )} */}
 
                 {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
                   <ERPInput
@@ -1154,6 +1154,28 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       voucherType = {formState.transaction.master.voucherType}
                       formState={formState}
                       title="sq_no#"
+                    />
+                  ))}
+                  {/* Manual Quotation Number In Sales Quotation */}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesQuotation && (
+                    <ManualInvNo
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      type="PI_Ref"
+                      label={t("m_quotation_no#")}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    />
+                  ))}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesQuotation && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="RFQ"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="rfq_no#"
                     />
                   ))}
                 {formState.wStockListOpen && (

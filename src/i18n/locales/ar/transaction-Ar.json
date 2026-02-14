@@ -1258,7 +1258,8 @@
   "day_closed_do_you_want_to_continue_with_next_transaction_date": "تم إغلاق اليوم. هل تريد الاستمرار مع تاريخ العملية التالية؟",
   "sales_invoice#": "رقم فاتورة المبيعات#",
   "load_sales_to_return": "تحميل المبيعات المرتجعة",
-  "dr_no#": "رقم إشعار الخصم#"
+  "dr_no#": "رقم إشعار الخصم#",
+  "sq_no#": "رقم عرض السعر#"
 
 }
 

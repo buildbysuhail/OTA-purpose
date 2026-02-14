@@ -778,6 +778,7 @@ export interface TransactionFormState {
   enableCreditAccount: boolean;
   
   voucherNumberLck?:boolean; 
+  einvoiceCheckBox?:boolean; 
 
   // Stocks
   chkCostFromExcel?: boolean;

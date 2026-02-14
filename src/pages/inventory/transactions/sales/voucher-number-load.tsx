@@ -8,40 +8,64 @@ import { Ellipsis } from "lucide-react";
 interface VoucherNumberLoadProps {
   t: (key: string) => string;
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
+  loadVoucherType: string;
   voucherType: string;
   formState: TransactionFormState;
+  title: any;
 }
 
 const api = new APIClient();
 const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
   t,
   loadAndSetTransVoucher,
+  loadVoucherType,
   voucherType,
   formState,
+  title
 }) => {
   const [invoiceData, setInvoiceData] = useState({
     vrPrefix: "",
     vrNumber: "",
   });
 
+  let vNumber = "";
+  let vPrefix = "";
+  let vType = "";
+
+  if(loadVoucherType === "DR"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "DR"
+
+  }
+  // In load and more section there will be a SQ, in that case we are making the url loadSQ,
+  // So need to manage that section using SQinSO - check is the methos is good or not
+  if(loadVoucherType === "SQinSO"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "SQinSO"   // Load VType
+
+  }
+
   const handleLoadBtnClick = async () => {
     try {
+      debugger;
       const res = await loadAndSetTransVoucher(
         false,
-        Number(invoiceData.vrNumber),
-        "",
+        Number(vNumber),
+        invoiceData.vrPrefix,
         voucherType,
         "",
         "",
         0,
         undefined,
+        true,  // skip prompt
         false,
-        false,
-        "",
+        vType,
         undefined,
-        "",
+        vPrefix,
         undefined,
-        undefined,
+        false, // pnl master disable
         true
       );
     } catch (error) {
@@ -50,32 +74,48 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-secondary">{t("dr_no#")}</label>
+    <div className="flex flex-col">
+  <label className="text-secondary">{t(title)}</label>
 
-      <div className="flex items-center gap-2">
-        <ERPInput
-          id="voucherNumber"
-          type="text"
-          value={invoiceData.vrNumber}
-          noLabel
-          className="w-32"
-          onChange={(e) =>
-            setInvoiceData((prev) => ({
-              ...prev,
-              vrNumber: e.target.value,
-            }))
-          }
-        />
+  <div className="grid grid-cols-[auto_1fr_auto] gap-1 items-center">
+    {formState.transaction.master.voucherType === "SO" && (
+      <ERPInput
+        id="voucherPrefix"
+        type="text"
+        value={invoiceData.vrPrefix}
+        noLabel={true}
+        className="w-20"
+        onChange={(e) =>
+          setInvoiceData((prev) => ({
+            ...prev,
+            vrPrefix: e.target.value.toUpperCase(),
+          }))
+        }
+      />
+    )}
 
-        <button
-          className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300"
-          onClick={handleLoadBtnClick}
-        >
-          <Ellipsis className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
+    <ERPInput
+      id="voucherNumber"
+      type="text"
+      value={invoiceData.vrNumber}
+      noLabel
+      className="w-32"
+      onChange={(e) =>
+        setInvoiceData((prev) => ({
+          ...prev,
+          vrNumber: e.target.value,
+        }))
+      }
+    />
+
+    <button
+      className="bg-gray-300 px-2 py-1.5 rounded-md hover:shadow-md transition"
+      onClick={handleLoadBtnClick}
+    >
+      <Ellipsis className="w-3 h-3" />
+    </button>
+  </div>
+</div>
   );
 };
 

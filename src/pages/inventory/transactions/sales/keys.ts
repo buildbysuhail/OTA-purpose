@@ -92,6 +92,18 @@
 //please_close_old_counter_and_open_new_counter_for_transaction
 //shift_user_mismatch
 //shift_duration_exceeded
+//give_more_discount_up_to_
+//_in_
+//zero_value
+//invalid_entry
+//both_qty_and_free_cannot_be_zero_please_update_the_values
+//non_stock_serial
+//row_serial
+//is_out_of_stock
+//duplicate_serial
+//row_serial_exists_in
+
+
 
 
 

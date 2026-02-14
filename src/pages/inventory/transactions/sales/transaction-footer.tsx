@@ -552,7 +552,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     <div className="w-full max-w-none sm:max-w-[140px] lg:max-w-[160px] xl:max-w-[180px] flex-shrink">
       {(
         formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-        formState.transaction.master.voucherType === VoucherType.SalesReturn
+        formState.transaction.master.voucherType === VoucherType.SalesReturn ||
+         formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft 
       ) && (
           <CostCentreCombobox
             ref={costCenterRef}
@@ -582,7 +583,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     <div className="flex items-center gap-2 w-full justify-start sm:justify-center">
       {(
         formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-        formState.transaction.master.voucherType === VoucherType.SalesQuotation
+        formState.transaction.master.voucherType === VoucherType.SalesQuotation ||
+        formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft ||
+        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote
       ) && (
           <AutoCalculationCheckbox
             formState={formState}
@@ -595,7 +598,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         dispatch={dispatch}
         t={t}
       />
-      {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
+        {(formState.transaction.master.voucherType === VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft)  && (
         <ERPCheckbox
           id="gatePassPrint"
           label={t("gate_pass")}
@@ -610,7 +613,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         />
       )}
       {/* Make the below for vat# in si footer instead of gatepass */}
-      {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
+      {(formState.transaction.master.voucherType === VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft)  && (
         <><ERPCheckbox
           id="vat"
           label={t("vat_#")}
@@ -624,6 +627,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           <ERPInput
             id="vatNo"
             label={t("Tax no")}
+            noLabel={true}
             type="string"
             value={tokenNumberValue}
             readOnly={!formState?.vatChecked}
@@ -674,7 +678,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               attachmentComponent
             )}
             <div className="w-full sm:w-auto sm:max-w-[270px] gap-0.5 flex flex-wrap sm:flex-nowrap">
-              {formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
+              {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
                   id="creditCardAmount"
                   label={t("credit_card_amount")}
@@ -682,8 +686,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   value={creditAmtValue}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                 />
-              )}
-              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+              ))}
+              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice || 
+              formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                 <ERPInput
                   id="couponAmount"
                   label={t("coupon_amount")}
@@ -692,7 +697,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   disabled
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
                 />
-              ))}
+              )}
             </div>
             <div className="flex items-end gap-1">
               {
@@ -704,7 +709,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               }
             </div>
             <div className="flex items-end gap-1 flex-wrap">
-              {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+               formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full sm:w-[130px]">
                   <ERPInput
                     id="srAmount"
@@ -716,7 +722,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                formState.transaction.master.voucherType === VoucherType.SalesReturn) && isAppGlobal && (
+                formState.transaction.master.voucherType === VoucherType.SalesReturn ||
+                 formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft
+              ) && isAppGlobal && (
                   // <ERPButton
                   //   title={t("sr")}
                   //   className="!h-[38px] !px-3"
@@ -749,7 +757,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             </div>
           </div>
 
-          {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && showButtonsOutside && (
+          {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+           formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft
+          ) && showButtonsOutside && (
             <div className="flex items-center gap-1">
               <BtnTender
                 formState={formState}
@@ -813,7 +823,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
             </div>
           )}
-          {(formState.transaction.master.voucherType === VoucherType.SalesQuotation) && showButtonsOutside && (
+           {([VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
             <div className="flex items-center gap-1">
               <BtnTender
                 formState={formState}
@@ -843,7 +853,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 onClick={() => alert("P Button clicked")}
               />
             </div>
-          )}
+          ))}
           {(formState.transaction.master.voucherType === VoucherType.SalesOrder) && showButtonsOutside && (
             <div className="flex gap-1">
               <ERPButton
@@ -890,7 +900,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           {showSecondHalf && (
             <div className="flex flex-wrap gap-1 min-w-0">
 
-              {formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
+               {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
                   id="creditCardAmount"
                   label={t("credit_card_amount")}
@@ -898,8 +908,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   value={creditAmtValue}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                 />
-              )}
-              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+              ))}
+              {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+               formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                 <ERPInput
                   id="couponAmount"
                   label={t("coupon_amount")}
@@ -908,7 +919,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   value={couponAmtValue}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
                 />
-              ))}
+              )}
               <div className="flex items-end gap-1 flex-wrap">
 
                 <div className="flex items-end gap-1">
@@ -920,7 +931,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     )
                   }
                 </div>
-                {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+                {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                 formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                   <div className="w-full sm:w-[140px]">
                     <ERPInput
                       id="srAmount"
@@ -1009,13 +1021,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   <>
                     <li>
                       {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                        formState.transaction.master.voucherType === VoucherType.SalesQuotation) && (
-                          <AutoCalculationCheckbox
-                            formState={formState}
-                            dispatch={dispatch}
-                            t={t}
-                          />
-                        )}
+                        formState.transaction.master.voucherType === VoucherType.SalesQuotation ||
+                         formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft ||
+                        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote)
+                       && (
+                        <AutoCalculationCheckbox
+                          formState={formState}
+                          dispatch={dispatch}
+                          t={t}
+                        />
+                      )}
                     </li>
                     <li>
                       <IsLockedCheckbox
@@ -1024,7 +1039,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         t={t}
                       />
                     </li>
-                    {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && (
+                      {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                         formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft)
+                        && (
                       <ERPCheckbox
                         id="gatePassPrint"
                         label={t("gate_pass")}
@@ -1041,7 +1058,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </>
                 )}
                 {/* Field 6: VAT # and Tax No */}
-                {verticalVisibleFields <= 6 && formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+                {verticalVisibleFields <= 6 && (formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                 formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                   <li className="flex items-center gap-2">
                     <ERPCheckbox
                       id="vatVertical"
@@ -1084,7 +1102,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </li>
                 )}
                 {/* Field 9: Coupon Amount */}
-                {verticalVisibleFields <= 9 && formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+                {verticalVisibleFields <= 9 && (formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                 formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                   <li>
                     <ERPInput
                       id="couponAmountVertical"
@@ -1099,29 +1118,30 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {/* Field 10: SR Amount and SR Button */}
                 {verticalVisibleFields <= 10 && (
                   formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                  formState.transaction.master.voucherType === VoucherType.SalesReturn
-                ) && (
-                    <li className="flex items-end gap-1">
-                      {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
-                        <ERPInput
-                          id="srAmountVertical"
-                          label={t('sr_amount')}
-                          type="number"
-                          value={srAmountValue}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
-                          className="flex-1"
-                        />
-                      )}
-                      {isAppGlobal && (
-                        <BtnSr
-                          formState={formState}
-                          dispatch={dispatch}
-                          srBtnClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
-                          t={t}
-                        />
-                      )}
-                    </li>
-                  )}
+                  formState.transaction.master.voucherType === VoucherType.SalesReturn ||
+                  formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft)
+                 && (
+                  <li className="flex items-end gap-1">
+                    {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+                      <ERPInput
+                        id="srAmountVertical"
+                        label={t('sr_amount')}
+                        type="number"
+                        value={srAmountValue}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
+                        className="flex-1"
+                      />
+                    )}
+                    {isAppGlobal && (
+                      <BtnSr
+                      formState={formState}
+                      dispatch={dispatch}
+                      srBtnClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                      t={t}
+                    />
+                    )}
+                  </li>
+                )}
                 {/* Field 11: GRN Print Button */}
                 {verticalVisibleFields <= 11 && (
                   <li>
@@ -1133,7 +1153,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </li>
                 )}
                 {/* Field 12: Tender, Pending, Privilege Card Buttons (SalesInvoice) */}
-                {verticalVisibleFields <= 12 && formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+                {verticalVisibleFields <= 12 && (formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                   <li className="flex flex-wrap gap-1 pt-2 border-t border-gray-200 dark:border-dark-border">
                     <BtnTender
                       formState={formState}
@@ -1199,7 +1220,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </li>
                   )}
                 {/* Field 15: SalesQuotation P Button */}
-                {verticalVisibleFields <= 15 && formState.transaction.master.voucherType === VoucherType.SalesQuotation && (
+                {verticalVisibleFields <= 15 &&[VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any && (
                   <li>
                     <ERPButton
                       title={t("p")}
@@ -1207,7 +1228,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       onClick={() => alert("P Button clicked")}
                     />
                   </li>
-                )}
+                ))}
                 {/* Field 16: SalesOrder - Load Excel & Advance Amount */}
                 {verticalVisibleFields <= 16 && formState.transaction.master.voucherType === VoucherType.SalesOrder && (
                   <li className="flex flex-col gap-1">
@@ -1286,7 +1307,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {/* Field 2: Cost Centre */}
-              {verticalVisibleFields > 2 && (
+              {(verticalVisibleFields > 2 || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full">
                   <CostCentreCombobox
                     formState={formState}
@@ -1326,13 +1347,15 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               {verticalVisibleFields > 5 && (
                 <div className="w-full flex flex-wrap items-center gap-2 mt-2">
                   {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                    formState.transaction.master.voucherType === VoucherType.SalesQuotation) && (
-                      <AutoCalculationCheckbox
-                        formState={formState}
-                        dispatch={dispatch}
-                        t={t}
-                      />
-                    )}
+                   formState.transaction.master.voucherType === VoucherType.SalesQuotation ||
+                   formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft ||
+                  formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote) && (
+                    <AutoCalculationCheckbox
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                    />
+                  )}
                   <IsLockedCheckbox
                     formState={formState}
                     dispatch={dispatch}
@@ -1355,7 +1378,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {/* Field 6: VAT # and Tax No */}
-              {verticalVisibleFields > 6 && formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+              {(verticalVisibleFields > 6 && formState.transaction.master.voucherType === VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full flex items-center gap-2 mt-1">
                   <ERPCheckbox
                     id="vatVerticalMain"
@@ -1398,7 +1421,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {/* Field 9: Coupon Amount */}
-              {verticalVisibleFields > 9 && formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+              {verticalVisibleFields > 9 && (formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+                formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full mt-1">
                   <ERPInput
                     id="couponAmountVerticalMain"
@@ -1413,30 +1437,31 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               {/* Field 10: SR Amount and SR Button */}
               {verticalVisibleFields > 10 && (
                 formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-                formState.transaction.master.voucherType === VoucherType.SalesReturn
-              ) && (
-                  <div className="w-full flex items-end gap-1 mt-1">
-                    {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
-                      <div className="flex-1">
-                        <ERPInput
-                          id="srAmountVerticalMain"
-                          label={t('sr_amount')}
-                          type="number"
-                          value={srAmountValue}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
-                        />
-                      </div>
-                    )}
-                    {isAppGlobal && (
-                      <BtnSr
-                        formState={formState}
-                        dispatch={dispatch}
-                        srBtnClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
-                        t={t}
+                formState.transaction.master.voucherType === VoucherType.SalesReturn ||
+                 formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft)
+               && (
+                <div className="w-full flex items-end gap-1 mt-1">
+                  {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+                    <div className="flex-1">
+                      <ERPInput
+                        id="srAmountVerticalMain"
+                        label={t('sr_amount')}
+                        type="number"
+                        value={srAmountValue}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                       />
-                    )}
-                  </div>
-                )}
+                    </div>
+                  )}
+                  {isAppGlobal && (
+                    <BtnSr
+                    formState={formState}
+                    dispatch={dispatch}
+                    srBtnClick={() => handleSalesReturnOpen(formState.transaction.master.voucherType)}
+                    t={t}
+                  />
+                  )}  
+                </div>
+              )}
               {/* Field 11: GRN Print Button */}
               {verticalVisibleFields > 11 && (
                 <div className="w-full mt-1">
@@ -1448,7 +1473,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {/* Field 12: Tender, Pending, Privilege Card Buttons (SalesInvoice) */}
-              {verticalVisibleFields > 12 && formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+              {verticalVisibleFields > 12 && (formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+               formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full flex flex-wrap gap-1 mt-2">
                   <BtnTender
                     formState={formState}
@@ -1514,7 +1540,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </div>
                 )}
               {/* Field 15: SalesQuotation P Button */}
-              {verticalVisibleFields > 15 && formState.transaction.master.voucherType === VoucherType.SalesQuotation && (
+              {verticalVisibleFields > 15 && [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any  && (
                 <div className="w-full mt-1">
                   <ERPButton
                     title={t("p")}
@@ -1522,7 +1548,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     onClick={() => alert("P Button clicked")}
                   />
                 </div>
-              )}
+              ))}
               {/* Field 16: SalesOrder - Load Excel & Advance Amount */}
               {verticalVisibleFields > 16 && formState.transaction.master.voucherType === VoucherType.SalesOrder && (
                 <div className="w-full flex flex-col gap-1 mt-1">
@@ -1773,7 +1799,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
         {!showSecondHalf && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0 flex">
-            {formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
+            {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest].includes(formState.transaction.master.voucherType as any) &&(
               <ERPInput
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
@@ -1781,8 +1807,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 value={creditAmtValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
               />
-            )}
-            {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+            ))}
+            {(formState.transaction.master.voucherType === VoucherType.SalesInvoice  || formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
               <ERPInput
                 id="couponAmount"
                 label={t("coupon_amount")}
@@ -1791,7 +1817,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 value={couponAmtValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCouponAmtChange(e.target.value)}
               />
-            ))}
+            )}
           </div>
         )}
         {!showSecondHalf && (
@@ -1807,7 +1833,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 )
               }
             </div>
-            {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
+            {(formState.transaction.master.voucherType === VoucherType.SalesInvoice  || 
+             formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
               <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
                 <ERPInput
                   id="srAmount"
@@ -1819,7 +1846,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               </div>
             )}
             {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
-              formState.transaction.master.voucherType === VoucherType.SalesReturn) && isAppGlobal && (
+              formState.transaction.master.voucherType === VoucherType.SalesReturn ||
+              formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && isAppGlobal && (
                 // <ERPButton
                 //   title={t("sr")}
                 //   className="!h-[38px] !px-3"
@@ -1834,7 +1862,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
           </div>
         )}
-        {(formState.transaction.master.voucherType === VoucherType.SalesInvoice) && !showButtonsOutside && (
+        {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
+         formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && !showButtonsOutside && (
           <>
             <BtnTender
               formState={formState}
@@ -1885,7 +1914,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             />
           </>
         )}
-        {(formState.transaction.master.voucherType === VoucherType.SalesQuotation) && !showButtonsOutside && (
+        {([VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
           <div className="flex items-center gap-1">
             <BtnTender
               formState={formState}
@@ -1915,7 +1944,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               onClick={() => alert("P Button clicked")}
             />
           </div>
-        )}
+        ))}
         {(formState.transaction.master.voucherType === VoucherType.SalesOrder) && !showButtonsOutside && (
           <div className="flex gap-1">
             <ERPButton

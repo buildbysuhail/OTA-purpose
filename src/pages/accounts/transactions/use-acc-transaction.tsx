@@ -1257,7 +1257,10 @@ export const useAccTransaction = (
         }
 
         if (formState.userConfig?.printCheque) {
-          printCheque("");
+         await printCheque(
+            formState.transaction.details,
+            formState.userConfig?.printPreview ?? false,
+           );
         }
         if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {
           clearControls(

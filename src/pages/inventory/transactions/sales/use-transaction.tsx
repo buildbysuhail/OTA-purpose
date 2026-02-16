@@ -620,6 +620,8 @@ export const useTransaction = (
       voucherType ?? (formState.transaction?.master?.voucherType || "");
     let out_voucherForm =
       formType ?? (formState.transaction?.master?.voucherForm || "");
+    
+    let ignoreTaxOnDiscountCalculateTotal = true
 
     if (loadVType == "SO") {
       url = url + "/LoadSO";
@@ -637,6 +639,9 @@ export const useTransaction = (
     // Need to check is this method is good or not
     if(loadVType == "SQinSO" || loadVType == "SQinGR" || loadVType == "SQinGD"){
       loadVType = "SQ"
+    }
+    if(loadVType == "DR"){
+      ignoreTaxOnDiscountCalculateTotal = false;
     }
     if (!usingManualInvNumber) {
       if (voucherNumber == undefined || voucherNumber <= 0) {
@@ -940,11 +945,13 @@ export const useTransaction = (
     });
     debugger;
     if (voucher.transaction.master.billDiscount > 0) {
+      const taxOnBillDisc = await calculateTaxOnDiscount(voucher.transaction.master.billDiscount, vch.details, ignoreTaxOnDiscountCalculateTotal)
       const net = summaryRes.summary?.total ?? 0;
       const bilDis = voucher.transaction.master.billDiscount;
 
       if (net != 0) {
         voucher.billDiscountPerc = bilDis / net * 100;
+        voucher.transaction.master.taxOnDiscount = Number(taxOnBillDisc);
       } else {
         voucher.billDiscountPerc = 0
       }
@@ -6297,6 +6304,7 @@ export const useTransaction = (
         // setIsLoading(false);
         return; // User cancelled
       }
+      debugger;
 
       // Read Excel file using ExcelJS
       const workbook = new ExcelJS.Workbook();
@@ -6304,7 +6312,7 @@ export const useTransaction = (
       await workbook.xlsx.load(fileBuffer);
 
       // Get 'Sales' worksheet
-      const salesWorksheet = workbook.getWorksheet("Sales");
+      const salesWorksheet = workbook.getWorksheet("Purchase");
       if (!salesWorksheet) {
         throw new Error("Sales worksheet not found in the Excel file");
       }

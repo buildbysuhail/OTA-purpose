@@ -30,43 +30,63 @@ export type TemplatesPreViewHandle = {
 type TemplatesProps = {
   voucherType?: string;
   isInvTrans?: boolean;
-  printPreviwPopupInfo: popupDataProps;
+  printPreviwPopupInfo?: popupDataProps;
   transactionType?: string;
   lastChooseTemp?: any;
   isInLedgerReport?: boolean;
   isAccAdviceReport?: boolean;
+  externalTemplate?: TemplateState<unknown>;
+  externalPrintData?: PrintData;
 };
 //  
 const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
-  ({ voucherType, isInvTrans = false, printPreviwPopupInfo, transactionType, lastChooseTemp, isInLedgerReport = false, isAccAdviceReport = false }, ref) => {
+   ({ 
+    voucherType, 
+    isInvTrans = false, 
+    printPreviwPopupInfo, 
+    transactionType, 
+    lastChooseTemp, 
+    isInLedgerReport = false, 
+    isAccAdviceReport = false,
+    externalTemplate,
+    externalPrintData
+  }, ref) => {
 
     const { t } = useTranslation();
+        // Only use hook if external data is NOT provided
+    const shouldFetchData = !externalTemplate || !externalPrintData;
     const {
       stableTemplateProps,
       loading,
       templateStyleProperties
     } = useTemplateDesigner({
-      manuvalTemplateFeatch: true,
+      manuvalTemplateFeatch: shouldFetchData,
       isInvTrans: isInvTrans,
-      MasterIDParam: printPreviwPopupInfo.masterId ?? 0,
+      MasterIDParam:  shouldFetchData ? (printPreviwPopupInfo?.masterId ?? 0) : undefined,
       transactionType: transactionType,
       voucherType: voucherType,
       lastChoosedTemplate: lastChooseTemp,
       isInLedgerReport: isInLedgerReport,
-      isAccAdviceReport: isAccAdviceReport
+      isAccAdviceReport: isAccAdviceReport,
+      externalTemplate,
+      externalPrintData
     });
+
     const previewWidth = templateStyleProperties.previewWidth ?? 500;
     const previewHeight = templateStyleProperties.previewHeight ?? 500; // Can be number or "auto"
     const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
+      // Use external data if provided, otherwise use hook data
+    const finalTemplate = externalTemplate || stableTemplateProps?.template;
+    const finalPrintData = externalPrintData || stableTemplateProps?.printData;
 
 
     useImperativeHandle(ref, () => ({
       getPrintData: () => {
-        if (!stableTemplateProps?.printData || !stableTemplateProps?.template) return null;
+        if (!finalPrintData || !finalTemplate) return null;
 
         return {
-          template: stableTemplateProps?.template,
-          printData: stableTemplateProps.printData,
+          template: finalTemplate,
+          printData: finalPrintData,
         };
       },
       // openTemplateChooser: () =>
@@ -84,20 +104,18 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       );
     }
 
-    if (!stableTemplateProps?.template) {
+    if (!finalTemplate) {
       return (
         <div className="absolute inset-0 flex items-center justify-center italic">
           <span className="text-gray-500 dark:text-gray-400">
             ...No Template Found.&nbsp;
           </span>
           <Link
-
-
             to={
-              stableTemplateProps?.printData && stableTemplateProps?.printData?.kind === "voucher"
+              finalPrintData && finalPrintData?.kind === "voucher"
                 ? `/templates?template_group=${voucherType}` +
-                `&form_type=${stableTemplateProps?.printData?.data?.master?.voucherForm}` +
-                `&customer_type=${stableTemplateProps?.printData?.data?.master.customerType}`
+                `&form_type=${finalPrintData?.data?.master?.voucherForm}` +
+                `&customer_type=${finalPrintData?.data?.master.customerType}`
                 : `/templates?template_group=${voucherType}`
             }
             className="text-blue-600 hover:underline dark:text-blue-400"
@@ -122,8 +140,8 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
           >
             <div className={`relative w-full ${isAutoHeight ? 'flex flex-col' : 'h-full'}`}>
               <SharedTemplatePreview
-                template={stableTemplateProps?.template}
-                printData={stableTemplateProps?.printData}
+                template={finalTemplate}
+                printData={finalPrintData}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
                 isTemplateDesigner={false}
                 isInvTrans={isInvTrans}

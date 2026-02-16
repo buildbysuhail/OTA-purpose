@@ -98,6 +98,7 @@ import { useAppState } from "../../../utilities/hooks/useAppState";
 import { TransactionDetail } from "../../inventory/transactions/transaction-types";
 import { toggleIsPrintPreviewPopup } from "../../../redux/slices/popup-reducer";
 import TemplatesPreView from "../../transaction-base/transaction-print-preview";
+import { PrintData } from "../../use-print-type";
 interface BilledItem {
   id?: number;
   name: string;
@@ -3166,8 +3167,11 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   title={t("print_cheque")}
                   variant="secondary"
                   // disabled={formState.printCheque == false}
-                  onClick={() =>
-                    printCheque(formState.transaction.master?.voucherType)
+                  onClick={async() =>
+                   await printCheque(
+                    formState.transaction.details,
+                    formState.userConfig?.printPreview ?? false,
+                  )
                   }
                   className="p-1 m-0 md:p-1 lg:p-1 xl:p-[5px]"
                   loading={formState.printCheque}
@@ -3319,6 +3323,30 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   printPreviwPopupInfo={popupData.IsPrintPreviewPopup}
                   transactionType={formState.transactionType}
                   lastChooseTemp={formState.lastChoosedTemplate}
+                />
+              }
+            />
+          )}
+
+          {formState.transaction && (
+            <ERPModal
+              isOpen={(formState.userConfig?.printPreview ?? false) && (formState.chequePreview?.isPrintPreview ?? false)}
+              title={t("Cheque Template")}
+              width={1000}
+              height={700}
+              isForm={true}
+              isPrintButton={true}
+              closeModal={() => {
+                        dispatch(
+                          accFormStateHandleFieldChange({
+                            fields: { chequePreview: {isPrintPreview: false, template:null, printData:null} },
+                          })
+                        );
+              }}
+              content={
+                <TemplatesPreView
+                  externalTemplate={formState.chequePreview?.template}
+                  externalPrintData={formState.chequePreview?.printData }
                 />
               }
             />

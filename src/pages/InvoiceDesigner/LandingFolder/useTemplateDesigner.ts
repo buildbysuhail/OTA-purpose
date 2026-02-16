@@ -58,6 +58,8 @@ interface UseTemplateDesignerProps<T = unknown> {
   isInLedgerReport?: boolean;
   isTemplateDesigner?: boolean;
   isAccAdviceReport?: boolean;
+  externalTemplate?: TemplateState<T>;
+  externalPrintData?: PrintData;
 }
 
 export const useTemplateDesigner = <T = unknown,>({
@@ -88,7 +90,9 @@ export const useTemplateDesigner = <T = unknown,>({
   lastChoosedTemplate,
   isInLedgerReport = false,
   isTemplateDesigner = false,
-  isAccAdviceReport=false
+  isAccAdviceReport=false,
+  externalTemplate,
+  externalPrintData
 }: UseTemplateDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
@@ -97,7 +101,7 @@ export const useTemplateDesigner = <T = unknown,>({
   const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
   let activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
   // State
-  const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps | null>(null);
+  const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps<T>  | null>(null);
 
   // const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
   const [printData, setPrintData] = useState<PrintData>(() =>
@@ -128,17 +132,20 @@ export const useTemplateDesigner = <T = unknown,>({
   const currentMasterIdRef = useRef<number | null | undefined>(null);
   const lastFetchedTemplateIdRef = useRef<number | null>(null);
   const autoTemplateResolvedRef = useRef(false);
-
-  // Create consolidated template style properties object
+  // NEW: Skip data loading if external data is provided
+  const shouldSkipFetch = !!externalTemplate && !!externalPrintData;
+  // templateStyleProperties will work with both external and fetched templates
   const templateStyleProperties = useMemo(() => {
+    const templateToUse = externalTemplate || activeTemplate;
+    
     const pageOrientation =
-      activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-    const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
-    const isAutoHeight = activeTemplate?.propertiesState?.isAutoHeight ?? false;
+      templateToUse?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
+    const pageSize = templateToUse?.propertiesState?.pageSize ?? "A4";
+    const isAutoHeight = templateToUse?.propertiesState?.isAutoHeight ?? false;
     const selectedPageSize = getPageDimensions(
       pageSize,
-      activeTemplate?.propertiesState?.width,
-      activeTemplate?.propertiesState?.height
+      templateToUse?.propertiesState?.width,
+      templateToUse?.propertiesState?.height
     );
 
     const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
@@ -149,6 +156,11 @@ export const useTemplateDesigner = <T = unknown,>({
       isAutoHeight,
     };
   }, [
+    externalTemplate?.propertiesState?.orientation,
+    externalTemplate?.propertiesState?.pageSize,
+    externalTemplate?.propertiesState?.width,
+    externalTemplate?.propertiesState?.height,
+    externalTemplate?.propertiesState?.isAutoHeight,
     activeTemplate?.propertiesState?.orientation,
     activeTemplate?.propertiesState?.pageSize,
     activeTemplate?.propertiesState?.width,
@@ -311,31 +323,33 @@ export const useTemplateDesigner = <T = unknown,>({
 
   // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
   useEffect(() => {
+    if (shouldSkipFetch) return; // Skip if using external data
+    
     const isActiveRef = { current: true };
-   if(!isTemplateDesigner){
-    loadPrintAndTemplateData(isActiveRef);
-   }
+    if (!isTemplateDesigner) {
+      loadPrintAndTemplateData(isActiveRef);
+    }
 
     return () => {
       isActiveRef.current = false;
     };
-  }, [loadPrintAndTemplateData,isTemplateDesigner]);
+  }, [loadPrintAndTemplateData, isTemplateDesigner, shouldSkipFetch]);
 
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
     const updateProps = async () => {
-      debugger;
-      //    if (!activeTemplate) {
-      //   setStableTemplateProps(null); 
+      const templateToUse = externalTemplate || activeTemplate;
+      const printDataToUse = externalPrintData || printData;
+
+      // if (!templateToUse) {
+      //   setStableTemplateProps(null);
       //   return;
       // }
-      // if (!printData) return;
 
       try {
-        // Generate QR codes
         const elements: PlacedComponent[] = [
-          ...(activeTemplate?.headerState?.customElements?.elements ?? []),
-          ...(activeTemplate?.footerState?.customElements?.elements ?? []),
+          ...(templateToUse?.headerState?.customElements?.elements ?? []),
+          ...(templateToUse?.footerState?.customElements?.elements ?? []),
         ].filter(comp => comp.type === DesignerElementType.qrCode);
 
         const qrImages: { [key: string]: string } = {};
@@ -345,21 +359,20 @@ export const useTemplateDesigner = <T = unknown,>({
           }
         }
 
-        const props: StableTemplateProps = {
-          template: activeTemplate,
-          printData: printData,
+        const props: StableTemplateProps<T> = {
+          template: templateToUse,
+          printData: printDataToUse,
           qrCodeImages: qrImages,
         };
 
-        setStableTemplateProps(props)
+        setStableTemplateProps(props);
       } catch (err) {
         console.error("Error updating props:", err);
       }
     };
 
     updateProps();
-
-  }, [activeTemplate, printData]);
+  }, [activeTemplate, printData, externalTemplate, externalPrintData]);
 
   // Effect: Handle user template selection
   useEffect(() => {

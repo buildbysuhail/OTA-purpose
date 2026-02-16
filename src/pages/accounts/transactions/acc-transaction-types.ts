@@ -487,6 +487,12 @@ export interface AccTransactionFormState {
   templateChooserModal?: boolean
   lastChoosedTemplate?: TemplateState<unknown>;
   enablePrintPaymentAdvice?: boolean;
+  chequePreview?:{
+    isPrintPreview: boolean;
+    template: any;
+    printData: any;
+  };
+  
 }
 export const initialFormElements: { [key: string]: FormElementState } = {
   foreignCurrency: {

@@ -20,6 +20,7 @@ import { Rnd } from "react-rnd";
 import { useDynamicModalSize } from "../../utilities/hooks/useDynamicModalSize";
 import { useCommenPrint } from "../../pages/transaction-base/use-commen-print";
 import { useDirectPrint } from "../../utilities/hooks/use-direct-print";
+import { TemplatesPreViewHandle } from "../../pages/transaction-base/transaction-print-preview";
 
 type ModalPosition = "center" | "left" | "right" | "top" | "bottom" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -134,7 +135,7 @@ const ERPModal = React.memo(
       isForm
     );
     // Inside ERPModal component
-    const printtRef = useRef<any>(null);
+    const printtRef = useRef<TemplatesPreViewHandle>(null);
     const [isMaximized, setIsMaximized] = useState(initialMaximize);
     const [modalHeight, setModalHeight] = useState(0);
     const [modalWidth, setModalWidth] = useState(0);

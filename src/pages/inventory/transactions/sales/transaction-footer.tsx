@@ -284,6 +284,18 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     300
   );
 
+  const { value: cashReceivedValue, onChange: onCashReceivedChange } = useDebouncedInput(
+    formState.transaction.master.cashReceived || "",
+    (debouncedValue) => {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: { cashReceived: debouncedValue },
+        })
+      );
+    },
+    300
+  );
+
   const handleFieldChange = (field: keyof UserConfig, value: any) => {
     const updatedUserConfig = {
       ...formState.userConfig,
@@ -862,7 +874,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               />
             </div>
           ))}
-          {(formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && showButtonsOutside && (
+          {[VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
             <div className="flex gap-1">
               <ERPFileUploadButton
                 buttonText={t("load_excel")}
@@ -878,14 +890,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     label={t("cash")}
                     labelDirection="horizontal"
                     type="number"
-                    value={0.00}
+                    value={cashReceivedValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCashReceivedChange(e.target.value)}
                   />
                   <ERPInput
                     id="AdvanceCardAmount"
                     label={t("card")}
                     labelDirection="horizontal"
                     type="number"
-                    value={0.00}
+                    value={creditAmtValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                   />
                 </div>
               </div>
@@ -1238,7 +1252,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </li>
                 ))}
                 {/* Field 16: SalesOrder - Load Excel & Advance Amount */}
-                {verticalVisibleFields <= 16 && (formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && (
+                {verticalVisibleFields <= 16 && [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(formState.transaction.master.voucherType as any) && (
                   <li className="flex flex-col gap-1">
                     <ERPFileUploadButton
                       buttonText={t("load_excel")}
@@ -1253,14 +1267,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                           label={t("cash")}
                           labelDirection="horizontal"
                           type="number"
-                          value={0.00}
+                          value={cashReceivedValue}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCashReceivedChange(e.target.value)}
                         />
                         <ERPInput
                           id="AdvanceCardAmountVertical"
                           label={t("card")}
                           labelDirection="horizontal"
                           type="number"
-                          value={0.00}
+                          value={creditAmtValue}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                         />
                       </div>
                     </div>
@@ -1558,7 +1574,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               ))}
               {/* Field 16: SalesOrder - Load Excel & Advance Amount */}
-              {verticalVisibleFields > 16 && (formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && (
+              {verticalVisibleFields > 16 && [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(formState.transaction.master.voucherType as any) && (
                 <div className="w-full flex flex-col gap-1 mt-1">
                   <ERPFileUploadButton
                     buttonText={t("load_excel")}
@@ -1573,14 +1589,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         label={t("cash")}
                         labelDirection="horizontal"
                         type="number"
-                        value={0.00}
+                        value={cashReceivedValue}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCashReceivedChange(e.target.value)}
                       />
                       <ERPInput
                         id="AdvanceCardAmountVerticalMain"
                         label={t("card")}
                         labelDirection="horizontal"
                         type="number"
-                        value={0.00}
+                        value={creditAmtValue}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                       />
                     </div>
                   </div>
@@ -1953,7 +1971,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             />
           </div>
         ))}
-        {(formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && !showButtonsOutside && (
+        {[VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(formState.transaction.master.voucherType as any) && !showButtonsOutside && (
           <div className="flex gap-1">
             <ERPFileUploadButton
                 buttonText={t("load_excel")}
@@ -1964,19 +1982,21 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <label>{t("advance_amount")}</label>
               <div className="flex flex-row  gap-1">
                 <ERPInput
-                  id="AdvanceCashAmount"
-                  label={t("cash")}
-                  labelDirection="horizontal"
-                  type="number"
-                  value={0.00}
-                />
-                <ERPInput
-                  id="AdvanceCardAmount"
-                  label={t("card")}
-                  labelDirection="horizontal"
-                  type="number"
-                  value={0.00}
-                />
+                    id="AdvanceCashAmount"
+                    label={t("cash")}
+                    labelDirection="horizontal"
+                    type="number"
+                    value={cashReceivedValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCashReceivedChange(e.target.value)}
+                  />
+                  <ERPInput
+                    id="AdvanceCardAmount"
+                    label={t("card")}
+                    labelDirection="horizontal"
+                    type="number"
+                    value={creditAmtValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
+                  />
               </div>
             </div>
           </div>

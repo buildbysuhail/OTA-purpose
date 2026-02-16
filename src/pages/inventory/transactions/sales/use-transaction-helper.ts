@@ -3678,17 +3678,17 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     return totalTaxable;
   }
-  function getMaxTaxPercInItemList(): number {
+  function getMaxTaxPercInItemList(_details?: TransactionDetail[]): number {
     let maxTaxPerc = 0;
 
     try {
-      const details = formState.transaction.details;
+      const details = (_details ?? formState.transaction.details) ??[];
 
       for (let i = 0; i < details.length; i++) {
         const row = details[i];
         if (!row) continue;
 
-        const vatPerc = Number(row.vatPerc ?? 0);
+        const vatPerc = Number((row.vatPerc || (row as any).vatPercentage) ?? 0);
 
         if (vatPerc > maxTaxPerc) {
           maxTaxPerc = vatPerc;
@@ -3700,13 +3700,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     return maxTaxPerc;
   }
-  async function calculateTaxOnDiscount(inputBillDiscount?: number) {
+  async function calculateTaxOnDiscount(inputBillDiscount?: number, details?: TransactionDetail[], ignoreTaxOnDiscountCalculateTotal?:boolean) {
     try {
       if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
-
+      debugger;
       const decimalPoints = applicationSettings.mainSettings.decimalPoints;
       let oldTaxOnBillDisc = formState.transaction.master.taxOnDiscount ?? 0;
-      let taxPerc = getMaxTaxPercInItemList();
+      let taxPerc = getMaxTaxPercInItemList(details);
       let billDiscount = inputBillDiscount??formState.transaction.master.billDiscount ?? 0;
 
       // First calculation (3 decimal rounding)
@@ -3720,6 +3720,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       } else {
         taxOnBillDisc = oldTaxOnBillDisc;
       }
+      if(ignoreTaxOnDiscountCalculateTotal){
         await calculateTotal(
         {
           ...formState.transaction.master
@@ -3735,6 +3736,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             }
           }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly
       })
+
+      }
+        
       // Assign final value
       return taxOnBillDisc;
 

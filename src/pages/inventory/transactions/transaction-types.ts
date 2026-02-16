@@ -779,7 +779,6 @@ export interface TransactionFormState {
   
   voucherNumberLck?:boolean; 
   einvoiceCheckBox?:boolean;
-  taxOnBillDisc?: number;
 
   // Stocks
   chkCostFromExcel?: boolean;

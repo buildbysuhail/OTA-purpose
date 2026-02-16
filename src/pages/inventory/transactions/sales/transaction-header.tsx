@@ -1112,7 +1112,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     onClick={handleWStockList}
                   />
                 )}
-                {([VoucherType.SalesInvoice,VoucherType.GoodsDeliveryNote, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) && (
+                {([VoucherType.SalesInvoice,VoucherType.GoodsDeliveryNote, VoucherType.SalesInvoiceDraft,VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn ].includes(formState.transaction.master.voucherType as any) && (
                 <ManualInvNo
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     formState={formState}
@@ -1178,6 +1178,87 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       title="quot_no#"
                     />
                   ))}
+
+                   {/* SQ Load In RequestForSalesQuotation TO DO */}
+                  {(formState.transaction.master.voucherType == VoucherType.RequestForQuotation && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinRFQ"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="sq_no#"
+                    />
+                  ))}
+
+
+                   {/* Quotation Number Load in GoodsDeliveryReturn TO DO */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGDR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="quot_no#"
+                    />
+                  ))}
+
+
+                  {/* Quotation Number Load in GoodsReceiptReturn TO DO */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGRR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="quot_no#"
+                    />
+                  ))}
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn&&
+                  <ERPInput
+                  id="GoodsDelivary"
+                  label={t("GD#")}
+                  placeholder={t("")}
+                  className="w-[100px]"
+                  />
+                   
+                )}   
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn &&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[100px]"
+                  />
+                )} 
+
+
+
+                 {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn&&
+                  <ERPInput
+                  id="GoodsReceiptReturn"
+                  label={t("GR#")}
+                  placeholder={t("")}
+                  className="w-[50px]"
+                  />
+                   
+                )}   
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn &&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[100px]"
+                  />
+                )} 
+
+
+
                   {/* Manual Quotation Number In Sales Quotation */}
                   {(formState.transaction.master.voucherType == VoucherType.SalesQuotation && (
                     <ManualInvNo

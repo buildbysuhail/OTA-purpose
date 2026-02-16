@@ -93,7 +93,7 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
   <label className="text-secondary">{t(title)}</label>
 
   <div className="grid grid-cols-[auto_1fr_auto] gap-1 items-center">
-    {(formState.transaction.master.voucherType === "SO" || formState.transaction.master.voucherType === "GR" || formState.transaction.master.voucherType === "GD") && (
+    {(formState.transaction.master.voucherType === "SO" || formState.transaction.master.voucherType === "GR" || formState.transaction.master.voucherType === "GD"  || formState.transaction.master.voucherType === "RFQ") && (
       <ERPInput
         id="voucherPrefix"
         type="text"

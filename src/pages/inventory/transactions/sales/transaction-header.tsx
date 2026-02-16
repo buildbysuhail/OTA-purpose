@@ -745,7 +745,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   />
                 )} */}
 
-                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
+                {/* {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
                   <ERPInput
                     id="Ouot_No"
                     label={t("Ouot_No")}
@@ -771,7 +771,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.transactionLoading}
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
                   />
-                )}
+                )} */}
 
                 {/* Credit Account */}
                 {(formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
@@ -1154,6 +1154,28 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       voucherType = {formState.transaction.master.voucherType}
                       formState={formState}
                       title="sq_no#"
+                    />
+                  ))}
+                  {/* SQ Load In Goods request */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodRequest && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="sq_no#"
+                    />
+                  ))}
+                  {/* Quotation Number Load in Goods delivery note */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGD"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="quot_no#"
                     />
                   ))}
                   {/* Manual Quotation Number In Sales Quotation */}

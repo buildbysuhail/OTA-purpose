@@ -2319,30 +2319,128 @@ export const useTransaction = (
       }
     }
 
-    // ============ Negative Stock Validation ============
-    const showNegStockWarning = applicationSettings.inventorySettings?.showNegStockWarning;
-    if (master.stockUpdate && showNegStockWarning === "Block") {
+      // ============ Negative Stock Validation ============
+
+    const showNegStockWarning =
+      applicationSettings.inventorySettings?.showNegStockWarning;
+    //for sales invoice gcc only
+    if (
+      master.stockUpdate &&
+      (showNegStockWarning === "Block" ||
+        applicationSettings.inventorySettings?.showNonStockItemsinSales === false) && voucherType == VoucherType.SalesInvoice && !isIndia
+    ) {
+
       for (let i = 0; i < validDetails.length; i++) {
-        const row = validDetails[i];
-        if (row.itemType === "Inventory") {
-          const qty = row.qty ?? 0;
-          const stock = row.stock ?? 0;
-          if (qty > stock) {
+
+        const currentRow = validDetails[i];
+
+        if (currentRow.itemType === "Inventory") {
+
+          let totalQty = 0;
+
+          // Determine Warehouse (like C# Wid logic)
+          let warehouseID =
+            currentRow.warehouseID ?? master.fromWarehouseID ?? 0;
+
+          for (let j = i; j < validDetails.length; j++) {
+
+            const compareRow = validDetails[j];
+
+            // Recalculate warehouse per row (C# logic)
+            let compareWarehouseID =
+              compareRow.warehouseID ?? master.fromWarehouseID ?? 0;
+
+            const sameProduct =
+              compareRow.productBatchID === currentRow.productBatchID;
+
+            const sameWarehouse =
+              compareWarehouseID === warehouseID;
+
+            if (sameProduct && sameWarehouse) {
+
+              let qty =
+                (compareRow.qty ?? 0) -
+                (compareRow.qtyTag ?? 0);
+
+              const multiFactor = await api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/GetMuQty` +
+                `?batchID=${compareRow.productBatchID}` +
+                `&unitID=${compareRow.unitID}`
+              );
+
+              qty = qty * (multiFactor ?? 1);
+
+              totalQty += qty;
+            }
+          }
+          const stock = currentRow.stock ?? 0;
+
+          if (totalQty > stock) {
             await ERPAlert.show({
               icon: "error",
               title: t("validation_error"),
-              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("item_please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
+              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
               confirmButtonText: t("ok"),
             });
             return {
-              master: master,
+              master,
               isValid: false
             };
           }
         }
       }
     }
+    //for all other except sales gcc
+    if (
+      (master.stockUpdate &&
+        (showNegStockWarning === "Block" || applicationSettings.inventorySettings?.showNonStockItemsinSales === false) &&
+        (voucherType == VoucherType.SalesInvoice && isIndia))
+      || (showNegStockWarning === "Block" &&
+        [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any) &&
+        formState.userConfig?.blockNonStockItemsSO)
+      || ( showNegStockWarning === "Block" && voucherType == VoucherType.GoodsDeliveryNote)
+    ) {
+      for (let i = 0; i < validDetails.length; i++) {
+        const currentRow = validDetails[i];
+        if (currentRow.itemType === "Inventory") {
+          let totalQty = 0;
+          for (let j = i; j < validDetails.length; j++) {
+            const compareRow = validDetails[j];
+            const sameProduct =
+              compareRow.productBatchID === currentRow.productBatchID;
+            if (sameProduct) {
+              let qty =
+                (compareRow.qty ?? 0) -
+                (compareRow.qtyTag ?? 0);
+              const multiFactor = await api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/GetMuQty` +
+                `?batchID=${compareRow.productBatchID}` +
+                `&unitID=${compareRow.unitID}`
+              );
+              qty = qty * (multiFactor ?? 1);
+              totalQty += qty;
+            }
+          }
+          const stock = currentRow.stock ?? 0;
 
+          if (totalQty > stock) {
+
+            await ERPAlert.show({
+              icon: "error",
+              title: t("validation_error"),
+              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
+              confirmButtonText: t("ok"),
+            });
+
+            return {
+              master,
+              isValid: false
+            };
+          }
+        }
+      }
+    }
+    //not added all condition managed in backend
     // CODE CHECKED########  - Working Not checked/ Tested (SAMA PLASTIC CASE, NEEDS TESTING)
     // ============ Rate Warning Check (Sales price less than purchase/min price) ============
     const showRateWarning = applicationSettings.inventorySettings?.showRateWarning;

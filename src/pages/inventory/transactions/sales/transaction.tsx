@@ -1903,6 +1903,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                        costCenterRef={costCenterRef}
                        onFooterHeightChange={handleFooterHeightChange}
                        handleLoadSr={handleLoadSr}
+                       importFromExcel={importFromExcel}
                       />
                     )}
                 </div>
@@ -2119,6 +2120,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   costCenterRef={costCenterRef}
                   onFooterHeightChange={handleFooterHeightChange}
                   handleLoadSr={handleLoadSr}
+                  importFromExcel={importFromExcel}
                 />
 
                 {/* Total Summary */}
@@ -2172,6 +2174,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             costCenterRef={costCenterRef}
             onFooterHeightChange={handleFooterHeightChange}
             handleLoadSr={handleLoadSr}
+            importFromExcel={importFromExcel}
           />
         )}
         {/* footer ends here */}

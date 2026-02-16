@@ -44,6 +44,7 @@ import EWBLabel from "./components/EWBLabel";
 import PostedTransactionLabel from "./components/PostedTransactionLabel";
 import SRAmountLabel from "./components/SRAmountLabel";
 import SalesReturnAmount from "./sales-return";
+import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -70,6 +71,7 @@ interface TransactionFooterProps {
   costCenterRef?: any;
   onFooterHeightChange?: (height: number) => void;
   handleLoadSr: any;
+  importFromExcel:(event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface Confetti {
@@ -202,7 +204,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   applyTaxOnBillDiscount,
   costCenterRef,
   onFooterHeightChange,
-  handleLoadSr
+  handleLoadSr,
+  importFromExcel
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -465,6 +468,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     fontSize: "14px",
     cursor: "pointer",
   };
+
+  // Load from Excel
+  const onSelectExcel = (event: React.ChangeEvent<HTMLInputElement>) => {
+      importFromExcel && importFromExcel(event);
+  }
 
   const handlePrivilegeCardOpen = () => {
     dispatch(
@@ -854,12 +862,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               />
             </div>
           ))}
-          {(formState.transaction.master.voucherType === VoucherType.SalesOrder) && showButtonsOutside && (
+          {(formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && showButtonsOutside && (
             <div className="flex gap-1">
-              <ERPButton
-                title={t('load_excel')}
-                onClick={handleTenderOpen}
-                className="px-2 w-fit"
+              <ERPFileUploadButton
+                buttonText={t("load_excel")}
+                handleFileChange={onSelectExcel}
+                hideIcon={true}
               />
               {/* If needed make this component */}
               <div className="flex flex-col p-1 border border-gray-300 ">
@@ -1230,12 +1238,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </li>
                 ))}
                 {/* Field 16: SalesOrder - Load Excel & Advance Amount */}
-                {verticalVisibleFields <= 16 && formState.transaction.master.voucherType === VoucherType.SalesOrder && (
+                {verticalVisibleFields <= 16 && (formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && (
                   <li className="flex flex-col gap-1">
-                    <ERPButton
-                      title={t('load_excel')}
-                      onClick={handleTenderOpen}
-                      className="px-2 w-fit"
+                    <ERPFileUploadButton
+                      buttonText={t("load_excel")}
+                      handleFileChange={onSelectExcel}
+                      hideIcon={true}
                     />
                     <div className="flex flex-col p-1 border border-gray-300 dark:border-dark-border">
                       <label className="text-xs dark:text-dark-text">{t("advance_amount")}</label>
@@ -1550,12 +1558,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               ))}
               {/* Field 16: SalesOrder - Load Excel & Advance Amount */}
-              {verticalVisibleFields > 16 && formState.transaction.master.voucherType === VoucherType.SalesOrder && (
+              {verticalVisibleFields > 16 && (formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && (
                 <div className="w-full flex flex-col gap-1 mt-1">
-                  <ERPButton
-                    title={t('load_excel')}
-                    onClick={handleTenderOpen}
-                    className="px-2 w-fit"
+                  <ERPFileUploadButton
+                    buttonText={t("load_excel")}
+                    handleFileChange={onSelectExcel}
+                    hideIcon={true}
                   />
                   <div className="flex flex-col p-1 border border-gray-300 dark:border-dark-border">
                     <label className="text-xs dark:text-dark-text">{t("advance_amount")}</label>
@@ -1945,13 +1953,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             />
           </div>
         ))}
-        {(formState.transaction.master.voucherType === VoucherType.SalesOrder) && !showButtonsOutside && (
+        {(formState.transaction.master.voucherType === VoucherType.SalesOrder || formState.transaction.master.voucherType === VoucherType.GoodRequest) && !showButtonsOutside && (
           <div className="flex gap-1">
-            <ERPButton
-              title={t('load_excel')}
-              onClick={handleTenderOpen}
-              className="px-2 w-fit"
-            />
+            <ERPFileUploadButton
+                buttonText={t("load_excel")}
+                handleFileChange={onSelectExcel}
+                hideIcon={true}
+              />
             <div className="flex flex-col p-1 border border-gray-300 ">
               <label>{t("advance_amount")}</label>
               <div className="flex flex-row  gap-1">

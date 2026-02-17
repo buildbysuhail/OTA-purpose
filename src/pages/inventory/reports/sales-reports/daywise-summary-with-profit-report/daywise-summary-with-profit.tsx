@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react/jsx-runtime";
+import { Fragment } from "react";
 import ErpDevGrid, {
   DrillDownCellTemplate,
 } from "../../../../../components/ERPComponents/erp-dev-grid";

@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react/jsx-runtime";
 import ErpDevGrid, { SummaryConfig, } from "../../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import GridId from "../../../../../redux/gridId";
 import FastMovingReportFilter, { FastMovingReportFilterInitialState, } from "./fast-moving-products-filter";

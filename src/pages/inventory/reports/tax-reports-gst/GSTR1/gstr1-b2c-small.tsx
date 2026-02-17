@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react/jsx-runtime";
+import { Fragment } from "react";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";

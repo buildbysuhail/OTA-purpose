@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../redux/types";
-import { Fragment } from "react/jsx-runtime";
+import { Fragment } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";

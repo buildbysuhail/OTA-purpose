@@ -621,6 +621,7 @@ export const useTransaction = (
     let out_voucherForm =
       formType ?? (formState.transaction?.master?.voucherForm || "");
     
+    // ----------------- Check This condition------------
     let ignoreTaxOnDiscountCalculateTotal = true
 
     if (loadVType == "SO") {
@@ -640,6 +641,7 @@ export const useTransaction = (
     if(loadVType == "SQinSO" || loadVType == "SQinGR" || loadVType == "SQinGD"){
       loadVType = "SQ"
     }
+    // ----------------- Check This condition------------
     if(loadVType == "DR"){
       ignoreTaxOnDiscountCalculateTotal = false;
     }
@@ -945,13 +947,16 @@ export const useTransaction = (
     });
     debugger;
     if (voucher.transaction.master.billDiscount > 0) {
-      const taxOnBillDisc = await calculateTaxOnDiscount(voucher.transaction.master.billDiscount, vch.details, ignoreTaxOnDiscountCalculateTotal)
+      // ----------------- Check This condition------------
+      if(ignoreTaxOnDiscountCalculateTotal === false){
+         const taxOnBillDisc = await calculateTaxOnDiscount(voucher.transaction.master.billDiscount, vch.details, ignoreTaxOnDiscountCalculateTotal)
+         voucher.transaction.master.taxOnDiscount = Number(taxOnBillDisc);
+      }
       const net = summaryRes.summary?.total ?? 0;
       const bilDis = voucher.transaction.master.billDiscount;
 
       if (net != 0) {
         voucher.billDiscountPerc = bilDis / net * 100;
-        voucher.transaction.master.taxOnDiscount = Number(taxOnBillDisc);
       } else {
         voucher.billDiscountPerc = 0
       }

@@ -61,6 +61,7 @@ export const useDirectPrint = () => {
     (state: RootState) => state.ApplicationSettings
   );
   const printMethodForBrowser = applicationSettings?.printerSettings?.directPrintMethodForBrowser ?? "PrintDialog";
+  
   const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const generateBarcodeImagesForPrint = async (pages: any[], template: any) => {
     const images: { [key: string]: string } = {};
@@ -221,7 +222,37 @@ export const useDirectPrint = () => {
         );
       }
       const blob = await pdf(pdfDocument).toBlob();
+      console.log('[PRINT-RENDERER] PDF blob created, size:', blob.size);
 
+      // Electron: send raw PDF bytes directly (no base64/layout conversion).
+      try {
+        if (
+          typeof window !== "undefined" &&
+          (window as any).electron &&
+          typeof (window as any).electron.print === "function"
+        ) {
+          const pdfBytes = new Uint8Array(await blob.arrayBuffer());
+          console.log(
+            "[PRINT-RENDERER] Sending raw PDF bytes to electron.print with printer:",
+            PrinterName,
+            "bytes:",
+            pdfBytes.length
+          );
+
+          const printResult = await (window as any).electron.print({
+            pdfBytes,
+            printerName: PrinterName,
+          });
+          console.log("[PRINT-RENDERER] electron.print() returned:", printResult);
+
+          closePrintJob();
+          return { success: true, reason: "printed-electron", result: printResult };
+        }
+      } catch (electronErr) {
+        console.error("[PRINT-RENDERER] Electron direct byte print failed:", electronErr);
+      }
+
+      
       if (params.isDirectDownload) {
 
         //  Download the file using FileSaver

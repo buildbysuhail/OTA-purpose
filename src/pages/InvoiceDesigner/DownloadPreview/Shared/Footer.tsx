@@ -51,7 +51,7 @@ const ShardDownFooter: React.FC<Props> = ({ printData, template, qrCodes = {},Am
 
   return (
     <View style={styles.headerContainer} fixed={!footerState?.customElements?.isFirstOnly}>
-      {bgImage && <Image src={bgImage} style={styles.bgImage} />}
+      {bgImage ? <Image src={bgImage} style={styles.bgImage} /> : null}
       <View style={styles.contentContainer}>
         {customElements.map((component) => (
           <RenderComponentPDF

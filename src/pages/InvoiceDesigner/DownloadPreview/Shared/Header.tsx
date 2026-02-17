@@ -51,7 +51,7 @@ const ShardDowHeader = ({ printData, template, qrCodes,AmountToEnglish,AmountToA
 
   return (
     <View style={styles.headerContainer} fixed={!headerState?.customElements?.isFirstOnly}>
-      {bgImage && <Image src={bgImage} style={styles.bgImage} />}
+      {bgImage ? <Image src={bgImage} style={styles.bgImage} /> : null}
       <View style={styles.contentContainer}>
         {customElements.map((component) => (
           <RenderComponentPDF

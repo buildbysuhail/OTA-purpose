@@ -3,7 +3,7 @@ import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useTemplateDesigner } from "../../InvoiceDesigner/LandingFolder/useTemplateDesigner"
 import { Box, Paper, } from "@mui/material";
-import { Pencil, Printer, Trash2, } from "lucide-react";
+import { Pencil, Printer, Trash2, X, } from "lucide-react";
 import { useSearch } from "./search-context.tsx";
 import SharedTemplatePreview from "../../InvoiceDesigner/DesignPreview/shared";
 import { useCommenPrint } from "../../transaction-base/use-commen-print";
@@ -38,6 +38,11 @@ export interface TransactionViewProps {
 }
 
 const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (props) => {
+  type DirectPrintResult = {
+    success?: boolean;
+    reason?: string;
+  };
+
   const [searchParams] = useSearchParams();
   const { voucherNo: voucherNoParam } = useParams<{ voucherNo: string }>();
   const navigate = useNavigate();
@@ -173,6 +178,23 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
       }
     }
   };
+  const goToPreviousPage = () => {
+
+    if (window.history.length <= 1) {
+      // No history to go back to, attempt to close the tab
+      window.close();
+
+      // If window.close() doesn't work (common in modern browsers),
+      // you can try this alternative approach
+      window.open('', '_self', '');
+      window.close();
+
+      // Or as a last resort, redirect to a blank page
+      // window.location.href = 'about:blank';
+    } else {
+      window.history.back();
+    }
+  };
 
   return (
     <>
@@ -219,9 +241,23 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               disabled={loading}
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
 
-              onClick={async () =>
-                await directPrint({ template: stableTemplateProps?.template, data: printData })
-              }
+              onClick={async () => {
+                try {
+                  console.log('Starting print...');
+                  const result = (await directPrint({
+                    template: stableTemplateProps?.template,
+                    data: printData
+                  })) as DirectPrintResult;
+                  if (result?.success) {
+                    ERPToast.show('Print job sent successfully', 'success');
+                  } else {
+                    throw new Error(result?.reason || 'Print failed');
+                  }
+                } catch (error) {
+                  console.error('Print error:', error);
+                  ERPToast.show('Failed to print. Please try again.', 'error');
+                }
+              }}
               title="PDF/Print"
               aria-label="PDF/Print"
             >
@@ -240,6 +276,18 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               onClick={handleDeleteClick}
             >
               <Trash2 className="w-4 h-4" />
+            </button>
+
+            <div className="w-px h-6 bg-gray-200 dark:bg-dark-border" />
+             <button
+              disabled={loading}
+              type="button"
+              className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
+              title="Previous"
+              aria-label="Previous"
+              onClick={(e) => { e.preventDefault(); goToPreviousPage() }}
+            >
+              <X className="w-4 h-4" />
             </button>
           </div>
         </header>

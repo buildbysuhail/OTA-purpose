@@ -28,13 +28,22 @@ export default defineConfig(({ mode }) => {
       // 'replacing-eagles-till-reservation.trycloudflare.com',
       // 'camcorders-janet-flight-joins.trycloudflare.com',
     ],
+    proxy: {
+      // Proxy /api requests to backend to bypass CORS in development
+      '/api': {
+        target: 'https://api.poldev.work',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path // Keep the /api path as-is
+      }
+    }
   },
   build: {
     // sourcemap: true,
     // outDir: 'C:\\inetpub\\wwwroot',
-    outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
+    // outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
     //  outDir: 'build',
-    //  outDir: 'dist',
+     outDir: 'dist',
     //  sourcemap: false,
     //  minify: "esbuild",
     //  target: "es2018",

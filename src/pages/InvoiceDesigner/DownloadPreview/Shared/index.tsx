@@ -49,7 +49,7 @@ import { SharedDownTable } from "./Table"
         
         >
           {/* Background Image */}
-          {template?.background_image && (
+          {template?.background_image ? (
             <Image
               src={template.background_image || "/placeholder.svg"}
               style={{
@@ -62,7 +62,7 @@ import { SharedDownTable } from "./Table"
                 objectPosition: template?.propertiesState?.bg_image_position ?? "center",
               }}
             />
-          )}
+          ) : null}
           {printData?.kind ==="voucher"&&(
             <SharedDownTable data={printData?.data?.details ?? []} template={template} />
           )}

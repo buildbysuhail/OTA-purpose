@@ -32,6 +32,7 @@ interface SalesInvoiceNumberProps {
   calculateTotal: any;
   calculateSummary: any;
   title: string;
+  toggleDropdown: () => void;
 }
 
 const api = new APIClient();
@@ -42,7 +43,8 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
   refactorDetails,
   calculateTotal,
   calculateSummary,
-  title
+  title,
+  toggleDropdown
 }) => {
   const [invoiceData, setInvoiceData] = useState({
     vrPrefix: "",
@@ -192,6 +194,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
       })
     );
     dispatch(formStateTransactionDetailsRowAdd(rows));
+    toggleDropdown() // Close the drop down
     setLoadSalesDataModal(false);
   };
 

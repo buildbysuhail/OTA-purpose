@@ -1133,6 +1133,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       calculateTotal={calculateTotal}
                       calculateSummary={calculateSummary}
                       title="sales_invoice#"
+                      toggleDropdown={toggleDropdown}
 
                     />
                   ))} 
@@ -1215,6 +1216,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       calculateTotal={calculateTotal}
                       calculateSummary={calculateSummary}
                       title="gd#"
+                      toggleDropdown={toggleDropdown}
 
                     />
                   ))}
@@ -1243,6 +1245,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       calculateTotal={calculateTotal}
                       calculateSummary={calculateSummary}
                       title="gr#"
+                      toggleDropdown={toggleDropdown}
 
                     />
                 )} 

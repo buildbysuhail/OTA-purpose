@@ -314,6 +314,7 @@ const accTransactionSlice = createSlice({
         userSession: UserModel;
       }>
     ) => {
+      debugger;
       const data = action.payload.row;
       const amount =
         action.payload.isForeignCurrencyEnabled && data.amount
@@ -323,14 +324,12 @@ const accTransactionSlice = createSlice({
         ...data,
         chqDate: data.chqDate ? new Date(data.chqDate).toISOString() : "",
         bankDate: data.bankDate ? new Date(data.bankDate).toISOString() : "",
-        amount:
-          state.isTaxOnExpense && (data.incentives ?? 0) > 0
-            ? data.incentives
-            : data.amount,
-        amountFC: data.amount,
-        drCr: state.row.drCr,
-        debit: state.row.drCr == "Dr" ? state.row.amount : 0,
-        credit: state.row.drCr == "Cr" ? state.row.amount : 0,
+        amount: 
+          Number(amount) || 0,
+        amountFC: Number(data.amount ) || 0,
+        drCr:data.drCr,
+        debit: data.drCr == "Dr" ? Number(amount) : 0,
+        credit: data.drCr == "Cr" ? Number(amount) : 0,
         // ledgerCode: state.ledgerData.ledgerCode,
       };
       if (state.isRowEdit === true) {

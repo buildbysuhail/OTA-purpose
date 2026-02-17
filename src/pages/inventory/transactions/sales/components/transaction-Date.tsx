@@ -38,6 +38,7 @@ const AccTransactionDate = React.forwardRef<
                 })
               )
             }
+            
             disabled={
               formState.formElements.transactionDate?.disabled ||
               formState.formElements.pnlMasters?.disabled

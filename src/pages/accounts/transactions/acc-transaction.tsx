@@ -1654,6 +1654,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       column: "credit",
       summaryType: "custom",
       valueFormat: "currency",
+      customizeText: customizeSummaryRow,
       cellSummaryAction:(value: number) => {
           return erpParseFloat(getFormattedValue(value));
         },

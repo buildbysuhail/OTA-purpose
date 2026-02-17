@@ -1478,10 +1478,25 @@ export const useAccTransaction = (
       });
       return false;
     }
-    const fdd = isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount);
+    debugger;
+    const isAmountZero =  isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount);
     const fdsdd = isNullOrUndefinedOrZero(
       formState.transaction.master.totalAmount
     );
+    if (isNullOrUndefinedOrZero(formState.row.ledgerID)) {
+      ERPAlert.show({
+        icon: "warning",
+        title: t("please_select_ledger"),
+        onConfirm() {
+          focusLedgerCombo();
+          return false;
+        },
+        onCancel() {
+          return false;
+        },
+      });
+      return false;
+    }
     if (
       isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount) &&
       !isNullOrUndefinedOrZero(formState.transaction.master.totalAmount)
@@ -1516,7 +1531,7 @@ export const useAccTransaction = (
       });
     }
 
-    if (isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount)) {
+    if (isAmountZero) {
       ERPAlert.show({
         icon: "info",
         onCancel: () => {
@@ -1596,6 +1611,10 @@ export const useAccTransaction = (
       accFormStateTransactionDetailsRowAdd({
         row: {
           ...formState.row,
+          drCr: formState.row.drCr == undefined ||
+              formState.row.drCr == ""
+              ? "Dr"
+              : formState.row.drCr,
           costCentreName: costCentreName,
           ledgerName:
             formState.row.ledgerName == undefined ||

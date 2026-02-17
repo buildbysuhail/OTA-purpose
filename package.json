@@ -19,6 +19,7 @@
     "asar": true,
     "win": {
       "target": "nsis",
+      "icon": "electron\favicon.ico",
       "publish": [
         {
           "provider": "github",
@@ -61,7 +62,8 @@
     "android": "npm run build && npx cap sync && npx cap open android",
     "android:live": "npm run build && npx cap sync && npx cap run android -l --external",
     "electron": "electron .",
-    "build:exe": "npm run build && electron-builder"
+    "build:exe": "npm run build && electron-builder",
+    "build:builder": "electron-builder"
   },
   "dependencies": {
     "@capacitor-community/barcode-scanner": "^4.0.1",

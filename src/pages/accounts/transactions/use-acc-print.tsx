@@ -9,7 +9,9 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { isNullOrUndefinedOrEmpty } from "../../../utilities/Utils";
 import { AccTransactionFormState, AccTransactionRow } from "./acc-transaction-types";
 import { accFormStateHandleFieldChange } from "./reducer";
-import { PrintData, PrintResponse } from "../../use-print-type";
+import { ChequeDataPrint, PrintData, PrintResponse } from "../../use-print-type";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { t } from "i18next";
 
 
 const api = new APIClient()
@@ -20,15 +22,23 @@ export const useAccPrint = () => {
 
   const printCheque = async (chequeData: any, printPreview = false,) => {
     debugger
-    chequeData = isNullOrUndefinedOrEmpty(chequeData) ? formState?.transaction?.details : chequeData
+     const sourceData = isNullOrUndefinedOrEmpty(chequeData) ? formState?.transaction?.details : chequeData
     const chequeDataTypes = "Cheque"
     const backNameAsFormType = ""
-    // Filter details that satisfy the condition
-    const chequeDetails = chequeData.filter(
+ // ✅ FILTER + MAP → ChequeDataPrint
+  const chequeDetails = sourceData
+    .filter(
       (detail:any) =>
         !isNullOrUndefinedOrEmpty(detail.ledgerID) &&
-        (detail.chequeNumber !== undefined || detail.chequeNumber !== null),
+        !isNullOrUndefinedOrEmpty(detail.chequeNumber)
     )
+    .map((detail:any): ChequeDataPrint => ({
+      bankName: detail.bankName ?? "",
+      nameOnCheque: detail.nameOnCheque ?? detail.partyName,
+      bankDate: detail.bankDate ?? detail.chequeDate,
+      chequeNumber: String(detail.chequeNumber),
+      amount: detail.amount,
+    }));
 
     // Only proceed if there are cheque details
     if (chequeDetails.length > 0) {
@@ -41,9 +51,15 @@ export const useAccPrint = () => {
       const template = await getOrFetchTemplate(chequeDataTypes, backNameAsFormType, "")
 
       // Pass all cheque details at once to directPrint
-      if (template?.id == 0) {
-        ERPToast.showWith("Please Set Template For Print ", "warning");
-        return
+      if (!template && template?.id == 0) {
+                await ERPAlert.show({
+                  text: t("Oops! No Default Template Found . Please set a Default Template before continuing."),
+                  title: t("set_default_template"),
+                  icon: "warning",
+                  onConfirm:async()=>{
+
+                  }
+                });
       }
 
       if (printPreview) {

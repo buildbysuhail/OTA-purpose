@@ -442,10 +442,10 @@ const ERPModal = React.memo(
                               <button
                                 className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3 rounded-md hover:bg-gray-200 transition-colors`}
                                 onClick={async() => {
-                                  const printData = printtRef.current?.getPrintData?.();
-                                  console.log("printData:", printData);
-                                  if (printData) {
-                                        await directPrint({ template: printData.template, data: printData,})
+                                  const printInfo = printtRef.current?.getPrintData?.();
+                                  console.log("printData:", printInfo);
+                                  if (printInfo) {
+                                        await directPrint({ template: printInfo?.template, data: printInfo?.printData,})
                                   }
                                 }}
                               >

@@ -3348,6 +3348,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 <TemplatesPreView
                   externalTemplate={formState.chequePreview?.template}
                   externalPrintData={formState.chequePreview?.printData }
+                  isTemplateDesigner
                 />
               }
             />

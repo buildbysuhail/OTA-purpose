@@ -35,6 +35,7 @@ type TemplatesProps = {
   lastChooseTemp?: any;
   isInLedgerReport?: boolean;
   isAccAdviceReport?: boolean;
+  isTemplateDesigner?:boolean;
   externalTemplate?: TemplateState<unknown>;
   externalPrintData?: PrintData;
 };
@@ -48,6 +49,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
     lastChooseTemp, 
     isInLedgerReport = false, 
     isAccAdviceReport = false,
+    isTemplateDesigner=false,
     externalTemplate,
     externalPrintData
   }, ref) => {
@@ -143,10 +145,10 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
                 template={finalTemplate}
                 printData={finalPrintData}
                 qrCodeImages={stableTemplateProps?.qrCodeImages}
-                isTemplateDesigner={false}
                 isInvTrans={isInvTrans}
                 isInLedgerReport={isInLedgerReport}
                 isAccAdviceReport={isAccAdviceReport}
+                isTemplateDesigner={isTemplateDesigner}
               />
             </div>
           </div>

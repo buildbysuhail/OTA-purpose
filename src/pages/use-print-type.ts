@@ -365,6 +365,14 @@ export interface ledgerDataPrint {
   customerAccName: string;
   balance: number;
 }
+export interface ChequeDataPrint {
+  bankName: string;
+  nameOnCheque?: string;
+  bankDate: string;
+  chequeNumber: string;
+  amount?: number;
+  
+}
 export type PrintData =
   | {
       kind: "voucher";

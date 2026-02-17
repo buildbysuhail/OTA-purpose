@@ -23,7 +23,7 @@ import { setTemplateCustomElements } from "../../redux/slices/templates/reducer"
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { useTranslation } from "react-i18next";
 import VoucherType, { accountsVoucherTypes, } from "../../enums/voucher-types";
-import { accountsFields, inventoryFields, barCodeField, imgField,ledgerReportFields } from "./fields";
+import { accountsFields, inventoryFields, barCodeField, imgField,ledgerReportFields,CheckFields } from "./fields";
 import { containsArabicString, getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
@@ -2269,7 +2269,9 @@ const getFieldContent = () => {
   if (templateGroup === "CBR") {
     return ledgerReportFields;
   }
-
+  if (templateGroup === "Cheque") {
+    return CheckFields;
+  } 
   return accountsVoucherTypes.includes(templateGroup as VoucherType)
     ? accountsFields
     : inventoryFields;

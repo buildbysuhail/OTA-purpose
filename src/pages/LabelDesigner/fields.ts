@@ -1,10 +1,10 @@
 
 import { OptionGroup } from "../../components/ERPComponents/erp-grouped-combo";
-import { initialHeaderFooter, initialLedgerReportDataForPrint } from "../../redux/slices/user-session/reducer";
+import { initialChequeDataForPrint, initialHeaderFooter, initialLedgerReportDataForPrint } from "../../redux/slices/user-session/reducer";
 import { modelToListFromObject } from "../../utilities/Utils";
 import { TransactionMasterInitialData, initialTransactionDetailData, initialProductData } from "../inventory/transactions/transaction-type-data";
 import { TransactionMaster, TransactionDetail, BarcodeLabel } from "../inventory/transactions/transaction-types";
-import { CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, ledgerDataPrint, LedgerReportDataForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
+import { ChequeDataPrint, CompanyDetailsForPrint, HeaderFooter, InvDetail2ForPrint, ledgerDataPrint, LedgerReportDataForPrint, PartyDetailsForPrint, PrintCustomFields, PrintDetailDto, PrintMasterDto } from "../use-print-type";
 import { initialCompanyDetailsForPrint, initialInvDetail2ForPrint, initialPartyDetailsForPrint, initialPrintCustomFields, initialPrintDetailDto, initialPrintMasterDto } from "../use-print-type-data";
 interface fdf {
   fdd: number
@@ -34,6 +34,9 @@ export const ledgerReportFields: OptionGroup[] = [
   { groupName: 'Organization', options: modelToListFromObject<CompanyDetailsForPrint>(initialCompanyDetailsForPrint, "org___") },
   { groupName: 'HeaderFooter', options: modelToListFromObject<HeaderFooter>(initialHeaderFooter, "headerFooter___") },
   { groupName: 'LedgerReport', options: modelToListFromObject<ledgerDataPrint>(initialLedgerReportDataForPrint, "ledgerReportDataForPrint___") },
+];
+export const CheckFields: OptionGroup[] = [
+  { groupName: 'Cheque', options: modelToListFromObject<ChequeDataPrint>(initialChequeDataForPrint, "cheque___") },
 ];
 export const barCodeField: OptionGroup[] = [
   { groupName: "BarCodeField", options: modelToListFromObject<BarcodeLabel>(initialProductData, "barcode___") }

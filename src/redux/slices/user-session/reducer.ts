@@ -4,7 +4,7 @@ import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 import Cookies from "js-cookie";
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import { getStorageString } from "../../../utilities/storage-utils";
-import { ledgerDataPrint } from "../../../pages/use-print-type";
+import { ChequeDataPrint, ledgerDataPrint } from "../../../pages/use-print-type";
 export interface BranchSelectDto {
   id: number;
   name?: string;
@@ -135,6 +135,13 @@ export const initialLedgerReportDataForPrint: ledgerDataPrint = {
   code: "",
   customerAccName: "",
   balance: 0
+};
+export const initialChequeDataForPrint: ChequeDataPrint = {
+  bankName: "",
+  nameOnCheque: "",
+  bankDate: "",
+  chequeNumber: "",
+  amount: 0,
 };
 export interface UserModel {
   userId: number;

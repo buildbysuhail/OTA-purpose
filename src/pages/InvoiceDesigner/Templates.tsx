@@ -382,7 +382,7 @@ const onCustomerTypeChange = (value: string) => {
                     e.stopPropagation()
                     templateGroup === 'barcode'
                       ? navigate(`/label-designer/${temp?.id}?template_group=${templateGroup}`)
-                      : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}&form_type=${formType}&customer_type=${customerType}`, {
+                      : navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}&form_type=${formType??""}&customer_type=${customerType??""}`, {
                         state: { templateKind: temp?.templateKind, templateType: temp?.templateType },
                       })
                   }}
@@ -849,13 +849,13 @@ const onCustomerTypeChange = (value: string) => {
                       {filteredAndSortedTemplates.map((temp: any) => renderTemplateCard(temp))}
                       {viewMode === "grid" ? (
                         <div className="
-          group relative w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[270px] 
-          h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
-          aspect-[4/5] bg-white dark:bg-dark-bg-card rounded-xl sm:rounded-2xl 
-          border border-slate-200 dark:border-dark-border hover:border-slate-300 dark:hover:border-dark-border hover:shadow-lg 
-          transition-all duration-500 transform hover:scale-[0.99] hover:-translate-y-1 overflow-hidden 
-          mx-auto sm:mx-0
-        ">
+                          group relative w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[270px] 
+                          h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] 
+                          aspect-[4/5] bg-white dark:bg-dark-bg-card rounded-xl sm:rounded-2xl 
+                          border border-slate-200 dark:border-dark-border hover:border-slate-300 dark:hover:border-dark-border hover:shadow-lg 
+                          transition-all duration-500 transform hover:scale-[0.99] hover:-translate-y-1 overflow-hidden 
+                          mx-auto sm:mx-0
+                        ">
                           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
                             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl group-hover:scale-110 transition-transform duration-300 shadow-lg">

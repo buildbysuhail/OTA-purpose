@@ -168,7 +168,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
  
 
           
-       {   !["CBR","PARP","RARP"].includes(templateGroup??"")  &&(
+       {   !["CBR","PARP","RARP","Cheque"].includes(templateGroup??"")  &&(
         <div className="flex gap-1">
           <ERPDataCombobox
             id="template_formType"

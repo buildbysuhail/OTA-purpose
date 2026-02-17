@@ -167,15 +167,16 @@ export const useDirectPrint = () => {
         DefaultPrinterName,
       } = params;
 
-      const columnsPerRow =
-        Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
-      const rowsPerPage =
-        Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
+
       const PrinterName =
         DefaultPrinterName || template?.propertiesState?.printer;
 
       // 1. Build PDF document
       if (template?.templateGroup === "barcode") {
+              const columnsPerRow =
+        Number(template?.barcodeState?.labelState?.columnsPerRow) ?? 1;
+      const rowsPerPage =
+        Number(template?.barcodeState?.labelState?.rowsPerPage) ?? 1;
         const TotalPage =
           page ?? generateBarcodePages(data ?? [], columnsPerRow, rowsPerPage);
         const barcodeImagesForPrint = await generateBarcodeImagesForPrint(
@@ -197,12 +198,13 @@ export const useDirectPrint = () => {
       //   console.warn("Advice template handling not yet implemented");
       //   return { success: false, reason: "not-implemented" };
       // }
-       else if (template?.templateGroup === "Cheque") {
-        // Handle cheque templates
-        // TODO: Implement cheque template handling
-        console.warn("Cheque template handling not yet implemented");
-        return { success: false, reason: "not-implemented" };
-      } else {
+      //  else if (template?.templateGroup === "Cheque") {
+      //   // Handle cheque templates
+      //   // TODO: Implement cheque template handling
+      //   console.warn("Cheque template handling not yet implemented");
+      //   return { success: false, reason: "not-implemented" };
+      // }
+       else {
 
         // For standard templates, fetch the data
         console.log("Fetching template data for printing...");

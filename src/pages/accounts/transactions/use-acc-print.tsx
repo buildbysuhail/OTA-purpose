@@ -16,7 +16,7 @@ const api = new APIClient()
 export const useAccPrint = () => {
   const { directPrint } = useDirectPrint();
   const formState = useAppSelector((state: RootState) => state.AccTransaction)
-
+    const dispatch = useDispatch();
 
   const printCheque = async (chequeData: any, printPreview = false,) => {
     debugger
@@ -52,7 +52,7 @@ export const useAccPrint = () => {
             fields: { chequePreview: {isPrintPreview: true, template, printData } },
           })
         );
-        // return;
+        return;
 
       }
 
@@ -71,7 +71,4 @@ export const useAccPrint = () => {
 }
 
 
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
 

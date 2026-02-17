@@ -1533,11 +1533,12 @@ export const useTransaction = (
     }
     // CODE CHECKED########
     // ============ Salesman Validation ============
-    if (formState.userConfig?.enableSalesMan 
-      &&[VoucherType.SalesInvoice,
+    // formState.userConfig?.enableSalesMan - This condition is removed due to some reason - ask ashar
+    // In back end they written it is mandatory always - not need to check local settings
+    if ([VoucherType.SalesInvoice,
         VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,
         VoucherType.SalesQuotation].includes(voucherType as any)) {
-      if (isNullOrUndefinedOrZero(master.salesManID)) {
+      if (isNullOrUndefinedOrZero(master.employeeID)) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
@@ -7536,6 +7537,8 @@ export const useTransaction = (
         (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
           applicationSettings.mainSettings.roundingMethod === "No Rounding")
       )
+      _formState.userConfig!.autoEwayBill = applicationSettings.gSTTaxesSettings.enableEWB ? true : false;
+      _formState.userConfig!.disableEinvoice = applicationSettings.gSTTaxesSettings.enableEInvoiceIndia ? true : false;
     };
 
     // 7️⃣ Tender button visibility

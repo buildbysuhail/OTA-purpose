@@ -61,6 +61,26 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
     vPrefix = invoiceData.vrPrefix;
     vType = "SQinGD"
   }
+  if(loadVoucherType === "SQinRFQ"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "SQinRFQ"
+  }
+  if(loadVoucherType === "SQinGDR"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "SQinGDR"
+  }
+  if(loadVoucherType === "GDinGDR"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "GDinGDR"
+  }
+  if(loadVoucherType === "SQinGRR"){
+    vNumber = invoiceData.vrNumber;
+    vPrefix = invoiceData.vrPrefix;
+    vType = "SQinGRR"
+  }
 
   const handleLoadBtnClick = async () => {
     try {
@@ -93,7 +113,9 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
   <label className="text-secondary">{t(title)}</label>
 
   <div className="grid grid-cols-[auto_1fr_auto] gap-1 items-center">
-    {(formState.transaction.master.voucherType === "SO" || formState.transaction.master.voucherType === "GR" || formState.transaction.master.voucherType === "GD"  || formState.transaction.master.voucherType === "RFQ") && (
+    {(formState.transaction.master.voucherType === "SO" || formState.transaction.master.voucherType === "GR" ||
+     formState.transaction.master.voucherType === "GD"  || formState.transaction.master.voucherType === "RFQ" ||
+      formState.transaction.master.voucherType === "DR" || formState.transaction.master.voucherType === "GRR") && (
       <ERPInput
         id="voucherPrefix"
         type="text"

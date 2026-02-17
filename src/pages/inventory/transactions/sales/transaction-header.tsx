@@ -1132,6 +1132,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       refactorDetails={refactorDetails}
                       calculateTotal={calculateTotal}
                       calculateSummary={calculateSummary}
+                      title="sales_invoice#"
 
                     />
                   ))} 
@@ -1179,7 +1180,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     />
                   ))}
 
-                   {/* SQ Load In RequestForSalesQuotation TO DO */}
+                   {/* SQ Load In RequestForSalesQuotation */}
                   {(formState.transaction.master.voucherType == VoucherType.RequestForQuotation && (
                     <VoucherNumberLoad
                       t={t}
@@ -1192,7 +1193,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                   ))}
 
 
-                   {/* Quotation Number Load in GoodsDeliveryReturn TO DO */}
+                   {/* Quotation Number Load in GoodsDeliveryReturn - check The working */}
                   {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn && (
                     <VoucherNumberLoad
                       t={t}
@@ -1201,6 +1202,20 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       voucherType = {formState.transaction.master.voucherType}
                       formState={formState}
                       title="quot_no#"
+                    />
+                  ))}
+
+                  {/* GD load in goods delivery return */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn && (
+                    <SalesInvoiceNumber
+                      t={t}
+                      voucherType="GD"
+                      formState={formState}
+                      refactorDetails={refactorDetails}
+                      calculateTotal={calculateTotal}
+                      calculateSummary={calculateSummary}
+                      title="gd#"
+
                     />
                   ))}
 
@@ -1217,44 +1232,19 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     />
                   ))}
 
-                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn&&
-                  <ERPInput
-                  id="GoodsDelivary"
-                  label={t("GD#")}
-                  placeholder={t("")}
-                  className="w-[100px]"
-                  />
-                   
-                )}   
 
-                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn &&
-                  <ERPInput
-                    id=""
-                    label={t("")}
-                    placeholder={t("")}
-                    className="w-[100px]"
-                  />
-                )} 
-
-
-
+                 {/* GR Load in goods receipt return */}
                  {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn&&
-                  <ERPInput
-                  id="GoodsReceiptReturn"
-                  label={t("GR#")}
-                  placeholder={t("")}
-                  className="w-[50px]"
-                  />
-                   
-                )}   
+                  <SalesInvoiceNumber
+                      t={t}
+                      voucherType="GR"  // This is type of voucher type using while load
+                      formState={formState}
+                      refactorDetails={refactorDetails}
+                      calculateTotal={calculateTotal}
+                      calculateSummary={calculateSummary}
+                      title="gr#"
 
-                {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn &&
-                  <ERPInput
-                    id=""
-                    label={t("")}
-                    placeholder={t("")}
-                    className="w-[100px]"
-                  />
+                    />
                 )} 
 
 

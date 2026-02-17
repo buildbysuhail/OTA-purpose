@@ -638,8 +638,11 @@ export const useTransaction = (
       url = url + "/LoadGDQuotation";
     }
     // Need to check is this method is good or not
-    if(loadVType == "SQinSO" || loadVType == "SQinGR" || loadVType == "SQinGD"){
+    if(loadVType == "SQinSO" || loadVType == "SQinGR" || loadVType == "SQinGD" || loadVType == "SQinRFQ" || loadVType == "SQinGDR" || loadVType == "SQinGRR"){
       loadVType = "SQ"
+    }
+    if( loadVType == "GDinGDR"){
+      loadVType = "GD"
     }
     // ----------------- Check This condition------------
     if(loadVType == "DR"){
@@ -2935,6 +2938,7 @@ export const useTransaction = (
               },
             })
           );
+          // to do - ashar
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
             await printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID

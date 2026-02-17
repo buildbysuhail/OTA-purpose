@@ -13,6 +13,7 @@ import {
   TransactionFormState,
 } from "../transaction-types";
 import {
+  formStateClearDetails,
   formStateHandleFieldChangeKeysOnly,
   formStateTransactionDetailsRowAdd,
   formStateTransactionDetailsRowsAdd,
@@ -30,6 +31,7 @@ interface SalesInvoiceNumberProps {
   refactorDetails: any;
   calculateTotal: any;
   calculateSummary: any;
+  title: string;
 }
 
 const api = new APIClient();
@@ -40,6 +42,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
   refactorDetails,
   calculateTotal,
   calculateSummary,
+  title
 }) => {
   const [invoiceData, setInvoiceData] = useState({
     vrPrefix: "",
@@ -50,6 +53,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
   const [loadSalesDataModal, setLoadSalesDataModal] = useState(false);
   const [gridData, setGridData] = useState<any[]>([]);
   const dispatch = useDispatch();
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -90,6 +94,8 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
           );
           setGridData(filteredDetails);
           setLoadSalesDataModal(true);
+          // Clearing the details row - verify the code and working in all use cases
+          dispatch(formStateClearDetails(deviceInfo.isMobile));
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {
@@ -516,7 +522,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
 
   return (
     <div>
-      <label className="text-secondary">{t("sales_invoice#")}</label>
+      <label className="text-secondary">{t(title)}</label>
 
       <div className="grid grid-cols-[160px_1fr_0px] gap-1 items-center">
         <div className="flex gap-1">

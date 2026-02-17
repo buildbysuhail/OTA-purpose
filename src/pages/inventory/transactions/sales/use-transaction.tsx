@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { usePurchasePrint } from "./use-print";
 import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -36,6 +35,7 @@ import { purchaseGridCol } from "./transaction-grid-cols";
 import DeliveryBoy from "../../../rpos/deliveryboy";
 import { SalesDateChange } from "./components/dateChange"
 import { setClientSession } from "../../../../redux/slices/client-session/reducer"
+import { usePurchasePrint } from "../../../transaction-base/use-commen-barcode-print";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -620,6 +620,9 @@ export const useTransaction = (
       voucherType ?? (formState.transaction?.master?.voucherType || "");
     let out_voucherForm =
       formType ?? (formState.transaction?.master?.voucherForm || "");
+    
+    // ----------------- Check This condition------------
+    let ignoreTaxOnDiscountCalculateTotal = true
 
     if (loadVType == "SO") {
       url = url + "/LoadSO";
@@ -633,6 +636,14 @@ export const useTransaction = (
     if (loadVType == "GDQ") {
       loadVType = "GD"
       url = url + "/LoadGDQuotation";
+    }
+    // Need to check is this method is good or not
+    if(loadVType == "SQinSO" || loadVType == "SQinGR" || loadVType == "SQinGD"){
+      loadVType = "SQ"
+    }
+    // ----------------- Check This condition------------
+    if(loadVType == "DR"){
+      ignoreTaxOnDiscountCalculateTotal = false;
     }
     if (!usingManualInvNumber) {
       if (voucherNumber == undefined || voucherNumber <= 0) {
@@ -936,6 +947,11 @@ export const useTransaction = (
     });
     debugger;
     if (voucher.transaction.master.billDiscount > 0) {
+      // ----------------- Check This condition------------
+      if(ignoreTaxOnDiscountCalculateTotal === false){
+         const taxOnBillDisc = await calculateTaxOnDiscount(voucher.transaction.master.billDiscount, vch.details, ignoreTaxOnDiscountCalculateTotal)
+         voucher.transaction.master.taxOnDiscount = Number(taxOnBillDisc);
+      }
       const net = summaryRes.summary?.total ?? 0;
       const bilDis = voucher.transaction.master.billDiscount;
 
@@ -1148,7 +1164,7 @@ export const useTransaction = (
     };
   };
 
-  async function validate(): Promise<{
+ async function validate(): Promise<{
     master: TransactionMaster, isValid: boolean
   }> {
     const master = { ...formState.transaction.master };
@@ -1279,25 +1295,9 @@ export const useTransaction = (
       }
     }
 
-    // if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight && (voucherType === VoucherType.SalesInvoice && !isIndia) && clientSession.softwareDate != master.transactionDate) {
-    //   const confirm = await ERPAlert.show({
-    //     icon: "info",
-    //     title: t("date_warning"),
-    //     text: t("system_date_does_not_match_transaction_date. Do_you_want_to_update?"),
-    //     confirmButtonText: t("yes"),
-    //     cancelButtonText: t("no"),
-    //     showCancelButton: true,
-    //   });
-    //   if (!confirm) {
-    //     return false;
-    //   } else {
-    //     master.transactionDate = clientSession.softwareDate;
-    //     master.refDate = clientSession.softwareDate;
-    //   }
-    // }
     // CODE CHECKED########
     // ============ Cash/Card Amount Validations ============ 
-    if (cashReceived < 0 || cardAmount < 0) {
+    if ((cashReceived < 0 || cardAmount < 0 )&& voucherType==VoucherType.SalesInvoice && !isIndia ) {
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1311,7 +1311,7 @@ export const useTransaction = (
     }
 
     // CODE CHECKED########
-    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000) {
+    if (cashReceived + cardAmount > grandTotal * 100 && cashReceived + cardAmount > 10000 && voucherType==VoucherType.SalesInvoice) {
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1323,10 +1323,10 @@ export const useTransaction = (
         isValid: false
       };
     }
-
+     //NO india SI and SR added --pending
     // CODE CHECKED########  - Working Not checked/ Tested
     // ============ B2B/B2C Tax Reg Number Validation (KSA) ============
-    if (customerType === "B2B" && vatNumber.length !== 15 && !isIndia) {    //For countryId === 1
+    if (customerType === "B2B" && vatNumber.length !== 15 && applicationSettings.branchSettings.countryName==1 && voucherType==VoucherType.SalesInvoice) {    //For countryId === 1
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1338,9 +1338,9 @@ export const useTransaction = (
         isValid: false
       };
     }
-
+   //NO india SI and SR added --pending
     // CODE CHECKED########  - Working Not checked/ Tested
-    if (customerType === "B2C" && vatNumber.length > 0 && !isIndia) {    // //For countryId === 1
+    if (customerType === "B2C" && vatNumber.length > 0 && applicationSettings.branchSettings.countryName==1 && voucherType==VoucherType.SalesInvoice) {    // //For countryId === 1
       await ERPAlert.show({
         icon: "error",
         title: t("validation_error"),
@@ -1355,7 +1355,7 @@ export const useTransaction = (
 
     // CODE CHECKED########
     // Tax Registration number format validation (15 digits, starts with 3, ends with 3)
-    if (vatNumber !== "" && !isIndia) {
+    if (vatNumber !== "" && applicationSettings.branchSettings.countryName==1 && voucherType==VoucherType.SalesInvoice) {
       if (vatNumber.length !== 15 || !vatNumber.startsWith("3") || !vatNumber.endsWith("3")) {
         await ERPAlert.show({
           icon: "error",
@@ -1372,7 +1372,8 @@ export const useTransaction = (
 
     // CODE CHECKED########
     // E-Invoice: Transaction date should not be post-dated
-    if (isKSAEInvoice && formType === "VAT") {
+    if (isKSAEInvoice && formType === "VAT" 
+      && [VoucherType.SalesInvoice,VoucherType.SalesReturn].includes(voucherType as any)) {
       const transDate = new Date(master.transactionDate);
       const today = new Date();
       transDate.setHours(0, 0, 0, 0);
@@ -1404,7 +1405,8 @@ export const useTransaction = (
 
     // CODE CHECKED########
     // ============ Excess Card Amount Check ============ 
-    if (cashReceived + cardAmount > grandTotal && [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
+    if (cashReceived + cardAmount > grandTotal 
+      && [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
       if (cardAmount > 0) {
         if (formState.userConfig?.allowExcessCashReceipt) {
           const confirmed = await ERPAlert.show({
@@ -1451,6 +1453,7 @@ export const useTransaction = (
         }
       }
     }
+    //present in All
     // CODE CHECKED########
     // ============ Grand Total Check ============
     if (grandTotal < 0) {
@@ -1481,7 +1484,8 @@ export const useTransaction = (
 
     // CODE CHECKED########
     // ============ Stock Update Warning ============
-    if (!master.stockUpdate && (voucherType === "SI" || voucherType === "SR")) {
+    if (!master.stockUpdate 
+      && [VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
       const confirm = await ERPAlert.show({
         icon: "info",
         title: t("stock_update_warning"),
@@ -1502,7 +1506,8 @@ export const useTransaction = (
 
     // CODE CHECKED########
     // ============ Cost Centre Validation ============
-    if (applicationSettings.accountsSettings.maintainCostCenter) {
+    if (applicationSettings.accountsSettings.maintainCostCenter 
+      && [VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
       if (isNullOrUndefinedOrZero(master.costCentreID)) {
         await ERPAlert.show({
           icon: "error",
@@ -1525,7 +1530,10 @@ export const useTransaction = (
     }
     // CODE CHECKED########
     // ============ Salesman Validation ============
-    if (formState.userConfig?.enableSalesMan) {
+    if (formState.userConfig?.enableSalesMan 
+      &&[VoucherType.SalesInvoice,
+        VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,
+        VoucherType.SalesQuotation].includes(voucherType as any)) {
       if (isNullOrUndefinedOrZero(master.salesManID)) {
         await ERPAlert.show({
           icon: "error",
@@ -1721,7 +1729,7 @@ export const useTransaction = (
       }
     }
 
-    //Counter Shift validate Gcc
+    //#region Counter Shift GCC
     if (applicationSettings.accountsSettings.allowSalesCounter === true
       && userSession.isMaintainShift === true
       && voucherType == VoucherType.SalesInvoice
@@ -1806,7 +1814,8 @@ export const useTransaction = (
         }
       }
     }
-    //Counter Shift India
+    //#endregion Counter Shift GCC
+    //#region Counter Shift India
     if ([VoucherType.SalesInvoice,
     VoucherType.SalesReturn, VoucherType.SaleReturnEstimate,
     VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation,
@@ -1837,8 +1846,8 @@ export const useTransaction = (
 
           // 2️⃣ Get Shift Data
           const response = await api.getAsync(
-        `${Urls.inv_transaction_base}${transactionType}/GetShiftOpenedDate`
-      );
+            `${Urls.inv_transaction_base}${transactionType}/GetShiftOpenedDate`
+          );
 
           if (!response) return {
             isValid: true,
@@ -1997,8 +2006,8 @@ export const useTransaction = (
         };
       }
     }
-
-
+    //#endregion Counter Shift India
+     //in all
     // CODE CHECKED########
     // ============ Party Selection Check ============
     if (isNullOrUndefinedOrZero(master.ledgerID)) {
@@ -2017,7 +2026,10 @@ export const useTransaction = (
 
     // CODE CHECKED########
     // ============ Mobile Number Mandatory Check ============
-    if (applicationSettings.inventorySettings?.mobileNumberMandotryInSales) {
+    if ((applicationSettings.inventorySettings?.mobileNumberMandotryInSales 
+      && voucherType==VoucherType.SalesInvoice && !isIndia)||
+    (applicationSettings.inventorySettings?.mobileNumberMandotryInSales 
+      && [VoucherType.SalesInvoice,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.SalesQuotation].includes(voucherType as any) && isIndia) ) {
       if (isNullOrUndefinedOrEmpty(master.address4)) {
         await ERPAlert.show({
           icon: "error",
@@ -2047,7 +2059,10 @@ export const useTransaction = (
 
       // CODE CHECKED########
       // Tax calculation validation
-      if ((row.vatPerc ?? 0) === 0 && (row.vatAmount ?? 0) > 0 && !clientSession.isAppGlobal) {
+      if ((row.vatPerc ?? 0) === 0 && (row.vatAmount ?? 0) > 0 
+      &&[VoucherType.SalesInvoice,
+        VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,
+        VoucherType.SalesQuotation].includes(voucherType as any)&& !isIndia) {
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
@@ -2092,7 +2107,13 @@ export const useTransaction = (
       }
       // CODE CHECKED########
       // Zero quantity/rate validation
-      if ((row.free ?? 0) === 0 && row.gross === 0) {
+      if ((row.free ?? 0) === 0 && row.gross === 0 && voucherType == VoucherType.SalesInvoice && !isIndia
+        || (row.gross === 0 && voucherType == VoucherType.SalesReturn && !isIndia)
+        || (row.gross === 0
+          && [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(voucherType as any))
+        || ((row.free ?? 0) === 0 && row.gross === 0
+          && [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn])
+      ) {
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("zero_rate_or_qty"),
@@ -2111,9 +2132,59 @@ export const useTransaction = (
           };
         }
       }
+      if ((row.free ?? 0) === 0 && row.gross === 0 &&
+        [
+          VoucherType.SalesInvoice,
+          VoucherType.SalesReturn,
+          VoucherType.SaleReturnEstimate
+        ].includes(voucherType as any) &&
+        isIndia
+      ) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("zero_value"),
+          text: `${t("zero_rate_or_qty_entered_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+
+        if (confirm !== true) {
+          const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
+          const res = focusColumn(rowIndex, "qty");
+          setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+
+          return {
+            master: master,
+            isValid: false
+          };
+        } else {
+          if ((row.qty ?? 0) === 0 && (row.free ?? 0) === 0) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("invalid_entry"),
+              text: t("both_qty_and_free_cannot_be_zero_please_update_the_values"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false
+            });
+
+            const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
+            const res = focusColumn(rowIndex, "qty");
+            setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+
+            return {
+              master: master,
+              isValid: false
+            };
+          }
+        }
+      }
+
 
       // Zero quantity/rate validation
-      if (formState.userConfig?.blockZeroFigureEntry) {
+      if (formState.userConfig?.blockZeroFigureEntry
+        && voucherType == VoucherType.SalesInvoice
+        && !isIndia) {
         if ((row.free ?? 0) === 0 && row.qty === 0) {
           const confirm = await ERPAlert.show({
             icon: "question",
@@ -2137,10 +2208,92 @@ export const useTransaction = (
           };
         }
       }
+      // 🔹 Serial Checking
+      if (userSession.dbIdValue !== "543140180640" && [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)) {
+
+        for (let i = 0; i < details.length; i++) {
+
+          const row = details[i];
+
+          if ((row.productDescription ?? "").trim() !== "") {
+
+            const serials = row.productDescription.split(",");
+
+            for (const rawSerial of serials) {
+
+              const serial = rawSerial.trim();
+
+              if (serial !== "") {
+
+                try {
+
+                  // 🔹 Block Non Stock Serial Selling
+                  if (applicationSettings.inventorySettings.blockNonStockSerialSelling) {
+
+                    const params = new URLSearchParams({
+                      SerialNumber: serial,
+                      OldInvTransMasterID: master.invTransactionMasterID.toString()
+                    });
+
+                    const imeiCount = await api.getAsync(
+                      `${Urls.inv_transaction_base}${transactionType}/GetCountofIMEI?${params.toString()}`
+                    );
+                    if (imeiCount <= 0) {
+
+                      await ERPAlert.show({
+                        icon: "error",
+                        title: t("non_stock_serial"),
+                        text: `${i + 1} ${t("row_serial")} '${serial}' ${t("is_out_of_stock")}`,
+                        confirmButtonText: t("ok"),
+                        showCancelButton: false
+                      });
+                      return {
+                        master: master,
+                        isValid: false
+                      };
+                    }
+                  }
+                  const vr = await api.postAsync(
+                    `${Urls.inv_transaction_base}${transactionType}/CheckSerial`,
+                    {
+                      Serial: serial,
+                      OldInvTransMasterID: master.invTransactionMasterID ?? 0,
+                      VoucherType: voucherType,
+                      IsEdit: formState.isEdit
+                    }
+                  );
+                  if (vr && vr !== "") {
+
+                    const confirm = await ERPAlert.show({
+                      icon: "question",
+                      title: t("duplicate_serial"),
+                      text: `${i + 1} ${t("row_serial_exists_in")} ${vr}. ${t("do_you_want_to_continue")}`,
+                      confirmButtonText: t("yes"),
+                      cancelButtonText: t("no"),
+                      showCancelButton: true
+                    });
+
+                    if (confirm !== true) {
+                      return {
+                        master: master,
+                        isValid: false
+                      };
+                    }
+                  }
+
+                } catch (error) {
+                  // silent catch like C#
+                }
+              }
+            }
+          }
+        }
+      }
+
 
       // CODE CHECKED########
       // Bulk quantity warning
-      if ((row.qty ?? 0) > 100000) {
+      if ((row.qty ?? 0) > 100000 && voucherType == VoucherType.SalesInvoice) {
         const confirm = await ERPAlert.show({
           icon: "question",
           title: t("bulk_qty"),
@@ -2157,7 +2310,7 @@ export const useTransaction = (
         }
       }
     }
-
+    //In all VCH
     // CODE CHECKED########
     // ============ Items After Blank Row Check ============
     if (firstFreeRow !== -1) {
@@ -2178,35 +2331,135 @@ export const useTransaction = (
       }
     }
 
-    // ============ Negative Stock Validation ============
-    const showNegStockWarning = applicationSettings.inventorySettings?.showNegStockWarning;
-    if (master.stockUpdate && showNegStockWarning === "Block") {
+      // ============ Negative Stock Validation ============
+
+    const showNegStockWarning =
+      applicationSettings.inventorySettings?.showNegStockWarning;
+    //for sales invoice gcc only
+    if (
+      master.stockUpdate &&
+      (showNegStockWarning === "Block" ||
+        applicationSettings.inventorySettings?.showNonStockItemsinSales === false) && voucherType == VoucherType.SalesInvoice && !isIndia
+    ) {
+
       for (let i = 0; i < validDetails.length; i++) {
-        const row = validDetails[i];
-        if (row.itemType === "Inventory") {
-          const qty = row.qty ?? 0;
-          const stock = row.stock ?? 0;
-          if (qty > stock) {
+
+        const currentRow = validDetails[i];
+
+        if (currentRow.itemType === "Inventory") {
+
+          let totalQty = 0;
+
+          // Determine Warehouse (like C# Wid logic)
+          let warehouseID =
+            currentRow.warehouseID ?? master.fromWarehouseID ?? 0;
+
+          for (let j = i; j < validDetails.length; j++) {
+
+            const compareRow = validDetails[j];
+
+            // Recalculate warehouse per row (C# logic)
+            let compareWarehouseID =
+              compareRow.warehouseID ?? master.fromWarehouseID ?? 0;
+
+            const sameProduct =
+              compareRow.productBatchID === currentRow.productBatchID;
+
+            const sameWarehouse =
+              compareWarehouseID === warehouseID;
+
+            if (sameProduct && sameWarehouse) {
+
+              let qty =
+                (compareRow.qty ?? 0) -
+                (compareRow.qtyTag ?? 0);
+
+              const multiFactor = await api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/GetMuQty` +
+                `?batchID=${compareRow.productBatchID}` +
+                `&unitID=${compareRow.unitID}`
+              );
+
+              qty = qty * (multiFactor ?? 1);
+
+              totalQty += qty;
+            }
+          }
+          const stock = currentRow.stock ?? 0;
+
+          if (totalQty > stock) {
             await ERPAlert.show({
               icon: "error",
               title: t("validation_error"),
-              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("item_please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
+              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
               confirmButtonText: t("ok"),
             });
             return {
-              master: master,
+              master,
               isValid: false
             };
           }
         }
       }
     }
+    //for all other except sales gcc
+    if (
+      (master.stockUpdate &&
+        (showNegStockWarning === "Block" || applicationSettings.inventorySettings?.showNonStockItemsinSales === false) &&
+        (voucherType == VoucherType.SalesInvoice && isIndia))
+      || (showNegStockWarning === "Block" &&
+        [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation].includes(voucherType as any) &&
+        formState.userConfig?.blockNonStockItemsSO)
+      || ( showNegStockWarning === "Block" && voucherType == VoucherType.GoodsDeliveryNote)
+    ) {
+      for (let i = 0; i < validDetails.length; i++) {
+        const currentRow = validDetails[i];
+        if (currentRow.itemType === "Inventory") {
+          let totalQty = 0;
+          for (let j = i; j < validDetails.length; j++) {
+            const compareRow = validDetails[j];
+            const sameProduct =
+              compareRow.productBatchID === currentRow.productBatchID;
+            if (sameProduct) {
+              let qty =
+                (compareRow.qty ?? 0) -
+                (compareRow.qtyTag ?? 0);
+              const multiFactor = await api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/GetMuQty` +
+                `?batchID=${compareRow.productBatchID}` +
+                `&unitID=${compareRow.unitID}`
+              );
+              qty = qty * (multiFactor ?? 1);
+              totalQty += qty;
+            }
+          }
+          const stock = currentRow.stock ?? 0;
 
+          if (totalQty > stock) {
+
+            await ERPAlert.show({
+              icon: "error",
+              title: t("validation_error"),
+              text: `${t("negative_stock_in_row")} ${i + 1}. ${t("please_check_items_entered_in_multiple_rows_cannot_proceed")}`,
+              confirmButtonText: t("ok"),
+            });
+
+            return {
+              master,
+              isValid: false
+            };
+          }
+        }
+      }
+    }
+    //not added all condition managed in backend
     // CODE CHECKED########  - Working Not checked/ Tested (SAMA PLASTIC CASE, NEEDS TESTING)
     // ============ Rate Warning Check (Sales price less than purchase/min price) ============
     const showRateWarning = applicationSettings.inventorySettings?.showRateWarning;
-    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT" && voucherType==VoucherType.SalesInvoice&& !isIndia) {
+    if (showRateWarning?.toUpperCase() === "BLOCK" && formType !== "BT" 
+    && voucherType == VoucherType.SalesInvoice && !isIndia) {
       // please add password in master --master.AuthorizationPassword
+      //please pass header to popup for discount sales etc (Discount Authorisation)
       for (let i = 0; i < validDetails.length; i++) {
         const row = validDetails[i];
         const purchasePrice = row.purchasePrice ?? 0;
@@ -2273,7 +2526,103 @@ export const useTransaction = (
         }
       }
     }
+    //discount validation itemwise
+    // 🔹 Discount validation itemwise
+    if (userSession.maxDiscPercAllowed > 0.01 && voucherType == VoucherType.SalesInvoice) {
 
+      let maxDisc = userSession.maxDiscPercAllowed;
+
+      for (let i = 0; i < validDetails.length; i++) {
+
+        const discPerc = Number(validDetails[i].discPerc || 0);
+
+        if (maxDisc < discPerc) {
+          maxDisc = discPerc;
+        }
+      }
+
+      if (maxDisc > userSession.maxDiscPercAllowed) {
+
+        const action =
+          `give_more_discount_up_to_${maxDisc}_in_${voucherType}:${master.voucherForm}:${master.voucherNumber}`;
+
+        const isAuthorized = await SalesAuthorization(action);
+        // const isAuthorised = await SalesAuthorization(
+        //   action,
+        //   t("discount_authorisation")
+        // );
+
+        if (!isAuthorized) {
+          return {
+            isValid: false,
+            master: master,
+          };
+        }
+      }
+    }
+    //E-invoice validation case 2
+    if (applicationSettings.gSTTaxesSettings.enableEInvoiceIndia &&
+      ["WHOLESALE", "Int_State", "B2B"].includes((formType).toUpperCase()) &&
+      formState.isEdit &&
+      (master.invTransactionMasterID ?? 0) > 0 &&
+      voucherType == VoucherType.SalesInvoice &&
+      isIndia
+    ) {
+      const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetEInvoiceDetailsByID/${master.invTransactionMasterID}`
+      );
+      const dt = response?.tables?.[0] ?? response?.[0] ?? [];
+      if (dt.length > 0) {
+        if (formState.einvoiceCheckBox === true) {
+
+          await ERPAlert.show({
+            icon: "error",
+            title: t("e_invoice"),
+            text: t("e_invoice_cannot_submit_again_for_same_invoice"),
+            confirmButtonText: t("ok"),
+            showCancelButton: false
+          });
+
+          return {
+            master: master,
+            isValid: false
+          };
+        }
+      }
+    }
+    //EWB validation case 2
+    if (applicationSettings.gSTTaxesSettings.enableEWB &&
+      formState.isEdit &&
+      (master.invTransactionMasterID ?? 0) > 0 &&
+      voucherType == VoucherType.SalesInvoice &&
+      isIndia
+    ) {
+      const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${transactionType}/GetEWBDetailsByID/${master.invTransactionMasterID}`
+      );
+
+
+      const dt = response?.tables?.[0] ?? response?.[0] ?? [];
+
+      if (dt.length > 0) {
+
+        if (formState?.userConfig?.autoEwayBill === true) {
+
+          await ERPAlert.show({
+            icon: "error",
+            title: t("eway_bill"),
+            text: t("ewb_cannot_submit_again_for_same_invoice"),
+            confirmButtonText: t("ok"),
+            showCancelButton: false
+          });
+
+          return {
+            master: master,
+            isValid: false
+          };
+        }
+      }
+    }
     // ============ Voucher Number Zero Check (Edit Mode) ============
     if (formState.isEdit && master.voucherNumber === 0) {
       await ERPAlert.show({
@@ -2477,6 +2826,7 @@ export const useTransaction = (
         transactionDate:
           master.transactionDate == "" ? null : master.transactionDate,
       }, transactionInitialData.master);
+
       let params = {
                     master: {
                       ...sanitizedMaster,
@@ -2529,6 +2879,20 @@ export const useTransaction = (
                     // 🔹 GatePass Items
                     // gatePassItems: formState.transaction.gatePassItems ?? []
                   };
+      // let params = {
+      //   master: {
+      //     ...sanitizedMaster,
+      //     deliveryDate: sanitizedMaster.deliveryDate ? sanitizedMaster.deliveryDate : sanitizedMaster.transactionDate
+      //   },
+      //   details: dtRes.outputDetails,
+      //   attachments: attachments,
+      //   invAccTransactions: formState.transaction.invAccTransactions,
+      //   pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs,
+      //   PendingOrderListBranchIDs: formState.pendingOrdListBranchIDs,
+      //   couponDetails: formState.transaction.couponDetails,
+      //   upiDetails: formState.transaction.uPIDetails,
+      //   bankCardDetails: formState.transaction.bankCardDetails
+      // };
       // params = sanitizeDataAdvanced(params, transactionInitialData);
       try {
         const saveRes =
@@ -5945,6 +6309,7 @@ export const useTransaction = (
         // setIsLoading(false);
         return; // User cancelled
       }
+      debugger;
 
       // Read Excel file using ExcelJS
       const workbook = new ExcelJS.Workbook();
@@ -5952,7 +6317,7 @@ export const useTransaction = (
       await workbook.xlsx.load(fileBuffer);
 
       // Get 'Sales' worksheet
-      const salesWorksheet = workbook.getWorksheet("Sales");
+      const salesWorksheet = workbook.getWorksheet("Purchase");
       if (!salesWorksheet) {
         throw new Error("Sales worksheet not found in the Excel file");
       }
@@ -7540,6 +7905,7 @@ export const useTransaction = (
     fetchUserConfig, applyTaxOnBillDiscount,
     _purchaseGridCol,
     gridCode,
-    initializeFormElements
+    initializeFormElements,
+    calculateTaxOnDiscount
   };
 };

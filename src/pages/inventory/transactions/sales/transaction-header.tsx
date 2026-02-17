@@ -48,6 +48,8 @@ import moment from "moment";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import BtnToInvoice from "./components/btnToInvoice";
 import CreditAccount from "./components/cb-credit-account";
+import SalesInvoiceNumber from "./sales-invoice-number";
+import VoucherNumberLoad from "./voucher-number-load";
 
 const api = new APIClient();
 interface TransactionHeaderProps {
@@ -86,6 +88,9 @@ interface TransactionHeaderProps {
   inputRefs: Record<string, React.RefObject<HTMLInputElement>>
   partyNameRef: any;
   getNextVoucherNumber: any;
+  refactorDetails: any;
+  calculateTotal: any;
+  calculateSummary: any;
 }
 // clientSession
 const TransactionHeader: React.FC<TransactionHeaderProps> = ({
@@ -116,7 +121,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   isAppGlobal,
   inputRefs,
   partyNameRef,
-  getNextVoucherNumber
+  getNextVoucherNumber,
+  refactorDetails,
+  calculateTotal,
+  calculateSummary
+  
 }) => {
   const { appState } = useAppState();
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
@@ -675,7 +684,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
                 {/* {formState.transaction.master.voucherType !==
                   VoucherType.GoodsReceiptNote && ( */}
-                 {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
+                 {/* {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
                   <ERPInput
                   id="SalesInvoice"
                   label={t("Sales Invoice #")}
@@ -692,58 +701,13 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     placeholder={t("")}
                     className="w-[100px]"
                   />
-                )}
-
-                {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
-                  <ERPInput
-                    id="DRNO"
-                    label={t("DR_NO")}
-                    placeholder={t("enter_DR_NO")}
-                    className="w-[100px]"
-                  />
-                )}
-
-                {(formState.transaction.master.voucherType == VoucherType.SalesReturn &&
-                  <ERPButton
-                    title={t("...")}
-                    variant="secondary"
-                    disabled={formState.transactionLoading}
-                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
-                  />
-                )}
+                )} */}
 
 
 
 
-                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
-                  <ERPInput
-                    id="SQ"
-                    label={t("SQ #")}
-                    placeholder={t("enter_SQ_#")}
-                    className="w-[80px]"
-                    
-                  />
-                )}
 
-                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
-                  <ERPInput
-                    id=""
-                    label={t("")}
-                    placeholder={t("")}
-                    className="w-[100px]"
-                  />
-                )}
-
-                {([VoucherType.GoodRequest,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any)&&
-                  <ERPButton
-                    title={t("Load")}
-                    variant="secondary"
-                    disabled={formState.transactionLoading}
-                    className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg w-10 h-6"
-                  />
-                )}
-
-                {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                {/* {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
                   <ERPInput
                     id="MQuotNo"
                     label={t("M Quot.No#")}
@@ -760,9 +724,9 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.transactionLoading}
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
                   />
-                )}
+                )} */}
 
-                 {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
+                 {/* {(formState.transaction.master.voucherType == VoucherType.SalesQuotation &&
                   <ERPInput
                     id="RFQ"
                     label={t("RFQ #")}
@@ -779,9 +743,9 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.transactionLoading}
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg w-10 h-6"
                   />
-                )}
+                )} */}
 
-                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
+                {/* {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote &&
                   <ERPInput
                     id="Ouot_No"
                     label={t("Ouot_No")}
@@ -807,7 +771,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     disabled={formState.transactionLoading}
                     className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg h-4"
                   />
-                )}
+                )} */}
 
                 {/* Credit Account */}
                 {(formState.transaction.master.voucherType == VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
@@ -1148,7 +1112,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     onClick={handleWStockList}
                   />
                 )}
-                {([VoucherType.SalesInvoice,VoucherType.GoodsDeliveryNote, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
+                {([VoucherType.SalesInvoice,VoucherType.GoodsDeliveryNote, VoucherType.SalesInvoiceDraft,VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn ].includes(formState.transaction.master.voucherType as any) && (
                 <ManualInvNo
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     formState={formState}
@@ -1158,7 +1122,165 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     label={t("m_invoice_no")}
                     loadAndSetTransVoucher={loadAndSetTransVoucher}
                   />
-                  )}
+                  ))}
+                  {/* Sales Invoice Number - in sales return */}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesReturn && (
+                    <SalesInvoiceNumber
+                      t={t}
+                      voucherType="SI"  // This is type of voucher type using while load
+                      formState={formState}
+                      refactorDetails={refactorDetails}
+                      calculateTotal={calculateTotal}
+                      calculateSummary={calculateSummary}
+
+                    />
+                  ))} 
+                  {/* Voucher number loader */}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesReturn && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="DR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="dr_no#"
+                    />
+                  ))} 
+                  {(formState.transaction.master.voucherType == VoucherType.SalesOrder && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinSO"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="sq_no#"
+                    />
+                  ))}
+                  {/* SQ Load In Goods request */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodRequest && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="sq_no#"
+                    />
+                  ))}
+                  {/* Quotation Number Load in Goods delivery note */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryNote && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGD"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="quot_no#"
+                    />
+                  ))}
+
+                   {/* SQ Load In RequestForSalesQuotation TO DO */}
+                  {(formState.transaction.master.voucherType == VoucherType.RequestForQuotation && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinRFQ"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="sq_no#"
+                    />
+                  ))}
+
+
+                   {/* Quotation Number Load in GoodsDeliveryReturn TO DO */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGDR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="quot_no#"
+                    />
+                  ))}
+
+
+                  {/* Quotation Number Load in GoodsReceiptReturn TO DO */}
+                  {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="SQinGRR"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="quot_no#"
+                    />
+                  ))}
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn&&
+                  <ERPInput
+                  id="GoodsDelivary"
+                  label={t("GD#")}
+                  placeholder={t("")}
+                  className="w-[100px]"
+                  />
+                   
+                )}   
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsDeliveryReturn &&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[100px]"
+                  />
+                )} 
+
+
+
+                 {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn&&
+                  <ERPInput
+                  id="GoodsReceiptReturn"
+                  label={t("GR#")}
+                  placeholder={t("")}
+                  className="w-[50px]"
+                  />
+                   
+                )}   
+
+                {(formState.transaction.master.voucherType == VoucherType.GoodsReceiptReturn &&
+                  <ERPInput
+                    id=""
+                    label={t("")}
+                    placeholder={t("")}
+                    className="w-[100px]"
+                  />
+                )} 
+
+
+
+                  {/* Manual Quotation Number In Sales Quotation */}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesQuotation && (
+                    <ManualInvNo
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      formState={formState}
+                      dispatch={dispatch}
+                      t={t}
+                      type="PI_Ref"
+                      label={t("m_quotation_no#")}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    />
+                  ))}
+                  {(formState.transaction.master.voucherType == VoucherType.SalesQuotation && (
+                    <VoucherNumberLoad
+                      t={t}
+                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                      loadVoucherType="RFQ"
+                      voucherType = {formState.transaction.master.voucherType}
+                      formState={formState}
+                      title="rfq_no#"
+                    />
+                  ))}
                 {formState.wStockListOpen && (
                   <ERPModal
                     isOpen={formState.wStockListOpen}

@@ -26,6 +26,7 @@ import { setStorageString } from "../../../../../utilities/storage-utils";
 import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
 import { useAppSelector } from "../../../../../utilities/hooks/useAppDispatch";
+import { usePurchasePrint } from "../../../../transaction-base/use-commen-barcode-print";
 
 const api = new APIClient();
 interface HeaderProps extends VoucherElementProps {
@@ -111,6 +112,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     loadAndSetTransVoucher,
   }, ref) => {
     const { appState } = useAppState();
+    const { printBarcode } = usePurchasePrint();
     const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const isRtl = appState.locale.rtl;
     const popupRef = useRef<HTMLDivElement | null>(null);
@@ -119,7 +121,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     const [isPendingOrderOpen, setIsPendingOrderOpen] = useState({ open: false, type: "SO" });
     const [isImportExcelOpen, setIsImportExcelOpen] = useState(false)
     const clientSession = useAppSelector((state: RootState) => state.ClientSession);
-
+    
     const popupStyle = {
       top: "45px",
       [isRtl ? "right" : "left"]: "-231px",
@@ -146,7 +148,21 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
         })
       );
     };
+    const printMultiRowBarcode = async () => {
+      debugger;
+      const allSlNos = formState.transaction.details.filter(row => row.productID && row.productID > 0)
+      .map(row => row.slNo);
 
+      await  printBarcode(
+        allSlNos, // Multiple slNos
+        false,
+        true,
+        formState.transaction.master.ledgerID,
+        formState.transaction.master.fromWarehouseID,
+        false
+      );
+      closeMenuPopup();
+    }
     const openMenuPopup = () => {
       dispatch(
         formStateHandleFieldChange({
@@ -872,7 +888,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     <li>
                       <button
                         className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-amber-50 hover:text-amber-800 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 transition-all duration-200 rounded-md group text-left"
-                        onClick={() => { closeMenuPopup() }}>
+                         onClick={printMultiRowBarcode}>
                         <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 group-hover:scale-110 transition-all duration-200">
                           <Barcode className="h-4 w-4 text-amber-800 dark:text-amber-300" />
                         </div>

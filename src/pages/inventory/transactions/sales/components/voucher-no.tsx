@@ -94,8 +94,8 @@ const AccVoucherNo = React.forwardRef<HTMLInputElement, VoucherNoPrefixProps>(
                 }
               }
             }}
-            disabled={formState.formElements.voucherNumber?.disabled 
-              || formState.voucherNumberLck==false}
+            disabled={formState.formElements.voucherNumber?.disabled}
+            readOnly={formState.voucherNumberLck === true ? false : true}
             labelInfo={
               <button className={`pe-3`}>
                 <VoucherNumberDetailsSidebar displayType="link" />

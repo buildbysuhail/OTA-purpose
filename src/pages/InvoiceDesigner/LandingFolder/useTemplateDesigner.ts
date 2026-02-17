@@ -56,6 +56,10 @@ interface UseTemplateDesignerProps<T = unknown> {
   isAppGlobal?: boolean;
   lastChoosedTemplate?: TemplateState<T>;
   isInLedgerReport?: boolean;
+  isTemplateDesigner?: boolean;
+  isAccAdviceReport?: boolean;
+  externalTemplate?: TemplateState<T>;
+  externalPrintData?: PrintData;
 }
 
 export const useTemplateDesigner = <T = unknown,>({
@@ -85,6 +89,10 @@ export const useTemplateDesigner = <T = unknown,>({
   isAppGlobal,
   lastChoosedTemplate,
   isInLedgerReport = false,
+  isTemplateDesigner = false,
+  isAccAdviceReport=false,
+  externalTemplate,
+  externalPrintData
 }: UseTemplateDesignerProps<T>) => {
   const { t } = useTranslation("system");
   const { id } = useParams();
@@ -93,7 +101,7 @@ export const useTemplateDesigner = <T = unknown,>({
   const appSettings = useSelector((state: RootState) => state.ApplicationSettings);
   let activeTemplate = useSelector((state: RootState) => state.Template?.activeTemplate);
   // State
-  const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps | null>(null);
+  const [stableTemplateProps, setStableTemplateProps] = useState<StableTemplateProps<T>  | null>(null);
 
   // const [printData, setPrintData] = useState<PrintResponse>(DummyVoucherData as any);
   const [printData, setPrintData] = useState<PrintData>(() =>
@@ -124,17 +132,20 @@ export const useTemplateDesigner = <T = unknown,>({
   const currentMasterIdRef = useRef<number | null | undefined>(null);
   const lastFetchedTemplateIdRef = useRef<number | null>(null);
   const autoTemplateResolvedRef = useRef(false);
-
-  // Create consolidated template style properties object
+  // NEW: Skip data loading if external data is provided
+  const shouldSkipFetch = !!externalTemplate && !!externalPrintData;
+  // templateStyleProperties will work with both external and fetched templates
   const templateStyleProperties = useMemo(() => {
+    const templateToUse = externalTemplate || activeTemplate;
+    
     const pageOrientation =
-      activeTemplate?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
-    const pageSize = activeTemplate?.propertiesState?.pageSize ?? "A4";
-    const isAutoHeight = activeTemplate?.propertiesState?.isAutoHeight ?? false;
+      templateToUse?.propertiesState?.orientation === "landscape" ? "landscape" : "portrait";
+    const pageSize = templateToUse?.propertiesState?.pageSize ?? "A4";
+    const isAutoHeight = templateToUse?.propertiesState?.isAutoHeight ?? false;
     const selectedPageSize = getPageDimensions(
       pageSize,
-      activeTemplate?.propertiesState?.width,
-      activeTemplate?.propertiesState?.height
+      templateToUse?.propertiesState?.width,
+      templateToUse?.propertiesState?.height
     );
 
     const orientedDimensions = getOrientedDimensions(selectedPageSize, pageOrientation);
@@ -145,6 +156,11 @@ export const useTemplateDesigner = <T = unknown,>({
       isAutoHeight,
     };
   }, [
+    externalTemplate?.propertiesState?.orientation,
+    externalTemplate?.propertiesState?.pageSize,
+    externalTemplate?.propertiesState?.width,
+    externalTemplate?.propertiesState?.height,
+    externalTemplate?.propertiesState?.isAutoHeight,
     activeTemplate?.propertiesState?.orientation,
     activeTemplate?.propertiesState?.pageSize,
     activeTemplate?.propertiesState?.width,
@@ -193,7 +209,26 @@ export const useTemplateDesigner = <T = unknown,>({
           autoTemplateResolvedRef.current = true;
           return;
         }
+        // -------------------------------
+        // ACC-ADVICE-DATA FLOW
+        // -------------------------------
+       if(isAccAdviceReport) {
+          const adviceData = await api.getAsync(`${Urls.acc_advice_payment}?masterId=${MasterIDParam}`)
+          if (!isActiveRef.current) return;
+          setVoucherPrintData(adviceData);
+           if (!manuvalTemplateFeatch) return;
 
+        const adviceVoucherTyp =  ["CP", "BP", "CQP"].includes(voucherType??"")
+      ? "PARP"
+      : ["CR", "BR", "CQR"].includes(voucherType??"")
+        ? "RARP"
+        : ""
+         const template = await getOrFetchTemplate(adviceVoucherTyp,"","")
+           dispatch(setTemplate(template));
+            // autoTemplateResolvedRef.current = true;
+        return
+       }
+       
         // -------------------------------
         // VOUCHER FLOW
         // -------------------------------
@@ -260,6 +295,7 @@ export const useTemplateDesigner = <T = unknown,>({
     [
       MasterIDParam,
       isInLedgerReport,
+      isAccAdviceReport,
       manuvalTemplateFeatch,
       voucherTypeParam,
       isInvTrans,
@@ -281,35 +317,39 @@ export const useTemplateDesigner = <T = unknown,>({
       voucherType,
       isAppGlobal,
       appSettings?.printerSettings?.useEmptyTaxTypeTemplateIfMissing,
+      
     ]
   );
 
   // Effect 1: Load print data (only depends on parameters, NOT on activeTemplate)
   useEffect(() => {
+    if (shouldSkipFetch) return; // Skip if using external data
+    
     const isActiveRef = { current: true };
-
-    loadPrintAndTemplateData(isActiveRef);
+    if (!isTemplateDesigner) {
+      loadPrintAndTemplateData(isActiveRef);
+    }
 
     return () => {
       isActiveRef.current = false;
     };
-  }, [loadPrintAndTemplateData]);
+  }, [loadPrintAndTemplateData, isTemplateDesigner, shouldSkipFetch]);
 
   // Effect 2: Update stableTemplateProps when activeTemplate OR printData changes
   useEffect(() => {
     const updateProps = async () => {
-      debugger;
-      //    if (!activeTemplate) {
-      //   setStableTemplateProps(null); 
+      const templateToUse = externalTemplate || activeTemplate;
+      const printDataToUse = externalPrintData || printData;
+
+      // if (!templateToUse) {
+      //   setStableTemplateProps(null);
       //   return;
       // }
-      // if (!printData) return;
 
       try {
-        // Generate QR codes
         const elements: PlacedComponent[] = [
-          ...(activeTemplate?.headerState?.customElements?.elements ?? []),
-          ...(activeTemplate?.footerState?.customElements?.elements ?? []),
+          ...(templateToUse?.headerState?.customElements?.elements ?? []),
+          ...(templateToUse?.footerState?.customElements?.elements ?? []),
         ].filter(comp => comp.type === DesignerElementType.qrCode);
 
         const qrImages: { [key: string]: string } = {};
@@ -319,23 +359,24 @@ export const useTemplateDesigner = <T = unknown,>({
           }
         }
 
-        const props: StableTemplateProps = {
-          template: activeTemplate,
-          printData: printData,
+        const props: StableTemplateProps<T> = {
+          template: templateToUse,
+          printData: printDataToUse,
           qrCodeImages: qrImages,
         };
 
-        setStableTemplateProps(props)
+        setStableTemplateProps(props);
       } catch (err) {
         console.error("Error updating props:", err);
       }
     };
 
     updateProps();
-  }, [activeTemplate, printData]);
+  }, [activeTemplate, printData, externalTemplate, externalPrintData]);
 
   // Effect: Handle user template selection
   useEffect(() => {
+   if(!isTemplateDesigner && !isAccAdviceReport){
     console.log("Running template selection effect");
    debugger;
     if (!manuvalTemplateFeatch) return;
@@ -357,11 +398,14 @@ export const useTemplateDesigner = <T = unknown,>({
 
     lastFetchedTemplateIdRef.current = newTemplateId;
     dispatch(setTemplate(lastChoosedTemplate));
+   } 
 
   }, [
     lastChoosedTemplate?.id,
     MasterIDParam,
     manuvalTemplateFeatch,
+    isTemplateDesigner,
+    isAccAdviceReport
   ]);
 
   // Set max height based on window size
@@ -372,7 +416,7 @@ export const useTemplateDesigner = <T = unknown,>({
 
   // Filter design sections based on designer type
   useEffect(() => {
-    if (templateGroup) {
+    if (templateGroup && isTemplateDesigner ) {
       const typeKey = designerType.toUpperCase();
       const validKinds = designerSectionsConfig[typeKey] || {};
       const sectionsForKind = validKinds[templateKind] || validKinds[Object.keys(validKinds)[0]] || [];
@@ -406,7 +450,7 @@ export const useTemplateDesigner = <T = unknown,>({
   }, [id, dispatch, t]);
 
   useEffect(() => {
-    if (!manuvalTemplateFeatch) {
+    if (!manuvalTemplateFeatch && isTemplateDesigner) {
       getPDFTemplateData();
     }
   }, [getPDFTemplateData, manuvalTemplateFeatch]);
@@ -432,6 +476,7 @@ export const useTemplateDesigner = <T = unknown,>({
       throw err;
     }
   }, []);
+  //const userSession = useSelector((state: RootState) => state.UserSession);
 
   // Handle template saving
   const handleSave = useCallback(
@@ -486,6 +531,147 @@ export const useTemplateDesigner = <T = unknown,>({
         cleanedTemplate.customerType,
         cleanedTemplate.formType
       );
+
+
+
+// const taxType = userSession.countryId == Countries.India ? "GST" : "VAT"      
+// const templateViewToCopy: any = {
+//   TemplateType: activeTemplate.templateType ?? "standard",
+//   TemplateKind: activeTemplate.templateKind ?? "",
+//   TemplateGroup: activeTemplate.templateGroup ?? "",
+//   Content: compressedContent,
+//   thumbImage:thumbImage,
+//   TaxType: activeTemplate.formType ?? taxType,
+// };
+
+// // Helper function to escape single quotes for SQL
+// const sqlEscape = (value: any) => {
+//   if (value === null || value === undefined || value === '') return 'NULL';
+//   const escaped = String(value).replace(/'/g, "''");
+//   return `'${escaped}'`;
+// };
+
+// // Generate template name first (same logic as SQL CONCAT)
+// const templateName = `${templateViewToCopy.TemplateGroup || ''}-${templateViewToCopy.TaxType || 'DEF'}-${templateViewToCopy.TemplateType === 'standard' ? 'STD' : 'UN'}-${templateViewToCopy.TemplateKind.toUpperCase()}`;
+
+// // Build VALUES row - only 6 properties
+// const valuesRow = `${sqlEscape(templateViewToCopy.TemplateType)}, ${sqlEscape(templateViewToCopy.TemplateKind)}, ${sqlEscape(templateViewToCopy.TemplateGroup)}, ${sqlEscape(templateViewToCopy.Content)}, ${sqlEscape(templateViewToCopy.thumbImage)}, ${sqlEscape(templateViewToCopy.TaxType)}`;
+
+// // Generate SQL INSERT statement
+// const sqlContent = `INSERT INTO Templates (
+//     TemplateType,
+//     TemplateKind,
+//     TemplateGroup,
+//     TemplateName,
+//     Content,
+//     TemplateDescription,
+//     thumbImage,
+//     background_image,
+//     background_image_header,
+//     background_image_footer,
+//     signature_image,
+//     TaxType
+// )
+// SELECT
+//     v.TemplateType,
+//     v.TemplateKind,
+//     v.TemplateGroup,
+//     tn.TemplateName,
+//     v.Content,
+//     NULL,
+//     v.thumbImage,
+//     NULL,
+//     NULL,
+//     NULL,
+//     NULL,
+//     v.TaxType
+// FROM (
+//     VALUES
+//         (${valuesRow})
+// ) AS v (
+//     TemplateType,
+//     TemplateKind,
+//     TemplateGroup,
+//     Content,
+//     thumbImage,
+//     TaxType
+// )
+// CROSS APPLY (
+//     SELECT
+//         CONCAT(
+//             v.TemplateGroup, '-',
+//             COALESCE(v.TaxType, 'DEF'), '-',
+//             CASE v.TemplateType
+//                 WHEN 'standard'  THEN 'STD'
+//                 WHEN 'universal' THEN 'UN'
+//             END, '-',
+//             UPPER(v.TemplateKind)
+//         ) AS TemplateName
+// ) tn
+// WHERE NOT EXISTS (
+//     SELECT 1
+//     FROM Templates t
+//     WHERE t.TemplateName = tn.TemplateName
+// );`;
+
+// // Use template name as filename (sanitize for filesystem)
+// const fileName = `${templateName}.txt`;
+
+// try {
+//   // Check if File System Access API is supported
+//   if ('showSaveFilePicker' in window) {
+//     // Modern approach - User chooses location
+//     const handle = await (window as any).showSaveFilePicker({
+//       suggestedName: fileName,
+//       types: [{
+//         description: 'SQL File',
+//         accept: { 'text/plain': ['.txt'] }
+//       }]
+//     });
+    
+//     const writable = await handle.createWritable();
+//     await writable.write(sqlContent);
+//     await writable.close();
+    
+//     alert(`SQL file saved as: ${fileName}`);
+//   } else {
+//     // Fallback - Downloads folder
+//     const blob = new Blob([sqlContent], { type: 'text/plain;charset=utf-8' });
+//     const url = URL.createObjectURL(blob);
+//     const link = document.createElement('a');
+//     link.href = url;
+//     link.download = fileName;
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+//     URL.revokeObjectURL(url);
+    
+//     alert(`SQL file saved as: ${fileName}`);
+//   }
+// } catch (err) {
+//   console.error('Failed to save file:', err);
+//   // Fallback if user cancels
+//   const blob = new Blob([sqlContent], { type: 'text/plain;charset=utf-8' });
+//   const url = URL.createObjectURL(blob);
+//   const link = document.createElement('a');
+//   link.href = url;
+//   link.download = fileName;
+//   document.body.appendChild(link);
+//   link.click();
+//   document.body.removeChild(link);
+//   URL.revokeObjectURL(url);
+// }
+
+// // Also copy to clipboard
+// navigator.clipboard.writeText(sqlContent).catch(() => {
+//   console.warn("Clipboard copy failed");
+// });
+
+// console.log(`Template name: ${templateName}`);
+// console.log(`File saved as: ${fileName}`);
+// return;
+
+
       try {
         const res = await api.postAsync(Urls.templates, cleanedTemplate);
         handleResponse(res, async () => {

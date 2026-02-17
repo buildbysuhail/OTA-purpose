@@ -42,6 +42,7 @@ import { Countries, UserModel } from "../../../redux/slices/user-session/reducer
 import { getStorageString, setStorageString } from "../../../utilities/storage-utils";
 import { getApLocalData } from "../../../redux/cached-urls";
 import voucherNo from "../../inventory/transactions/sales/components/voucher-no";
+import { useAccPrint } from "./use-acc-print";
 
 
 interface FormElementState {
@@ -77,7 +78,8 @@ export const useAccTransaction = (
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
   );
-  const { printVoucher, printCheque, printPaymentReceiptAdvice } = useCommenPrint();
+  const { printVoucher,} = useCommenPrint();
+  const { printCheque }= useAccPrint();
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -1236,7 +1238,7 @@ export const useAccTransaction = (
             userSession.dbIdValue?.trim() == "BAHAMDOON" &&
             formState.isBahamdoonPOSReceipt != true
           ) {
-            printPaymentReceiptAdvice("");
+            // printPaymentReceiptAdvice("",0);
           } else {
             await  printVoucher(
                     formState.transaction.master.accTransactionMasterID,  // masterID
@@ -1255,7 +1257,10 @@ export const useAccTransaction = (
         }
 
         if (formState.userConfig?.printCheque) {
-          printCheque("");
+         await printCheque(
+            formState.transaction.details,
+            formState.userConfig?.printPreview ?? false,
+           );
         }
         if (formState.userConfig?.clearDetailsAfterSaveAccounts == true) {
           clearControls(
@@ -2639,7 +2644,6 @@ export const useAccTransaction = (
     handleLoadByRefNo,
     printCheque,
     printVoucher,
-    printPaymentReceiptAdvice,
     handleRefresh,
     createNewVoucher,
     unlockVoucher,

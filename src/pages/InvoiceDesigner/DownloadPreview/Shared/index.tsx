@@ -63,7 +63,7 @@ import { SharedDownTable } from "./Table"
               }}
             />
           )}
-          {printData?.kind =="voucher"&&(
+          {printData?.kind ==="voucher"&&(
             <SharedDownTable data={printData?.data?.details ?? []} template={template} />
           )}
      

@@ -35,6 +35,7 @@ const FooterDesigner = ({ }: FooterDesignerProps) => {
           <CustomDesignerButton
             Label={t("add_footer")}
             customFieldMaster={"footerState"}
+            
             dispatch={dispatch}
             className=""
           />

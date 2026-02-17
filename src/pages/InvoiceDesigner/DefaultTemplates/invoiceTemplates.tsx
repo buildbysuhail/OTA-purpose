@@ -37,6 +37,8 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         templateName: "Standard Template (INV)",
         template_type: "standard",
         template_kind: "standard",
+        template_formType:"",
+        template_customerType:""
       },
       tableState:[],
       headerState: {
@@ -204,6 +206,8 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         templateName: "Retail Standard",
         template_kind: "standard",
         template_type: "standard",
+        template_formType:"",
+        template_customerType:""
       },
       headerState: {
         showLogo: false,

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../../utilities/hooks/useA
 import { useRootState } from '../../../../utilities/hooks/useRootState';
 import PrivilegeCardManage from '../../../accounts/masters/account-privilege-card/privilege-card-manage';
 import { RootState } from '../../../../redux/store';
-import { TransactionFormState } from '../transaction-types';
+import { PrivilegeCardDetails, TransactionFormState } from '../transaction-types';
 import { APIClient } from '../../../../helpers/api-client';
 import Urls from '../../../../redux/urls';
 import { formStateHandleFieldChangeKeysOnly } from '../reducer';
@@ -119,8 +119,12 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                   privilegeCardDetails: {
                     cardHolderName: res.cardHolderName,
                     address1: res.address1,
-                    mobile: res.mobile,
+                    phone: res.phone,
                     oBalance: res.oBalance + res.cardBalance,
+                    privilegeCardsID: res.privilegeCardsID,
+                    cardNumber:res.cardNumber,
+                    cardBalance:res.cardBalance,
+                    priceCategoryID:res.priceCategoryID
                   },
                   master: {
                     partyName: res.cardHolderName,
@@ -139,12 +143,13 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     // Function handle redeem value button click - OTP Send
     const handleRedeemPointClick = async (points: number) => {
         setRedeemPoints(0);
+        debugger;
         if((formState.transaction.privilegeCardDetails.oBalance ?? 0) >= points) {
           try{
             setSelectedPoint(points)
             const phone = formState.transaction.privilegeCardDetails.mobile ?? "";
             const response = await api.postAsync(
-              `${Urls.inv_transaction_base}${formState.transactionType}/SendPointRedeemOTP?toPhone=${encodeURIComponent(phone)}`,{});
+              `${Urls.inv_transaction_base}${formState.transactionType}/SendPointRedeemOTP`,{toPhone:phone});
 
             if(response.isOk === true ){
               setConfirToken(response.item)
@@ -162,7 +167,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     const handleVerifyOtpNumber = async () =>{
       try{
          const phone = formState.transaction.privilegeCardDetails.mobile ?? "";
-         const res = await api.postAsync(`${Urls.inv_transaction_base}${formState.transactionType}/ValidatePointRedeemOTP?otp=${otpValue}&confirToken=${confirToken}&toPhone=${encodeURIComponent(phone)}`,{});
+         const res = await api.postAsync(`${Urls.inv_transaction_base}${formState.transactionType}/ValidatePointRedeemOTP`,{otp:otpValue,confirmToken:confirToken,toPhone:phone});
          if(res.isOk === true ){
           const oldBalanceValue = formState.transaction.privilegeCardDetails.oBalance;
           setRedeemPoints(selectedPoint)

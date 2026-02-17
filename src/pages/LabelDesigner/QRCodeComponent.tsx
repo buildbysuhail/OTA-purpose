@@ -5,8 +5,7 @@ import { DeleteButton } from "./label_designer";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
-import useDebounce from "../inventory/transactions/purchase/use-debounce";
-
+import useDebounce from "../transaction-base/use-debounce";
 interface QRCodeComponentProps {
   component: PlacedComponent;
   isSelected: boolean;

@@ -234,6 +234,7 @@ const Urls = {
     "/Core/BarcodePrint/GetBarcodePrintGridFromTransaction/",
   // Accounts Start
   // Masters
+   acc_advice_payment: "/Core/TransactionBase/PaymentReceiptBillwiseAdviceForPrint/",
   hide_Ledger: "/Accounts/HideLedger/",
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
@@ -257,6 +258,7 @@ const Urls = {
   acc_attachmentInfo_download: "/Core/AttachmentInfo/Download/",
   //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
+  acc_billwise_ledger: "/Accounts/RptLedgerReport/BillwiseDetails/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_cash_book_monthwise:
     "/Accounts/RptCashBook/CashBookMonthwiseSummary/",

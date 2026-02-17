@@ -352,9 +352,9 @@ export interface LedgerReportDataForPrint {
   headerFooter: HeaderFooter;
 }
 
-export interface StableTemplateProps {
-  template?: TemplateState<unknown>;
-  printData ?: PrintData;
+export interface StableTemplateProps<T = unknown> {
+  template?: TemplateState<T>;
+  printData?: PrintData;
   qrCodeImages?: Record<string, string>;
 }
 

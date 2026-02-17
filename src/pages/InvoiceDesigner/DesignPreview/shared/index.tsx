@@ -18,12 +18,12 @@ export interface AccountTransactionProps {
   isTemplateDesigner?: boolean
   isInvTrans?: boolean;
   isInLedgerReport?: boolean;
-
+  isAccAdviceReport?: boolean;
 }
 export type TemplateChangeHandler = {
   openTemplateChooser: () => {}
 };
-const SharedTemplatePreview = ({ printData, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans, isInLedgerReport }: AccountTransactionProps) => {
+const SharedTemplatePreview = ({ printData, template, qrCodeImages = {}, isTemplateDesigner = true, isInvTrans, isInLedgerReport,isAccAdviceReport }: AccountTransactionProps) => {
   const headerState = template?.headerState;
   const isAutoHeight =template?.propertiesState?.isAutoHeight??false; 
   const propertiesState = template?.propertiesState;
@@ -94,7 +94,7 @@ const SharedTemplatePreview = ({ printData, template, qrCodeImages = {}, isTempl
           )}
         </div>
         {/* Hoverable Customize Button */}
-        {!isTemplateDesigner && (
+        {!isTemplateDesigner && !isAccAdviceReport && (
           <div className="absolute top-0 right-0 rounded-bl-md shadow-md overflow-hidden opacity-0 z-[39] group-hover:opacity-100 transition-opacity duration-300">
             <button
               ref={buttonRef}

@@ -13,12 +13,12 @@ import { AppState, inputBox, } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
-import useDebounce from "./use-debounce";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
 import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "../reducer";
 import { UserConfig } from "../transaction-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
+import useDebounce from "../../../transaction-base/use-debounce";
 
 const api = new APIClient();
 

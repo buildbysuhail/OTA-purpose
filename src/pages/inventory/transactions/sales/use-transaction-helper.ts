@@ -47,7 +47,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     posRoundAmount,
     roundAmount,
     RoundAmountGlobal,
-    getFormattedValue
+    getFormattedValue,
+    roundAwayFromZero
   } = useNumberFormat();
 
   const { hasRight } = useUserRights();
@@ -1626,6 +1627,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     billDiscount: number,
     isRPOS = false
   ) => {
+    debugger;
     master.itemTaxDetails = [];
     master.taxableDetails = [];
 
@@ -1899,7 +1901,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         ? m.deliveryManID
         : m.driverID,
 
-      vehicelID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
+      vehicleID: [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(m.voucherType as any)
         ? 0
         : m.vehicleID,
       gatePassNo: m.voucherType == VoucherType.ServiceInvoice
@@ -1936,14 +1938,14 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // privilageCardId: formState.transaction.privilegeCardDetails.privilegeCardsID,
       // privilageAddAmount: formState.transaction.privilegeCardDetails.red,
       // privilageRedeem: m.privilageRedeem,
-      privilageCardId: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
+      privCardID: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
       VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.privilegeCardDetails.privilegeCardsID : 0,
-      privilageAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0
+      privAddAmount: m.voucherType == VoucherType.SalesInvoice && privperc > 0
         ? m.grandTotal * (privperc / 100)
         : [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
           ? formState.transaction.master.privAddAmount
           : 0,
-      privilageRedeem: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
+      privRedeem: [VoucherType.SalesInvoice, VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote, VoucherType.GoodsDeliveryReturn,
       VoucherType.GoodsReceiptReturn].includes(m.voucherType as any) ? formState.transaction.master.privRedeem : 0,
 
       /** ---------------- Project / Cost ---------------- */
@@ -3582,7 +3584,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
       };
-      debugger;
       let billDisc = 0,
         totalGross = 0,
         itemGross = 0,
@@ -3596,13 +3597,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       billDisc = formState.transaction.master.billDiscount;
       outState.transaction!.master!.billDiscount = 0;
       // Calculate total gross for items with productID > 0
-      totalGross = formState.summary.gross;
+      totalGross = formState.summary.total;
       // Apply discount to each item with productID > 0
       let updatedRows: DeepPartial<TransactionDetail>[] = [];
       if (details.length > 0) {
         for (let i = 0; i < details.length; i++) {
           const item = details[i];
-          itemGross = item.gross ?? 0;
+          itemGross = item.total ?? 0;
           grossPerc = (itemGross / totalGross) * 100;
           itemDisc = (billDisc * grossPerc) / 100;
           discPerc = round((itemDisc / itemGross) * 100, 5);
@@ -3622,7 +3623,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
           details[i] = { ...item, ...updatedRow.transaction!.details![0] };
         }
-
         const summaryRes = await calculateSummary(details, formState, {
           result: {},
         });
@@ -3678,17 +3678,17 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     return totalTaxable;
   }
-  function getMaxTaxPercInItemList(): number {
+  function getMaxTaxPercInItemList(_details?: TransactionDetail[]): number {
     let maxTaxPerc = 0;
 
     try {
-      const details = formState.transaction.details;
+      const details = (_details ?? formState.transaction.details) ??[];
 
       for (let i = 0; i < details.length; i++) {
         const row = details[i];
         if (!row) continue;
 
-        const vatPerc = Number(row.vatPerc ?? 0);
+        const vatPerc = Number((row.vatPerc || (row as any).vatPercentage) ?? 0);
 
         if (vatPerc > maxTaxPerc) {
           maxTaxPerc = vatPerc;
@@ -3700,15 +3700,14 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
     return maxTaxPerc;
   }
-  function calculateTaxOnDiscount() {
+  async function calculateTaxOnDiscount(inputBillDiscount?: number, details?: TransactionDetail[], ignoreTaxOnDiscountCalculateTotal?:boolean) {
     try {
       if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
-
+      debugger;
       const decimalPoints = applicationSettings.mainSettings.decimalPoints;
-
       let oldTaxOnBillDisc = formState.transaction.master.taxOnDiscount ?? 0;
-      let taxPerc = getMaxTaxPercInItemList();
-      let billDiscount = formState.transaction.master.billDiscount ?? 0;
+      let taxPerc = getMaxTaxPercInItemList(details);
+      let billDiscount = inputBillDiscount??formState.transaction.master.billDiscount ?? 0;
 
       // First calculation (3 decimal rounding)
       let taxOnBillDisc = Number(
@@ -3717,13 +3716,29 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       // Double rounding logic same as C#
       if (Math.abs(oldTaxOnBillDisc * 100 - taxOnBillDisc * 100) >= 0.75) {
-        taxOnBillDisc = Number(
-          taxOnBillDisc.toFixed(decimalPoints)
-        );
+        taxOnBillDisc =roundAwayFromZero(taxOnBillDisc,decimalPoints);
       } else {
         taxOnBillDisc = oldTaxOnBillDisc;
       }
+      if(ignoreTaxOnDiscountCalculateTotal){
+        await calculateTotal(
+        {
+          ...formState.transaction.master
+          , billDiscount: formState.transaction.master.billDiscount
+          , taxOnDiscount: taxOnBillDisc??0
+        }, formState.summary, formState.formElements, {
+          result: {
+            transaction: {
+              master: {
+                billDiscount: formState.transaction.master.billDiscount
+          , taxOnDiscount: taxOnBillDisc
+              }
+            }
+          }, formStateHandleFieldChangeKeysOnly: formStateHandleFieldChangeKeysOnly
+      })
 
+      }
+        
       // Assign final value
       return taxOnBillDisc;
 
@@ -3960,8 +3975,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         result.transaction!.master!.grandTotal = roundAmount(_grandTotal);
       }
     }
-
-
     result.transaction!.master!.roundAmount = round((result.transaction!.master!.grandTotal || 0) - _grandTotal);
     if (clientSession.isAppGlobal && formState.transaction.master.voucherType == VoucherType.SalesInvoice) {
       // TCS calculation (Indian SI uses TCS percentage if present)

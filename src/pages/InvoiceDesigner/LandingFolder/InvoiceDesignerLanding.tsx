@@ -30,8 +30,8 @@ const InvoiceDesigner = () => {
   const rootState = useRootState();
   const tg = searchParams.get("template_group");
   const templateGroup = tg && Object.values(VoucherType).includes(tg as VoucherType) ? (tg as VoucherType) : tg??"";
-  const formType = searchParams?.get("form_type")! as string ?? "";
-  const customerType = searchParams?.get("customer_type")! as string ?? "";
+  const formType = searchParams?.get("form_type") ?? "";
+  const customerType = searchParams?.get("customer_type") ?? "";
   const { templateKind, templateType } = (location.state as LocationState) || {};
 
   return (

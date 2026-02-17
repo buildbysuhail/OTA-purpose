@@ -40,6 +40,7 @@ const AccTransactionDate = React.forwardRef<
             }
             
             disabled={
+               !formState.userConfig?.enableVoucherPrefixAndDate ||
               formState.formElements.transactionDate?.disabled ||
               formState.formElements.pnlMasters?.disabled
             }

@@ -43,7 +43,13 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
       templateStyleProperties,
       previewContainerRef,
       masterId
-    } = useTemplateDesigner({ templateGroup, templateKind: designerKind, designerType })
+    }= useTemplateDesigner({
+       templateGroup,
+       templateKind: designerKind,
+       designerType ,
+       isInLedgerReport:templateGroup ==="CBR"? true : false,
+       isTemplateDesigner: true
+      })
     const tableColumns: TableColumn<PrintDetailDto>[] = [];
 
   const previewWidth = templateStyleProperties.previewWidth ?? 500;

@@ -207,6 +207,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing,formtype,custome
 
 
   const handleChooseTemplate = async (template: TemplateState<unknown>) => {
+    debugger
     const length = tempCrmData?.length || 0
     const _template = await fetchCRMTemplateFromApiById(template.id);
     if (!_template) return null;
@@ -215,6 +216,8 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing,formtype,custome
     const propertiesState = {
       ..._template.propertiesState,
       templateName: t("untitled_template") + (length + 1),
+      template_formType:"",
+      template_customerType:""
     }
 
     const newTemplate = {

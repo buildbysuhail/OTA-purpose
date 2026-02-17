@@ -1255,7 +1255,15 @@
   "system_date_doesn’t_match_transaction_date. Do_you_want_to_update?": "تاريخ النظام لا يتطابق مع تاريخ المعاملة. هل تريد التحديث؟",
   "demo_expired_please_activate": "انتهت صلاحية النسخة التجريبية، يرجى التفعيل",
   "day_closed": "اليوم مغلق",
-  "day_closed_do_you_want_to_continue_with_next_transaction_date": "تم إغلاق اليوم. هل تريد الاستمرار مع تاريخ العملية التالية؟"
+  "day_closed_do_you_want_to_continue_with_next_transaction_date": "تم إغلاق اليوم. هل تريد الاستمرار مع تاريخ العملية التالية؟",
+  "sales_invoice#": "رقم فاتورة المبيعات#",
+  "load_sales_to_return": "تحميل المبيعات المرتجعة",
+  "dr_no#": "رقم إشعار الخصم#",
+  "sq_no#": "رقم عرض السعر#",
+  "please_select_items": "يرجى اختيار العناصر!",
+  "m_quotation_no#": "رقم عرض السعر اليدوي#",
+  "rfq_no#": "رقم طلب عرض السعر#",
+  "quot_no#": "رقم العرض"
 
 }
 

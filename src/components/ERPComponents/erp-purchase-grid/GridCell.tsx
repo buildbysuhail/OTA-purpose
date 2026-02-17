@@ -10,13 +10,13 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { formStateHandleFieldChange } from "../../../pages/inventory/transactions/reducer";
 import Urls from "../../../redux/urls";
 import { AppState } from "../../../redux/slices/app/types";
-import useDebounce from "../../../pages/inventory/transactions/purchase/use-debounce";
 import { merge } from "lodash";
 import { initialUserConfig } from "../../../pages/inventory/transactions/transaction-type-data";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { initialTransactionDetails2, transactionInitialMoreDetails } from "../../../pages/inventory/transactions/transaction-type-data";
 import { TransactionDetailKeys, ColumnModel, TransactionDetail, CurrentCell,  TransactionDetails2, TransactionDetailsMore } from "../../../pages/inventory/transactions/transaction-types";
+import useDebounce from "../../../pages/transaction-base/use-debounce";
 
 
 interface GridCellProps {

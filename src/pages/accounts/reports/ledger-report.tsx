@@ -16,17 +16,27 @@ import { popupDataProps } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import TemplatesPreView from "../../transaction-base/transaction-print-preview";
 import { useSelector } from "react-redux";
-import  { RootState } from "../../../redux/store";
+import { RootState } from "../../../redux/store";
+import { se } from "date-fns/locale";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import BillwiseDetailsGrid from "./billwise-details-modalGrid";
+import { handlePlainResponse, handleResponse } from "../../../utilities/HandleResponse";
 
 interface LedgerReport {
   from: Date;
 }
-
+interface BillwiseDetails {
+  isOpen: boolean;
+  isLoading?: boolean;
+  billwiseData: any;
+}
 const api = new APIClient();
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
-    const popupData = useSelector((state: RootState) => state?.PopupData);
-  const [selectedRowData, setSelectedRowData] = useState<any[]>([]);
+  const { printStatement } = useReportPrint();
+  const popupData = useSelector((state: RootState) => state?.PopupData);
+  const [billwiseDetailsInfo, setBillwiseDetailsInfo] = useState<BillwiseDetails>({ isOpen: false, isLoading: false, billwiseData: null });
+  const [rowData, setRowData] = useState<any>(null);
   const { t } = useTranslation("accountsReport");
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(LedgerReportFilterInitialState);
@@ -352,13 +362,50 @@ const LedgerReport = () => {
       data: { data: dataRef.current, filter: filter },
     })
   };
-      const handleRowClick = async (event: any) => {
-      try {
-        setSelectedRowData(event.data);
-      } catch (error) { }
-    };
+  const handleRowClick = async (event: any) => {
+    try {
+      setRowData(event.data);
+    } catch (error) {
 
-  const { printStatement } = useReportPrint();
+    }
+  };
+
+  const billWiseDetailsGridOpen = async (rowData: any) => {
+    debugger;
+    if (!rowData) {
+      ERPAlert.show({
+        title: t("no_row_selected"),
+        text: t("please_select_a_row_to_view_billwise_details"),
+        icon: "warning",
+      });
+      return;
+    }
+    console.log("billwiseDetailsInfo:-", rowData);
+    try {
+      setBillwiseDetailsInfo(prev => ({
+        ...prev,
+        isLoading: true,
+      }));
+      const response = await api.postAsync(Urls.acc_billwise_ledger, { accTransactionDetailID: rowData.accTransactionDetailID ?? 0 });
+
+      handlePlainResponse(response, () => {
+        setBillwiseDetailsInfo(prev => ({
+          ...prev,
+          isOpen: true,
+          billwiseData: response.data,
+          isLoading: false,
+        }));
+      });
+
+    } catch (error) {
+      console.log("billwiseDetails open error:-", error);
+
+    } finally {
+
+    }
+
+
+  }
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -389,8 +436,8 @@ const LedgerReport = () => {
                   <li>
                     <button
                       className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
-                       onClick={() => setPrnitCustomerBalance({ isOpen: true, masterId: filter.ledgerID ?? 0 })}
-                      
+                      onClick={() => setPrnitCustomerBalance({ isOpen: true, masterId: filter.ledgerID ?? 0 })}
+
                     >
                       <FileUp className="pe-2" />
                       <span className="text-sm font-semibold ">
@@ -402,6 +449,7 @@ const LedgerReport = () => {
                   <li>
                     <button
                       className="w-full flex items-center px-4 py-2 hover:bg-gray-300 hover:text-black transition-colors rounded-sm"
+                      onClick={() => billWiseDetailsGridOpen(rowData)}
                     >
                       <FileUp className="pe-2" />
                       <span className="text-sm font-semibold ">
@@ -441,27 +489,44 @@ const LedgerReport = () => {
           </div>
         </div>
       </div>
-              
-                <ERPModal
-                  isOpen={prnitCustomerBalance?.isOpen??false}
-                  title={t("Template")}
-                  width={1000}
-                  height={700}
-                  isForm={true}
-                  isPrintButton={true}
-                  closeModal={() => {
-                    setPrnitCustomerBalance({ isOpen: false });
-                  }}
-                  content={
-                    <TemplatesPreView
-                      voucherType={"CBR"}
-                      printPreviwPopupInfo={prnitCustomerBalance}
-                      isInLedgerReport
-                      lastChooseTemp={popupData?.lastChooseTemplate}
-                    />
-                  }
-                />
-        
+
+      <ERPModal
+        isOpen={prnitCustomerBalance?.isOpen ?? false}
+        title={t("Template")}
+        width={1000}
+        height={700}
+        isForm={true}
+        isPrintButton={true}
+        closeModal={() => {
+          setPrnitCustomerBalance({ isOpen: false });
+        }}
+        content={
+          <TemplatesPreView
+            voucherType={"CBR"}
+            printPreviwPopupInfo={prnitCustomerBalance}
+            isInLedgerReport
+            lastChooseTemp={popupData?.lastChooseTemplate}
+          />
+        }
+      />
+
+      <ERPModal
+        isOpen={billwiseDetailsInfo?.isOpen ?? false}
+        title={t("billwise_details")}
+        isForm={true}
+        closeModal={() => {
+          setBillwiseDetailsInfo({ isOpen: false, billwiseData: null });
+        }}
+        content={
+          <BillwiseDetailsGrid
+            billwiseData={billwiseDetailsInfo?.billwiseData ?? []} />
+
+
+        }
+      />
+
+
+
     </Fragment>
   );
 };

@@ -85,7 +85,7 @@ app.whenReady().then(() => {
       cleanedHeaders['Access-Control-Allow-Methods'] = ['GET,POST,PUT,DELETE,OPTIONS,PATCH'];
       // Allow all common and custom headers - use wildcard-like approach with specific headers
       cleanedHeaders['Access-Control-Allow-Headers'] = [
-        'Content-Type, Authorization, X-Requested-With, X-Client-Date, X-Software-Date, Accept'
+        'Content-Type, Authorization, X-Requested-With, X-Client-Date, X-Software-Date, Accept, x-custom-header'
       ];
       cleanedHeaders['Access-Control-Max-Age'] = ['86400'];
 

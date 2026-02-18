@@ -1268,6 +1268,14 @@
   "rfq_no#":"RFQ NO#",
   "quot_no#":"Quot No#",
   "gd#":"GD#",
-  "gr#":"GR#"
+  "gr#":"GR#",
+
+  "auto_e_way_bill":"Auto E-WayBill",
+  "disable_e_invoice":"Disable E-Invoice",
+  "disable_e_way_bill":"Disable E-WayBill",
+  "e_way_bill":"E-Way Bill",
+  "e_invoice":"E-Invoice",
+  "cancel_e_invoice":"Cancel E-Invoice",
+  "cancel_ewb":"Cancel EWB"
 
 }

@@ -45,6 +45,7 @@ import PostedTransactionLabel from "./components/PostedTransactionLabel";
 import SRAmountLabel from "./components/SRAmountLabel";
 import SalesReturnAmount from "./sales-return";
 import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 
 interface TransactionFooterProps {
   formState: TransactionFormState;
@@ -640,7 +641,6 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           data={formState}
           checked={formState?.vatChecked}
           onChange={(e) => {
-            debugger;
             dispatch(formStateHandleFieldChangeKeysOnly({ fields: { vatChecked: e.target.checked } }))
           }}
         />
@@ -654,6 +654,44 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onTokenNumberChange(e.target.value)}
           />
         </>
+      )}
+
+      {(formState.transaction.master.voucherType === VoucherType.SalesInvoice && isAppGlobal ) && (
+        <ERPCheckbox
+          id="eWayBill"
+          label={t("e_way_bill")}
+          data={formState}
+          checked={
+            formState.userConfig?.disableEWay
+              ? false
+              : formState.eWayBill ?? false
+          }
+          onChange={(e) => {
+            dispatch(
+              formStateHandleFieldChange({
+                fields: { eWayBill: e.target.checked }
+              })
+            );
+          }}
+          disabled={formState.userConfig?.disableEWay}
+        />
+      )}
+
+      {formState.transaction.master.voucherType === VoucherType.SalesInvoice && isAppGlobal &&(
+        <ERPCheckbox
+          localInputBox={formState?.userConfig?.inputBoxStyle}
+          id="einvoiceCheckBox"
+          label={t("e_invoice")}
+          checked={
+            formState?.userConfig?.disableEinvoice
+              ? false
+              : formState?.einvoiceCheckBox ?? false
+          }
+          onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { einvoiceCheckBox: e.target.checked }, }))}
+          disabled={formState?.userConfig?.disableEinvoice}
+          className="dark:text-dark-text"
+        />
+
       )}
     </div>
   );
@@ -2037,7 +2075,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               className="dark:text-dark-text"
             />
           )}
-          {formState.formElements.einvoiceCheckBox.visible && isAppGlobal &&(
+          {/* {formState.formElements.einvoiceCheckBox.visible && isAppGlobal &&(
             <ERPCheckbox
               localInputBox={formState?.userConfig?.inputBoxStyle}
               id="einvoiceCheckBox"
@@ -2048,7 +2086,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               className="dark:text-dark-text"
             />
 
-          )}
+          )} */}
         </div>
         <div className="flex md:hidden flex-col w-full max-w-full">
           <div className="flex flex-col gap-2 mb-2">

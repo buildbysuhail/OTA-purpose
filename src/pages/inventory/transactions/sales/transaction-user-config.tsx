@@ -554,43 +554,85 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     onChangeData={(e) => handleFieldChange("showCustomersAfterSales", e.showCustomersAfterSales)}
                     className="w-1/3"
                   />
+                  <ERPCheckbox
+                    id="printPreview"
+                    label={t("print_preview")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.printPreview}
+                    onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
+                    className="w-1/3"
+                  />
+                  {clientSession.isAppGlobal && (
+                  <>
+                    <ERPCheckbox
+                      id="autoEwayBill"
+                      label={t("auto_e_way_bill")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.autoEwayBill}
+                      onChangeData={(e) => handleFieldChange("autoEwayBill", e.autoEwayBill)}
+                      className="w-1/3"
+                      disabled={applicationSettings.gSTTaxesSettings.enableEWB ? false : true }
+                    />
+                    <ERPCheckbox
+                      id="disableEinvoice"
+                      label={t("disable_e_invoice")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.disableEinvoice}
+                      onChangeData={(e) => handleFieldChange("disableEinvoice", e.disableEinvoice)}
+                      className="w-1/3"
+                      disabled={applicationSettings.gSTTaxesSettings.enableEInvoiceIndia ? false : true}
+                    />
+                    <ERPCheckbox
+                      id="disableEWay"
+                      label={t("disable_e_way_bill")}
+                      data={formState.userConfig}
+                      checked={formState?.userConfig?.disableEWay}
+                      onChangeData={(e) => handleFieldChange("disableEWay", e.disableEWay)}
+                      className="w-1/3"
+                    />
+                    
+                </>
+                )}
+
+                  <div className="w-1/3">
                   <ERPInput
                     type="number"
-                    className="text-[10px] w-1/4"
-                    labelClassName="!text-[10px] px-4"
+                    className="text-[10px] w-48"
+                    labelClassName="!text-[10px]"
                     id="qtyDecimalPoint"
                     labelDirection="horizontal"
+                    placeholder=" "
                     label={t("qty_decimal_point")}
                     data={formState.userConfig}
                     value={formState?.userConfig?.qtyDecimalPoint}
                     onChangeData={(e) => handleFieldChange("qtyDecimalPoint", e.qtyDecimalPoint)}
                   />
-
-                <ERPCheckbox
-                  id="printPreview"
-                  label={t("print_preview")}
-                  data={formState.userConfig}
-                  checked={formState?.userConfig?.printPreview}
-                  onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
-                />
-                {clientSession.isAppGlobal && (
-                  <>
-                <ERPCheckbox
-                  id="autoEwayBill"
-                  label={t("auto_e_way_bill")}
-                  data={formState.userConfig}
-                  checked={formState?.userConfig?.autoEwayBill}
-                  onChangeData={(e) => handleFieldChange("autoEwayBill", e.autoEwayBill)}
-                />
-                <ERPCheckbox
-                  id="disableEinvoice"
-                  label={t("disable_e_invoice")}
-                  data={formState.userConfig}
-                  checked={formState?.userConfig?.disableEinvoice}
-                  onChangeData={(e) => handleFieldChange("disableEinvoice", e.disableEinvoice)}
-                />
-                </>
-                )}
+                  </div>
+                  {clientSession.isAppGlobal &&
+                    formState.formElements.btnEinvoice.visible && (
+                      <div className="w-1/3">
+                      <ERPButton
+                        title={t("cancel_e_invoice")}
+                        variant="secondary"
+                        disabled={formState.transactionLoading}
+                        className="w-36"
+                        onClick={handleUndoClick}
+                    />
+                    </div>
+                  )}
+                  {clientSession.isAppGlobal &&
+                    formState.formElements.btnEWB.visible && (
+                      <div className="w-1/3">
+                      <ERPButton
+                        title={t("cancel_ewb")}
+                        variant="secondary"
+                        disabled={formState.transactionLoading}
+                        className="w-32"
+                        onClick={handleUndoClick}
+                    />
+                    </div>
+                  )}
+                  
                 </>
               }
             </div>
@@ -607,7 +649,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               </button>
             )}
           </div>
-           {clientSession.isAppGlobal && ( <div className="absolute top-[200px] right-[30px]">
+           {/* {clientSession.isAppGlobal && ( <div className="absolute top-[200px] right-[30px]">
             {formState.formElements.btnEWB.visible && (
               <button
                 className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
@@ -617,8 +659,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 Cancel EWB
               </button>
             )}
-          </div>)}
-           {clientSession.isAppGlobal && ( <div className="absolute top-[200px] right-[30px]">
+          </div>)} */}
+          {/* {clientSession.isAppGlobal && ( <div className="absolute top-[200px] right-[30px]">
             {formState.formElements.btnEinvoice.visible && (
               <button
                 className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
@@ -628,7 +670,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 Cancel E-Invoice
               </button>
             )}
-          </div>)}
+          </div>)} */}
           
         </CollapsibleSection>
         ) }

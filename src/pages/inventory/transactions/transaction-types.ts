@@ -521,6 +521,7 @@ export interface UserConfig {
   autoEwayBill?: boolean;
   disableEinvoice?: boolean;
   dummyBill?: boolean;
+  disableEWay?: boolean;
 
   // stock
   userSalesPriceForStockTransfer?: boolean;
@@ -779,6 +780,9 @@ export interface TransactionFormState {
   
   voucherNumberLck?:boolean; 
   einvoiceCheckBox?:boolean;
+
+  // india
+  eWayBill?: boolean;
 
   // Stocks
   chkCostFromExcel?: boolean;

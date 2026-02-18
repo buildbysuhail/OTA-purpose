@@ -19,7 +19,7 @@
     "asar": true,
     "win": {
       "target": "nsis",
-      "icon": "electron\favicon.ico",
+      "icon": "electron/favicon.ico",
       "publish": [
         {
           "provider": "github",

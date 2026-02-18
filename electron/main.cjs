@@ -34,7 +34,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
-    icon: path.join(__dirname, 'electron\favicon.ico'),
+    icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,

@@ -381,6 +381,10 @@ export type PrintData =
   | {
       kind: "ledgerReport";
       data: LedgerReportDataForPrint;
+    }
+  | {
+      kind: "cheque";
+      data: ChequeDataPrint[];
     };
 
 export interface PrintDetailDto {

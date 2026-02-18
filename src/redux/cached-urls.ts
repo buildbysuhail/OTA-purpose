@@ -77,7 +77,8 @@ const CachedUrls = {
         }/${x.transactionType}/Data/AccLedgers/`
       )
     ),
-    btoa('/Inventory/LocalPurchaseOrder/Data/AccLedgers/')
+    btoa('/Inventory/LocalPurchaseOrder/Data/AccLedgers/'),
+    btoa(`/Core/Template/Data/AccLedgers`)
   ],
   ProductCategory: [btoa('/Inventory/LocalPurchaseOrder/Data/ProductCategory/')],
   ProductGroup: [btoa('/Inventory/LocalPurchaseOrder/Data/ProductGroup/')],

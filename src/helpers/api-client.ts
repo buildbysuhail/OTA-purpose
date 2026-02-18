@@ -86,7 +86,7 @@ clearInFlightRequests = () => {
       await setAuthorization(token);
       // Construct a stable cache key (you could change the delimiter if needed)
       const cacheKey = `${getCacheStoreKey(url)}`;
-      const data = await getApLocalData(cacheKey as any, "", true);
+      const data = await getApLocalData(cacheKey as any, queryString, true);
       if (data) {
         return data;
       }

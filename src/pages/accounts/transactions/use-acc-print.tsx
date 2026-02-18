@@ -45,8 +45,8 @@ export const useAccPrint = () => {
       // Get the template{
 
          const printData : PrintData = {
-             kind: "voucher",
-            data: chequeDetails as PrintResponse,
+             kind: "cheque",
+            data: chequeDetails as ChequeDataPrint[],
          }
       const template = await getOrFetchTemplate(chequeDataTypes, backNameAsFormType, "")
 

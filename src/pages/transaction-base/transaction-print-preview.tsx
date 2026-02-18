@@ -97,6 +97,15 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
       //   )
 
     }));
+    const templateCreateUrl =
+    finalPrintData?.kind === "voucher"
+     ? `/templates?template_group=${voucherType}` +
+      `&form_type=${finalPrintData.data.master?.voucherForm}` +
+      `&customer_type=${finalPrintData.data.master?.customerType}`
+    : finalPrintData?.kind === "cheque"
+    ? `/templates?template_group=Cheque`
+    : `/templates?template_group=${voucherType}`;
+
 
     if (loading) {
       return (
@@ -113,13 +122,7 @@ const TemplatesPreView = forwardRef<TemplatesPreViewHandle, TemplatesProps>(
             ...No Template Found.&nbsp;
           </span>
           <Link
-            to={
-              finalPrintData && finalPrintData?.kind === "voucher"
-                ? `/templates?template_group=${voucherType}` +
-                `&form_type=${finalPrintData?.data?.master?.voucherForm}` +
-                `&customer_type=${finalPrintData?.data?.master.customerType}`
-                : `/templates?template_group=${voucherType}`
-            }
+            to={templateCreateUrl}
             className="text-blue-600 hover:underline dark:text-blue-400"
           >
             Create Template

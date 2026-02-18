@@ -61,9 +61,17 @@ app.whenReady().then(() => {
   ses.webRequest.onHeadersReceived((details, callback) => {
     let headers = details.responseHeaders || {};
     if (details.url.startsWith("https://api.poldev.work/")) {
-      // Determine request origin header (support different casing)
-      const reqHeaders = details.requestHeaders || {};
-      const reqOrigin = reqHeaders['Origin'] || reqHeaders['origin'] || 'http://192.168.20.3:5173';
+      const isDev = !app.isPackaged;
+      let originToAllow;
+
+      if (isDev) {
+        // In development, allow the Vite dev server origin.
+        // The fallback is for when you run `electron .` directly without Vite.
+        originToAllow = process.env.VITE_DEV_SERVER_URL || 'http://192.168.20.3:5173';
+      } else {
+        // In production (packaged app), the origin is the custom `app://` protocol.
+        originToAllow = 'app://.';
+      }
 
       // Remove any existing CORS headers (case-insensitive) to avoid multiple values
       const cleanedHeaders = {};
@@ -81,7 +89,7 @@ app.whenReady().then(() => {
       }
 
       // Set comprehensive CORS headers to allow all custom headers from client
-      cleanedHeaders['Access-Control-Allow-Origin'] = [reqOrigin];
+      cleanedHeaders['Access-Control-Allow-Origin'] = [originToAllow];
       cleanedHeaders['Access-Control-Allow-Credentials'] = ['true'];
       cleanedHeaders['Access-Control-Allow-Methods'] = ['GET,POST,PUT,DELETE,OPTIONS,PATCH'];
       // Allow all common and custom headers - use wildcard-like approach with specific headers

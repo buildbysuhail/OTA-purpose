@@ -17,6 +17,7 @@ import { Search, Sparkles } from "lucide-react"
 import ChooseTemplate from "./choose-template"
 import ERPToast from "../../components/ERPComponents/erp-toast"
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
+import { LedgerType } from "../../enums/ledger-types"
 
 // Enhanced scrollbar styles
 const scrollbarStyles = `
@@ -81,7 +82,8 @@ const Templates = () => {
   const [templateGroup, setTemplateGroup] = useState<VoucherType | string>(  (searchParams?.get("template_group")! as VoucherType | string) ?? "SI",)
   const [formType, setFormType] = useState<string>(  (searchParams?.get("form_type")! as string) ?? "",)
   const [customerType, setCustomerType] = useState<string>(  (searchParams?.get("customer_type")! as string) ?? "",)
-  const [accountVoucher, setAccountVoucher] = useState(DummyVoucherData)
+  const [banksOption, setBanksOption] = useState([{id:"",name:""}])
+  const [fetching, setFetching] = useState(false);
   const setDefaultTemplate = async (id: any) => {
     try {
       const res = await api.patch(`${Urls.templates}${id}`, {
@@ -138,6 +140,27 @@ const onCustomerTypeChange = (value: string) => {
 
   setSearchParams(next, { replace: true });
 };
+
+ const fetchBankName = async () => {
+  setFetching(true);
+  try {
+    debugger
+      const bankRes =await api.getWithCacheAsync(`${Urls.templates}Data/AccLedgers`,`ledgerType=${LedgerType.BankAccount}`) 
+
+    if (bankRes) {
+      setBanksOption([{ id: "", name: "" }, ...bankRes]);
+    }
+  } catch (error) {
+    console.error("Failed to fetch bank names:", error);
+  } finally {
+    setFetching(false); // always runs whether success or error
+  }
+};
+useEffect(() => {
+  if (templateGroup === "Cheque") {
+    fetchBankName();
+  }
+}, [templateGroup]);
 
   const getTemplates = async () => {
     setLoading(true)
@@ -815,6 +838,30 @@ const onCustomerTypeChange = (value: string) => {
               />
             </div>
             )}
+            {
+              templateGroup ==="Cheque"&&(
+                <>
+                <ERPDataCombobox
+                id="bank_name"
+                labelDirection="horizontal"
+                value={formType}
+                defaultValue={formType}
+                field={{
+                  id: "bank_name",              
+                  valueKey: "name",
+                  labelKey: "name",
+                }}
+                options={banksOption}
+                fetching={fetching}
+                onChange={(e: any) => {
+                  setFormType(e.value ? e.name : "")
+                  onFormTypeChange(e.value ? e.name : "")
+                }}
+              />
+                </>
+
+              )
+            }
 
             <div className="flex-1 overflow-y-auto scrollbar-thin">
               <div className="p-2 w-full">

@@ -20,6 +20,7 @@ import {
   LedgerReportDataForPrint,
   PrintData,
   ledgerDataPrint,
+  ChequeDataPrint,
 } from "./use-print-type";
 import {
   initialPrintCustomFields,
@@ -2026,6 +2027,16 @@ export function bindDataForPrint(
       }
     }
   }
+// ----------------------------
+  // CHEQUE FLOW
+  // ----------------------------
+  else if (printData.kind === "cheque") {
+  const cheque = printData.data 
+
+  if (group === "cheque") {
+    val = cheque[rowIndex]?.[key as keyof ChequeDataPrint];
+  }
+}
 
   // ----------------------------
   // LEDGER REPORT FLOW

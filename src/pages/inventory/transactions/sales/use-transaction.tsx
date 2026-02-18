@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useCommenPrint } from "../../../transaction-base/use-commen-print";
 import moment from "moment";
@@ -36,6 +36,7 @@ import DeliveryBoy from "../../../rpos/deliveryboy";
 import { SalesDateChange } from "./components/dateChange"
 import { setClientSession } from "../../../../redux/slices/client-session/reducer"
 import { usePurchasePrint } from "../../../transaction-base/use-commen-barcode-print";
+import { useSignalR } from "../../../../utilities/hooks/use-signalr";
 
 // export interface UserConfig {
 //   keepNarrationForJV: boolean;
@@ -176,6 +177,61 @@ export const useTransaction = (
   const formState = useAppSelector(
     (state: RootState) => state.InventoryTransaction
   );
+  const signalRConnection = useSignalR();
+  const saveModeRef = useRef<"" | "LPO" | "LPQ">("");
+  const signalRHandledRef = useRef(false);
+  const formStateSnapshotRef = useRef(formState);
+  useEffect(() => { formStateSnapshotRef.current = formState; }, [formState]);
+
+  // Listen for SignalR "TransactionSaved" to reset form instantly after DB commit
+  useEffect(() => {
+    const conn = signalRConnection.current;
+    if (!conn) return;
+
+    const handler = (msg: any) => {
+      try {
+        if (msg?.messageType !== "TransactionSaved") return;
+        const data = msg.payload;
+        if (String(data.userId) !== String(userSession.userId)) return;
+        if (!formStateSnapshotRef.current.saving) return;
+
+        signalRHandledRef.current = true;
+        const fs = formStateSnapshotRef.current;
+        const mode = saveModeRef.current;
+
+        dispatch(formStateTransactionUpdate({ key: "masterValidations", value: undefined }));
+
+        if (fs.userConfig?.clearDetailsAfterSave) {
+          clearControls(true, true);
+        } else {
+          dispatch(formStateHandleFieldChangeKeysOnly({
+            fields: { formElements: { pnlMasters: { disabled: true } } },
+          }));
+        }
+        dispatch(formStateHandleFieldChange({ fields: { savingCompleted: true, saving: false } }));
+
+        if (fs.printOnSave === true && mode !== "LPO" && mode !== "LPQ") {
+          printVoucher(
+            data.masterId,
+            transactionType ?? "",
+            fs.transaction?.master.voucherType ?? "",
+            fs.transaction?.master?.voucherForm ?? "",
+            fs.transaction?.master.customerType ?? "",
+            true,
+            fs.userConfig?.printPreview ?? false,
+            undefined,
+            fs.transaction?.master.transactionDate ?? "",
+            undefined,
+            fs?.lastChoosedTemplate?.id
+          );
+        }
+      } catch { }
+    };
+
+    conn.on("ReceiveMessage", handler);
+    return () => { conn.off("ReceiveMessage", handler); };
+  }, [signalRConnection.current]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey) {
@@ -2898,67 +2954,47 @@ export const useTransaction = (
       //   bankCardDetails: formState.transaction.bankCardDetails
       // };
       // params = sanitizeDataAdvanced(params, transactionInitialData);
-      try {
-        const saveRes =
-          formState.transaction.master.invTransactionMasterID > 0
-            ? await api.putAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            )
-            : await api.postAsync(
-              `${Urls.inv_transaction_base}${transactionType}`,
-              params
-            );
-        if (saveRes.isOk == true) {
-          dispatch(
-            formStateTransactionUpdate({
-              key: "masterValidations",
-              value: undefined,
-            })
-          );
-          // If clearDetailsAfterSave is checked, Then clear details, otherwise, disable pnl master
+      // Store saveMode so SignalR handler can access it
+      saveModeRef.current = saveMode;
+      signalRHandledRef.current = false;
+
+      // Fire API call — SignalR will handle form reset on success (with API fallback)
+      const apiCall =
+        formState.transaction.master.invTransactionMasterID > 0
+          ? api.putAsync(`${Urls.inv_transaction_base}${transactionType}`, params)
+          : api.postAsync(`${Urls.inv_transaction_base}${transactionType}`, params);
+
+      apiCall.then((saveRes: any) => {
+        if (saveRes.isOk === true) {
+          // If SignalR already handled form reset, skip
+          if (signalRHandledRef.current) return;
+          // Fallback: reset form via API response when SignalR is unavailable
+          dispatch(formStateTransactionUpdate({ key: "masterValidations", value: undefined }));
           if (formState.userConfig?.clearDetailsAfterSave) {
             clearControls(true, true);
           } else {
-            dispatch(
-              formStateHandleFieldChangeKeysOnly({
-                fields: {
-                  formElements: {
-                    pnlMasters: {
-                      disabled: true,
-                    },
-                  },
-                },
-              })
-            );
+            dispatch(formStateHandleFieldChangeKeysOnly({
+              fields: { formElements: { pnlMasters: { disabled: true } } },
+            }));
           }
-          dispatch(
-            formStateHandleFieldChange({
-              fields: {
-                savingCompleted: true,
-              },
-            })
-          );
-          // to do - ashar
-          if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
-            await printVoucher(
-              saveRes?.item?.master?.invTransactionMasterID, // masterID
-              transactionType ?? "", // transactionType
-              formState.transaction?.master.voucherType ?? "", // voucherType
-              formState.transaction?.master?.voucherForm ?? "", // formType
-              formState.transaction?.master.customerType ?? "", // customerType
-              true, //isInv
-              formState.userConfig?.printPreview ?? false, // printPreview
-              undefined, //template
+          dispatch(formStateHandleFieldChange({ fields: { savingCompleted: true, saving: false } }));
+          if (formState.printOnSave === true && saveMode !== "LPO" && saveMode !== "LPQ") {
+            printVoucher(
+              saveRes?.item?.master?.invTransactionMasterID,
+              transactionType ?? "",
+              formState.transaction?.master.voucherType ?? "",
+              formState.transaction?.master?.voucherForm ?? "",
+              formState.transaction?.master.customerType ?? "",
+              true,
+              formState.userConfig?.printPreview ?? false,
+              undefined,
               formState.transaction?.master.transactionDate ?? "",
-              undefined,  //tempData   
-              formState?.lastChoosedTemplate?.id //lastChooseTempId
+              undefined,
+              formState?.lastChoosedTemplate?.id
             );
           }
-
-          // ERPToast.show(saveRes.message, "success");
         } else {
-          // dispatch(acc)
+          // Handle error responses
           const isMobileNumberError = saveRes?.errorCode === 3055 || saveRes?.message?.toLowerCase().includes("please enter the mobile number,invalid mobile number");
           const costCenterError = saveRes?.message?.includes("Select a valid cost centre and try again.");
           const salesManError = saveRes?.message?.includes("Please select a valid  salesman and try again.");
@@ -2967,7 +3003,6 @@ export const useTransaction = (
               icon: "warning",
               title: saveRes.message,
               onConfirm: () => {
-                // Open the sales header dropdown and focus mobile number field
                 setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
                 setTimeout(() => {
                   mobileNumRef?.current?.focus();
@@ -3029,7 +3064,7 @@ export const useTransaction = (
             })
           );
         }
-      } catch (error) {
+      }).catch(() => {
         dispatch(
           formStateHandleFieldChange({
             fields: {
@@ -3043,7 +3078,7 @@ export const useTransaction = (
           text: "Please try Again",
           title: "",
         });
-      }
+      });
     } else {
       dispatch(
         formStateHandleFieldChange({

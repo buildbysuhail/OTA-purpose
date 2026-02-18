@@ -13,6 +13,7 @@ app.whenReady().then(() => {
 
 // Allow file access
 app.commandLine.appendSwitch("allow-file-access-from-files");
+app.commandLine.appendSwitch("disable-http2");
 
 // Register custom protocol BEFORE ready
 protocol.registerSchemesAsPrivileged([

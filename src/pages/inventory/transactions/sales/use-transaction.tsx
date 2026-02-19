@@ -1199,7 +1199,7 @@ export const useTransaction = (
       clientSession.softwareDate.split("/").reverse().join("-")
     );
     const transactionDate = toLocalDateOnly(master.transactionDate);
-    if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight
+    if (applicationSettings.mainSettings.autoChangeTransactionDateByMidnight
       && (voucherType === VoucherType.SalesInvoice
         && !isIndia)
       && softwareDate != transactionDate) {
@@ -6670,7 +6670,7 @@ export const useTransaction = (
 
         if (!clientSession.isAppGlobal) {
           let customerType = "";
-          if (["PR"].includes(voucherType ?? "")) {
+          if (["SI","SR"].includes(voucherType ?? "")) {
             if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
               if (
                 ledgerData?.taxNumber != null &&

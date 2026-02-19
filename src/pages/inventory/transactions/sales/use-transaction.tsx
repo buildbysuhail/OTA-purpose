@@ -6705,7 +6705,7 @@ export const useTransaction = (
 
         if (!clientSession.isAppGlobal) {
           let customerType = "";
-          if (["PR"].includes(voucherType ?? "")) {
+          if (["SI","SR"].includes(voucherType ?? "")) {
             if (applicationSettings.branchSettings.maintainKSA_EInvoice) {
               if (
                 ledgerData?.taxNumber != null &&

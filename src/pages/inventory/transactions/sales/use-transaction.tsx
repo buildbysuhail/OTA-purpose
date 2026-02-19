@@ -1255,7 +1255,7 @@ export const useTransaction = (
       clientSession.softwareDate.split("/").reverse().join("-")
     );
     const transactionDate = toLocalDateOnly(master.transactionDate);
-    if (!applicationSettings.mainSettings.autoChangeTransactionDateByMidnight
+    if (applicationSettings.mainSettings.autoChangeTransactionDateByMidnight
       && (voucherType === VoucherType.SalesInvoice
         && !isIndia)
       && softwareDate != transactionDate) {

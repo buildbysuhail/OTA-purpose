@@ -260,7 +260,7 @@ export const useTemplateDesigner = <T = unknown,>({
         setVoucherPrintData(voucherData);
 
         if (!manuvalTemplateFeatch) return;
-
+debugger;
         let template = await getOrFetchTemplate(
           voucherData.master?.voucherType,
           voucherData.master?.voucherForm ?? "",

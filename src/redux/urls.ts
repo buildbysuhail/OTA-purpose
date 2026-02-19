@@ -821,6 +821,10 @@ const Urls = {
   leave_type: '/HR/LeaveType/',
   job_works: '/HR/JobWorks/',
   emp_documents: '/HR/EmpDocuments/',
+
+  // SignalR
+  signalr_join: '/Core/SignalR/Join',
+  signalr_leave: '/Core/SignalR/Leave',
 };
 
 export default Urls;

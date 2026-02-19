@@ -6,8 +6,21 @@ import {
   LogLevel,
 } from "@microsoft/signalr";
 import { domain } from "../../redux/urls";
+import { APIClient } from "../../helpers/api-client";
+import Urls from "../../redux/urls";
 
 const hubUrl = `${domain}/chathub`;
+const api = new APIClient();
+
+function joinGroup(connectionId: string | null) {
+  if (!connectionId) return;
+  api.postAsync(`${Urls.baseUrl}${Urls.signalr_join}`, { connectionId }).catch(() => {});
+}
+
+function leaveGroup(connectionId: string | null) {
+  if (!connectionId) return;
+  api.postAsync(`${Urls.baseUrl}${Urls.signalr_leave}`, { connectionId }).catch(() => {});
+}
 
 export function useSignalR() {
   const connectionRef = useRef<HubConnection | null>(null);
@@ -26,16 +39,20 @@ export function useSignalR() {
 
     connectionRef.current = connection;
 
+    connection.onreconnected(() => {
+      joinGroup(connection.connectionId);
+    });
+
     connection
       .start()
       .then(() => {
-        connection.invoke("JoinGroup", { connectionId: connection.connectionId });
+        joinGroup(connection.connectionId);
       })
       .catch((err) => console.error("SignalR connection error:", err));
 
     return () => {
       if (connection.state === HubConnectionState.Connected) {
-        connection.invoke("LeaveGroup", { connectionId: connection.connectionId }).catch(() => {});
+        leaveGroup(connection.connectionId);
       }
       connection.stop();
     };

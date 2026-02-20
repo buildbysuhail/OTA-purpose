@@ -1273,7 +1273,45 @@
   "e_way_bill": "فاتورة الطريق الإلكترونية",
   "e_invoice": "الفاتورة الإلكترونية",
   "cancel_e_invoice": "إلغاء الفاتورة الإلكترونية",
-  "cancel_ewb": "إلغاء فاتورة الطريق الإلكترونية"
+  "cancel_ewb": "إلغاء فاتورة الطريق الإلكترونية",
+
+  "document_details": "تفاصيل المستند",
+  "doc_number": "رقم المستند",
+  "sub_supply_type": "نوع التوريد الفرعي",
+  "doc_type": "نوع المستند",
+  "transaction_type": "نوع المعاملة",
+  "company_details": "تفاصيل الشركة",
+  "trade_name": "الاسم التجاري",
+  "pin": "رقم التعريف الشخصي (PIN)",
+  "gstin": "رقم تعريف ضريبة السلع والخدمات (GSTIN)",
+  "place": "المكان",
+  "company_state": "ولاية/منطقة الشركة",
+  "dispatch_state": "ولاية/منطقة الإرسال",
+  "customer_state": "ولاية/منطقة العميل",
+  "ship_to_state": "ولاية/منطقة الشحن إليها",
+  "despatch_details": "تفاصيل الإرسال",
+  "pin_code": "الرمز البريدي",
+  "ship_to_details": "تفاصيل الشحن إلى",
+  "transport_details": "تفاصيل النقل",
+  "transport_mode": "وسيلة النقل",
+  "distance_km": "المسافة (كم)",
+  "transport_name": "اسم الناقل",
+  "transport_id": "معرف النقل",
+  "vehicle_number": "رقم المركبة",
+  "vehicle_type": "نوع المركبة",
+  "transport_doc_date": "تاريخ مستند النقل",
+  "transport_doc_number": "رقم مستند النقل",
+  "tax_details": "تفاصيل الضريبة",
+  "other_value": "قيمة أخرى",
+  "total_value": "القيمة الإجمالية",
+  "cess_non_ad_valorem": "الضريبة الإضافية (غير القيمة)",
+  "total_invoice_value": "إجمالي قيمة الفاتورة",
+  "cess": "الضريبة الإضافية (CESS)",
+  "using_taxpro": "استخدام TaxPro",
+  "generate": "إنشاء",
+  "e_way_bill_details": "تفاصيل فاتورة الطريق الإلكترونية"
+
+  
 
 }
 

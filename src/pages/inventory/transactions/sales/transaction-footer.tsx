@@ -909,7 +909,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <ERPButton
                 title={t("p")}
                 variant="secondary"
-                onClick={() => alert("P Button clicked")}
+                onClick={() => handlePrivilegeCardOpen()}
               />
             </div>
           ))}
@@ -1287,7 +1287,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     <ERPButton
                       title={t("p")}
                       variant="secondary"
-                      onClick={() => alert("P Button clicked")}
+                      onClick={() => handlePrivilegeCardOpen()}
                     />
                   </li>
                 ))}
@@ -1610,7 +1610,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   <ERPButton
                     title={t("p")}
                     variant="secondary"
-                    onClick={() => alert("P Button clicked")}
+                    onClick={() => handlePrivilegeCardOpen()}
                   />
                 </div>
               ))}
@@ -2008,7 +2008,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <ERPButton
               title={t("p")}
               variant="secondary"
-              onClick={() => alert("P Button clicked")}
+              onClick={() => handlePrivilegeCardOpen()}
             />
           </div>
         ))}

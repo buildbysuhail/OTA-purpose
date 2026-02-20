@@ -12,6 +12,7 @@ import Urls from '../../../../redux/urls';
 import { formStateHandleFieldChangeKeysOnly } from '../reducer';
 import { merge } from 'lodash';
 import { initialUserConfig } from '../transaction-type-data';
+import VoucherType from '../../../../enums/voucher-types';
 interface PrivilegeCardEntryProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,6 +40,18 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     const [otpModalOpen, setOtpModalOpen] =  useState(false)
     const [otpValue, setOtpValue ] = useState("")
     const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+
+    // In some voucher types - the design have difference
+    const design2VoucherTypes: VoucherType[] = [
+      VoucherType.SalesQuotation,
+      VoucherType.GoodsDeliveryNote,
+      VoucherType.GoodsDeliveryReturn,
+      VoucherType.GoodsReceiptReturn,
+    ];
+
+    const isDesign2 = design2VoucherTypes.includes(
+      formState.transaction.master.voucherType as VoucherType
+    );
 
     useEffect(() => {
       if(formState.formElements.btnPrivilegeCard.visible){
@@ -202,13 +215,60 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
       }
     }
 
+    // In "P" Button Case - need to make the code correct
+    const handleRedeemChangeDesign2 = (redeem: number) => {
+      setRedeemPoints(redeem);
+      debugger;
+      if (redeem > 0) {
+        const grandTotal = Number(formState.transaction.master.grandTotal || 0);
+        const prevOldBalance = Number(formState.transaction.privilegeCardDetails.oBalance || 0);
+
+        // ------------The below logic is found in 1050--------------
+        // const calculatedAddAmount = grandTotal / redeem;
+        // setAddAmount(calculatedAddAmount);
+        // const newBalance = prevOldBalance + calculatedAddAmount - redeem;
+        // dispatch(
+        //   formStateHandleFieldChangeKeysOnly({
+        //     fields: {
+        //       transaction: {
+        //         privilegeCardDetails: {
+        //           totalBalance: newBalance,
+        //         },
+        //         master:{
+        //           billDiscount: redeem,
+        //         }
+        //       },
+        //     },
+        //   })
+        // );
+        // ------------The above logic is found in 1050--------------
+        // The below Code is not the correct logic - make the code correct after discussion with sir
+        const calculatedAddAmount = (grandTotal * (applicationSettings.mainSettings?.previlegeCardPerc / 100)).toFixed(2);
+        setAddAmount(Number(calculatedAddAmount));
+        const newBalance = prevOldBalance + Number(calculatedAddAmount) - redeem;
+         dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              transaction: {
+                privilegeCardDetails: {
+                  totalBalance: newBalance,
+                },
+                master:{
+                  billDiscount: redeem,
+                }
+              },
+            },
+          })
+        );
+      }
+    };
   return (
     <ERPModal
       isOpen={isOpen}
       closeModal={onClose}
       title={t("privilege_card_entry")}
       width={500}
-      height={360}
+      height={isDesign2 ? 250 :360}
       content={
         <div className="w-full modal-content">
           <div className="flex flex-col gap-3 p-2">
@@ -366,6 +426,8 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                   />
                 </div>
 
+                {!isDesign2 ? (
+                 <>
                 {/* Redeem */}
                 <div className="flex items-center gap-2">
                   <label className="w-20 text-xs font-semibold text-right">
@@ -376,7 +438,48 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     value={redeemPoints}
                     className="w-28 h-7 text-xs text-right"
                     noLabel={true}
-                    onChange={(e) => setRedeemPoints(Number(e.target?.value))  }
+                    onChange={(e) => setRedeemPoints(Number(e.target?.value))}
+                  />
+                </div>
+
+                {/* Balance */}
+                <div className="flex items-center gap-2">
+                  <label className="w-20 text-xs font-semibold text-right">
+                    {t("balance")}
+                  </label>
+                  <ERPInput
+                    id="totalBalance"
+                    value={formState.transaction.privilegeCardDetails.totalBalance}
+                    className="w-28 h-7 text-xs text-right"
+                    noLabel={true}
+                    onChange={(e) =>
+                      dispatch(
+                        formStateHandleFieldChangeKeysOnly({
+                          fields: { 
+                            transaction:{
+                              privilegeCardDetails:{
+                                  totalBalance:e.target?.value
+                              }
+                            }
+                           },
+                        })
+                      )
+                    }
+                  />
+                </div>
+              </>
+            ) : (
+              <div>
+                <div className="flex items-center gap-2">
+                  <label className="w-20 text-xs font-semibold text-right">
+                    {t("redeem")}
+                  </label>
+                  <ERPInput
+                    id="pRedeem"
+                    value={redeemPoints}
+                    className="w-28 h-7 text-xs text-right"
+                    noLabel={true}
+                    onChange={(e) => handleRedeemChangeDesign2(Number(e.target?.value))}
                   />
                 </div>
 
@@ -406,28 +509,31 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                   />
                 </div>
               </div>
+            )}
+              </div>
             </div>
-
             {/* Redeem Points Section */}
+          {!isDesign2 && (
             <div className="border-t pt-3">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-red-600">
                   {redeemPoints ===0 ? t("redeem_points") : t(`Redeem : ${redeemPoints}`)}
                 </span>
                 <button
-                  onClick={()=>handleAddNew()}
-                  className="h-7 text-sm px-3 font-semibold underline "
-                >{t('add_new')}</button>
-                <div className='flex gap-2'>
+                  onClick={() => handleAddNew()}
+                  className="h-7 text-sm px-3 font-semibold underline"
+                >{t("add_new")}
+                </button>
+                <div className="flex gap-2">
                   <ERPButton
-                title={t('reset')}
+                title={t("reset")}
                 onClick={handleReset}
-                variant='secondary'
+                variant="secondary"
                 />
                 <ERPButton
-                  title={t('apply')}
+                  title={t("apply")}
                   onClick={handleApply}
-                  variant='primary'
+                  variant="primary"
                 />
                 </div>
               </div>
@@ -443,8 +549,8 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                   </button>
                 ))}
               </div>
-
             </div>
+          )}
             {/* Otp enter Modal */}
             <ERPModal
                 isOpen={otpModalOpen}

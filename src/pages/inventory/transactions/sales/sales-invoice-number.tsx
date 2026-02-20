@@ -67,7 +67,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
           VoucherNumber: Number(invoiceData.vrNumber),
           voucherPrefix: invoiceData.vrPrefix.toUpperCase(),
           voucherType: voucherType,
-          voucherForm: "",
+          voucherForm: formState.transaction.master.voucherForm ?? "",
           isUsingManualInvNo: false, // This is for load and more manual invoice number
           IsUsingManualInvoiceNo: false, // This is for load and more manual invoice number in header
           autoEwayBill: false, // for india sales

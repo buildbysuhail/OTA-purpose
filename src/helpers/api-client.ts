@@ -12,7 +12,7 @@ import { setData } from "../redux/slices/data/reducer";
 const { api } = config;
 import {decryptAES} from '../utilities/Utils'
 import { getStorageString, setStorageString } from "../utilities/storage-utils";
-import { getApLocalData, getCacheStoreKey } from "../redux/cached-urls";
+import { filterData, getApLocalData, getCacheStoreKey } from "../redux/cached-urls";
 
 //  const formState = useAppSelector((state: RootState) => state.AccTransaction);
 // default
@@ -108,8 +108,9 @@ clearInFlightRequests = () => {
       }      
       // inFlightRequests.set(cacheKey, resData);      
       await setStorageString(cacheKey, JSON.stringify(resData))
-      return resData
-    
+      // return resData
+        const filtered = filterData(resData, queryString);
+       return filtered;
     } catch (error) {
       console.error("Unexpected error in getAsync:", error);
       return undefined;

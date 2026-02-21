@@ -17,7 +17,7 @@ import { SharedDownTable } from "./Table"
     const paddingBottom = template?.propertiesState?.padding?.bottom || 10
     const pageSize = template?.propertiesState?.pageSize ?? "A4"
     const isAutoHeight = template?.propertiesState?.isAutoHeight ?? false;
-      const selectedPageSize = getPageDimensions(
+            const selectedPageSize = getPageDimensions(
               pageSize,
               template?.propertiesState?.width,
               template?.propertiesState?.height,
@@ -46,7 +46,6 @@ import { SharedDownTable } from "./Table"
             flexGrow: 1,
             position: "relative",
           }}
-        
         >
           {/* Background Image */}
           {template?.background_image ? (

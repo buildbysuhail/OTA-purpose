@@ -14,11 +14,12 @@ import { TemplateImagesTypes } from "../LandingFolder/InvoiceDesignerLanding";
 import { RootState } from "../../../redux/store";
 import { AccessPrinterList } from "../utils/get_printers";
 import Urls from "../../../redux/urls";
+import { validateImageFile } from "../utils/pdf-util";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
   templateGroup?: VoucherType | string;
-  formType?: string;  
+  formType?: string;
   customerType?: string;
   onChange?: (propertiesState: PropertiesState) => void;
   tempImages: {
@@ -33,12 +34,12 @@ const pageSizeOptions = [
   { label: "Letter", value: "LETTER" },
   { label: `2″ roll`, value: "ROLL_2_INCH" },
   { label: `3″ roll`, value: "ROLL_3_INCH" },
-  { label:`4″ roll`, value: "ROLL_4_INCH" },
+  { label: `4″ roll`, value: "ROLL_4_INCH" },
   { label: "Custom", value: "CUSTOM" },
 ];
 
 
-const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup ,formType,customerType}) => {
+const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup, formType, customerType }) => {
   /* ########################################################################################### */
   const templateData = useSelector((state: RootState) => state?.Template)
   const dispatch = useDispatch();
@@ -86,7 +87,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         />
 
         {
-          propertiesState?.pageSize == "CUSTOM" &&(
+          propertiesState?.pageSize == "CUSTOM" && (
             <>
               <div className="flex items-center space-x-3">
                 <div className="basis-2/3 ">
@@ -156,7 +157,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         }
 
         {propertiesState?.pageSize?.startsWith("ROLL") && (
-         <ERPCheckbox
+          <ERPCheckbox
             id="isAutoHeight"
             label={t("auto_height")}
             checked={propertiesState?.isAutoHeight}
@@ -165,51 +166,51 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         )
 
         }
- 
 
-          
-       {   !["CBR","PARP","RARP","Cheque"].includes(templateGroup??"")  &&(
-        <div className="flex gap-1">
-          <ERPDataCombobox
-            id="template_formType"
-            field={{
-              id: "template_formType",
-              getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
-              valueKey: "name",
-              labelKey: "name",
-            }}
-            defaultValue={formType}
-            value={propertiesState?.template_formType}
-            data={propertiesState}
-            onChangeData={(data: any) => {
-              onChange?.({ ...propertiesState, template_formType: data.template_formType })
-            }}
-            label={t("from_type")}
-          />
 
-          <ERPDataCombobox
-            id="template_customerType"
-            field={{
-              id: "template_customerType",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            defaultValue={customerType}
-            value={propertiesState?.template_customerType}
-            data={propertiesState}
-            onChangeData={(data: any) => {
-              onChange?.({ ...propertiesState, template_customerType: data.template_customerType })
-            }}
-            options={[
-              { label: "B2B", value: "B2B" },
-              { label: "B2C", value: "B2C" },
-              { label: "INT", value: "INT" },
-              { label: "", value: "" },
-            ]}
-            label={t("customer_type")}
-          />
-        </div>
-       )}
+
+        {!["CBR", "PARP", "RARP", "Cheque"].includes(templateGroup ?? "") && (
+          <div className="flex gap-1">
+            <ERPDataCombobox
+              id="template_formType"
+              field={{
+                id: "template_formType",
+                getListUrl: `${Urls.template_FormTypeByVoucherType}/${templateGroup}`,
+                valueKey: "name",
+                labelKey: "name",
+              }}
+              defaultValue={formType}
+              value={propertiesState?.template_formType}
+              data={propertiesState}
+              onChangeData={(data: any) => {
+                onChange?.({ ...propertiesState, template_formType: data.template_formType })
+              }}
+              label={t("from_type")}
+            />
+
+            <ERPDataCombobox
+              id="template_customerType"
+              field={{
+                id: "template_customerType",
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              defaultValue={customerType}
+              value={propertiesState?.template_customerType}
+              data={propertiesState}
+              onChangeData={(data: any) => {
+                onChange?.({ ...propertiesState, template_customerType: data.template_customerType })
+              }}
+              options={[
+                { label: "B2B", value: "B2B" },
+                { label: "B2C", value: "B2C" },
+                { label: "INT", value: "INT" },
+                { label: "", value: "" },
+              ]}
+              label={t("customer_type")}
+            />
+          </div>
+        )}
 
 
         <ERPDataCombobox
@@ -351,43 +352,6 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             />
           </div>
         </div>
-
-        {["SI"]?.includes(templateGroup!) &&
-          <div>
-            <ERPCheckbox
-              id="includePaymentStub"
-              label={t("include_payment_stub")}
-              checked={propertiesState?.includePaymentStub}
-              onChange={(e) => onChange?.({ ...propertiesState, includePaymentStub: e.target.checked })}
-            />
-            {propertiesState?.includePaymentStub && <div className="">
-              <ERPInput
-                label={t("payment_stub")}
-                id="payment_stub_label"
-                value={propertiesState?.payment_stub_label ?? "Payment Stub"}
-                onChange={(e) => onChange?.({ ...propertiesState, payment_stub_label: e.target?.value })}
-              />
-              <ERPInput
-                label={t("amount_enclosed")}
-                id="amount_enclosed_label"
-                value={propertiesState?.amount_enclosed_label ?? "Amount Enclosed"}
-                onChange={(e) => onChange?.({ ...propertiesState, amount_enclosed_label: e.target?.value })}
-              />
-              <ERPDataCombobox
-                id="Payment Stub Position"
-                defaultValue={propertiesState?.payment_stub_position ?? "new_page"}
-                value={propertiesState?.payment_stub_position ?? "new_page"}
-                onChangeData={(data: any) => {
-                  onChange?.({ ...propertiesState, payment_stub_position: data.payment_stub_position })
-                }}
-                options={[
-                  { label: t("on_a_separate_page"), value: "new_page" },
-                  { label: t("on_existing_page"), value: "same_page" },
-                ]}
-              />
-            </div>}
-          </div>
-        }
       </div>
 
       {/* <div className="transition-all  flex flex-col gap-4  p-4">
@@ -638,11 +602,23 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             ref={inputFile}
             type="file"
             onChange={(e: any) => {
-              if (e.target.files[0].size > 2097152) {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              if (file.size > 2097152) {
                 ERPToast.showWith(t("max_file_size_error"));
-              } else {
-                handleSetTemplateBackgroundImage(e.target.files[0], dispatch);
+                e.target.value = "";
+                return;
               }
+              // Type validation
+              const error = validateImageFile(file);
+              if (error) {
+                ERPToast.showWith(error, "error"); // red toast
+                e.target.value = "";
+                return;
+              }
+
+              handleSetTemplateBackgroundImage(file, dispatch);
+
             }}
             className={"hidden"}
             accept="image/png,image/jpeg"

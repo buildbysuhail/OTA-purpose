@@ -54,6 +54,15 @@ export const resolveTenderPromise = (success: boolean) => {
   }
 };
 
+// E Way bill response manage
+let eWayBillResolver: ((value: boolean) => void) | null = null;
+export const resolveWayBillPromise = (success: boolean) => {
+  if (eWayBillResolver) {
+    eWayBillResolver(success);
+    eWayBillResolver = null;
+  }
+};
+
 interface FormElementState {
   visible: boolean;
   disabled: boolean;
@@ -2735,6 +2744,32 @@ export const useTransaction = (
     });
   };
 
+  // E Way bill details modal open manager
+  const openEWayBill = (invTransactionMasterIdForeWayBill: number): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (clientSession.isAppGlobal) {
+        if (formState.eWayBill) {
+          if (
+            formState.userConfig?.autoEwayBill &&
+            applicationSettings.gSTTaxesSettings.enableEWB
+          ) {
+            eWayBillResolver = resolve;
+            dispatch(
+              formStateHandleFieldChange({
+                fields: {
+                  eWayBillDetailOpen: true,
+                  eWayBillMasterId: invTransactionMasterIdForeWayBill
+                }
+              })
+            );
+            return;
+          }
+        }
+      }
+      resolve(true);
+    });
+  };
+
   const preSave = async () => {
     if (
       formState.isEdit &&
@@ -2867,9 +2902,10 @@ export const useTransaction = (
                     lsBlockZeroFigureEntry: formState.userConfig?.blockZeroFigureEntry ?? false,
                     lsBlockNonStockItemInSO: formState.userConfig?.blockNonStockItemsSO ?? false,
                     // TODO: Ashar
-                    // isEwayBillChecked: formState.userConfig.isEwayBillChecked ?? false,
-                    // isEwayBillAutomationChecked: formState.transaction.isEwayBillAutomationChecked ?? false,
-                    // isEInvoiceChecked: formState.userConfig.isEInvoiceChecked ?? false,
+                    isEwayBillChecked: formState.eWayBill ?? false,   // Verify is this correct
+                    isEwayBillAutomationChecked: formState.userConfig?.autoEwayBill ?? false,  // Verify is this correct
+                    isEInvoiceChecked: formState.einvoiceCheckBox ?? false,  // Verify is this correct
+
 
                     // 🔹 Strings
                     pendingOrderListMasterIDs: formState.pendingOrdListMasterIDs ?? null,
@@ -2940,6 +2976,19 @@ export const useTransaction = (
             })
           );
           // to do - ashar
+          // E way bill details form opens condition
+          // Check the response need to do anything like alert box or something
+          if(clientSession.isAppGlobal){
+            if(formState.eWayBill){
+              if(formState.userConfig?.autoEwayBill && applicationSettings.gSTTaxesSettings.enableEWB){
+                 const masterId = saveRes?.item?.master?.invTransactionMasterID;
+                  if (masterId) {
+                    const response = await openEWayBill(masterId);
+                    // check if Manage response needed
+                  }
+              }
+            }
+          }
           if (formState.printOnSave == true && saveMode != "LPO" && saveMode != "LPQ") {
             await printVoucher(
               saveRes?.item?.master?.invTransactionMasterID, // masterID

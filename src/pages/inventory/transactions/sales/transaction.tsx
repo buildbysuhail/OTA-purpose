@@ -66,6 +66,7 @@ import MQtyFactorsModal from "./mqty-factors";
 import { merge } from "lodash";
 import { AuthorizationModal } from "./components/AuthorizationSales";
 import DateChangeModal from "./components/dateChange";
+import EWayBillDetails from "./e-way-bill-details";
 
 interface BilledItem {
   id?: number;
@@ -457,6 +458,16 @@ const TransactionForm: React.FC<TransactionProps> = ({
       })
     )
   };
+
+  // Close e Way bill Details modal in save - open case
+  const handleCloseEWayDetailsModal = ()=> {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { eWayBillDetailOpen: false },
+      })
+    );
+  }
+
   const focusCBledger = () => {
     if (cbLedger.current) {
       cbLedger.current.focus();
@@ -2749,8 +2760,30 @@ const TransactionForm: React.FC<TransactionProps> = ({
       <AuthorizationModal />
       {/* Date Picker Modal */}
       <DateChangeModal />
+
+      {/* E-Way bill details modal */}
+      {/* Make sure that the modal open section code is need to place in this page or some where else */}
+      {formState.eWayBillDetailOpen && (
+            <ERPModal
+              isOpen={formState.eWayBillDetailOpen}
+              closeModal={handleCloseEWayDetailsModal}
+              title={t('e_way_bill_details')}
+              width={1400}
+              height={900}
+              content={
+                <EWayBillDetails
+                  closeModal={handleCloseEWayDetailsModal}
+                  formState={formState}
+                  loadAndSetTransVoucher={loadAndSetTransVoucher}
+                  t={t}
+                />
+              }
+            />
+          )}
     </>
   );
 };
 
 export default TransactionForm;
+
+

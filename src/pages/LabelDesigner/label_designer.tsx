@@ -23,8 +23,8 @@ import { setTemplateCustomElements } from "../../redux/slices/templates/reducer"
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { useTranslation } from "react-i18next";
 import VoucherType, { accountsVoucherTypes, } from "../../enums/voucher-types";
-import { accountsFields, inventoryFields, barCodeField, imgField,ledgerReportFields,CheckFields } from "./fields";
-import { containsArabicString, getPageDimensions, ptToPx, pxToPt } from "../InvoiceDesigner/utils/pdf-util";
+import { accountsFields, inventoryFields, barCodeField, imgField, ledgerReportFields, CheckFields } from "./fields";
+import { containsArabicString, getPageDimensions, ptToPx, pxToPt, validateImageFile } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
@@ -189,80 +189,80 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const [toolbarHeightPt, setToolbarHeightPt] = useState(0);
 
 
-useLayoutEffect(() => {
-  if (!toolbarRef.current) return;
+  useLayoutEffect(() => {
+    if (!toolbarRef.current) return;
 
-  const heightPx = toolbarRef.current.getBoundingClientRect().height;
-  const heightPt = pxToPt(heightPx); 
-  setToolbarHeightPt(heightPt);
-}, []);
+    const heightPx = toolbarRef.current.getBoundingClientRect().height;
+    const heightPt = pxToPt(heightPx);
+    setToolbarHeightPt(heightPt);
+  }, []);
 
-const {
-  canUndo,
-  canRedo,
-  undo: undoAction,
-  redo: redoAction,
-  clearHistory,
-  pushState,
-  history,
-  historyIndex,
-  resetHistory,
-} = useUndoRedo(templateData);
+  const {
+    canUndo,
+    canRedo,
+    undo: undoAction,
+    redo: redoAction,
+    clearHistory,
+    pushState,
+    history,
+    historyIndex,
+    resetHistory,
+  } = useUndoRedo(templateData);
 
 
-    // Track current state to detect changes
+  // Track current state to detect changes
   const prevTemplateDataRef = useRef(templateData);
 
-    // Helper: Push state to history when templateData changes
+  // Helper: Push state to history when templateData changes
   const pushToHistory = useCallback(
     (newState: TemplateState<unknown>, action: string) => {
       pushState(newState, action);
       prevTemplateDataRef.current = newState;
     },
-    [pushState,leftSidebarWidth, rightSidebarWidth, zoom]
+    [pushState, leftSidebarWidth, rightSidebarWidth, zoom]
   );
 
-    // Override undo/redo to also update templateData
-const handleUndo = useCallback(() => {
-  if (canUndo && historyIndex > 0) {
-    const previousIndex = historyIndex - 1;
-    if (history[previousIndex]) {
-      const previousState = history[previousIndex];
-      setTemplateData(previousState.templateData);
-      undoAction(); // Call the hook's undo to update historyIndex
-      // Sync selectedComponent with new templateData ----
-      setSelectedComponent((prev) => {
-      if (!prev) return null;
-      return previousState?.templateData?.barcodeState?.placedComponents
-        .find(c => c.id === prev.id) || null;
-    });
+  // Override undo/redo to also update templateData
+  const handleUndo = useCallback(() => {
+    if (canUndo && historyIndex > 0) {
+      const previousIndex = historyIndex - 1;
+      if (history[previousIndex]) {
+        const previousState = history[previousIndex];
+        setTemplateData(previousState.templateData);
+        undoAction(); // Call the hook's undo to update historyIndex
+        // Sync selectedComponent with new templateData ----
+        setSelectedComponent((prev) => {
+          if (!prev) return null;
+          return previousState?.templateData?.barcodeState?.placedComponents
+            .find(c => c.id === prev.id) || null;
+        });
+      }
     }
-  }
-}, [canUndo, historyIndex, history, undoAction]);
+  }, [canUndo, historyIndex, history, undoAction]);
 
-const handleRedo = useCallback(() => {
-  if (canRedo && historyIndex < history.length - 1) {
-    const nextIndex = historyIndex + 1;
-    if (history[nextIndex]) {
-      const nextState = history[nextIndex];
-      setTemplateData(nextState.templateData);
-      redoAction(); // Call the hook's redo to update historyIndex
-      // Sync selectedComponent with new templateData ----
-      setSelectedComponent((prev) => {
-      if (!prev) return null;
-      return nextState?.templateData?.barcodeState?.placedComponents
-        .find(c => c.id === prev.id) || null;
-    })
+  const handleRedo = useCallback(() => {
+    if (canRedo && historyIndex < history.length - 1) {
+      const nextIndex = historyIndex + 1;
+      if (history[nextIndex]) {
+        const nextState = history[nextIndex];
+        setTemplateData(nextState.templateData);
+        redoAction(); // Call the hook's redo to update historyIndex
+        // Sync selectedComponent with new templateData ----
+        setSelectedComponent((prev) => {
+          if (!prev) return null;
+          return nextState?.templateData?.barcodeState?.placedComponents
+            .find(c => c.id === prev.id) || null;
+        })
+      }
     }
-  }
-}, [canRedo, historyIndex, history, redoAction]);
+  }, [canRedo, historyIndex, history, redoAction]);
 
-const debouncedPushDragHistory = useDebounce(
-  (currentState: TemplateState<unknown>) => {
-    pushToHistory(currentState, "Moved component");
-  },
-  150 // Matches your drag debounce timing
-);
+  const debouncedPushDragHistory = useDebounce(
+    (currentState: TemplateState<unknown>) => {
+      pushToHistory(currentState, "Moved component");
+    },
+    150 // Matches your drag debounce timing
+  );
   // Components configuration
   const components = [
     {
@@ -457,21 +457,21 @@ const debouncedPushDragHistory = useDebounce(
           newComponent.children = [];
         }
 
-      const newUpdatedComponents = [
-        ...(templateData?.barcodeState?.placedComponents || []),
-        newComponent,
-      ];
+        const newUpdatedComponents = [
+          ...(templateData?.barcodeState?.placedComponents || []),
+          newComponent,
+        ];
 
-      const newTemplateData : TemplateState<unknown> = {
-        ...templateData,
-        barcodeState: {
-          ...templateData.barcodeState,
-          placedComponents: newUpdatedComponents,
-        },
-      };
+        const newTemplateData: TemplateState<unknown> = {
+          ...templateData,
+          barcodeState: {
+            ...templateData.barcodeState,
+            placedComponents: newUpdatedComponents,
+          },
+        };
 
-      setTemplateData(newTemplateData);
-      pushToHistory(newTemplateData, `Added ${componentType} containers`);
+        setTemplateData(newTemplateData);
+        pushToHistory(newTemplateData, `Added ${componentType} containers`);
         setTimeout(() => {
           setSelectedComponent(newComponent);
         }, 0);
@@ -593,21 +593,21 @@ const debouncedPushDragHistory = useDebounce(
           newComponent.y = Math.max(0, newComponent.y);
         }
 
-      const newUpdatedComponents = [
-        ...(templateData?.barcodeState?.placedComponents || []),
-        newComponent,
-      ];
+        const newUpdatedComponents = [
+          ...(templateData?.barcodeState?.placedComponents || []),
+          newComponent,
+        ];
 
-      const newTemplateData : TemplateState<unknown> = {
-        ...templateData,
-        barcodeState: {
-          ...templateData.barcodeState,
-          placedComponents: newUpdatedComponents,
-        },
-      };
+        const newTemplateData: TemplateState<unknown> = {
+          ...templateData,
+          barcodeState: {
+            ...templateData.barcodeState,
+            placedComponents: newUpdatedComponents,
+          },
+        };
 
-      setTemplateData(newTemplateData);
-      pushToHistory(newTemplateData, `Added ${componentType} component`);
+        setTemplateData(newTemplateData);
+        pushToHistory(newTemplateData, `Added ${componentType} component`);
 
         setTimeout(() => {
           setSelectedComponent(newComponent);
@@ -676,8 +676,8 @@ const debouncedPushDragHistory = useDebounce(
 
     const canvasRect = canvasRef.current?.getBoundingClientRect();
 
-      if (canvasRect) {
-        const fullComponent = templateData?.barcodeState?.placedComponents?.find(
+    if (canvasRect) {
+      const fullComponent = templateData?.barcodeState?.placedComponents?.find(
         c => c.id === component.id
       );
 
@@ -706,12 +706,12 @@ const debouncedPushDragHistory = useDebounce(
 
   // Delete handler - cascades through nested containers
   const handleDelete = (componentId: string) => {
-    const newTemplateData : TemplateState<unknown> = {
+    const newTemplateData: TemplateState<unknown> = {
       ...templateData,
     };
     const componentsToDelete = new Set<string>();
-    const components = newTemplateData.barcodeState?.placedComponents || [];  
-      const findAllChildren = (id: string) => {
+    const components = newTemplateData.barcodeState?.placedComponents || [];
+    const findAllChildren = (id: string) => {
       componentsToDelete.add(id);
       components.forEach(comp => {
         if (comp.containerId === id) {
@@ -729,14 +729,14 @@ const debouncedPushDragHistory = useDebounce(
     newTemplateData.barcodeState = {
       ...newTemplateData.barcodeState,
       placedComponents: updatedComponents,
-    };  
+    };
     setTemplateData(newTemplateData);
     pushToHistory(newTemplateData, 'Deleted component(s)');
     setSelectedComponent(null);
   };
- //  clear all in desinger buttons:
+  //  clear all in desinger buttons:
   const handleClear = () => {
-    const newTemplateData : TemplateState<unknown> = {
+    const newTemplateData: TemplateState<unknown> = {
       ...templateData,
       barcodeState: {
         ...templateData.barcodeState,
@@ -757,7 +757,7 @@ const debouncedPushDragHistory = useDebounce(
           comp.id === (id ? id : selectedComponent.id) ? updatedComponent : comp
         );
 
-      const newTemplateData : TemplateState<unknown> = {
+      const newTemplateData: TemplateState<unknown> = {
         ...templateData,
         barcodeState: {
           ...templateData.barcodeState,
@@ -791,16 +791,16 @@ const debouncedPushDragHistory = useDebounce(
         (comp) => (comp.id === selectedComponent.id ? updatedComponent : comp)
       );
 
-    const newTemplateData : TemplateState<unknown> = {
-      ...templateData,
-      barcodeState: {
-        ...templateData.barcodeState,
-        placedComponents: updatedComponents,
-      },
-    };
+      const newTemplateData: TemplateState<unknown> = {
+        ...templateData,
+        barcodeState: {
+          ...templateData.barcodeState,
+          placedComponents: updatedComponents,
+        },
+      };
 
-    setTemplateData(newTemplateData);
-    pushToHistory(newTemplateData, `Changed container ${property}`);
+      setTemplateData(newTemplateData);
+      pushToHistory(newTemplateData, `Changed container ${property}`);
 
       setSelectedComponent(updatedComponent);
     }
@@ -823,7 +823,7 @@ const debouncedPushDragHistory = useDebounce(
         );
 
 
-      const newTemplateData : TemplateState<unknown> = {
+      const newTemplateData: TemplateState<unknown> = {
         ...templateData,
         barcodeState: {
           ...templateData.barcodeState,
@@ -872,7 +872,7 @@ const debouncedPushDragHistory = useDebounce(
             : comp
       ) as PlacedComponent[];
 
-        const newTemplateData : TemplateState<unknown> = {
+      const newTemplateData: TemplateState<unknown> = {
         ...templateData,
         barcodeState: {
           ...templateData.barcodeState,
@@ -1278,7 +1278,7 @@ const debouncedPushDragHistory = useDebounce(
             onResize={(e, { size }) => {
               const widthPt = pxToPt(size.width);
               const thicknessPt = pxToPt(size.height); // ✅ vertical resize = thickness
-               debouncedResize(component.id, widthPt, thicknessPt, component);
+              debouncedResize(component.id, widthPt, thicknessPt, component);
 
             }}
             style={{
@@ -1450,68 +1450,68 @@ const debouncedPushDragHistory = useDebounce(
           let newX = pxToPt(e.clientX - canvasRect.left) - dragOffsetRef.current.x;
           let newY = pxToPt(e.clientY - canvasRect.top) - dragOffsetRef.current.y;
 
-        // Calculate relative position if inside a container
-        if (draggingRef.current?.containerId) {
-          const containerChain = [];
-          let currentContainerId = draggingRef.current.containerId;
+          // Calculate relative position if inside a container
+          if (draggingRef.current?.containerId) {
+            const containerChain = [];
+            let currentContainerId = draggingRef.current.containerId;
 
-          while (currentContainerId) {
-            const container = (templateData?.barcodeState?.placedComponents || []).find(
-              c => c.id === currentContainerId
-            );
-            if (container) {
-              containerChain.push(container);
-              currentContainerId = container.containerId ?? "";
-            } else {
-              break;
+            while (currentContainerId) {
+              const container = (templateData?.barcodeState?.placedComponents || []).find(
+                c => c.id === currentContainerId
+              );
+              if (container) {
+                containerChain.push(container);
+                currentContainerId = container.containerId ?? "";
+              } else {
+                break;
+              }
+            }
+
+            if (containerChain.length > 0) {
+              const immediateParent = containerChain[0];
+              const parentAbsolutePos = getAbsolutePosition(
+                immediateParent,
+                templateData?.barcodeState?.placedComponents || []
+              );
+              const containerPadding = immediateParent.containerProps?.padding || 10;
+
+              newX = newX - parentAbsolutePos.x - containerPadding;
+              newY = newY - parentAbsolutePos.y - containerPadding;
+
+              const maxX = immediateParent.width - (containerPadding * 2) - draggingRef.current!.width;
+              const maxY = immediateParent.height - (containerPadding * 2) - draggingRef.current!.height;
+              newX = Math.max(0, Math.min(newX, maxX));
+              newY = Math.max(0, Math.min(newY, maxY));
             }
           }
 
-          if (containerChain.length > 0) {
-            const immediateParent = containerChain[0];
-            const parentAbsolutePos = getAbsolutePosition(
-              immediateParent,
-              templateData?.barcodeState?.placedComponents || []
-            );
-            const containerPadding = immediateParent.containerProps?.padding || 10;
+          // Update templateData WITHOUT pushing to history yet
+          setTemplateData((prev: TemplateState<unknown>) => {
+            const updatedComponents = (prev?.barcodeState?.placedComponents || []).map((comp) => {
+              if (comp.id === draggingRef.current!.id) {
+                return {
+                  ...comp,
+                  x: newX,
+                  y: newY,
+                };
+              }
+              return comp;
+            });
 
-            newX = newX - parentAbsolutePos.x - containerPadding;
-            newY = newY - parentAbsolutePos.y - containerPadding;
+            const newState = {
+              ...prev,
+              barcodeState: {
+                ...prev.barcodeState,
+                placedComponents: updatedComponents,
+              },
+            };
 
-            const maxX = immediateParent.width - (containerPadding * 2) - draggingRef.current!.width;
-            const maxY = immediateParent.height - (containerPadding * 2) - draggingRef.current!.height;
-            newX = Math.max(0, Math.min(newX, maxX));
-            newY = Math.max(0, Math.min(newY, maxY));
-          }
-        }
+            // Call debounced history push with the new state
+            debouncedPushDragHistory(newState);
 
-        // Update templateData WITHOUT pushing to history yet
-        setTemplateData((prev: TemplateState<unknown>) => {
-          const updatedComponents = (prev?.barcodeState?.placedComponents || []).map((comp) => {
-            if (comp.id === draggingRef.current!.id) {
-              return {
-                ...comp,
-                x: newX,
-                y: newY,
-              };
-            }
-            return comp;
+            return newState;
           });
-
-          const newState = {
-            ...prev,
-            barcodeState: {
-              ...prev.barcodeState,
-              placedComponents: updatedComponents,
-            },
-          };
-
-          // Call debounced history push with the new state
-          debouncedPushDragHistory(newState);
-
-          return newState;
-        });
-         // Update selected component for UI feedback
+          // Update selected component for UI feedback
           setSelectedComponent((prevSelected) => {
             const draggingId = draggingRef.current?.id; // safe access
             if (prevSelected && draggingId && prevSelected.id === draggingId) {
@@ -1531,14 +1531,14 @@ const debouncedPushDragHistory = useDebounce(
       if (draggingRef.current) {
         e.preventDefault();
         e.stopPropagation();
-      // ✅ Flush any pending debounced history push on mouse up
-      debouncedPushDragHistory.flush();
+        // ✅ Flush any pending debounced history push on mouse up
+        debouncedPushDragHistory.flush();
         setDraggingComponent(null);
         setDragOffset({ x: 0, y: 0 });
         draggingRef.current = null;
-       
+
         dragOffsetRef.current = { x: 0, y: 0 };
-   
+
       }
     };
 
@@ -1549,7 +1549,7 @@ const debouncedPushDragHistory = useDebounce(
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
- 
+
       document.removeEventListener('mousemove', handleGlobalMouseMove);
       document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
@@ -1633,27 +1633,27 @@ const debouncedPushDragHistory = useDebounce(
   };
 
 
-const debouncedLabelResize = useDebounce(
-  (widthPt: number, heightPt: number) => {
-     
-    const newTemplateData: TemplateState<unknown> = {
-      ...templateData,
-      barcodeState: {
-        ...templateData.barcodeState,
-        placedComponents: templateData.barcodeState?.placedComponents ?? [],
-        labelState: {
-          ...templateData?.barcodeState?.labelState,
-          labelWidth: widthPt,
-          labelHeight: heightPt,
+  const debouncedLabelResize = useDebounce(
+    (widthPt: number, heightPt: number) => {
+
+      const newTemplateData: TemplateState<unknown> = {
+        ...templateData,
+        barcodeState: {
+          ...templateData.barcodeState,
+          placedComponents: templateData.barcodeState?.placedComponents ?? [],
+          labelState: {
+            ...templateData?.barcodeState?.labelState,
+            labelWidth: widthPt,
+            labelHeight: heightPt,
+          },
         },
-      },
-    };
-    setTemplateData(newTemplateData);
-    //  pushToHistory(newTemplateData, "Resized main label");
-  },
-  150
-);
- const handleContentLabelResize = (
+      };
+      setTemplateData(newTemplateData);
+      //  pushToHistory(newTemplateData, "Resized main label");
+    },
+    150
+  );
+  const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
   ) => {
@@ -1682,30 +1682,30 @@ const debouncedLabelResize = useDebounce(
     property: keyof PropertiesState,
     value: any,
   ) => {
-  const newTemplateData : TemplateState<unknown>=  {
-    ...templateData,
-    propertiesState: { ...templateData.propertiesState, [property]: value },
-  };
+    const newTemplateData: TemplateState<unknown> = {
+      ...templateData,
+      propertiesState: { ...templateData.propertiesState, [property]: value },
+    };
 
-  setTemplateData(newTemplateData);
-  pushToHistory(newTemplateData, `Changed page ${String(property)}`);
+    setTemplateData(newTemplateData);
+    pushToHistory(newTemplateData, `Changed page ${String(property)}`);
   };
 
   const handleLabelPropsChange = (property: any, value: any) => {
-const newTemplateData : TemplateState<unknown> = {
-  ...templateData,
-  barcodeState: {
-    ...templateData.barcodeState,
-    placedComponents: templateData?.barcodeState?.placedComponents ?? [],
-   labelState: {
-  ...templateData?.barcodeState?.labelState,
-  [property]: value,
-  } as LabelState,
-  },
-};
+    const newTemplateData: TemplateState<unknown> = {
+      ...templateData,
+      barcodeState: {
+        ...templateData.barcodeState,
+        placedComponents: templateData?.barcodeState?.placedComponents ?? [],
+        labelState: {
+          ...templateData?.barcodeState?.labelState,
+          [property]: value,
+        } as LabelState,
+      },
+    };
 
-setTemplateData(newTemplateData);
-pushToHistory(newTemplateData, `Changed label ${property}`);
+    setTemplateData(newTemplateData);
+    pushToHistory(newTemplateData, `Changed label ${property}`);
 
   };
 
@@ -1893,245 +1893,245 @@ pushToHistory(newTemplateData, `Changed label ${property}`);
     resetHistory(_template);
   };
 
-useEffect(() => {
-  const handleKeyDown = (e: KeyboardEvent) => {
-    // Check if user is typing in an input/textarea - don't intercept
-    const target = e.target as HTMLElement;
-    const isInputElement = 
-      target.tagName === 'INPUT' || 
-      target.tagName === 'TEXTAREA' ||
-      target.contentEditable === 'true';
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if user is typing in an input/textarea - don't intercept
+      const target = e.target as HTMLElement;
+      const isInputElement =
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.contentEditable === 'true';
 
-    // ============ UNDO: Ctrl+Z (Windows/Linux) or Cmd+Z (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === 'z' && 
-      !e.shiftKey && 
-      !isInputElement &&
-      canUndo
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Undo triggered');
-      handleUndo();
-      return;
-    }
-
-    // ============ REDO: Ctrl+Shift+Z (Windows/Linux) or Cmd+Shift+Z (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === 'z' && 
-      e.shiftKey && 
-      !isInputElement &&
-      canRedo
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Redo triggered');
-      handleRedo();
-      return;
-    }
-
-    // ============ REDO (Alternative): Ctrl+Y (Windows/Linux) or Cmd+Y (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === 'y' && 
-      !isInputElement &&
-      canRedo
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Redo triggered (Ctrl+Y)');
-      handleRedo();
-      return;
-    }
-
-    // ============ DELETE: Delete key or Backspace ============
-    if (
-      (e.key === 'Delete' ) && 
-      selectedComponent && 
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Delete triggered');
-      handleDelete(selectedComponent.id);
-      return;
-    }
-
-    // ============ DUPLICATE: Ctrl+D (Windows/Linux) or Cmd+D (Mac) ============
-
-
-    // ============ DESELECT: Escape key ============
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Deselect triggered');
-      setSelectedComponent(null);
-      setDraggingComponent(null);
-      setDragOffset({ x: 0, y: 0 });
-      return;
-    }
-
-    // ============ ARROW KEYS: Move or Resize selected component ============
-    if (
-      selectedComponent && 
-      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) &&
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const step = e.shiftKey ? 10 : 1; // Shift+Arrow = larger movement
-      let { x, y, width, height } = selectedComponent;
-
-      if (e.altKey) {
-        // -------- RESIZE MODE (Alt+Arrow) --------
-        console.log('Resize mode');
-        switch (e.key) {
-          case 'ArrowUp':
-            height = Math.max(20, height - step);
-            break;
-          case 'ArrowDown':
-            height = Math.max(20, height + step);
-            break;
-          case 'ArrowLeft':
-            width = Math.max(20, width - step);
-            break;
-          case 'ArrowRight':
-            width = Math.max(20, width + step);
-            break;
-        }
-      } else {
-        // -------- MOVE MODE (Arrow only) --------
-        console.log('Move mode');
-        switch (e.key) {
-          case 'ArrowUp':
-            y = Math.max(0, y - step);
-            break;
-          case 'ArrowDown':
-            y = y + step;
-            break;
-          case 'ArrowLeft':
-            x = Math.max(0, x - step);
-            break;
-          case 'ArrowRight':
-            x = x + step;
-            break;
-        }
+      // ============ UNDO: Ctrl+Z (Windows/Linux) or Cmd+Z (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === 'z' &&
+        !e.shiftKey &&
+        !isInputElement &&
+        canUndo
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Undo triggered');
+        handleUndo();
+        return;
       }
 
-      // Update templateData
-      const newTemplateData : TemplateState<unknown> = {
-        ...templateData,
-        barcodeState: {
-          ...templateData.barcodeState,
-          placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
-            comp.id === selectedComponent.id
-              ? { ...comp, x, y, width, height }
-              : comp
-          ),
-        },
-      };
+      // ============ REDO: Ctrl+Shift+Z (Windows/Linux) or Cmd+Shift+Z (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === 'z' &&
+        e.shiftKey &&
+        !isInputElement &&
+        canRedo
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Redo triggered');
+        handleRedo();
+        return;
+      }
 
-      setTemplateData(newTemplateData);
-      pushToHistory(newTemplateData, `${e.altKey ? 'Resized' : 'Moved'} component with keyboard`);
-      setSelectedComponent((prev) =>
-        prev ? { ...prev, x, y, width, height } : prev
-      );
-      return;
-    }
+      // ============ REDO (Alternative): Ctrl+Y (Windows/Linux) or Cmd+Y (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === 'y' &&
+        !isInputElement &&
+        canRedo
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Redo triggered (Ctrl+Y)');
+        handleRedo();
+        return;
+      }
+
+      // ============ DELETE: Delete key or Backspace ============
+      if (
+        (e.key === 'Delete') &&
+        selectedComponent &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Delete triggered');
+        handleDelete(selectedComponent.id);
+        return;
+      }
+
+      // ============ DUPLICATE: Ctrl+D (Windows/Linux) or Cmd+D (Mac) ============
+
+
+      // ============ DESELECT: Escape key ============
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Deselect triggered');
+        setSelectedComponent(null);
+        setDraggingComponent(null);
+        setDragOffset({ x: 0, y: 0 });
+        return;
+      }
+
+      // ============ ARROW KEYS: Move or Resize selected component ============
+      if (
+        selectedComponent &&
+        ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const step = e.shiftKey ? 10 : 1; // Shift+Arrow = larger movement
+        let { x, y, width, height } = selectedComponent;
+
+        if (e.altKey) {
+          // -------- RESIZE MODE (Alt+Arrow) --------
+          console.log('Resize mode');
+          switch (e.key) {
+            case 'ArrowUp':
+              height = Math.max(20, height - step);
+              break;
+            case 'ArrowDown':
+              height = Math.max(20, height + step);
+              break;
+            case 'ArrowLeft':
+              width = Math.max(20, width - step);
+              break;
+            case 'ArrowRight':
+              width = Math.max(20, width + step);
+              break;
+          }
+        } else {
+          // -------- MOVE MODE (Arrow only) --------
+          console.log('Move mode');
+          switch (e.key) {
+            case 'ArrowUp':
+              y = Math.max(0, y - step);
+              break;
+            case 'ArrowDown':
+              y = y + step;
+              break;
+            case 'ArrowLeft':
+              x = Math.max(0, x - step);
+              break;
+            case 'ArrowRight':
+              x = x + step;
+              break;
+          }
+        }
+
+        // Update templateData
+        const newTemplateData: TemplateState<unknown> = {
+          ...templateData,
+          barcodeState: {
+            ...templateData.barcodeState,
+            placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
+              comp.id === selectedComponent.id
+                ? { ...comp, x, y, width, height }
+                : comp
+            ),
+          },
+        };
+
+        setTemplateData(newTemplateData);
+        pushToHistory(newTemplateData, `${e.altKey ? 'Resized' : 'Moved'} component with keyboard`);
+        setSelectedComponent((prev) =>
+          prev ? { ...prev, x, y, width, height } : prev
+        );
+        return;
+      }
 
 
 
-    // ============ SAVE: Ctrl+S (Windows/Linux) or Cmd+S (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === 's' && 
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Save triggered');
-      manageSaveTemplate();
-      return;
-    }
+      // ============ SAVE: Ctrl+S (Windows/Linux) or Cmd+S (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === 's' &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Save triggered');
+        manageSaveTemplate();
+        return;
+      }
 
-    // ============ ZOOM IN: Ctrl++ (Windows/Linux) or Cmd++ (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      (e.key === '+' || e.key === '=') && 
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Zoom in triggered');
-      setZoom((prev) => Math.min(prev + 10, 200)); // Max 200%
-      return;
-    }
+      // ============ ZOOM IN: Ctrl++ (Windows/Linux) or Cmd++ (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === '+' || e.key === '=') &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Zoom in triggered');
+        setZoom((prev) => Math.min(prev + 10, 200)); // Max 200%
+        return;
+      }
 
-    // ============ ZOOM OUT: Ctrl+- (Windows/Linux) or Cmd+- (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === '-' && 
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Zoom out triggered');
-      setZoom((prev) => Math.max(prev - 10, 50)); // Min 50%
-      return;
-    }
+      // ============ ZOOM OUT: Ctrl+- (Windows/Linux) or Cmd+- (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === '-' &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Zoom out triggered');
+        setZoom((prev) => Math.max(prev - 10, 50)); // Min 50%
+        return;
+      }
 
-    // ============ ZOOM TO 100%: Ctrl+0 (Windows/Linux) or Cmd+0 (Mac) ============
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === '0' && 
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Zoom to 100% triggered');
-      setZoom(100);
-      return;
-    }
+      // ============ ZOOM TO 100%: Ctrl+0 (Windows/Linux) or Cmd+0 (Mac) ============
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === '0' &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Zoom to 100% triggered');
+        setZoom(100);
+        return;
+      }
 
-    // ============ GROUP: Ctrl+G (Windows/Linux) or Cmd+G (Mac) ============
-    // (Advanced feature - optional)
-    if (
-      (e.ctrlKey || e.metaKey) && 
-      e.key === 'g' && 
-      !isInputElement
-    ) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Group triggered');
-      // handleGroup();
-      return;
-    }
+      // ============ GROUP: Ctrl+G (Windows/Linux) or Cmd+G (Mac) ============
+      // (Advanced feature - optional)
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key === 'g' &&
+        !isInputElement
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Group triggered');
+        // handleGroup();
+        return;
+      }
 
-  };
+    };
 
-  window.addEventListener('keydown', handleKeyDown);
-  
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-  };
-}, [
-  canUndo,
-  canRedo,
-  selectedComponent,
-  templateData,
-  handleUndo,
-  handleRedo,
-  handleDelete,
-  setSelectedComponent,
-  setDraggingComponent,
-  setDragOffset,
-  setZoom,
-  pushToHistory,
-  manageSaveTemplate,
-]);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [
+    canUndo,
+    canRedo,
+    selectedComponent,
+    templateData,
+    handleUndo,
+    handleRedo,
+    handleDelete,
+    setSelectedComponent,
+    setDraggingComponent,
+    setDragOffset,
+    setZoom,
+    pushToHistory,
+    manageSaveTemplate,
+  ]);
 
   useEffect(() => {
     if (id !== "new" && !forCustomRows) getPDFTemplateData();
@@ -2149,19 +2149,19 @@ useEffect(() => {
       const loadedElements = nestedValue?.elements || [];
       const expandedComponents = expandContainerChildren(loadedElements);
       setCustomePageHeight((nestedValue?.height || 200) - (template.propertiesState?.padding?.top ?? 0));
-      
-        const newTemplateData: TemplateState<unknown> = {
+
+      const newTemplateData: TemplateState<unknown> = {
         ...templateData,
-      barcodeState: {
-        ...templateData.barcodeState,
-        placedComponents: expandedComponents || [],
-        labelState: {
-          ...templateData.barcodeState?.labelState,
-          labelHeight: (nestedValue?.height || 200) + (template.propertiesState?.padding?.top ?? 0),
-          labelWidth: selectedPageSize.width,
+        barcodeState: {
+          ...templateData.barcodeState,
+          placedComponents: expandedComponents || [],
+          labelState: {
+            ...templateData.barcodeState?.labelState,
+            labelHeight: (nestedValue?.height || 200) + (template.propertiesState?.padding?.top ?? 0),
+            labelWidth: selectedPageSize.width,
+          },
         },
-      },
-    };
+      };
       // setTemplateData((prev: TemplateState<unknown>) => ({
       //   ...prev,
       //   barcodeState: {
@@ -2195,87 +2195,87 @@ useEffect(() => {
   // Debounced handlers
   const debouncedHandleAreaPropetFieldChange = useDebounce(handleDesignerChange, 300);
   const debouncedHandlePropetFieldChange = useDebounce(handlePropertyChange, 300);
-const debouncedResize = useDebounce(
-  (
-    id: string,
-    widthPt: number,
-    heightPt: number,
-    component: any
-  ) => {
+  const debouncedResize = useDebounce(
+    (
+      id: string,
+      widthPt: number,
+      heightPt: number,
+      component: any
+    ) => {
 
-    const updatedComponents =
-      templateData?.barcodeState?.placedComponents?.map((comp) => {
-        if (comp.id !== id) return comp;
+      const updatedComponents =
+        templateData?.barcodeState?.placedComponents?.map((comp) => {
+          if (comp.id !== id) return comp;
 
-        //  If Line element → update lineWidth + lineThickness
-        if (component.type === DesignerElementType.line) {
+          //  If Line element → update lineWidth + lineThickness
+          if (component.type === DesignerElementType.line) {
+            return {
+              ...comp,
+              lineWidth: widthPt,
+              lineThickness: heightPt,
+            };
+          }
+
+          //  Otherwise → normal width/height update
           return {
             ...comp,
-            lineWidth: widthPt,
-            lineThickness: heightPt,
+            width: widthPt,
+            height: heightPt,
           };
-        }
+        }) || [];
 
-        //  Otherwise → normal width/height update
-        return {
-          ...comp,
-          width: widthPt,
-          height: heightPt,
-        };
-      }) || [];
+      const newTemplateData: TemplateState<unknown> = {
+        ...templateData,
+        barcodeState: {
+          ...templateData.barcodeState,
+          placedComponents: updatedComponents,
+        },
+      };
 
-    const newTemplateData: TemplateState<unknown> = {
-      ...templateData,
-      barcodeState: {
-        ...templateData.barcodeState,
-        placedComponents: updatedComponents,
-      },
-    };
+      setTemplateData(newTemplateData);
+      pushToHistory(newTemplateData, `resize ${component.type} containers`);
 
-    setTemplateData(newTemplateData);
-    pushToHistory(newTemplateData, `resize ${component.type} containers`);
+      // ----------------------------------------------------
+      //    UPDATE SELECTED COMPONENT (same logic as above)
+      // ----------------------------------------------------
+      if (selectedComponent?.id === id) {
+        setSelectedComponent((prev) => {
+          if (!prev) return prev;
+          // If line → update line values
+          if (component.type === DesignerElementType.line) {
+            return {
+              ...prev,
+              lineWidth: widthPt,
+              lineThickness: heightPt,
+            };
+          }
 
-    // ----------------------------------------------------
-    //    UPDATE SELECTED COMPONENT (same logic as above)
-    // ----------------------------------------------------
-    if (selectedComponent?.id === id) {
-      setSelectedComponent((prev) => {
-        if (!prev) return prev;
-        // If line → update line values
-        if (component.type === DesignerElementType.line) {
+          // Otherwise → update width/height
           return {
             ...prev,
-            lineWidth: widthPt,
-            lineThickness: heightPt,
+            width: widthPt,
+            height: heightPt,
           };
-        }
+        });
+      }
+    },
+    150
+  );
 
-        // Otherwise → update width/height
-        return {
-          ...prev,
-          width: widthPt,
-          height: heightPt,
-        };
-      });
+
+  const getFieldContent = () => {
+    if (!forCustomRows) return barCodeField;
+
+    if (templateGroup === "CBR") {
+      return ledgerReportFields;
     }
-  },
-  150
-);
-
-
-const getFieldContent = () => {
-  if (!forCustomRows) return barCodeField;
-
-  if (templateGroup === "CBR") {
-    return ledgerReportFields;
-  }
-  if (templateGroup === "Cheque") {
-    return CheckFields;
-  } 
-  return accountsVoucherTypes.includes(templateGroup as VoucherType)
-    ? accountsFields
-    : inventoryFields;
-};
+    if (templateGroup === "Cheque") {
+      return CheckFields;
+    }
+    return accountsVoucherTypes.includes(templateGroup as VoucherType)
+      ? accountsFields
+      : inventoryFields;
+  };
 
 
   // Computed values
@@ -2302,15 +2302,15 @@ const getFieldContent = () => {
   return (
     <div className={`flex h-dvh max-h-dvh bg-gray-100 overflow-hidden w-full 
     ${templateData.propertiesState?.language_prefer === "Eng" ? "dir-ltr" : templateData.propertiesState?.language_prefer === "Arb" ? "dir-rtl" : "dir-ltr"}`}
-        style={forCustomRows ? {
-      height: `${selectedPageSize?.height+toolbarHeightPt}pt`,
-      maxHeight: `${selectedPageSize?.height+toolbarHeightPt}pt`,
-      overflow: "hidden",
-    } : undefined}
+      style={forCustomRows ? {
+        height: `${selectedPageSize?.height + toolbarHeightPt}pt`,
+        maxHeight: `${selectedPageSize?.height + toolbarHeightPt}pt`,
+        overflow: "hidden",
+      } : undefined}
     >
       {/* Left Sidebar - Components */}
       <ResizableBox
-        key={`left-sidebar-${leftSidebarWidth}`} 
+        key={`left-sidebar-${leftSidebarWidth}`}
         width={leftSidebarWidth}
         height={Infinity}
         minConstraints={[150, Infinity]}
@@ -2318,9 +2318,9 @@ const getFieldContent = () => {
         resizeHandles={[templateData.propertiesState?.language_prefer === "Arb" ? "w" : "e",]}
         handle={<div className={`custom-handle ${templateData.propertiesState?.language_prefer === "Arb" ? "rtl" : "ltr"}`} />}
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
-          onResize={(e, { size }) => {
-            setLeftSidebarWidth(size.width);
-          }}
+        onResize={(e, { size }) => {
+          setLeftSidebarWidth(size.width);
+        }}
       >
         <div className="border-r border-gray-200 p-4">
           <div className="bg-[] border-b border-dashed pb-2 mb-1 border-gray-600">
@@ -2369,9 +2369,9 @@ const getFieldContent = () => {
       {/* Main Design Area */}
       <div className="flex-1 flex flex-col bg-[#e5e7eb]" style={{ height: "100%" }}>
         {/* Toolbar */}
-        <div 
-        ref={toolbarRef}
-        className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
+        <div
+          ref={toolbarRef}
+          className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center">
             {!forCustomRows && (
               <div className=" ">
@@ -2385,15 +2385,15 @@ const getFieldContent = () => {
               variant="custom"
               onClick={handleUndo}
               title="Undo (Ctrl+Z)"
-              backgroundColor="#5F6368" 
-              foreColor="white"    
+              backgroundColor="#5F6368"
+              foreColor="white"
               disabled={loading || !canUndo}
             />
-             <ERPButton
+            <ERPButton
               startIcon="ri-arrow-go-forward-fill"
               title="Redo (Ctrl+Shift+Z)"
               onClick={handleRedo}
-              foreColor="white"     
+              foreColor="white"
               variant="custom"
               backgroundColor="#5F6368"
               disabled={loading || !canRedo}
@@ -2409,10 +2409,10 @@ const getFieldContent = () => {
               variant="primary"
               loading={loading}
             />
-               {/* Optional: Show history counter */}
-    <div className="text-xs text-gray-500 px-2 border-l border-gray-300">
-      {historyIndex + 1}/{history.length}
-    </div>
+            {/* Optional: Show history counter */}
+            <div className="text-xs text-gray-500 px-2 border-l border-gray-300">
+              {historyIndex + 1}/{history.length}
+            </div>
           </div>
         </div>
 
@@ -2444,8 +2444,8 @@ const getFieldContent = () => {
               ((templateData?.propertiesState?.gap?.hgap ?? 0) *
                 ((templateData?.barcodeState?.labelState?.rowsPerPage ?? 1) - 1))
               }pt`,
-              
-              padding: forCustomRows ? `${template?.propertiesState?.padding?.top ?? 0}pt 
+
+            padding: forCustomRows ? `${template?.propertiesState?.padding?.top ?? 0}pt 
                       ${template?.propertiesState?.padding?.right ?? 0}pt 
                       ${0}pt 
                       ${template?.propertiesState?.padding?.left ?? 0}pt`
@@ -2459,14 +2459,14 @@ const getFieldContent = () => {
             width={labelWidthPx}
             height={labelHeightPx}
             minConstraints={[ptToPx(50), ptToPx(50)]}
-           maxConstraints={
-            forCustomRows
-              ? [
-                  ptToPx(customePageWidth), 
+            maxConstraints={
+              forCustomRows
+                ? [
+                  ptToPx(customePageWidth),
                   ptToPx(customePageMaxHeight)
                 ]
-              : [ptToPx(1200), ptToPx(800)]
-          }
+                : [ptToPx(1200), ptToPx(800)]
+            }
             resizeHandles={[
               forCustomRows
                 ? "s"
@@ -2475,28 +2475,28 @@ const getFieldContent = () => {
                   : "se",
             ]}
             className="box"
-       onResize={handleContentLabelResize}
-  //         onResizeStop={(e, { size }) => {
-  //   const widthPt = pxToPt(size.width);
-  //   const heightPt = pxToPt(size.height);
+            onResize={handleContentLabelResize}
+          //         onResizeStop={(e, { size }) => {
+          //   const widthPt = pxToPt(size.width);
+          //   const heightPt = pxToPt(size.height);
 
-  //   // Build final state from current templateData (or from size direct)
-  //   const newTemplateData: TemplateState<unknown> = {
-  //     ...templateData,
-  //     barcodeState: {
-  //       ...templateData.barcodeState,
-  //       placedComponents: templateData.barcodeState?.placedComponents ?? [],
-  //       labelState: {
-  //         ...templateData?.barcodeState?.labelState,
-  //         labelWidth: widthPt,
-  //         labelHeight: heightPt,
-  //       },
-  //     },
-  //   };
+          //   // Build final state from current templateData (or from size direct)
+          //   const newTemplateData: TemplateState<unknown> = {
+          //     ...templateData,
+          //     barcodeState: {
+          //       ...templateData.barcodeState,
+          //       placedComponents: templateData.barcodeState?.placedComponents ?? [],
+          //       labelState: {
+          //         ...templateData?.barcodeState?.labelState,
+          //         labelWidth: widthPt,
+          //         labelHeight: heightPt,
+          //       },
+          //     },
+          //   };
 
-  //   // setTemplateData(newTemplateData);
-  //   pushToHistory(newTemplateData, "Resized main label"); // single, reliable undo entry
-  // }}  
+          //   // setTemplateData(newTemplateData);
+          //   pushToHistory(newTemplateData, "Resized main label"); // single, reliable undo entry
+          // }}  
           >
             <div
               ref={canvasRef}
@@ -2537,7 +2537,7 @@ const getFieldContent = () => {
 
       {/* Right Sidebar - Properties */}
       <ResizableBox
-        key={`right-sidebar-${rightSidebarWidth}`} 
+        key={`right-sidebar-${rightSidebarWidth}`}
         width={rightSidebarWidth} // Initial width
         height={Infinity}
         minConstraints={[200, Infinity]} // Minimum width
@@ -2546,9 +2546,9 @@ const getFieldContent = () => {
           templateData.propertiesState?.language_prefer === "Arb" ? "e" : "w",
         ]}
         handle={<div className={`custom-handle ${templateData.propertiesState?.language_prefer === "Arb" ? "ltr" : "rtl"}`} />}
-          onResize={(e, { size }) => {
-            setRightSidebarWidth(size.width);
-          }}
+        onResize={(e, { size }) => {
+          setRightSidebarWidth(size.width);
+        }}
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden relative"
       >
         <div className="p-4 h-full">
@@ -2896,7 +2896,7 @@ const getFieldContent = () => {
                 )}
 
                 <Box sx={{ mb: 1 }}>
-                  <ERPInput 
+                  <ERPInput
                     id="x"
                     type="number"
                     label={t("position_x")}
@@ -3885,18 +3885,25 @@ const getFieldContent = () => {
                       type="file"
                       ref={inputFile}
                       onChange={(e: any) => {
-                        if (e.target.files[0].size > 2097152) {
-                          ERPToast.showWith(
-                            "Maximum file size allowed is 2 MB, please try with different file.",
-                            "warning"
-                          );
-                        } else {
-                          handleImagePropsChange(
-                            "background_image",
-                            e.target.files[0]
-                          );
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        if (file.size > 2097152) {
+                          ERPToast.showWith(t("max_file_size_error"));
+                          e.target.value = "";
+                          return;
                         }
+                        // Type validation
+                        const error = validateImageFile(file);
+                        if (error) {
+                          ERPToast.showWith(error, "error"); // red toast
+                          e.target.value = "";
+                          return;
+                        }
+
+                        handleImagePropsChange("background_image", file);
+
                       }}
+
                       className={"hidden"}
                       accept="image/png,image/jpeg"
                       label={t("image")}
@@ -4199,19 +4206,29 @@ const getFieldContent = () => {
                       id="background_image"
                       type="file"
                       ref={inputFile}
+
                       onChange={(e: any) => {
-                        if (e.target.files[0].size > 2097152) {
-                          ERPToast.showWith(
-                            "Maximum file size allowed is 2 MB, please try with different file.",
-                            "warning"
-                          );
-                        } else {
-                          handleDesignerChange(
-                            "background_image",
-                            e.target.files[0],
-                            true
-                          );
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        if (file.size > 2097152) {
+                          ERPToast.showWith(t("max_file_size_error"));
+                          e.target.value = "";
+                          return;
                         }
+                        // Type validation
+                        const error = validateImageFile(file);
+                        if (error) {
+                          ERPToast.showWith(error, "error"); // red toast
+                          e.target.value = "";
+                          return;
+                        }
+
+                        handleDesignerChange(
+                          "background_image",
+                          file,
+                          true
+                        );
+
                       }}
                       className={"hidden"}
                       accept="image/png,image/jpeg"

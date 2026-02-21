@@ -692,6 +692,7 @@ export const transactionRoutes: TransactionRoute[] = [
   //   listTitle: TransactionListTitles.ServiceInvoices,
   //   icon: Receipt,
   // },
+  
   // 3 pending post transaction ,sales view ,packing slip
   //#endregion Inventory
 ];

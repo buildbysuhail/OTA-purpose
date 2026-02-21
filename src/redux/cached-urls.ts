@@ -145,6 +145,7 @@ export const getApLocalDataByUrl = async (url: string,
   }
   return null;
 };
+
 export const getApLocalData = async (groupKey: keyof typeof CachedUrls,
   queryString: string = "",isKyeBase64: boolean = false) => {
   const encoded = isKyeBase64 ?  groupKey:btoa(groupKey);
@@ -157,11 +158,13 @@ export const getApLocalData = async (groupKey: keyof typeof CachedUrls,
   const filtered = filterData(val, queryString);
   return filtered;
 };
+
 /**
  * Generic filter function for any array and query string.
  * Example: filterData(data, "status=active&type=2")
  */
-const filterData = async <T extends Record<string, any>>(
+
+export const filterData = async <T extends Record<string, any>>(
   data: T[],
   queryString: string
 ): Promise<T[]> => {

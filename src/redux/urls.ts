@@ -694,6 +694,7 @@ const Urls = {
   tcsCategory: "/Inventory/TCSCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
+  salesView: "/Inventory/SalesView/",
   daily_statement_sales:
     "/Inventory/RptInventoryDailyStatementReport/DailyStatementReportSales",
   daily_statement_purchase:

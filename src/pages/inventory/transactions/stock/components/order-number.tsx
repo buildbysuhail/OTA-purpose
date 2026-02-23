@@ -67,9 +67,9 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
         undefined,
         true,
         false,
-        "PI_Ref",
         "",
-        "",true,false
+        "",
+        "",true,true
       );
     }, [formState.transaction.master.mannualInvoiceNumber]);
 
@@ -89,7 +89,7 @@ const OrderNo = React.forwardRef<HTMLInputElement, LoadByOrderNoProps>(
             {(formState.transaction.master.voucherType == "PI" ||
               formState.transaction.master.voucherType == "GRN" || props.type == "PI_Ref") && (
               <button
-                className="bg-gray-300 p-2 rounded-md hover:shadow-md transition duration-300 flex-shrink-0"
+                className="bg-gray-300 p-1.5 rounded-md hover:shadow-md transition duration-300 flex-shrink-0"
                 onClick={showLoadByRefNo}
               >
                 <Ellipsis className="w-4 h-4" />

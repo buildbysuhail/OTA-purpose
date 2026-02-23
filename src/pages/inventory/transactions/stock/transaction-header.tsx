@@ -43,6 +43,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPRadio from "../../../../components/ERPComponents/erp-radio";
 import WarehouseIDFromTo from "./components/warehouseIdFromTo";
 import WareHouseStockList from "./components/warehouse-stock-list";
+import VoucherNumberLoad from "./voucher-number-load";
 
 interface TransactionHeaderProps {
   formState: TransactionFormState;
@@ -694,17 +695,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             dispatch(
                               formStateMasterHandleFieldChange({
                                 fields: {
-                                  fType: e.value,
+                                  voucherForm: e.value,
                                 },
                               })
                             );
                           }}
                           value={formState.transaction.master.fType}
                           field={{
-                            id: "fType",
+                            id: "id",
                             valueKey: "id",
                             labelKey: "name",
-                            getListUrl: `${Urls.inv_transaction_base}${transactionType}/Data/FormTypeByVoucherType/${formState.transaction.master.voucherType}`,
+                            getListUrl: Urls.data_form_type,
                           }}
                         />
                         {/* This for stock branch transfer - need to set the branch ebd point below */}
@@ -722,17 +723,25 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                               );
                             }}
                           />
-                            <ERPDataCombobox
+                           <ERPDataCombobox
                             id="branch"
                             label={t("branch")}
                             field={{
-                              id: "sm",
-                              // getListUrl: Urls.,
-                              valueKey: "sm",
-                              labelKey: "smName",
+                              id: "id",
+                              getListUrl: Urls.data_acc_Branches,
+                              valueKey: "id",
+                              labelKey: "name",
                             }}
-                            // onChangeData={(data: any) => { handleFieldChange("sm", data.sm); }}
+                            data={formState.transaction.master}
                             disabled={formState.branchCheckbox === false}
+                            value={formState.transaction.master.branchID}
+                            onSelectItem={(e: { label: string; value: string | number }) => {
+                              dispatch(
+                                formStateMasterHandleFieldChange({
+                                  fields: { branchID: e.value },
+                                })
+                              );
+                            }}
                           />
                         </div>
                         <Employee
@@ -922,9 +931,36 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                                     />
                                 </div>
                               )}
-                              <ERPButton title={t("load_pi_import")} variant="secondary"/>
-                              <ERPButton title={t("load_os")} variant="secondary"/>
-                              <ERPButton title={t("load_b_req")} variant="secondary"/>
+                              {/* Load PI Import voucherNumber Data */}
+                              <VoucherNumberLoad
+                                t={t}
+                                loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                loadVoucherType="PIImport"
+                                voucherType = {formState.transaction.master.voucherType}
+                                formState={formState}
+                                loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                title="load_pi_import"
+                              />
+                              {/* Load OS(Opening Stock) voucher Number data */}
+                              <VoucherNumberLoad
+                                t={t}
+                                loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                loadVoucherType="OS"
+                                voucherType = {formState.transaction.master.voucherType}
+                                formState={formState}
+                                loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                title="load_os"
+                              />
+                              {/* Load GR load by voucher number */}
+                              <VoucherNumberLoad
+                                t={t}
+                                loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                loadVoucherType="GR"
+                                voucherType = {formState.transaction.master.voucherType}
+                                formState={formState}
+                                loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                title="load_b_req"
+                              />
                               <ERPButton
                                 title={t("more")}
                                 variant="secondary"
@@ -937,10 +973,44 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                               {/* Only Branch Transfer Out */}
                               {formState.transaction.master.voucherType === VoucherType.BranchTransferOut && (
                                 <div className="flex gap-1">
-                                    <ERPButton title={t("load_pi")} variant="secondary"/>
-                                    <ERPButton title={t("load_bti")} variant="secondary"/>
-                                    <ERPButton title={t("load_grn")} variant="secondary"/>
-                                    <ERPButton title={t("load_po")} variant="secondary"/>
+                                    {/* Load PI voucher number data */}
+                                    <VoucherNumberLoad
+                                      t={t}
+                                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                      loadVoucherType="PI"
+                                      voucherType = {formState.transaction.master.voucherType}
+                                      formState={formState}
+                                      loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                      title="load_pi"
+                                    />
+                                    {/* Load BTI voucher number data */}
+                                    <VoucherNumberLoad
+                                      t={t}
+                                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                      loadVoucherType="BTI"
+                                      voucherType = {formState.transaction.master.voucherType}
+                                      formState={formState}
+                                      loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                      title="load_bti"
+                                    />
+                                    <VoucherNumberLoad
+                                      t={t}
+                                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                      loadVoucherType="GRN"
+                                      voucherType = {formState.transaction.master.voucherType}
+                                      formState={formState}
+                                      loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                      title="load_grn"
+                                    />
+                                    <VoucherNumberLoad
+                                      t={t}
+                                      loadAndSetTransVoucher={loadAndSetTransVoucher}
+                                      loadVoucherType="PO"
+                                      voucherType = {formState.transaction.master.voucherType}
+                                      formState={formState}
+                                      loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                                      title="load_po"
+                                    />
                                     
                                 </div>
                               )}

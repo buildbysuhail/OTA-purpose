@@ -14,6 +14,12 @@ interface WarehouseIDProps extends VoucherElementProps {
   label?: string;
 }
 
+export enum StockType {
+  All = "All",
+  NonStockWareHouse = "NonStockWareHouse",
+  StockWareHouse = "StockWareHouse"
+}
+
 const WarehouseIDFromTo = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
   ({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown, warehouseType = "from", label }, ref) => {
     const isFromWarehouse = warehouseType === "from";
@@ -101,6 +107,13 @@ const WarehouseIDFromTo = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
         : (rawValue === null || rawValue === undefined || rawValue === 0 ? -2 : rawValue);
     const displayLabel = label ?? t(formState.formElements.cbWarehouseID.label);
 
+    let comboType = ""
+    if(formState.transaction.master.voucherType === "ST" && warehouseType === "from"){
+      comboType = StockType.All
+    }else if(formState.transaction.master.voucherType === "ST" && warehouseType === "to"){
+      comboType = StockType.StockWareHouse
+    }
+
     return (
       <>
       {
@@ -130,7 +143,7 @@ const WarehouseIDFromTo = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
               id: fieldId,
               valueKey: "id",
               labelKey: "name",
-              getListUrl: Urls.data_warehouse,
+              getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=${comboType}`,
             }}
             disabled={
               formState.formElements.cbWarehouseID.disabled ||

@@ -166,7 +166,7 @@ const StockLedger = () => {
         if (exportCell != undefined) {
           const value =
             cellElement.data?.quantity == null
-              ? ""
+              ? 0
               : getFormattedValue(cellElement.data.quantity, false, 4);
           return {
             ...exportCell,
@@ -176,7 +176,7 @@ const StockLedger = () => {
           };
         } else {
           return cellElement.data?.quantity == null
-            ? ""
+            ? 0
             : getFormattedValue(cellElement.data.quantity, false, 4);
         }
       },
@@ -244,16 +244,17 @@ const StockLedger = () => {
         }
       },
     },
-    {
-      dataField: "createdDate",
-      caption: t("created_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting: true,
-      width: 80,
-      visible: false,
-    },
+    //not in gcc/india
+    // {
+    //   dataField: "createdDate",
+    //   caption: t("created_date"),
+    //   dataType: "date",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   allowSorting: true,
+    //   width: 80,
+    //   visible: false,
+    // },
   ];
 
   const { getFormattedValue } = useNumberFormat();
@@ -325,7 +326,9 @@ const StockLedger = () => {
                   paging: false,
                   sorting: false,
                 }}
-                filterText="{id > 0 && , of Product : [product]}{warehouseID > 0 && , Warehouse : [warehouse]} Date From : {fromDate} To {toDate}"
+                filterText="{id > 0 && of Product : [product] , }
+                {warehouseID > 0 && Warehouse : [wareHouse] , } 
+                Date From : {fromDate} To {toDate}"
                 columns={columns}
 
                 gridHeader={t("stock_ledger_report")}

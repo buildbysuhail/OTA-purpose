@@ -17,14 +17,7 @@ const StockSummaryFilter = ({
   return (
     <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
       <div className="grid lg:grid-cols-3 md:grid-cols-1 gap-2 md:gap-4">
-        <ERPDateInput
-          label={t("as_on_date")}
-          {...getFieldProps("asOnDate")}
-          className="w-full"
-          onChangeData={(data: any) =>
-            handleFieldChange("asOnDate", data.asOnDate)
-          }
-        />
+
       </div>
 
       <div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4">
@@ -213,6 +206,14 @@ const StockSummaryFilter = ({
             });
           }}
         />
+        <ERPDateInput
+          label={t("as_on_date")}
+          {...getFieldProps("asOnDate")}
+          className="w-full"
+          onChangeData={(data: any) =>
+            handleFieldChange("asOnDate", data.asOnDate)
+          }
+        />
         <ERPCheckbox
           id="showBatchWise"
           {...getFieldProps("showBatchWise")}
@@ -221,76 +222,68 @@ const StockSummaryFilter = ({
             handleFieldChange("showBatchWise", data.showBatchWise)
           }
         />
-        {/* <ERPCheckbox
-                    id="standardFormat"
-                    {...getFieldProps("standardFormat")}
-                    label={t("standard_format")}
-                    onChangeData={(data) => handleFieldChange("standardFormat", data.standardFormat)}
-                /> */}
       </div>
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2 p-4 rounded-md border border-gray-200">
         <ERPRadio
-          id="allStock"
+          id="all"
           name="stockFilter"
           value="all"
           label={t("all_stock")}
-          checked={formState.stockFilter === "all"}
-          onChange={() => handleFieldChange("stockFilter", "all")}
-          className="items-center"
+          checked={getFieldProps("stockFilter").value == "all"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
         />
         <ERPRadio
-          id="zeroStock"
+          id="zero"
           name="stockFilter"
-          value="Zero"
+          value="zero"
           label={t("zero_stock")}
-          checked={formState.stockFilter === "zero"}
-          onChange={() => handleFieldChange("stockFilter", "zero")}
-          className="items-center"
+          checked={getFieldProps("stockFilter").value == "zero"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
         />
         <ERPRadio
-          id="positiveStock"
+          id="positive"
           name="stockFilter"
-          value="Positive"
+          value="positive"
           label={t("positive_stock")}
-          checked={formState.stockFilter === "positive"}
-          onChange={() => handleFieldChange("stockFilter", "positive")}
+          checked={getFieldProps("stockFilter").value == "positive"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
           className="items-center"
         />
         <ERPRadio
-          id="negativeStock"
+          id="negative"
           name="stockFilter"
-          value="Negative"
+          value="negative"
           label={t("negative_stock")}
-          checked={formState.stockFilter === "negative"}
-          onChange={() => handleFieldChange("stockFilter", "negative")}
+          checked={getFieldProps("stockFilter").value == "negative"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
           className="items-center"
         />
         <ERPRadio
-          id="aboveMaxStock"
+          id="maxStock"
           name="stockFilter"
-          value="MaxStcok"
+          value="maxStock"
           label={t("above_max_stock")}
-          checked={formState.stockFilter === "aboveMax"}
-          onChange={() => handleFieldChange("stockFilter", "aboveMax")}
+          checked={getFieldProps("stockFilter").value == "maxStock"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
           className="items-center"
         />
         <ERPRadio
-          id="belowMinStock"
+          id="minStock"
           name="stockFilter"
-          value="MinStock"
+          value="minStock"
           label={t("below_min_stock")}
-          checked={formState.stockFilter === "belowMin"}
-          onChange={() => handleFieldChange("stockFilter", "belowMin")}
+          checked={getFieldProps("stockFilter").value == "minStock"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
           className="items-center"
         />
         <ERPRadio
-          id="belowReorderLevel"
+          id="reorderlevel"
           name="stockFilter"
-          value="Reorderlevel"
+          value="reorderlevel"
           label={t("below_reorder_level")}
-          checked={formState.stockFilter === "belowReorder"}
-          onChange={() => handleFieldChange("stockFilter", "belowReorder")}
+          checked={getFieldProps("stockFilter").value == "reorderlevel"}
+          onChange={(e) => handleFieldChange("stockFilter", e.target.value)}
           className="items-center"
         />
       </div>

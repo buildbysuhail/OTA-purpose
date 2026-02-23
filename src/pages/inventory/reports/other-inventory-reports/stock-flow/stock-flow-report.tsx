@@ -648,6 +648,17 @@ const StockFlowReport = () => {
         showInPdf: true,
       },
       {
+        dataField: "expiryDate",
+        caption: t("expiry_date"),
+        dataType: "date",
+        format:"dd-MMM-yyyy",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
         dataField: "adjstk",
         caption: t("adjstk"),
         dataType: "number",
@@ -716,9 +727,13 @@ const StockFlowReport = () => {
     ];
     return baseColumns.filter((column) => {
       if (
-        column.dataField == "mobileNumber" ||
-        column.dataField == "totalExciseTax" ||
-        column.dataField == "toWarehouseName"
+        column.dataField == "expiryDate"
+      ) {
+        return !clientSession.isAppGlobal;
+      }
+      if (
+        column.dataField == "adjstk"||
+        column.dataField == "adjval"
       ) {
         return clientSession.isAppGlobal;
       }
@@ -1030,6 +1045,8 @@ const StockFlowReport = () => {
                 gridHeader={t("stock_flow_report")}
                 dataUrl={Urls.stock_flow_report}
                 hideGridAddButton={true}
+                allowGrouping={true}
+                autoExpandAll={true}
                 enablefilter={true}
                 showFilterInitially={true}
                 method={ActionType.POST}

@@ -314,7 +314,7 @@ const ProductSummaryReport2: React.FC<{
                 allowSearching={false}
                 allowExport={false}
                 enableScrollButton={false}
-                ShowGridPreferenceChooser={false}
+                ShowGridPreferenceChooser={true}
                 showPrintButton={false}
                 postData={filter?.filter}
                 reload={reloadBase2}

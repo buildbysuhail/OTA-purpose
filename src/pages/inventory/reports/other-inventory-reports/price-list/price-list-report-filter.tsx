@@ -32,7 +32,7 @@ const PriceListReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("productGroupID")}
-          noLabel
+             label={t("product_group")}
           field={{
             id: "productGroupID",
             getListUrl: Urls.data_productgroup,
@@ -53,7 +53,7 @@ const PriceListReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("brandID")}
-          noLabel
+          label={t("brand")}
           field={{
             id: "brandID",
             getListUrl: Urls.data_brands,
@@ -74,7 +74,7 @@ const PriceListReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("itemID")}
-          noLabel
+           label={t("product")}
           field={{
             id: "itemID",
             getListUrl: Urls.data_products,
@@ -95,7 +95,7 @@ const PriceListReportFilter = ({ getFieldProps, handleFieldChange }: any) => {
         <ERPDataCombobox
           className="basis-2/3"
           {...getFieldProps("productCategoryID")}
-          noLabel
+         label={t("product_category")}
           field={{
             id: "productCategoryID",
             getListUrl: Urls.data_productcategory,

@@ -20,6 +20,7 @@ export interface popupDataProps {
 }
 interface popupData {
   printJobLoader: { isPrinting: boolean }
+  ledgerReportDate: { from?: Date ,to?:Date}
   onCloseWithUnsavedChange: { warn: boolean, succeeded: boolean, canceled: boolean }
   section: popupDataProps
   salesManRoute: popupDataProps
@@ -173,7 +174,8 @@ const initialState: popupData = {
   EmpDesignations: { isOpen: false, key: null, mode: "edit", reload: true },
   Leavetype: { isOpen: false, key: null, mode: "edit", reload: true },
   JobWorks: { isOpen: false, key: null, mode: "edit", reload: true },
-  EmpDocuments: { isOpen: false, key: null, mode: "edit", reload: true }
+  EmpDocuments: { isOpen: false, key: null, mode: "edit", reload: true },
+  ledgerReportDate: {  }
 };
 
 const popupDataSlice = createSlice({
@@ -429,7 +431,10 @@ const popupDataSlice = createSlice({
     },
     toggleEmpDocuments: (state, action: PayloadAction<popupDataProps>) => {
       state.EmpDocuments = action.payload;
-    }
+    },
+    setStockDate: (state, action: PayloadAction<{ from: Date,to: Date }>) => {
+      state.ledgerReportDate = action.payload;
+    },
 
   },
 });
@@ -512,7 +517,8 @@ export const {
   toggleLeavetype,
   toggleJobWorks,
   toggleEmpDocuments,
-  toggleLastChooseTemplate
+  toggleLastChooseTemplate,
+  setStockDate
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

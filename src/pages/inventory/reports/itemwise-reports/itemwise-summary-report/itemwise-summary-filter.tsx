@@ -269,6 +269,11 @@ const ItemWiseSummaryFilter = ({ getFieldProps, handleFieldChange, formState, }:
                         handleFieldChange("location", data.value);
                     }}
                 />
+                  <ERPCheckbox
+                            label={t("ignore_groupwise")}
+                            {...getFieldProps("ignoreGroupwise")}
+                            onChangeData={(data: any) => handleFieldChange("ignoreGroupwise", data.ignoreGroupwise)}
+                        />
                 {
                     clientSession.isAppGlobal == true && (
                         <ERPCheckbox
@@ -303,4 +308,5 @@ export const ItemWiseSummaryFilterInitialState = {
     location: "",
     productCategoryID: -1,
     isCategoryWise: false,
+    ignoreGroupwise: false,
 };

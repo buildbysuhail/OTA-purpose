@@ -504,18 +504,34 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
     },
   ];
 
+
   const dataGridRef = useRef<any>(null);
+
   useEffect(() => {
-    const gridInstance = dataGridRef.current?.instance();
-    if (gridInstance) {
-      gridInstance.clearGrouping(); // Explicitly clear existing grouping
-      gridInstance.columnOption(
-        filter.isCategoryWise ? "category" : "groupName",
-        "groupIndex",
-        0
-      );
+    debugger;
+    if (filter.ignoreGroupwise == false) {
+      const gridInstance = dataGridRef.current?.instance();
+      if (gridInstance) {
+        gridInstance.clearGrouping(); // Explicitly clear existing grouping
+        gridInstance.columnOption(
+          filter.isCategoryWise ? "category" : "groupName",
+          "groupIndex",
+          0
+        );
+      }
+    } else {
+      const gridInstance = dataGridRef.current?.instance();
+      if (gridInstance) {
+        gridInstance.clearGrouping(); // Explicitly clear existing grouping
+        // gridInstance.columnOption(
+        //   filter.isCategoryWise ? "category" : "groupName",
+        //   "groupIndex",
+        //   0
+        // );
+      }
     }
   }, [filter.isCategoryWise, dataGridRef.current?.instance]);
+
 
   const location = useLocation();
   const [key, setKey] = useState(1);

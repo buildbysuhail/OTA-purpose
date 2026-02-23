@@ -6,6 +6,9 @@ import ERPButton from "../../../../../components/ERPComponents/erp-button";
 import moment from "moment";
 import Urls from "../../../../../redux/urls";
 import ErpInput from "../../../../../components/ERPComponents/erp-input";
+import { useDispatch, useSelector } from "react-redux";
+import { setStockDate } from "../../../../../redux/slices/popup-reducer";
+import { RootState } from "../../../../../redux/store";
 
 const StockLedgerFilter = ({
   getFieldProps,
@@ -13,27 +16,34 @@ const StockLedgerFilter = ({
   formState,
 }: any) => {
   const { t } = useTranslation("accountsReport");
+  const popupData = useSelector((state: RootState) => state?.PopupData);
 
+  const dispatch = useDispatch();
   const handleSetDate = () => {
+    debugger;
     const today = moment().local();
-    handleFieldChange("fromDate", today.clone().startOf("month").toDate());
-    handleFieldChange("toDate", today.clone().endOf("day").toDate());
+    dispatch(setStockDate({ from: getFieldProps("fromDate").value, to: getFieldProps("toDate").value }))
   };
 
   return (
     <div className="grid grid-cols-1 gap-4 overflow-y-hidden overflow-x-hidden">
       <div className="flex flex-col lg:flex-row md:flex-row items-end gap-4">
         <ERPDateInput
+          id="fromDate"
           label={t("from_date")}
-          {...getFieldProps("fromDate")}
+          value={popupData.ledgerReportDate?.from ?? getFieldProps("fromDate").value}
+          
+          data={formState}
           className="max-w-[150px]"
           onChangeData={(data: any) =>
             handleFieldChange("fromDate", data.fromDate)
           }
         />
         <ERPDateInput
+          id="toDate"
+          value={popupData.ledgerReportDate?.to ?? getFieldProps("toDate").value}
+          data={formState}
           label={t("to_date")}
-          {...getFieldProps("toDate")}
           className="max-w-[150px]"
           onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
         />
@@ -76,34 +86,34 @@ const StockLedgerFilter = ({
           }}
           onSelectItem={(data) => {
             handleFieldChange({
-              wareHouseID: data.value,
+              warehouseID: data.value,
               wareHouse: data.label,
             });
           }}
           className="w-full"
         />
-         <div>
-        <ERPCheckbox
-          id="showBatchWise"
-          {...getFieldProps("showBatchWise")}
-          label={t("batchwise")}
-          onChangeData={(data) =>
-            handleFieldChange("showBatchWise", data.showBatchWise)
-          }
-        />
-        <ErpInput
-         noLabel={true}
-          type="number"
-          placeholder={t("auto_barcode")}
-          disabled={getFieldProps("showBatchWise").value != true}
-          {...getFieldProps("autobarcode")}
-          onChange={(e: any) => {
-            handleFieldChange("autobarcode", e.target.value);
-          }}
-        />
+        <div>
+          <ERPCheckbox
+            id="showBatchWise"
+            {...getFieldProps("showBatchWise")}
+            label={t("batchwise")}
+            onChangeData={(data) =>
+              handleFieldChange("showBatchWise", data.showBatchWise)
+            }
+          />
+          <ErpInput
+            noLabel={true}
+            type="number"
+            placeholder={t("auto_barcode")}
+            disabled={getFieldProps("showBatchWise").value != true}
+            {...getFieldProps("autobarcode")}
+            onChange={(e: any) => {
+              handleFieldChange("autobarcode", e.target.value);
+            }}
+          />
+        </div>
       </div>
-      </div>
-     
+
       <div className="grid grid-cols-1 gap-2">
         <ERPCheckbox
           id="showOpeningStock"

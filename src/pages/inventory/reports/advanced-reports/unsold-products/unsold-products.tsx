@@ -152,7 +152,10 @@ const UnsoldProductReport = () => {
                   paging: false,
                   sorting: false,
                 }}
-                filterText="{branchid > -1 && of Branch : [branch]} {routeID > 1 && ,Route Name : [route]} Puchase From Date : {fromDate} - {toDate} , Sales From Date : {fromDateSales} - {toDateSales}"
+                filterText="{branchid > -1 && of Branch : [branch] , }
+                 {routeID > 1 && Route Name : [route] , } 
+                 Puchase From Date : {fromDate} - {toDate} 
+                 , Sales From Date : {fromDateSales} - {toDateSales}"
                 columns={columns}
                 gridHeader={t("unsold_product_report")}
                 dataUrl={Urls.unsold_products_reports}

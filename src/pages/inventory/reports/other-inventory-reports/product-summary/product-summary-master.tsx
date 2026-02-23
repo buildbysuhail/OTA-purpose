@@ -32,7 +32,7 @@ export interface ProductSummaryFilter {
 
 export interface ProductSummaryRef { reloadData: () => void; }
 const api = new APIClient();
-const ProductSummaryMaster = ({ productID, productBatchID, warehouseID }: any) => {
+const ProductSummaryMaster = ({ productID, productBatchID, warehouseID = 1 }: any) => {
   const childRef = useRef<ProductSummaryRef>(null);
   const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const dispatch = useAppDispatch();

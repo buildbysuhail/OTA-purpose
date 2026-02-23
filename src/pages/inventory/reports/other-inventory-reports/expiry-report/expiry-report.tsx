@@ -390,8 +390,8 @@ const ExpiryReport = () => {
                 }}
                 // {sectionID > 0 && , Section : [section]} cannot find a filter
                 filterText=" Between :{fromDate} and {toDate} 
-                  {productID > 0 && ,   Product :[productName]}
-                  {productGroupID > 0 && , Group Name : [groupName]}
+                  {productID > 0 && ,   Product :[product]}
+                  {productGroupID > 0 && , Group Name : [productGroup]}
                   {brandID > 0 && , Brand : [brand]}
                   {productCategoryID > 0 && ,  Product Category  : [productCategory]} 
                   {warehouseID > 0 && ,  Warehouse : [warehouse]} 

@@ -13691,4 +13691,14 @@ input[type=color i]::-webkit-color-swatch {
   @apply w-0;
 }
 
+/* Keep SVG menu icons (Lucide/Heroicons) crisp; legacy menu styles were built for icon fonts. */
+.app-sidebar .side-menu__item svg.side-menu__icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none !important;
+  stroke-width: 1.9;
+}
+
 /*# sourceMappingURL=style.css.map */

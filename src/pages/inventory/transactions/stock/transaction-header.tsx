@@ -630,7 +630,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                             label={t("m_invoice_no")}
                             loadAndSetTransVoucher={loadAndSetTransVoucher}
                           />
-                          <div className="flex gap-1 items-end">
+                          <div className="flex gap-1 items-center">
                           {formState.formElements.txtILRRefNo?.visible && (
                           <ERPInput
                             id="loadRequest"

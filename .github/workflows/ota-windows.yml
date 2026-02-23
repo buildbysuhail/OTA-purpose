@@ -23,6 +23,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.CDN_GITHUB_TOKEN }}
           NODE_OPTIONS: "--max-old-space-size=8192"
+        shell: bash
         run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#win-ota-}"
+          echo "Setting version to $VERSION"
+          npm version $VERSION --no-git-tag-version
           npm run build
           npx electron-builder --win --publish always

@@ -120,6 +120,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
                     cardHolderName: res.cardHolderName,
                     address1: res.address1,
                     phone: res.phone,
+                    mobile:res.mobile,
                     oBalance: res.oBalance + res.cardBalance,
                     privilegeCardsID: res.privilegeCardsID,
                     cardNumber:res.cardNumber,

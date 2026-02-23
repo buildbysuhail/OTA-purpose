@@ -2477,11 +2477,15 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           } else {
           }
         }
+        debugger;
         const voucherType = formState.transaction.master.voucherType;
 
         const isSI = voucherType === VoucherType.SalesInvoice;
         const isSR = voucherType === VoucherType.SalesReturn;
         const isSO = voucherType === VoucherType.SalesOrder;
+        const isDR = voucherType === VoucherType.GoodsDeliveryReturn;
+        const isGRR = voucherType === VoucherType.GoodsReceiptReturn;
+       
 
         /* ---------------- BASIC PRODUCT INFO ---------------- */
         outDetail.pCode = product.productCode;
@@ -2770,101 +2774,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           }
         }
 
-        /** ---------------- Scheme logic ---------------- */
-        // if (isSI&&applicationSettings.productsSettings.maintainSchemes) {
-        //   let schemeApplied = false;
-
-        //   if (product.schemeDiscount > 0) {
-        //     outDetail.discPerc = product.schemeDiscount;
-        //     outDetail.isSchemeItem = "S";
-        //     schemeApplied = true;
-        //   }
-
-        //   /** ---- Special scheme price ---- */
-        //   if (product.schemeDiscount === 0) {
-        //     let loadSchemePrice = true;
-
-        // if (product.schemeID > 0) {
-        //       outDetail.schemeQtyLimit = product.schemeQtyLimit;
-        //       outDetail.schemeFreeQty = product.schemeFreeQty;
-        //       outDetail.schemeType = product.schemeType;
-        //       outDetail.schemeID = product.schemeID;
-        //       outDetail.isSchemeProcessed = "N";
-        //     } else {
-
-        //         outDetail.schemeQtyLimit = 0;
-        //         outDetail.schemeFreeQty = 0;
-        //         outDetail.schemeType = "";
-        //         outDetail.schemeID = 0;
-        //     }
-
-        //     if (
-        //       outDetail.schemeType !== "Buy Exact N for off" &&
-        //       (outDetail.schemeFreeQty ?? 0) === 0 &&
-        //       (outDetail.schemeQtyLimit ?? 0) > 0
-        //     ) {
-        //       const reached = checkSpecialSpriceLimitReached(
-        //         outDetail.schemeQtyLimit!,
-        //         outDetail as any,
-        //         formState.transaction.details.filter((x) => x.productID > 0)
-        //       );
-        //       if (reached) {
-        //         loadSchemePrice = false;
-        //         schemeApplied = true;
-        //       }
-        //     }
-
-        //     if (
-        //       loadSchemePrice &&
-        //       outDetail.schemeType !== "Buy Exact N for off"
-        //     ) {
-        //       if (product.specialSchemePrice > 0) {
-        //         outDetail.unitPrice = product.specialSchemePrice;
-        //         outDetail.isSchemeItem = "S";
-        //         outDetail.actualSalesPrice = priceWithoutScheme;
-        //       }
-        //     }
-
-
-
-        //     /** ---- Qty based scheme ---- */
-        //     if (!schemeApplied && product.specialSchemePrice == 0) {
-        //       if (outDetail.schemeType === "Buy Exact N for off") {
-        //         if ((outDetail.schemeQtyLimit ?? 0) > 0) {
-        //           const dfg = await applySpecialSpriceExactQtyLimitReached(
-        //             outDetail.schemeQtyLimit!,
-        //             outDetail as TransactionDetail,
-        //             outDetail.slNo!,
-        //             formState.userConfig?.showRateBeforeTax || false,
-        //             product.specialSchemePrice!
-        //           );
-        //           if (dfg !== null) {
-        //             outDetail = merge({}, outDetail, dfg);
-        //           }
-        //         }
-        //       } else {
-        //           if (product.isCheckQtyLimit) {
-        //             outDetail.schemeQtyLimit = product.schemeQtyLimit;
-        //             outDetail.schemeFreeQty = product.schemeFreeQty;
-        //             outDetail.isSchemeProcessed = "N";
-
-        //             const dfg = await applyQtyDiscount(
-        //             outDetail.schemeQtyLimit!,
-        //             outDetail as TransactionDetail,
-        //             outDetail.slNo!,
-        //             product.schemeFreeQty
-        //           );
-        //           debugger;
-        //           if (dfg !== null) {
-        //             outDetail = merge({}, outDetail, dfg);
-        //           }
-        //             outDetail.isSchemeItem = "S";
-        //           }
-        //         }
-
-        //     }
-        //   }
-        // }
+        
         debugger;
         if (isSI && applicationSettings.productsSettings.maintainSchemes) {
           let schemeApplied = false;
@@ -3009,10 +2919,60 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           outDetail.unitPrice = product.weighingPrice;
           outDetail.ratePlusTax = product.weighingPrice;
         }
+
+
+        /** ---------------- Default Unit Price ---------------- */
+        if (isDR) {
+          if (multiFactor > 0) {
+            const salePrice = Number(product.stdSalesPrice || 0);
+            outDetail.unitPrice = salePrice * multiFactor;
+          } else {
+            outDetail.unitPrice = Number(product.stdSalesPrice || 0);
+          }
+        }
+        else if (isGRR) {
+          if (multiFactor > 0) {
+            const purchasePrice = Number(product.stdPurchasePrice || 0);
+            outDetail.unitPrice = purchasePrice * multiFactor;
+          } else {
+            outDetail.unitPrice = Number(product.stdPurchasePrice || 0);
+          }
+        }
+
+        /** ---------------- VAT Percentage ---------------- */
+        outDetail.vatPerc = Number(product.sVatPerc || 0);
+
+        /** ---------------- Price Category (Sales Only) ---------------- */
+        let priceCategoryPrice = 0;
+
+        if (isDR) {
+          priceCategoryPrice = product.priceCategoryPrice //toTest
+        }
+
+        if (priceCategoryPrice !== 0) {
+          outDetail.unitPrice = priceCategoryPrice;
+
+          const discPerc = product.priceCategoryDiscPerc //toTest
+
+          outDetail.discPerc = discPerc;
+        }
+
+        /** ---------------- Customer Last Sales Rate ---------------- */
+        if (
+          applicationSettings.productsSettings.loadCustomerLastRate &&
+          isDR
+        ) {
+          const lastRate = product.partyLastSalesRate //toTest
+
+          if (Number(lastRate) > 0) {
+            outDetail.unitPrice = Number(lastRate);
+          }
+        }
+
         /** ---------------- Tax / MRP inclusive ---------------- */
         let uRate = 0;
         let taxPerc = Number(outDetail.vatPerc || 0);
-
+        debugger;
         // DBID check (same as C#)
         if (userSession.dbIdValue !== "543140180640") {
           // Draft mode / form type condition
@@ -3034,8 +2994,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               Number(outDetail.unitPrice || 0) * (1 + taxPerc / 100);
 
             outDetail.ratePlusTax = round(rateWithTax);
-          }
-
+          } 
           // -------------------------------
           // Show rate INCLUDING tax (customer last price loaded)
           // -------------------------------
@@ -3050,7 +3009,22 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             outDetail.ratePlusTax = round(rateWithTax);
           }
 
-          if (!isSI) {
+          if (isDR && taxPerc > 0)
+          {
+            const uRate =
+              Number(outDetail.ratePlusTax || 0) / (1 + taxPerc / 100);
+
+            outDetail.unitPrice = round(uRate);
+          }
+
+          if(isGRR)
+          {
+            outDetail.ratePlusTax = outDetail.unitPrice;
+
+          }
+
+          if (!isSI && !isDR && !isGRR ) 
+          {
             outDetail.ratePlusTax = outDetail.unitPrice;
           }
 

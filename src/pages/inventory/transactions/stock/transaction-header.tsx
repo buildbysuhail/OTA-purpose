@@ -667,7 +667,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                   )}
 
               {[VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as VoucherType) && (
-                    <div className="flex flex-row gap-1 items-baseline">
+                    <div className="flex flex-row gap-1 items-end">
                         <ReferenceNumber
                         formState={formState}
                         dispatch={dispatch}
@@ -709,7 +709,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           }}
                         />
                         {/* This for stock branch transfer - need to set the branch ebd point below */}
-                        <div className="flex gap-1 flex-row items-start justify-center">
+                        <div className="flex gap-1 flex-row items-end justify-end">
                             <ERPCheckbox
                             id="branch"
                             className="text-left dark:text-dark-text flex px-1"
@@ -873,11 +873,11 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
             className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${formState.transaction.master.voucherType === "LPO" ? 'hidden' : 'block'} ${isDropDownOpen.open ? "max-h-[50vh]" : "max-h-0"}`}
           >
             <div className="p-4 md:p-2 dark:bg-dark-bg-card bg-white border-t dark:border-dark-border border-gray-300 shadow-lg">
-              <div className="flex flex-wrap !items-end gap-1">
+              <div className="flex flex-row items-end gap-1">
 
                 
                 {[VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as VoucherType) && (
-                      <div className="flex flex-row gap-1">
+                      <div className="flex flex-row gap-1 items-end">
 
                         <div className="flex gap-1">
                              <ERPInput
@@ -932,6 +932,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                                 </div>
                               )}
                               {/* Load PI Import voucherNumber Data */}
+                              <div className="flex gap-1 items-end">
                               <VoucherNumberLoad
                                 t={t}
                                 loadAndSetTransVoucher={loadAndSetTransVoucher}
@@ -961,13 +962,17 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                                 loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
                                 title="load_b_req"
                               />
-                              <ERPButton
-                                title={t("more")}
-                                variant="secondary"
-                                onClick={handleMoreButtonClick}
-                                disabled={formState.transactionLoading}
-                                className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
-                              />
+                              <div className="flex flex-col">
+                                <ERPButton
+                                  title={t("more")}
+                                  variant="secondary"
+                                  onClick={handleMoreButtonClick}
+                                  disabled={formState.transactionLoading}
+                                  className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                                />
+                              </div>
+                              </div>
+                              
                         </div>
                         <div className="flex">
                               {/* Only Branch Transfer Out */}

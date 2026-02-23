@@ -15,7 +15,7 @@ interface QRCodeComponentProps {
   handleDelete: (id: string) => void;
   qrCodeRefs:React.MutableRefObject<Record<string, HTMLDivElement | null>>;
   templateData?: any;
-  setTemplateData?: (updater: (prev: any) => any) => void;
+  setTemplateData?: React.Dispatch<React.SetStateAction<any>>;
   selectedComponent?: PlacedComponent | null;
   setSelectedComponent?: (updater: (prev: PlacedComponent | null) => PlacedComponent | null) => void;
   pushToHistory: (newState: any, action: string) => void;
@@ -55,9 +55,9 @@ export const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
       imageOptions: props.imageOptions
         ? {
             crossOrigin: props.imageOptions.crossOrigin || "anonymous",
-            hideBackgroundDots: props.imageOptions.hideBackgroundDots,
-            imageSize:ptToPx(props.imageOptions.imageSize) ,
-            margin:ptToPx(props.imageOptions.margin) ,
+            hideBackgroundDots: props.imageOptions.hideBackgroundDots ?? true,
+            imageSize:ptToPx(props.imageOptions.imageSize ?? 0.2),
+            margin: ptToPx(props.imageOptions.margin ?? 0) ,
           }
         : undefined,
       backgroundOptions: props.backgroundOptions

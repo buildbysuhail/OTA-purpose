@@ -18,6 +18,7 @@ const ShardPrevFooter = ({
   qrCodes: { [key: string]: string } 
 
 }) => {
+  debugger;
   const { convertAmountToEnglish, convertAmountToArabic } = useNumberToWords();
   const footerState = template?.footerState;
   const customElements = footerState?.customElements?.elements ?? [];

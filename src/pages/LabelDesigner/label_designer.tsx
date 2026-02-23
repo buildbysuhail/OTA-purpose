@@ -438,6 +438,28 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             level: "M",
             type: "svg",
             margin: 0,
+            image: "",
+            imageOptions: {
+              hideBackgroundDots: true,
+              imageSize: 0.2,
+              margin: 5,
+              crossOrigin: "anonymous",
+            },
+            dotsOptions: {
+              color: "#333",
+              type: "extra-rounded",
+            },
+            backgroundOptions: {
+              color: "#fafafa",
+            },
+            cornersSquareOptions: {
+              color: "#ff0000",
+              type: "classy",
+            },
+            cornersDotOptions: {
+              color: "#ff0000",
+              type: "dot",
+            },
           },
         };
 

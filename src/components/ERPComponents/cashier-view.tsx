@@ -16,24 +16,47 @@ import urls from "../../redux/urls";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
 
 export interface CashierViewData {
-  id: number;
-  branchID: number;
-  branch: string;
-  voucherNumber: string | null;
-  counter: string;
-  salesMan: string | null;
-  party: string;
-  voucherPrefix: string | null;
-  transactionDate: string; // ISO date string
-  netTotal: number;
-  billDiscount: number;
-  grandTotal: number;
-  staffIncentive: number;
-  roundAmount: number;
-  voucherType: string | null;
-  voucherForm: string | null;
-  dailyVoucherNumber: number;
-  ledgerID: number;
+    id: number;
+    branchID: number;
+    branch: string;
+    voucherNumber: string | null;
+    counter: string;
+    salesMan: string | null;
+    party: string;
+    voucherPrefix: string | null;
+    transactionDate: string; // ISO date string
+    netTotal: number;
+    billDiscount: number;
+    grandTotal: number;
+    staffIncentive: number;
+    roundAmount: number;
+    voucherType: string | null;
+    voucherForm: string | null;
+    dailyVoucherNumber: number;
+    ledgerID: number;
+}
+export interface SalesFormData {
+    masterId:number;
+    date: string;              // ISO string
+    voucherNumber: number;
+    party: string;
+    salesMan: string;
+
+    netTotal: number;          // 2 decimal financial number
+    billDiscount: number;
+    roundAmount: number;
+    grandTotal: number;
+
+    cashReceived: number;
+    balanceToPay: number;
+
+    printSalesInvoice: boolean;
+    printReceipt: boolean;
+
+    ledgerID: number;
+
+    voucherType: string | null;
+    voucherForm: string | null;
 }
 
 const CashierView: React.FC = () => {
@@ -111,7 +134,7 @@ const CashierView: React.FC = () => {
             dataType: "number",
             width: 100,
             visible: true,
-            format: "0.00",
+
         },
         {
             dataField: "billDiscount",
@@ -119,7 +142,7 @@ const CashierView: React.FC = () => {
             dataType: "number",
             width: 80,
             visible: true,
-            format: "0.00",
+
         },
         {
             dataField: "grandTotal",
@@ -127,7 +150,7 @@ const CashierView: React.FC = () => {
             dataType: "number",
             width: 80,
             visible: true,
-            format: "0.00",
+
         },
         {
             dataField: "staffIncentive",
@@ -135,7 +158,7 @@ const CashierView: React.FC = () => {
             dataType: "number",
             width: 100,
             visible: false,
-            format: "0.00",
+
         },
         {
             dataField: "roundAmount",
@@ -143,7 +166,7 @@ const CashierView: React.FC = () => {
             dataType: "number",
             width: 100,
             visible: false,
-            format: "0.00",
+
         },
         {
             dataField: "voucherType",
@@ -175,64 +198,153 @@ const CashierView: React.FC = () => {
         },
     ], []);
 
+    //correctround
+    const roundToTwo = (value: number) =>
+        Math.round((value + Number.EPSILON) * 100) / 100;
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<SalesFormData>({
+        masterId:0,
         date: new Date().toISOString(),
-        voucherNo: "0",
+        voucherNumber: 0,
         party: "",
         salesMan: "",
-        netTotal: "0.00",
-        billDiscount: "0.00",
-        roundOff: "0.00",
-        grandTotal: "0.00",
-        cashReceived: "0.00",
-        balanceToPay: "0.00",
+        netTotal: 0.0,
+        billDiscount: 0.0,
+        roundAmount: 0.0,
+        grandTotal: 0.0,
+        cashReceived: 0.0,
+        balanceToPay: 0.0,
         printSalesInvoice: false,
         printReceipt: false,
+        ledgerID: 0,
+        voucherType: null,
+        voucherForm: null,
     });
 
 
-            const feacthData = async () => {
-            const currentDate = formData?.date;
+    const feacthData = async () => {
+        const currentDate = formData?.date;
 
-            if (!currentDate) return;
-            // ✅ If already cached, use it
-            if (cacheRef.current.has(currentDate)) {
-                setGridData(cacheRef.current.get(currentDate)!);
-                console.log("Loaded from cache");
-                return;
-            }
+        if (!currentDate) return;
+        // ✅ If already cached, use it
+        if (cacheRef.current.has(currentDate)) {
+            setGridData(cacheRef.current.get(currentDate)!);
+            console.log("Loaded from cache");
+            return;
+        }
 
-            try {
+        try {
 
-                const api = new APIClient();
-                const res = await api.getAsync(`${urls.salesView}?Date=${currentDate}`);
+            const api = new APIClient();
+            const res = await api.getAsync(`${urls.salesView}?Date=${currentDate}`);
 
-                handlePlainResponse(res, () => {
+            handlePlainResponse(res, () => {
                 setGridData(res);
                 // 💾 Store in cache
                 cacheRef.current.set(currentDate, res);
-                });
+            });
 
-            }catch(err){
-                console.log("data featch error in cash-view",err); 
-            }
-            
-            };
-    
-            const handleChange = (field: string, value: any) => {
-            setFormData((prev) => ({
-                ...prev,
-                [field]:
+        } catch (err) {
+            console.log("data featch error in cash-view", err);
+        }
+
+    };
+
+    const handleChange = (field: string, value: any) => {
+        setFormData((prev) => ({
+            ...prev,
+            [field]:
                 field === "date"
                     ? new Date(value).toISOString()
                     : value,
-            }));
-            };
-
-    const handleSave = () => {
-        console.log("Saving:", formData);
+        }));
     };
+const saveSalesBookingToSalesInvoice = async (
+    invTransactionMasterID:number,
+    billDiscount:number,
+    cashReceived:number,
+    ledgerID:number,
+): Promise<number> => {
+    try {
+        // 🔎 Log parameters (equivalent to debugging C# call)
+        console.log("SaveSalesBookingToSalesInvoice called with:");
+        console.log("InvTransactionMasterID:", invTransactionMasterID);
+        console.log("BillDiscount:", billDiscount);
+        console.log("CashReceived:", cashReceived);
+        console.log("LedgerID:", ledgerID);
+
+        // Example API call (replace with your actual endpoint)
+        // const response = await api.post("/sales/save-booking-to-invoice", {
+        //     invTransactionMasterID,
+        //     billDiscount,
+        //     cashReceived,
+        //     ledgerID,
+        // });
+
+        return  0;
+    } catch (error) {
+        console.error("Error saving sales booking:", error);
+        return 0;
+    }
+};
+const handleSave = async () => {
+    try {
+        const {
+            balanceToPay,
+            cashReceived,
+            grandTotal,
+            billDiscount,
+            ledgerID,
+            masterId
+        } = formData;
+
+        // ✅ Validation (same logic as C#)
+        if (
+            balanceToPay >= 0 &&
+            cashReceived >= grandTotal &&
+            grandTotal > 0
+        ) {
+
+       const invMasterId =  await saveSalesBookingToSalesInvoice(masterId,billDiscount,cashReceived,ledgerID )
+        if(invMasterId){
+
+        }else{
+
+        }
+       
+
+        
+        //     if (response?.data?.id > 0) {
+        //         // ✅ Log action
+        //         await api.post("/audit/log", {
+        //             message: `User saved sales booking to sales invoices - Voucher ${formData.voucherNumber}`,
+        //             action: "save",
+        //             formCode: formCode,
+        //         });
+
+        //         // ✅ Print if required
+        //         if (formData.printSalesInvoice) {
+        //             printReceipt();
+        //         }
+
+        //         // ✅ Clear form
+        //         resetForm();
+
+        //         // ✅ Refresh grid
+        //         refreshSalesViewList();
+        //     } else {
+        //         throw new Error("Save failed");
+        //     }
+        
+        // } else {
+        //     showError("Validation failed");
+        // }
+    }
+    } catch (error) {
+        console.error(error);
+        // showError("Error while saving");
+    }
+};
 
     const handlePrint = () => {
         console.log("Printing:", formData);
@@ -240,20 +352,70 @@ const CashierView: React.FC = () => {
 
     const handleClear = () => {
         setFormData({
+            masterId:0,
             date: new Date().toISOString().split('T')[0],
-            voucherNo: "0",
+            voucherNumber: 0,
             party: "",
             salesMan: "",
-            netTotal: "0.00",
-            billDiscount: "0.00",
-            roundOff: "0.00",
-            grandTotal: "0.00",
-            cashReceived: "0.00",
-            balanceToPay: "0.00",
+            netTotal: 0.0,
+            billDiscount: 0.0,
+            roundAmount: 0.0,
+            grandTotal: 0.0,
+            cashReceived: 0.0,
+            balanceToPay: 0.0,
             printSalesInvoice: false,
             printReceipt: false,
+            ledgerID: 0,
+            voucherType: null,
+            voucherForm: null,
         });
     };
+    const handleRowClick = (event: any) => {
+        const row = event?.data;
+        if (!row) return;
+
+        setFormData((prev) => ({
+            ...prev,
+            party: row.party ?? "",
+            salesMan: row.salesMan ?? "",
+            netTotal: Number(row.netTotal) || 0,
+            billDiscount: Number(row.billDiscount) || 0,
+            roundAmount: Number(row.roundAmount) || 0,
+            grandTotal: Number(row.grandTotal) || 0,
+            voucherType:row.voucherType??null,
+            voucherForm:row.voucherForm??null,
+            ledgerID:Number(row.ledgerID) ||0
+        }));
+    };
+
+
+    const calculateTotals = (netTotal: number, billDiscount: number) => {
+        // Grand total before rounding
+        let grandTotal = netTotal - billDiscount;
+
+        // Rounded value
+        const rounded = Math.round(grandTotal);
+
+        // Round difference
+        const roundAmount =
+            Math.round((rounded - grandTotal + Number.EPSILON) * 100) / 100;
+
+        // Final grand total after round adjustment
+        grandTotal =
+            Math.round((grandTotal + roundAmount + Number.EPSILON) * 100) / 100;
+
+        return {
+            grandTotal,
+            roundAmount,
+        };
+    };
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            balanceToPay: roundToTwo(prev.cashReceived - prev.grandTotal),
+        }));
+    }, [formData.cashReceived,formData.grandTotal]);
 
     return (
         <>
@@ -278,6 +440,7 @@ const CashierView: React.FC = () => {
                         hideDefaultSearchPanel={true}
                         gridId="cashierViewGrid"
                         height={775}
+                        onRowClick={handleRowClick}
                     />
                 </div>
 
@@ -297,10 +460,10 @@ const CashierView: React.FC = () => {
                                 onChange={(e) => handleChange("date", e.target.value)}
                             />
                             <ERPInput
-                                id="voucherNo"
+                                id="voucherNumber"
                                 label={t('voucher_no')}
-                                value={formData.voucherNo}
-                                // onChange={(e) => handleChange("voucherNo", e.target.value)}
+                                value={formData.voucherNumber}
+                                // onChange={(e) => handleChange("voucherNumber", e.target.value)}
                                 className="w-20"
                                 readOnly
                             />
@@ -335,12 +498,12 @@ const CashierView: React.FC = () => {
                         <div className="flex items-end justify-between">
                             <label className="w-20">{t("sales_man")}</label>
 
-                               <ERPInput
+                            <ERPInput
                                 id="salesMan"
                                 noLabel={true}
-                              
-                                value={formData.netTotal}
-                                
+
+                                value={formData.salesMan}
+
                                 readOnly
                             />
                         </div>
@@ -352,8 +515,8 @@ const CashierView: React.FC = () => {
                                 id="netTotal"
                                 noLabel={true}
                                 className="w-32"
-                                value={formData.netTotal}
-                               readOnly
+                                value={formData.netTotal.toFixed(2)}
+                                readOnly
                             />
                         </div>
 
@@ -364,8 +527,42 @@ const CashierView: React.FC = () => {
                                 id="billDiscount"
                                 noLabel={true}
                                 className="w-32"
+                                type="number"
                                 value={formData.billDiscount}
-                                readOnly
+                                onChange={(e) => {
+                                    const value = e.target.value;
+
+                                    // Allow empty input while typing
+                                    if (value === "") {
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            billDiscount: 0,
+                                        }));
+                                        return;
+                                    }
+
+                                    const discount = Number(value);
+
+                                    if (isNaN(discount)) return;
+
+                                    setFormData((prev) => {
+                                        const totals = calculateTotals(prev.netTotal, discount);
+
+                                        return {
+                                            ...prev,
+                                            billDiscount: discount,
+                                            grandTotal: totals.grandTotal,
+                                            roundAmount: totals.roundAmount,
+                                        };
+                                    });
+                                }}
+                                onBlur={() => {
+                                    // Format only when user leaves input
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        billDiscount: Math.round((prev.billDiscount + Number.EPSILON) * 100) / 100,
+                                    }));
+                                }}
                             />
                         </div>
 
@@ -373,10 +570,10 @@ const CashierView: React.FC = () => {
                         <div className="flex items-end justify-between">
                             <label>{t("round_off")}</label>
                             <ERPInput
-                                id="roundOff"
+                                id="roundAmount"
                                 noLabel={true}
                                 className="w-32"
-                                value={formData.roundOff}
+                                value={formData.roundAmount}
                                 readOnly
                             />
                         </div>
@@ -388,7 +585,7 @@ const CashierView: React.FC = () => {
                                 id="grandTotal"
                                 noLabel={true}
                                 className="w-32"
-                                value={formData.grandTotal}
+                                value={formData.grandTotal.toFixed(2)}
                                 readOnly
                             />
                         </div>
@@ -398,10 +595,16 @@ const CashierView: React.FC = () => {
                             <label>{t("cash_received")}</label>
                             <ERPInput
                                 id="cashReceived"
+                                type="number"
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.cashReceived}
-                                readOnly
+                                onChange={(e) =>
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        cashReceived: Number(e.target.value) || 0,
+                                    }))
+                                }
                             />
                         </div>
 
@@ -412,7 +615,7 @@ const CashierView: React.FC = () => {
                                 id="balanceToPay"
                                 noLabel={true}
                                 className="w-32"
-                                value={formData.balanceToPay}
+                                value={formData.balanceToPay.toFixed(2)}
                                 readOnly
                             />
                         </div>

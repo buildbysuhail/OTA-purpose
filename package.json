@@ -35,7 +35,7 @@
       "allowToChangeInstallationDirectory": false,
       "allowElevation": true,
       "deleteAppDataOnUninstall": false,
-      "include": "build/installer.nsh"
+      "include": "scripts/installer.nsh"
     },
     "mac": {
       "target": [

@@ -1,4 +1,4 @@
-import { Landmark } from "lucide-react";
+import { Landmark, Wallet, ShoppingCart, Store, ChartLine, CreditCard, FileText  } from "lucide-react";
 import { TransactionBase, transactionRoutes } from "../../content/transaction-routes";
 import { TransactionTitles } from "../../content/transaction-titles";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
@@ -366,7 +366,7 @@ export const MENUITEMS = [
   //   ],
   // },
   {
-    icon: <i className="side-menu__icon ri-wallet-3-line"></i>,
+    icon: <Wallet className="side-menu__icon" />,
     type: "sub",
     Name: "",
     active: false,
@@ -408,7 +408,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-shopping-cart-line"></i>,
+    icon: <ShoppingCart  className="side-menu__icon" />,
     type: "sub",
     Name: "",
     active: false,
@@ -441,7 +441,7 @@ export const MENUITEMS = [
     ],
   },
   {
-    icon: <i className="side-menu__icon ri-store-2-line"></i>,
+    icon: <Store  className="side-menu__icon" />,
     type: "sub",
     Name: "",
     active: false,
@@ -587,7 +587,7 @@ export const MENUITEMS = [
   //   ],
   // },
   {
-    icon: <i className="side-menu__icon ri-line-chart-line"></i>,
+    icon: <ChartLine  className="side-menu__icon" />,
     type: "link",
     Name: "",
     active: false,
@@ -599,7 +599,7 @@ export const MENUITEMS = [
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
   },
   {
-    icon: <i className="side-menu__icon ri-database-2-line"></i>,
+    icon: <CreditCard  className="side-menu__icon" />,
     type: "link",
     Name: "",
     active: false,
@@ -612,7 +612,7 @@ export const MENUITEMS = [
     class: "badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2",
   },
   {
-    icon: <i className="side-menu__icon ri-database-2-line"></i>,
+    icon: <FileText  className="side-menu__icon" />,
     type: "link",
     Name: "",
     active: false,

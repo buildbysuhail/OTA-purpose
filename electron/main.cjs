@@ -14,6 +14,7 @@ app.whenReady().then(() => {
 // Allow file access
 app.commandLine.appendSwitch("allow-file-access-from-files");
 app.commandLine.appendSwitch("disable-http2");
+app.commandLine.appendSwitch("ignore-certificate-errors");
 
 // Register custom protocol BEFORE ready
 protocol.registerSchemesAsPrivileged([
@@ -56,22 +57,49 @@ let mainWindow = null;
 app.whenReady().then(() => {
   const distPath = path.join(app.getAppPath(), "dist");
 
-  // Fix CORS for API (optional) - echo request Origin or fallback to dev server
   const ses = session.defaultSession;
+  const requestOrigins = new Map();
+
+  // Redirect requests from localhost to the production API endpoint
+  ses.webRequest.onBeforeRequest((details, callback) => {
+    const url = details.url;
+    if (url.match(/^https?:\/\/localhost:7213/)) {
+      const newUrl = url.replace(/^https?:\/\/localhost:7213/, "https://api.poldev.work");
+      console.log(`[API Redirect] From: ${details.url} To: ${newUrl}`);
+      callback({ redirectURL: newUrl });
+    } else {
+      callback({});
+    }
+  });
+
+  ses.webRequest.onBeforeSendHeaders(
+    { urls: ["https://api.poldev.work/*"] },
+    (details, callback) => {
+      const headers = details.requestHeaders;
+      if (headers) {
+        const origin = headers["Origin"] || headers["origin"];
+        if (origin) {
+          requestOrigins.set(details.id, origin);
+        }
+      }
+      callback({ requestHeaders: headers });
+    }
+  );
+
   ses.webRequest.onHeadersReceived((details, callback) => {
     let headers = details.responseHeaders || {};
     if (details.url.startsWith("https://api.poldev.work/")) {
       const isDev = !app.isPackaged;
-      let originToAllow;
+      let originToAllow = requestOrigins.get(details.id);
 
-      if (isDev) {
-        // In development, allow the Vite dev server origin.
-        // The fallback is for when you run `electron .` directly without Vite.
-        originToAllow = process.env.VITE_DEV_SERVER_URL || 'http://192.168.20.3:5173';
-      } else {
-        // In production (packaged app), the origin is the custom `app://` protocol.
-        originToAllow = 'app://.';
+      if (!originToAllow) {
+        if (isDev) {
+          originToAllow = process.env.VITE_DEV_SERVER_URL || 'http://192.168.20.3:5173';
+        } else {
+          originToAllow = 'app://.';
+        }
       }
+      requestOrigins.delete(details.id);
 
       // Remove any existing CORS headers (case-insensitive) to avoid multiple values
       const cleanedHeaders = {};

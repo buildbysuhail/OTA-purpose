@@ -8,7 +8,6 @@ export const handleResponse = (
   warn: boolean = true,
   showSuccess: boolean = true
 ) => {
-  
   if (res != undefined && res != null) {
     if (res?.isOk != undefined && res?.isOk != null) {
       if (res.isOk) {
@@ -36,8 +35,17 @@ export const handlePlainResponse = (
   warn: boolean = true,
   showSuccess: boolean = true
 ) => {
+  debugger
   if (res != undefined && res != null) {
-    if (showSuccess) ERPToast.showWith(res?.message, "success");
+        // Case 1: API returns wrapped response with message
+    if (showSuccess && typeof res === "object" && "message" in res) {
+      ERPToast.showWith(res.message, "success");
+    }
+
+    // Case 2: API returns plain array
+    else if (showSuccess && Array.isArray(res)) {
+      ERPToast.showWith("Data loaded successfully", "success");
+    }
     action && action();
   } else {
     failAction && failAction();

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../components/ERPComponents/erp-button";
@@ -9,23 +9,38 @@ import { DevGridColumn } from "../types/dev-grid-column";
 import ERPDevGrid from "../../components/ERPComponents/erp-dev-grid";
 import { Printer, Save, Star, Trash, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { apiErrorChange } from "../../redux/slices/auth/register/reducer";
+import { APIClient } from "../../helpers/api-client";
+import Urls from "../../redux/urls";
+import urls from "../../redux/urls";
+import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
 
 export interface CashierViewData {
-    branch: string;
-    voucherNumber: string;
-    counter: string;
-    party: string;
-    netTotal: number;
-    billDiscount: number;
-    grandTotal: number;
-    dailyVoucherNumber: string;
+  id: number;
+  branchID: number;
+  branch: string;
+  voucherNumber: string | null;
+  counter: string;
+  salesMan: string | null;
+  party: string;
+  voucherPrefix: string | null;
+  transactionDate: string; // ISO date string
+  netTotal: number;
+  billDiscount: number;
+  grandTotal: number;
+  staffIncentive: number;
+  roundAmount: number;
+  voucherType: string | null;
+  voucherForm: string | null;
+  dailyVoucherNumber: number;
+  ledgerID: number;
 }
 
 const CashierView: React.FC = () => {
     const { t } = useTranslation('transaction');
     const navigate = useNavigate();
     const [gridData, setGridData] = useState<CashierViewData[]>([]);
-
+    const cacheRef = React.useRef<Map<string, CashierViewData[]>>(new Map());
     const columns: DevGridColumn[] = useMemo(() => [
         {
             dataField: "id",
@@ -162,10 +177,10 @@ const CashierView: React.FC = () => {
 
 
     const [formData, setFormData] = useState({
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString(),
         voucherNo: "0",
-        party: null,
-        salesMan: null,
+        party: "",
+        salesMan: "",
         netTotal: "0.00",
         billDiscount: "0.00",
         roundOff: "0.00",
@@ -176,9 +191,44 @@ const CashierView: React.FC = () => {
         printReceipt: false,
     });
 
-    const handleChange = (field: string, value: any) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+
+            const feacthData = async () => {
+            const currentDate = formData?.date;
+
+            if (!currentDate) return;
+            // ✅ If already cached, use it
+            if (cacheRef.current.has(currentDate)) {
+                setGridData(cacheRef.current.get(currentDate)!);
+                console.log("Loaded from cache");
+                return;
+            }
+
+            try {
+
+                const api = new APIClient();
+                const res = await api.getAsync(`${urls.salesView}?Date=${currentDate}`);
+
+                handlePlainResponse(res, () => {
+                setGridData(res);
+                // 💾 Store in cache
+                cacheRef.current.set(currentDate, res);
+                });
+
+            }catch(err){
+                console.log("data featch error in cash-view",err); 
+            }
+            
+            };
+    
+            const handleChange = (field: string, value: any) => {
+            setFormData((prev) => ({
+                ...prev,
+                [field]:
+                field === "date"
+                    ? new Date(value).toISOString()
+                    : value,
+            }));
+            };
 
     const handleSave = () => {
         console.log("Saving:", formData);
@@ -192,8 +242,8 @@ const CashierView: React.FC = () => {
         setFormData({
             date: new Date().toISOString().split('T')[0],
             voucherNo: "0",
-            party: null,
-            salesMan: null,
+            party: "",
+            salesMan: "",
             netTotal: "0.00",
             billDiscount: "0.00",
             roundOff: "0.00",
@@ -250,7 +300,7 @@ const CashierView: React.FC = () => {
                                 id="voucherNo"
                                 label={t('voucher_no')}
                                 value={formData.voucherNo}
-                                onChange={(e) => handleChange("voucherNo", e.target.value)}
+                                // onChange={(e) => handleChange("voucherNo", e.target.value)}
                                 className="w-20"
                                 readOnly
                             />
@@ -265,7 +315,7 @@ const CashierView: React.FC = () => {
                                 title={t("view_booking")}
                                 variant="secondary"
                                 startIcon={<Star className="w-4 h-4" />}
-                                onClick={() => console.log("View Booking")}
+                                onClick={feacthData}
                             />
                         </div>
 
@@ -284,12 +334,14 @@ const CashierView: React.FC = () => {
                         {/* SalesMan */}
                         <div className="flex items-end justify-between">
                             <label className="w-20">{t("sales_man")}</label>
-                            <ERPDataCombobox
+
+                               <ERPInput
                                 id="salesMan"
                                 noLabel={true}
-                                options={[]}
-                                value={formData.salesMan}
-                                onChange={(e) => handleChange("salesMan", e?.value || e)}
+                              
+                                value={formData.netTotal}
+                                
+                                readOnly
                             />
                         </div>
 
@@ -301,7 +353,7 @@ const CashierView: React.FC = () => {
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.netTotal}
-                                onChange={(e) => handleChange("netTotal", e.target.value)}
+                               readOnly
                             />
                         </div>
 
@@ -313,7 +365,7 @@ const CashierView: React.FC = () => {
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.billDiscount}
-                                onChange={(e) => handleChange("billDiscount", e.target.value)}
+                                readOnly
                             />
                         </div>
 
@@ -325,7 +377,7 @@ const CashierView: React.FC = () => {
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.roundOff}
-                                onChange={(e) => handleChange("roundOff", e.target.value)}
+                                readOnly
                             />
                         </div>
 
@@ -337,7 +389,7 @@ const CashierView: React.FC = () => {
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.grandTotal}
-                                onChange={(e) => handleChange("grandTotal", e.target.value)}
+                                readOnly
                             />
                         </div>
 
@@ -349,7 +401,7 @@ const CashierView: React.FC = () => {
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.cashReceived}
-                                onChange={(e) => handleChange("cashReceived", e.target.value)}
+                                readOnly
                             />
                         </div>
 
@@ -361,7 +413,7 @@ const CashierView: React.FC = () => {
                                 noLabel={true}
                                 className="w-32"
                                 value={formData.balanceToPay}
-                                onChange={(e) => handleChange("balanceToPay", e.target.value)}
+                                readOnly
                             />
                         </div>
 

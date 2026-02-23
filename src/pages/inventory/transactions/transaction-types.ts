@@ -783,6 +783,8 @@ export interface TransactionFormState {
 
   // india
   eWayBill?: boolean;
+  eWayBillDetailOpen?: boolean;
+  eWayBillMasterId?: number;
 
   // Stocks
   chkCostFromExcel?: boolean;

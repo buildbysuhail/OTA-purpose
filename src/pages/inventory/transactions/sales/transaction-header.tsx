@@ -423,7 +423,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
           btnDeleteVisible = false;
         }
         nextActiveVrNumber = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/GetNextActiveVoucherNumber/`,
-              `formType=${formState.initialFormType}&voucherType=${vrType}&voucherPrefix=${""}&isVoucherPrefix=${false}`) ;
+              `formType=${""}&voucherType=${vrType}&voucherPrefix=${""}&isVoucherPrefix=${true}`) ;
       }else{
         vrType = "SI"
         btnEditVisible = false;
@@ -444,7 +444,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
         transaction: {
           master: {
             voucherType: isDraft ? "SID" : formState.initialVrType,
-            voucherForm: isDraft ? "" : formState.initialFormType,
+            voucherForm: formState.initialFormType,
             voucherPrefix: isDraft ? "" : formState.initialVrPrefix,
             voucherNumber: nextNo,
             transactionDate: isDraft ? formState.transaction?.master?.transactionDate : softwareDate.toISOString(),

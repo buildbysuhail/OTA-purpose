@@ -606,7 +606,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
         formState.transaction.master.voucherType === VoucherType.SalesQuotation ||
         formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft ||
-        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote
+        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote ||
+        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryReturn
       ) && (
           <AutoCalculationCheckbox
             formState={formState}
@@ -736,7 +737,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               attachmentComponent
             )}
             <div className="w-full sm:w-auto sm:max-w-[270px] gap-0.5 flex flex-wrap sm:flex-nowrap">
-              {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest].includes(formState.transaction.master.voucherType as any) &&(
+              {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
                   id="creditCardAmount"
                   label={t("credit_card_amount")}
@@ -881,7 +882,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               )}
             </div>
           )}
-           {([VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
+           {([VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
             <div className="flex items-center gap-1">
               <BtnTender
                 formState={formState}
@@ -908,7 +909,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <ERPButton
                 title={t("p")}
                 variant="secondary"
-                onClick={() => alert("P Button clicked")}
+                onClick={() => handlePrivilegeCardOpen()}
               />
             </div>
           ))}
@@ -960,7 +961,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           {showSecondHalf && (
             <div className="flex flex-wrap gap-1 min-w-0">
 
-               {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest].includes(formState.transaction.master.voucherType as any) &&(
+               {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
                   id="creditCardAmount"
                   label={t("credit_card_amount")}
@@ -1082,8 +1083,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     <li>
                       {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                         formState.transaction.master.voucherType === VoucherType.SalesQuotation ||
-                         formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft ||
-                        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote)
+                        formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft ||
+                        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote ||
+                        formState.transaction.master.voucherType === VoucherType.GoodsDeliveryReturn)
                        && (
                         <AutoCalculationCheckbox
                           formState={formState}
@@ -1280,12 +1282,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </li>
                   )}
                 {/* Field 15: SalesQuotation P Button */}
-                {verticalVisibleFields <= 15 &&[VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any && (
+                {verticalVisibleFields <= 15 &&[VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn].includes(formState.transaction.master.voucherType as any && (
                   <li>
                     <ERPButton
                       title={t("p")}
                       variant="secondary"
-                      onClick={() => alert("P Button clicked")}
+                      onClick={() => handlePrivilegeCardOpen()}
                     />
                   </li>
                 ))}
@@ -1411,7 +1413,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                    formState.transaction.master.voucherType === VoucherType.SalesQuotation ||
                    formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft ||
-                  formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote) && (
+                   formState.transaction.master.voucherType === VoucherType.GoodsDeliveryNote ||
+                   formState.transaction.master.voucherType === VoucherType.GoodsDeliveryReturn) && (
                     <AutoCalculationCheckbox
                       formState={formState}
                       dispatch={dispatch}
@@ -1602,12 +1605,12 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </div>
                 )}
               {/* Field 15: SalesQuotation P Button */}
-              {verticalVisibleFields > 15 && [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any  && (
+              {verticalVisibleFields > 15 && [VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn].includes(formState.transaction.master.voucherType as any  && (
                 <div className="w-full mt-1">
                   <ERPButton
                     title={t("p")}
                     variant="secondary"
-                    onClick={() => alert("P Button clicked")}
+                    onClick={() => handlePrivilegeCardOpen()}
                   />
                 </div>
               ))}
@@ -1863,7 +1866,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         )}
         {!showSecondHalf && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0 flex">
-            {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest].includes(formState.transaction.master.voucherType as any) &&(
+            {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
               <ERPInput
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
@@ -1978,7 +1981,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             />
           </>
         )}
-        {([VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
+        {([VoucherType.SalesQuotation, VoucherType.GoodsDeliveryNote,VoucherType.GoodsDeliveryReturn,VoucherType.GoodsReceiptReturn].includes(formState.transaction.master.voucherType as any) && showButtonsOutside && (
           <div className="flex items-center gap-1">
             <BtnTender
               formState={formState}
@@ -2005,7 +2008,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             <ERPButton
               title={t("p")}
               variant="secondary"
-              onClick={() => alert("P Button clicked")}
+              onClick={() => handlePrivilegeCardOpen()}
             />
           </div>
         ))}

@@ -150,6 +150,22 @@ export const containsArabicString = (text: string): boolean => {
 
 
 
+const SUPPORTED_MIME_TYPES = ["image/png", "image/jpeg"];
+const SUPPORTED_EXTENSIONS = [".png", ".jpg", ".jpeg"];
+
+export function validateImageFile(file: File): string | null {
+  if (!SUPPORTED_MIME_TYPES.includes(file.type)) {
+    return "Unsupported file type. Please upload PNG or JPEG only.";
+  }
+
+  const ext = file.name.substring(file.name.lastIndexOf(".")).toLowerCase();
+
+  if (!SUPPORTED_EXTENSIONS.includes(ext)) {
+    return "Invalid file extension. Allowed: .png, .jpg, .jpeg";
+  }
+
+  return null;
+}
 
 
  

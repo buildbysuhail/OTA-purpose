@@ -196,8 +196,7 @@ const BranchTransferSummary: FC<BranchTransferSummaryProps> = ({
   const summaryItems: SummaryConfig[] = [
     {
       column: "employeeName",
-      summaryType: "sum",
-      valueFormat: "max",
+      summaryType: "max",
       customizeText: customizeTotal,
     },
     {

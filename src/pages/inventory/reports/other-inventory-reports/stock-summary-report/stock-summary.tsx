@@ -527,10 +527,16 @@ const StockSummary = () => {
                   paging: false,
                   sorting: false,
                 }}
-                filterText="{showBatchWise == true && , (Batchwise) } 
-                {productID > 0 || productGroupID > 0 || brandID > 0 || productCategoryID > 0 || wareHouseID > 0 && ,  Stock Report of } 
-                {productID <= 0 || productGroupID <= 0 || brandID <= 0 || productCategoryID <= 0 || wareHouseID <= 0 && , Stock Report of All Products } 
-                {productID > 0 && ,   Product :[product]} 
+                filterText="{showBatchWise == true &&  (Batchwise) } 
+                {productID > 0 
+                || productGroupID > 0 
+                || brandID > 0 
+                || productCategoryID > 0
+                || wareHouseID > 0 && ,  Stock Report of } 
+                {productID <= 0 || productGroupID <= 0 
+                || brandID <= 0 || productCategoryID <= 0 
+                || wareHouseID <= 0 && , Stock Report of All Products } 
+                {productID > 0 &&   Product :[product]} 
                 {productGroupID > 0 && ,   Group Name : [productGroup]} 
                 {brandID > 0 && , Brand: [brand]}
                 {productCategoryID > 0 && , Product Category  : [productCategory]}
@@ -549,9 +555,6 @@ const StockSummary = () => {
                 filterContent={<StockSummaryFilter />}
                 filterWidth={790}
                 filterHeight={430}
-                onFilterChanged={(filter: any) => {
-                  setFilter(filter);
-                }}
                 filterInitialData={{
                   ...StockSummaryFilterInitialState,
                   showBatchWise:
@@ -559,6 +562,9 @@ const StockSummary = () => {
                       ? true
                       : false,
                   valuationUsing: clientSession.isAppGlobal ? "APC" : "SPP",
+                }}
+                 onFilterChanged={(filter: any) => {
+                  setFilter(filter);
                 }}
                 reload={true}
                 gridId="grd_stock_summary"

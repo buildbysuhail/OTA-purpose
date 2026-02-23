@@ -29,6 +29,14 @@
         }
       ]
     },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "allowElevation": true,
+      "deleteAppDataOnUninstall": false,
+      "include": "scripts/installer.nsh"
+    },
     "mac": {
       "target": [
         "dmg",

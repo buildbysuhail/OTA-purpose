@@ -13,7 +13,7 @@ const StockJournalReportFilter = ({
   handleFieldChange,
   formState,
 }: any) => {
-    const userSession = useSelector((state: RootState) => state.UserSession);
+  const userSession = useSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation("accountsReport");
   return (
     <div className="grid grid-cols-1 gap-4 overflow-hidden">
@@ -92,26 +92,31 @@ const StockJournalReportFilter = ({
         {(location.pathname.includes("inventory/stock_transfer_report") ||
           location.pathname.includes("inventory/damage_stock_report") ||
           location.pathname.includes("inventory/excess_stock_report") ||
-          location.pathname.includes("inventory/shortage_stock_report")) && (
-          <div className="col-span-1">
-            <ERPDataCombobox
-              label={t("from_warehouse")}
-              {...getFieldProps("fromWarehouse")}
-              field={{
-                id: "fromWarehouse",
-                getListUrl: Urls.data_warehouse,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              disabled={location.pathname.includes(
-                "inventory/excess_stock_report"
-              )}
-              onSelectItem={(data) => {
-                handleFieldChange("fromWarehouse", data.value);
-              }}
-            />
-          </div>
-        )}
+          location.pathname.includes("inventory/shortage_stock_report")||
+          location.pathname.includes("inventory/stock_journal_excess_stock_sp") ||
+          location.pathname.includes("inventory/stock_journal_shortage_stock_sp")
+        
+        ) && (
+            <div className="col-span-1">
+              <ERPDataCombobox
+                label={t("from_warehouse")}
+                {...getFieldProps("fromWarehouse")}
+                field={{
+                  id: "fromWarehouse",
+                  getListUrl: Urls.data_warehouse,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                disabled={location.pathname.includes(
+                  "inventory/excess_stock_report"
+                ) ||location.pathname.includes(
+                  "inventory/stock_journal_excess_stock_sp") }
+                onSelectItem={(data) => {
+                  handleFieldChange("fromWarehouse", data.value);
+                }}
+              />
+            </div>
+          )}
         <div className="col-span-1">
           <ERPDataCombobox
             label={t("to_warehouse")}
@@ -124,56 +129,59 @@ const StockJournalReportFilter = ({
             }}
             disabled={location.pathname.includes(
               "inventory/damage_stock_report"
-            )||location.pathname.includes(
+            ) || location.pathname.includes(
               "inventory/shortage_stock_report"
-            )}
+            )|| location.pathname.includes(
+              "inventory/stock_journal_shortage_stock_sp"
+            )
+          }
             onSelectItem={(data) => {
               handleFieldChange("toWarehouse", data.value);
             }}
           />
         </div>
- {userSession.dbIdValue == "543140180640" && (
-        <div className="col-span-1">
-          <ERPInput
-            label={t("voucher_number")}
-            {...getFieldProps("voucherNumber")}
-            className="w-full"
-            onChangeData={(data: any) =>
-              handleFieldChange("voucherNumber", data.voucherNumber)
-            }
-          />
-        </div>
- )}
-  {userSession.dbIdValue == "543140180640" && (
-        <div className="col-span-1">
-          <ERPInput
-            label={t("vehicle")}
-            {...getFieldProps("vehicleID")}
-            className="w-full"
-            onChangeData={(data: any) =>
-              handleFieldChange("vehicleID", data.vehicleID)
-            }
-          />
-        </div>
-  )}
-   {userSession.dbIdValue == "543140180640" && (
-        <div className="col-span-1">
-          <ERPDataCombobox
-            label={t("employee")}
-            {...getFieldProps("employeeID")}
-            field={{
-              id: "employeeID",
-              getListUrl: Urls.data_employees,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onSelectItem={(data) => {
-              handleFieldChange("employeeID", data.value);
-            }}
-          />
-        </div>
-)}
-{/* always visible false */}
+        {userSession.dbIdValue == "543140180640" && (
+          <div className="col-span-1">
+            <ERPInput
+              label={t("voucher_number")}
+              {...getFieldProps("voucherNumber")}
+              className="w-full"
+              onChangeData={(data: any) =>
+                handleFieldChange("voucherNumber", data.voucherNumber)
+              }
+            />
+          </div>
+        )}
+        {userSession.dbIdValue == "543140180640" && (
+          <div className="col-span-1">
+            <ERPInput
+              label={t("vehicle")}
+              {...getFieldProps("vehicleID")}
+              className="w-full"
+              onChangeData={(data: any) =>
+                handleFieldChange("vehicleID", data.vehicleID)
+              }
+            />
+          </div>
+        )}
+        {userSession.dbIdValue == "543140180640" && (
+          <div className="col-span-1">
+            <ERPDataCombobox
+              label={t("employee")}
+              {...getFieldProps("employeeID")}
+              field={{
+                id: "employeeID",
+                getListUrl: Urls.data_employees,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onSelectItem={(data) => {
+                handleFieldChange("employeeID", data.value);
+              }}
+            />
+          </div>
+        )}
+        {/* always visible false */}
         {/* <div className="flex items-center space-x-4">
           <ERPRadio
             id="summary"
@@ -200,14 +208,16 @@ export default StockJournalReportFilter;
 export const StockJournalReportFilterInitialState = {
   fromDate: moment().local().toDate(),
   toDate: moment().local().toDate(),
-  fromWarehouse: location.pathname.includes("inventory/excess_stock_report")
+  fromWarehouse: location.pathname.includes("inventory/excess_stock_report") 
+  || location.pathname.includes("inventory/stock_journal_excess_stock_sp")
     ? 4
     : 0,
   toWarehouse: location.pathname.includes("inventory/damage_stock_report")
     ? 3
     : location.pathname.includes("inventory/shortage_stock_report")
-    ? 2
-    : 0,
+    || location.pathname.includes("inventory/stock_journal_shortage_stock_sp")
+      ? 2
+      : 0,
   productID: 0,
   productGpID: 0,
   brandID: 0,

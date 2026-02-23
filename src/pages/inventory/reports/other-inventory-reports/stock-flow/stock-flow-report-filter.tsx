@@ -54,6 +54,14 @@ const StockFlowReportFilter = ({ getFieldProps, handleFieldChange, formState }: 
             handleFieldChange("productCode", data.productCode)
           }
         />
+        <ERPInput
+          label={t("barcode")}
+          {...getFieldProps("barcode")}
+          className="w-full"
+            onChangeData={(data) =>
+            handleFieldChange("barcode", data.barcode)
+          }
+        />
 
         <ERPDataCombobox
           label={t("product_group")}
@@ -130,5 +138,7 @@ export const StockFlowReportFilterInitialState = {
   productGroupID: 0,
   warehouseID: 0,
   brandID: 0,
-  sectionID: -1
+  sectionID: -1,
+  productCode: "",
+  barcode: null,
 };

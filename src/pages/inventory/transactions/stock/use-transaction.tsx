@@ -352,6 +352,7 @@ export const useTransaction = (
     showLoading,
     disablePnlMasters = true
   ) => {
+    debugger;
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -396,7 +397,12 @@ export const useTransaction = (
       voucherType,
       formType,
       manualInvoiceNumber,
-      false
+      false,
+      undefined,
+      loadVType,
+      loadFType,
+      loadPrefix,
+      transactionMasterID,
     );
 
     if (loadVType == "GRN" || loadVType == "GRR") {
@@ -514,7 +520,12 @@ export const useTransaction = (
     voucherForm?: string,
     manualInvoiceNumber?: any,
     isPDTTrans: boolean = false,
-    pDTInvTransMasterID?: number
+    pDTInvTransMasterID?: number,
+    loadVType: string = "",
+    loadFType?: string,
+    loadPrefix?: string,
+    transactionMasterID?: number,
+    
   ) => {
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
@@ -534,14 +545,17 @@ export const useTransaction = (
     voucherPrefix =
       voucherPrefix ?? (formState.transaction?.master?.voucherPrefix || "");
 
+    let out_voucherType = voucherType ?? (formState.transaction?.master?.voucherType || "");
+    let out_voucherForm = voucherForm ?? (formState.transaction?.master?.voucherForm || "");
+
     if (voucherNumber == undefined || voucherNumber <= 0) {
       return voucher;
     }
     const params: Record<any, any> = {
       VoucherNumber: voucherNumber, // Ensuring it's always a string
       voucherPrefix: voucherPrefix,
-      voucherType: voucherType,
-      voucherForm: voucherForm,
+      voucherType: loadVType === "" ? out_voucherType : loadVType ,
+      voucherForm: loadVType === "" ? out_voucherForm : voucherForm,
       IsUsingManualInvoiceNo: usingManualInvNumber,
       ManualInvoiceNumber: manualInvoiceNumber,
       PDTInvTransMasterID: pDTInvTransMasterID ?? formState.transaction.master.refInvTransactionMasterID,
@@ -586,11 +600,16 @@ export const useTransaction = (
     voucher.allowStockUpdate = vch.stockUpdate;
     voucher.transaction = {
       ...(vch || {}), 
+       master: {
+        ...(vch?.master || {}),
+        voucherType: out_voucherType || (formState.transaction.master.voucherType ?? ""),
+        voucherForm: out_voucherForm || (formState.transaction.master.voucherForm ?? ""),
+       } as TransactionMaster,
       details: refactorDetails(
         vch.details,
         voucherForm ?? vch.master.voucherForm,
         voucherType ?? vch.master.voucherType,
-        { result: {} }
+        { result: {} },
       ),
       attachments: [...(vch?.attachments || [])],
     };
@@ -4517,23 +4536,28 @@ const verified = Boolean(vch.master.pdtVerified);
       // 1️⃣ Check if ILR already loaded
       const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ByILRReferenceNo/${formState.transaction.master.deliveryNoteNumber}`,{});
 
-    
 
       if (response?.isOk == true) {
-        if(response?.details.length > 0 ){
-          ERPAlert.show({
-          icon: "warning",
-          text: `${t("this_ilr_is_already_loaded_in_st")} : ${response.voucherNumber}, ${t("do_you_want_to_load_again")}`,
-          title: t("ilr"),
-          confirmButtonText: t("yes"),
-          cancelButtonText: t("no"),
-          onConfirm: async () => {
+        if(response?.item?.details.length > 0 ){
+          if(response?.item?.isLoadedILR){
+            ERPAlert.show({
+              icon: "warning",
+              text: `${t("this_ilr_is_already_loaded_in_st")} : ${response?.item?.loadedSTVoucherNumber}, ${t("do_you_want_to_load_again")}`,
+              title: t("ilr"),
+              confirmButtonText: t("yes"),
+              cancelButtonText: t("no"),
+              onConfirm: async () => {
+                handleLoadRequest(response);
+              },
+              onCancel: async () => {
+                return;
+              }
+            })
+            
+          }else{
             handleLoadRequest(response);
-          },
-          onCancel: async () => {
-            return;
           }
-        })}} else {
+          }} else {
         ERPAlert.show({
           icon: "warning",
           text: t(response?.message),
@@ -4555,7 +4579,7 @@ const verified = Boolean(vch.master.pdtVerified);
   }
 
   // Function for handling load request button in stock
-  const handleLoadRequest = (data: any) => {
+  const handleLoadRequest = async (data: any) => {
     let tm: DeepPartial<TransactionFormState> = { transaction: { master: {} } };
 
     if (!tm.transaction) {
@@ -4567,9 +4591,9 @@ const verified = Boolean(vch.master.pdtVerified);
     tm.transaction.master.voucherType = "ILR";
     tm.transaction.master.voucherForm = "";
     tm.transaction.master.voucherPrefix = "";
-    tm.transaction.master.voucherNumber = data.txtILRRefNo;
+    tm.transaction.master.voucherNumber = data?.item.master.voucherNumber;
 
-    const master = data.master;
+    const master = data?.item?.master;
     if (!master) return;
 
     const invMasterID = Number(master.invTransactionMasterID);
@@ -4586,7 +4610,7 @@ const verified = Boolean(vch.master.pdtVerified);
     tm.transaction.master.remarks = master.remarks ?? "";
 
     // Load ILR item details
-    const items = data.details;
+    const items = data?.item?.details;
     // let items: DeepPartial<TransactionFormState> = {transaction:{master:{}}}
 
     if (!items || items.length === 0) return;
@@ -4601,8 +4625,8 @@ const verified = Boolean(vch.master.pdtVerified);
     // Use refactorDetails like loadTransVoucher does
     let details = refactorDetails(
       items,
-      formState.transaction.master.voucherForm,
-      formState.transaction.master.voucherType,
+      tm.transaction.master.voucherForm,
+      tm.transaction.master.voucherType,
       { result: {} }
     );
 
@@ -4618,12 +4642,47 @@ const verified = Boolean(vch.master.pdtVerified);
           total: Number(row.quantity || 0) * Number(row.unitPrice || row.costPerItem || 0),
           brandID: row.brandID || 0,
           brand: row.brandName || "",
+          size: row.size || "",
+          stock: Number(row.fromWhouseStock) || 0,
+          mrp: row.mrp || 0,
+          cost: row.stdPurchasePrice || 0
         };
       }
       return detail;
     });
-    dispatch(formStateSetDetails(details));
+    const summaryRes = await calculateSummary(details, formState, {
+      result: {},
+    });
 
+    const masterForTotal = tm.transaction.master as TransactionMaster;
+    const totalRes = await calculateTotal(
+      masterForTotal,
+      summaryRes.summary as SummaryItems,
+      { ...formState.formElements } as FormElementsState,
+      { result: {} }
+    );
+
+    const calculatedMaster = totalRes.transaction?.master ?? {};
+    const mergedMaster: TransactionMaster = {
+      ...masterForTotal,
+      ...(calculatedMaster as Partial<TransactionMaster>),
+    };
+
+    dispatch(
+      formStateHandleFieldChangeKeysOnly({
+        fields: {
+          summary: summaryRes.summary,
+          transaction: {
+            master: mergedMaster,
+            details,
+          },
+        },
+        itemsToAddToDetails: details,
+        rowIndex: 0,
+      })
+    );
+    dispatch(formStateSetDetails(details));
+    // dispatch(formStateSetDetails(details));
     // 6️⃣ Finalize grid
     // dgvInventory.showAutoSummary = true;
     // dgvInventory.calculateAutoSummary();

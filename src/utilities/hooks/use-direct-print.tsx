@@ -171,6 +171,23 @@ export const useDirectPrint = () => {
 
       const PrinterName =
         DefaultPrinterName || template?.propertiesState?.printer;
+      const isElectronPrintAvailable =
+        typeof window !== "undefined" &&
+        (window as any).electron &&
+        typeof (window as any).electron.print === "function";
+
+      // Electron: if no printer selected, open the existing printer selection modal.
+      if (isElectronPrintAvailable && (!PrinterName || PrinterName.trim() === "")) {
+        dispatch(
+          toggleSelectPrinterPopup({
+            isOpen: true,
+            template,
+            data,
+          })
+        );
+        closePrintJob();
+        return { success: false, reason: "select-printer" };
+      }
 
       // 1. Build PDF document
       if (template?.templateGroup === "barcode") {
@@ -227,9 +244,7 @@ export const useDirectPrint = () => {
       // Electron: send raw PDF bytes directly (no base64/layout conversion).
       try {
         if (
-          typeof window !== "undefined" &&
-          (window as any).electron &&
-          typeof (window as any).electron.print === "function"
+          isElectronPrintAvailable
         ) {
           const pdfBytes = new Uint8Array(await blob.arrayBuffer());
           console.log(

@@ -1309,7 +1309,9 @@
   "cess": "الضريبة الإضافية (CESS)",
   "using_taxpro": "استخدام TaxPro",
   "generate": "إنشاء",
-  "e_way_bill_details": "تفاصيل فاتورة الطريق الإلكترونية"
+  "e_way_bill_details": "تفاصيل فاتورة الطريق الإلكترونية",
+
+  "loaded_successfully!. please_save": "تم التحميل بنجاح!. يرجى الحفظ."
 
   
 

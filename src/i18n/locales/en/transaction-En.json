@@ -1312,6 +1312,8 @@
   "cess": "CESS",
   "using_taxpro": "Using TaxPro",
   "generate": "Generate",
-  "e_way_bill_details":"E-Way Bill Details"
+  "e_way_bill_details":"E-Way Bill Details",
+  
+  "loaded_successfully!. please_save":"Loaded Successfully!. Please Save."
 
 }

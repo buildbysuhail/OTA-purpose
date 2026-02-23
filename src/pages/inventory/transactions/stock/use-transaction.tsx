@@ -4324,6 +4324,16 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       }
 
+      if(formState.transaction.master.voucherType === "EX"){
+        ERPAlert.show({
+        icon: "info",
+        title: t(""),
+        text: t("loaded_successfully!. please_save"),
+        confirmButtonText: t("ok"),
+        showCancelButton: false
+       });
+      }
+
       // setImportedCount(excelData.length);
       // const successMsg = `Successfully imported ${excelData.length} items from Excel`;
       // onSuccess?.(successMsg);
@@ -4625,8 +4635,8 @@ const verified = Boolean(vch.master.pdtVerified);
     // Use refactorDetails like loadTransVoucher does
     let details = refactorDetails(
       items,
-      tm.transaction.master.voucherForm,
-      tm.transaction.master.voucherType,
+      formState.transaction.master.voucherForm,
+      formState.transaction.master.voucherType,
       { result: {} }
     );
 
@@ -4666,6 +4676,8 @@ const verified = Boolean(vch.master.pdtVerified);
     const mergedMaster: TransactionMaster = {
       ...masterForTotal,
       ...(calculatedMaster as Partial<TransactionMaster>),
+      voucherType: formState.transaction.master.voucherType,
+      voucherForm: formState.transaction.master.voucherForm
     };
 
     dispatch(

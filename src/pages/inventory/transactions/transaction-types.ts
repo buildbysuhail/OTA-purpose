@@ -696,6 +696,7 @@ export interface TransactionFormState {
   message?: string;
 
   //Sales
+  partyColor: string;
   privilegeCardOpen?: boolean;
   schemeDiscount: number;
   postCashMasterId: number;

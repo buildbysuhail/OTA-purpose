@@ -1067,6 +1067,10 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       {t(formState.transaction.master.customerType)}
                     </span>
 
+
+                    {/* color will chang when choosing cstmr or party */}
+                       {([VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.RequestForQuotation,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && !clientSession.isAppGlobal) && (                    
+                <div className="h-7 w-7 mr-2" style={{backgroundColor: formState?.partyColor ?? "#9ca3af"}}/>)}
                 
 
                 {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&

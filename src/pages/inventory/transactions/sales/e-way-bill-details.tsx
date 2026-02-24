@@ -18,6 +18,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { RootState } from "../../../../redux/store";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface EWayBillDetailsProps {
   loadAndSetTransVoucher: LoadAndSetTransVoucherFn;
@@ -47,9 +48,9 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
   t,
   formState,
 }) => {
-  let ewbInput = "";
   let jsonLoad = false;
   const [initialEWayData, setInitialEWayData] = useState<any>(null);
+  const [ewb, setEWB] = useState<string>("");
 
   const columns: DevGridColumn[] = useMemo(
     () => [
@@ -107,10 +108,10 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
         formState.userConfig?.autoEwayBill &&
         applicationSettings.gSTTaxesSettings.enableEWB
       ) {
-        ewbInput = "taxproewb";
+        setEWB("taxproewb")
         jsonLoad = false;
       } else {
-        ewbInput = "";
+        setEWB("")
         jsonLoad = true;
       }
       try {
@@ -343,26 +344,203 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
     initialEWayData?.master?.supplyType,
     initialEWayData?.master?.subSupplyType,
   ]);
+  const validateNoTaxProWeb = async (): Promise<boolean> => {
+    if (!initialEWayData?.master?.buyerStCd || !initialEWayData?.master?.buyerStCd) {
+        await ERPAlert.show({
+          text: t("costumer_state_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
 
+      if (
+        String(initialEWayData?.master?.sellerPIN ?? "").trim().length < 6 ||
+        String(initialEWayData?.master?.buyerPIN ?? "").trim().length < 6
+      ) {
+
+        await ERPAlert.show({
+          text: t("pin_length_6_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        }); 
+        return false;
+      }
+    return true;
+  }
   const validate = async (): Promise<boolean> => {
-    const { voucherPrefix, transactionDate } = formState.transaction.master;
+          if (!initialEWayData?.master?.docNo?.trim()) {
+        await ERPAlert.show({
+          text: t("doc_number_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
 
-    if (!voucherPrefix || voucherPrefix.trim() === "") {
-      alert("Document Number is required");
-      return false;
-    }
+      if (!initialEWayData?.master?.sellerTrdNm?.trim()) {
+        await ERPAlert.show({
+          text: t("seller_trade_name_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
 
-    if (!transactionDate) {
-      alert("Date is required");
-      return false;
-    }
+      if (!initialEWayData?.master?.buyerStCd || !initialEWayData?.master?.buyerStCd) {
+        await ERPAlert.show({
+          text: t("costumer_state_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        if (
+        !String(initialEWayData?.master?.vehicleNo ?? "").trim() &&
+        !String(initialEWayData?.master?.transporterId ?? "").trim()
+      ) {
+        await ERPAlert.show({
+          text: t("vehicle_or_transporter_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        }); 
+        return false;
+      }
+      if (
+        (
+          (initialEWayData?.master?.sellerGSTIN?.length ?? 0) < 15 ||
+          (initialEWayData?.master?.buyerGSTIN?.length ?? 0) < 15
+        ) &&
+        initialEWayData?.master?.buyerGSTIN !== "URP"
+      ) {
+        await ERPAlert.show({
+          text: t("gstin_required_length_15"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+        return false;
+      }
 
+      if (
+        String(initialEWayData?.master?.sellerPIN ?? "").trim().length < 6 ||
+        String(initialEWayData?.master?.buyerPIN ?? "").trim().length < 6
+      ) {
+
+        await ERPAlert.show({
+          text: t("pin_length_6_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        }); 
+        return false;
+      }
+
+      if (
+        Number(initialEWayData?.master?.transDistance ?? 0) < 1 &&
+        ewb !== "taxproewb"
+      ) {
+        await ERPAlert.show({
+          text: t("distance_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        }); 
+        return false;
+      }
+
+      if (
+        !String(initialEWayData?.master?.vehicleNo ?? "").trim() &&
+        !String(initialEWayData?.master?.transporterId ?? "").trim()
+      ) {
+        await ERPAlert.show({
+          text: t("vehicle_or_transporter_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        }); 
+        return false;
+      }
+      if (
+        (
+          (initialEWayData?.master?.sellerGSTIN?.length ?? 0) < 15 ||
+          (initialEWayData?.master?.buyerGSTIN?.length ?? 0) < 15
+        ) &&
+        initialEWayData?.master?.buyerGSTIN !== "URP"
+      ) {
+        await ERPAlert.show({
+          text: t("gstin_required_length_15"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+
+      const gstRegex =
+        /^[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}[1-9A-Za-z]{1}Z{1}[0-9A-Za-z]{1}$/;
+
+      if (
+        (initialEWayData?.master?.sellerGSTIN ?? "") !== "" ||
+        (initialEWayData?.master?.buyerGSTIN ?? "") !== ""
+      ) {
+        if (!gstRegex.test(String(initialEWayData?.master?.sellerGSTIN ?? "").trim())) {
+          await ERPAlert.show({
+            text: t("gstin_format_invalid"),
+            title: t("validation_error"),
+            showCancelButton: false,
+          });
+          return false;
+        }
+
+        if (
+          initialEWayData?.master?.buyerGSTIN !== "URP" &&
+          !gstRegex.test(String(initialEWayData?.master?.buyerGSTIN ?? "").trim())
+        ) {
+          await ERPAlert.show({
+            text: t("gstin_format_invalid"),
+            title: t("validation_error"),
+            showCancelButton: false,
+          });
+          return false;
+        }
+      }
+      if (!initialEWayData?.master?.supplyType) {
+        await ERPAlert.show({
+          text: t("supply_type_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+
+      if (!initialEWayData?.master?.subSupplyType) {
+        await ERPAlert.show({
+          text: t("sub_supply_type_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+
+      if (!initialEWayData?.master?.docType) {
+        await ERPAlert.show({
+          text: t("doc_type_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+
+      if (!initialEWayData?.master?.transactionType) {
+        await ERPAlert.show({
+          text: t("transaction_type_required"),
+          title: t("validation_error"),
+          showCancelButton: false,
+        });
+        return false;
+      }
     return true;
   };
 
   // Check the two condition generate function
   const handleClickGenerate = async () => {
-    if (ewbInput === "taxproewb" && isUsingTaxPro) {
+    if (ewb === "taxproewb" && isUsingTaxPro) {
       const validateResult = await validate();
       if (validateResult) {
         // The end point contains an extra a at the end
@@ -370,20 +548,20 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
         //   `${Urls.inv_transaction_base}${formState.transactionType}/Eway`,
         //   initialEWayData
         // );
-         // Manage this after api response analyzed
-          resolveWayBillPromise(true)
-          closeModal()
+        // Manage this after api response analyzed
+        resolveWayBillPromise(true)
+        closeModal()
       }
     } else {
-      const validateResult = await validate();
+      const validateResult = await validateNoTaxProWeb();
       if (validateResult) {
         // const response = await api.postAsync(
         //   `${Urls.inv_transaction_base}${formState.transactionType}/Eway`,
         //   initialEWayData
         // );
         // Manage this after api response analyzed
-          resolveWayBillPromise(true)
-          closeModal()
+        resolveWayBillPromise(true)
+        closeModal()
       }
     }
   };
@@ -542,33 +720,57 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
               <ERPInput
                 id="sellerPIN"
                 label={t("pin")}
-                type="string"
                 value={initialEWayData?.master?.sellerPIN ?? ""}
-                onChange={(e: any) =>
-                  setInitialEWayData((prev: any) => ({
-                    ...prev,
-                    master: {
-                      ...prev.master,
-                      sellerPIN: e.target.value, // ✅ correct mapping
-                    },
-                  }))
-                }
-                required={true}
+                onChange={(e: any) => {
+                  const value = e.target.value;
+                  // Allow only numbers
+                  if (/^\d*$/.test(value)) {
+                    setInitialEWayData((prev: any) => ({
+                      ...prev,
+                      master: {
+                        ...prev.master,
+                        sellerPIN: value,
+                      },
+                    }));
+                  } else {
+                    ERPAlert.show({
+                      text: t("Only_accept_Numbers"),
+                      title: t("validation_Error"),
+                      showCancelButton: false,
+                    });
+                  }
+                }}
               />
+              
               <ERPInput
                 id="sellerGSTIN"
                 label={t("gstin")}
                 value={initialEWayData?.master?.sellerGSTIN ?? ""}
-                onChange={(e: any) =>
+                onChange={(e: any) => {
+                  const value = e.target.value.toUpperCase();
+
                   setInitialEWayData((prev: any) => ({
                     ...prev,
                     master: {
                       ...prev.master,
-                      sellerGSTIN: e.target.value, // ✅ correct mapping
+                      sellerGSTIN: value,
                     },
-                  }))
-                }
-                required={true}
+                  }));
+                }}
+                onBlur={async () => {
+                  const gst = initialEWayData?.master?.sellerGSTIN ?? "";
+
+                  const gstRegex =
+                    /^[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}[1-9A-Za-z]{1}Z{1}[0-9A-Za-z]{1}$/;
+
+                  if (gst && gst !== "URP" && !gstRegex.test(gst)) {
+                    await ERPAlert.show({
+                      title: t("validation_Error"),
+                      text: t("Invalid_Company_GSTIN_format"),
+                      showCancelButton: false,
+                    });
+                  }
+                }}
               />
               <ERPInput
                 id="sellerLoc"
@@ -689,33 +891,57 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
               <ERPInput
                 id="buyerPIN"
                 label={t("pin")}
-                type="string"
                 value={initialEWayData?.master?.buyerPIN ?? ""}
-                onChange={(e: any) =>
-                  setInitialEWayData((prev: any) => ({
-                    ...prev,
-                    master: {
-                      ...prev.master,
-                      buyerPIN: e.target.value,
-                    },
-                  }))
-                }
-                required={true}
+                onChange={(e: any) => {
+                  const value = e.target.value;
+
+                  // Allow only numbers
+                  if (/^\d*$/.test(value)) {
+                    setInitialEWayData((prev: any) => ({
+                      ...prev,
+                      master: {
+                        ...prev.master,
+                        buyerPIN: value,
+                      },
+                    }));
+                  } else {
+                    ERPAlert.show({
+                      text: t("Only_accept_Numbers"),
+                      title: t("validation_Error"),
+                      showCancelButton: false,
+                    });
+                  }
+                }}
               />
               <ERPInput
                 id="buyerGSTIN"
                 label={t("gstin")}
                 value={initialEWayData?.master?.buyerGSTIN ?? ""}
-                onChange={(e: any) =>
+                onChange={(e: any) => {
+                  const value = e.target.value.toUpperCase();
+
                   setInitialEWayData((prev: any) => ({
                     ...prev,
                     master: {
                       ...prev.master,
-                      buyerGSTIN: e.target.value,
+                      buyerGSTIN: value,
                     },
-                  }))
-                }
-                required={true}
+                  }));
+                }}
+                onBlur={async () => {
+                  const gst = initialEWayData?.master?.buyerGSTIN ?? "";
+
+                  const gstRegex =
+                    /^[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}[1-9A-Za-z]{1}Z{1}[0-9A-Za-z]{1}$/;
+
+                  if (gst && gst !== "URP" && !gstRegex.test(gst)) {
+                    await ERPAlert.show({
+                      title: t("validation_Error"),
+                      text: t("Invalid_Customer_GSTIN_format"),
+                      showCancelButton: false,
+                    });
+                  }
+                }}
               />
               <ERPInput
                 id="buyerLoc"
@@ -1200,7 +1426,7 @@ const EWayBillDetails: React.FC<EWayBillDetailsProps> = ({
                       label={t("transport_doc_date")}
                       value={
                         initialEWayData?.master?.transDocDate &&
-                        initialEWayData.master.transDocDate !== ""
+                          initialEWayData.master.transDocDate !== ""
                           ? initialEWayData.master.transDocDate
                           : new Date().toISOString().split("T")[0]
                       }

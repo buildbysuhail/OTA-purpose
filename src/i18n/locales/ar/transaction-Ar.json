@@ -1314,7 +1314,24 @@
   "loaded_successfully!. please_save": "تم التحميل بنجاح!. يرجى الحفظ.",
   "please_select_branch": "يرجى اختيار الفرع",
   "successfully_completed": "تم الإكمال بنجاح",
-  "unexpected_error": "خطأ غير متوقع"
+  "unexpected_error": "خطأ غير متوقع",
+  
+  "doc_number_required":"رقم المستند مطلوب",
+  "transaction_type_required":"نوع المعاملة مطلوب",
+  "distance_required":"المسافة مطلوبة",
+  "seller_trade_name_required":"اسم البائع التجاري مطلوب",
+  "company_state_required":"الولاية/المنطقة مطلوبة",
+  "pin_length_6_required":"يجب أن يكون رمز التعريف الشخصي (PIN) من 6 أرقام",
+  "vehicle_or_transporter_required":"رقم المركبة أو اسم الناقل مطلوب",
+  "gstin_required_length_15":"رقم تعريف ضريبة السلع والخدمات (GSTIN) مطلوب ويجب أن يكون 15 حرفًا",
+  "gstin_format_invalid":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) غير صالح",
+  "supply_type_required":"نوع التوريد مطلوب",
+  "sub_supply_type_required":"نوع التوريد الفرعي مطلوب",
+  "doc_type_required":"نوع المستند مطلوب",
+  "costumer_state_required":"الولاية/المنطقة للعميل مطلوبة",
+  "Invalid_Customer_GSTIN_format":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) للعميل غير صالح",
+  "Invalid_Company_GSTIN_format":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) للشركة غير صالح",
+  "Only_accept_Numbers": "يقبل الأرقام فقط"
 
   
 

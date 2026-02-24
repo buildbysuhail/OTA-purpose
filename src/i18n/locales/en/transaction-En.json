@@ -1313,10 +1313,26 @@
   "using_taxpro": "Using TaxPro",
   "generate": "Generate",
   "e_way_bill_details":"E-Way Bill Details",
-  
   "loaded_successfully!. please_save":"Loaded Successfully!. Please Save.",
+  
   "please_select_branch":"Please select branch",
   "successfully_completed":"Successfully Completed",
-  "unexpected_error":"UnExpected Error"
+  "unexpected_error":"UnExpected Error",
+  "doc_number_required":"Document number is required",
+  "transaction_type_required":"Transaction type is required",
+  "distance_required":"Distance is required",
+  "seller_trade_name_required":"Seller trade name is required",
+  "company_state_required":"State is required",
+  "pin_length_6_required":"PIN code should be 6 digits",
+  "vehicle_or_transporter_required":"Either vehicle number or transporter name is required",
+  "gstin_required_length_15":"GSTIN should be 15 characters",
+  "gstin_format_invalid":"GSTIN format is invalid",
+  "supply_type_required":"Supply type is required",
+  "sub_supply_type_required":"Sub supply type is required",
+  "doc_type_required":"Document type is required",
+  "costumer_state_required":"Customer state is required",
+  "Invalid_Company_GSTIN_format":"Invalid Company GSTIN format",
+  "Invalid_Customer_GSTIN_format": "Invalid Customer GSTIN format",
+  "Only_accept_Numbers": "Only accept Numbers"
 
 }

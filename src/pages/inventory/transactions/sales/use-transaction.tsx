@@ -6715,6 +6715,17 @@ export const useTransaction = (
             }
           }
           // setPartyColor(partyCategoryId);
+          if (ledgerData?.partyColor) {
+            const hexColor = String(ledgerData.partyColor).trim().split(" ")[0];
+
+            dispatch(
+              formStateHandleFieldChange({
+                fields: {
+                  partyColor: hexColor,
+                },
+              })
+            );
+          }
         }
 
         if (!clientSession.isAppGlobal) {

@@ -174,6 +174,7 @@ export const RenderPreviewComponent: React.FC<Props> = ({
             ...baseStyle,
             width: `${wPx}pt`,
            height: `${hPx}pt`,
+            // boxSizing: "border-box",
           }}
         >
           <img
@@ -182,7 +183,9 @@ export const RenderPreviewComponent: React.FC<Props> = ({
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain",
+              // objectFit: "contain",
+              // display: "block",
+
             }}
           />
         </div>
@@ -215,9 +218,9 @@ export const RenderPreviewComponent: React.FC<Props> = ({
         height:`${containerHeight}pt`,
         width:`${component.width}pt`,
         backgroundColor: containerProps.backgroundColor,
-            borderWidth: `${containerProps.borderWidth || 1}pt`, // FIXED: Explicit border properties
-            borderStyle: (containerProps.borderStyle || "solid") as CSSProperties["borderStyle"],
-            borderColor: containerProps.borderColor || "#d0d0d0",
+        borderWidth: `${containerProps.borderWidth || 1}pt`, // FIXED: Explicit border properties
+        borderStyle: (containerProps.borderStyle || "solid") as CSSProperties["borderStyle"],
+        borderColor: containerProps.borderColor || "#d0d0d0",
         padding: `${containerProps.padding}pt`,
         boxSizing: "border-box",
         transform: `rotate(${component.rotate || 0}deg)`,

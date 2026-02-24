@@ -1954,7 +1954,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         return;
       }
 
-      // ============ REDO (Alternative): Ctrl+Y (Windows/Linux) or Cmd+Y (Mac) ============
+      // ============((Alternative): Ctrl+Y (Windows/Linux) or Cmd+Y (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
         e.key === 'y' &&
@@ -2413,7 +2413,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             />
             <ERPButton
               startIcon="ri-arrow-go-forward-fill"
-              title="Redo (Ctrl+Shift+Z)"
+              title="Redo (Ctrl+Y)"
               onClick={handleRedo}
               foreColor="white"
               variant="custom"

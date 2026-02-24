@@ -128,13 +128,28 @@ export const useDirectPrint = () => {
         }
       }
       // Generate QR codes
-      const elements: PlacedComponent[] = [
-        ...(params.template?.headerState?.customElements?.elements ?? []),
-        ...(params.template?.footerState?.customElements?.elements ?? []),
-      ].filter(comp => comp.type === DesignerElementType.qrCode);
+     // ✅ Recursive function to collect ALL QR codes including nested in containers
+      const collectQRCodes = (components: PlacedComponent[]): PlacedComponent[] => {
+        const result: PlacedComponent[] = [];
+        for (const comp of components) {
+          if (comp.type === DesignerElementType.qrCode) {
+            result.push(comp);
+          }
+          // If container, recurse into children
+          if (comp.type === DesignerElementType.container && comp.children?.length) {
+            result.push(...collectQRCodes(comp.children));
+          }
+        }
+        return result;
+      };
+
+      const allElements: PlacedComponent[] = [
+        ...collectQRCodes(params?.template?.headerState?.customElements?.elements ?? []),
+        ...collectQRCodes(params?.template?.footerState?.customElements?.elements ?? []),
+      ];
 
       const qrImages: { [key: string]: string } = {};
-      for (const comp of elements) {
+      for (const comp of allElements) {
         if (comp.qrCodeProps) {
           qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
         }

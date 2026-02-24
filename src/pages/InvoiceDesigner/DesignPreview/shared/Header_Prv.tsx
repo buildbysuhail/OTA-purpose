@@ -1,7 +1,6 @@
 import { StyleSheet } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { DesignerElementType, type PlacedComponent, type TemplateState, } from "../../Designer/interfaces";
-import { generateQRCodeDataUrl } from "../../utils/qrSvgToImg";
 import { RenderPreviewComponent } from "../customPrvElement";
 import { useNumberToWords } from "../../../../utilities/number-to-words";
 import { PrintData } from "../../../use-print-type";

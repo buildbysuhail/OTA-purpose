@@ -182,8 +182,8 @@ const DEFAULT_FONT_CONFIG = {
       const wPt = component.qrCodeProps?.width || 128;
       const hPt = component.qrCodeProps?.height || 128;
       return qrCodeImages?.[component.id] ? (
-        <View style={{ ...baseStyle, width: wPt, height: hPt }}>
-          <Image src={qrCodeImages[component.id]} style={{ width: "100%", height: "100%" }} />
+        <View style={{ ...baseStyle, width: wPt, height: hPt,maxHeight:hPt }}>
+          <Image src={qrCodeImages[component.id]} style={{  width: wPt, height: hPt }} />
         </View>
       ) : null;
 

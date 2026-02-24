@@ -347,17 +347,32 @@ debugger;
       // }
 
       try {
-        const elements: PlacedComponent[] = [
-          ...(templateToUse?.headerState?.customElements?.elements ?? []),
-          ...(templateToUse?.footerState?.customElements?.elements ?? []),
-        ].filter(comp => comp.type === DesignerElementType.qrCode);
-
-        const qrImages: { [key: string]: string } = {};
-        for (const comp of elements) {
-          if (comp.qrCodeProps) {
-            qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
+     // ✅ Recursive function to collect ALL QR codes including nested in containers
+      const collectQRCodes = (components: PlacedComponent[]): PlacedComponent[] => {
+        const result: PlacedComponent[] = [];
+        for (const comp of components) {
+          if (comp.type === DesignerElementType.qrCode) {
+            result.push(comp);
+          }
+          // If container, recurse into children
+          if (comp.type === DesignerElementType.container && comp.children?.length) {
+            result.push(...collectQRCodes(comp.children));
           }
         }
+        return result;
+      };
+
+      const allElements: PlacedComponent[] = [
+        ...collectQRCodes(templateToUse?.headerState?.customElements?.elements ?? []),
+        ...collectQRCodes(templateToUse?.footerState?.customElements?.elements ?? []),
+      ];
+
+      const qrImages: { [key: string]: string } = {};
+      for (const comp of allElements) {
+        if (comp.qrCodeProps) {
+          qrImages[comp.id] = await generateQRCodeDataUrl(comp.qrCodeProps);
+        }
+      }
 
         const props: StableTemplateProps<T> = {
           template: templateToUse,

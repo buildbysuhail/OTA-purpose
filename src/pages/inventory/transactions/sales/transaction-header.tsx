@@ -1063,14 +1063,16 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
 
                 
-                <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
-                      {t(formState.transaction.master.customerType)}
-                    </span>
+                {formState.transaction.master.customerType && (
+                  <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
+                    {t(formState.transaction.master.customerType)}
+                  </span>
+                )}
 
 
                     {/* color will chang when choosing cstmr or party */}
                        {([VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.RequestForQuotation,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && !clientSession.isAppGlobal) && (                    
-                <div className="h-7 w-7 mr-2" style={{backgroundColor: formState?.partyColor ?? "#9ca3af"}}/>)}
+                <div className="h-10 w-8 mr-2 border border-gray-400" style={{backgroundColor: formState?.partyColor ?? "#E5E7EB"}}/>)}
                 
 
                 {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
@@ -1648,9 +1650,14 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
               
 
+                  {formState.transaction.master.customerType && (
                     <span className="text-xs dark:text-dark-text text-[#191155] font-bold px-4 py-1">
                       {t(formState.transaction.master.customerType)}
                     </span>
+                  )}
+                  {/* color will chang when choosing cstmr or party */}
+                       {([VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.RequestForQuotation,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && !clientSession.isAppGlobal) && (                    
+                <div className="h-10 w-8 mr-2 border border-gray-400" style={{backgroundColor: formState?.partyColor ?? "#E5E7EB"}}/>)}
               </div>
 
               <div className="flex items-center gap-2 mt-2">

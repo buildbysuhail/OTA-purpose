@@ -6714,14 +6714,21 @@ export const useTransaction = (
               });
             }
           }
-          // setPartyColor(partyCategoryId);
+          // set party color to the party color box
           if (ledgerData?.partyColor) {
             const hexColor = String(ledgerData.partyColor).trim().split(" ")[0];
-
             dispatch(
               formStateHandleFieldChange({
                 fields: {
                   partyColor: hexColor,
+                },
+              })
+            );
+          }else{
+            dispatch(
+              formStateHandleFieldChange({
+                fields: {
+                  partyColor: "#E5E7EB",
                 },
               })
             );

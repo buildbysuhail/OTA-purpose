@@ -10,6 +10,7 @@ interface WarehouseIDProps extends VoucherElementProps {
 
 const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
   ({ formState, dispatch, t, handleFieldKeyDown, handleKeyDown }, ref) => {
+    const displayType = formState.transaction.master.voucherType === "BTO" ? "StockWareHouse" : "All";
     return (
       <>
       {
@@ -38,7 +39,7 @@ const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
           id: "warehouseID",
           valueKey: "id",
           labelKey: "name",
-          getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=StockWareHouse`
+          getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=${displayType}`
         }}
         disabled={
           formState.formElements.cbWarehouseID.disabled ||

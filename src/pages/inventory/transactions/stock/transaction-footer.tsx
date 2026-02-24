@@ -209,6 +209,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const [showAttachmentOutside, setShowAttachmentOutside] = useState(false);
   const [dropupState, setDropupState] = useState<'closed' | 'minimal' | 'full'>('closed');
   const [isSmallDevice, setIsSmallDevice] = useState(false);
+  const userSession = useSelector((state: RootState) => state.UserSession);
 
   const remToPx = (rem: number) => rem * 16;
 
@@ -458,7 +459,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       id: "toBranchWarehouseID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=StockWareHouse`
+                    getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BranchWarehouses?DisplayType=StockWareHouse&branchId=${formState.transaction.master.branchID > 0  ? formState.transaction.master.branchID : userSession.currentBranchId}`
                     }}
                     disabled={
                       formState.formElements.cbWarehouseID.disabled ||

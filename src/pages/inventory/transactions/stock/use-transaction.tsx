@@ -4718,48 +4718,105 @@ const verified = Boolean(vch.master.pdtVerified);
           fields: { transactionLoading: true },
         })
       );
-
+      // Can optimize the below code if having time
+      let apiEndPoint = "";
+      if(transactionType === "OpeningStock"){
+          apiEndPoint = "OpeningProducts"
+      }else if(transactionType ==="BranchTransferOut" || transactionType ==="BranchTransferIn"){
+        apiEndPoint = "LoadProducts"
+      }
       const warehouseId = formState.transaction.master.fromWarehouseID || 1;
-      // The "OpeningProducts" will be some another end point in branch transfer -  need to set the api end point
-      const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/OpeningProducts/${warehouseId}`, {});
-      if (response?.isOk === false) {
-        console.log("Failed to load Products")
-        return;
+      let mappedProducts: any[] = [];
+      if(transactionType ==="BranchTransferOut" || transactionType ==="BranchTransferIn"){
+         const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/${apiEndPoint}/${warehouseId}`);
+         if (response?.isOk === false) {
+          console.log("Failed to load Products")
+          return;
+        }
+        const products = response || [];
+
+        if (!Array.isArray(products) || products.length === 0) {
+          console.log("No_products_found")
+          return;
+        }
+        if (products && products.length > 0) {
+          mappedProducts = products.map((p: any, index: number) => {
+
+            const qty = Number(p.qty ?? 0);
+            const unitPrice = Number(p.purchPrice ?? 0);
+            const salesPrice = Number(p.salesPrice ?? 0);
+
+            const gross = qty * salesPrice;
+            const netAmount = qty * unitPrice;
+
+            return {
+              productCode: p.productCode ?? "",
+              productName: p.productName ?? "",
+              productID: p.productID ?? "",
+              quantity: qty,
+              autoBarcode: p.autoBarcode ?? "",
+              productBatchID: p.productBatchID ?? "",
+              unitName: p.unitName ?? "",
+              unitID: p.unitID ?? "",
+              brandID: 0,
+              brand: "",
+              size: "",
+              salesPrice: salesPrice,
+              unitPrice: Number(unitPrice.toFixed(2)),
+              vatPerc: 0,
+              gross: gross,
+              discPerc: 0,
+              discount: 0,
+              netValue: unitPrice,
+              total: Number(netAmount.toFixed(2)),
+              barcodePrinted: "Y",
+              batchCreated: "Y",
+            };
+          });
+        }
+      }
+      if(transactionType === "OpeningStock"){
+        const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/${apiEndPoint}/${warehouseId}`, {});
+        if (response?.isOk === false) {
+          console.log("Failed to load Products")
+          return;
+        }
+
+        const products = response || [];
+
+        if (!Array.isArray(products) || products.length === 0) {
+          console.log("No_products_found")
+          return;
+        }
+       
+        if (products && products.length > 0) {
+          mappedProducts = products.map((p: any) => {
+            const qty = Number(p.qty || 0);
+            const cost = Number(p.purchPrice || p.cost || 0);
+            const total = qty * cost;
+
+            return {
+              productCode: p.productCode ?? "",
+              productName: p.productName ?? "",
+              productID: p.productID,
+              autoBarcode: p.autoBarcode,
+              productBatchID: p.productBatchID,
+              unitName: p.unitName,
+              unitID: p.unitID,
+              quantity: qty,
+              costPerItem: cost,
+              mrp: Number(p.mrp || 0),
+              stdSalesPrice: Number(p.salesPrice || 0),
+              brandID: 0,
+              brand: "",
+              size: "",
+              vatPerc: 0,
+              total: total
+            };
+          });
+        }
       }
 
-      const products = response || [];
-
-      if (!Array.isArray(products) || products.length === 0) {
-        console.log("No_products_found")
-        return;
-      }
-      // Map API response to the format expected by refactorDetails
-      const mappedProducts = products.map((p: any) => {
-      const qty = Number(p.qty || 0);
-      const cost = Number(p.purchPrice || p.cost || 0);
-      const total = qty * cost;
-
-      return {
-        productCode: p.productCode ?? "",
-        productName: p.productName ?? "",
-        productID: p.productID,
-        autoBarcode: p.autoBarcode,
-        productBatchID: p.productBatchID,
-        unitName: p.unitName,
-        unitID: p.unitID,
-        quantity: qty,
-        costPerItem: cost, 
-        mrp: Number(p.mrp || 0),
-        stdSalesPrice: Number(p.salesPrice || 0),
-        brandID: 0,
-        brand: "",
-        size: "",
-        vatPerc: 0,
-        total: total
-      };
-    });
-
-      // Use refactorDetails like loadTransVoucher does
       const details = refactorDetails(
         mappedProducts,
         formState.transaction.master.voucherForm || "",
@@ -5030,7 +5087,7 @@ const verified = Boolean(vch.master.pdtVerified);
             });
           } else {
             ERPAlert.show({
-              icon: "success",
+              icon: "error",
               title: t("unexpected_error"),
               text: t(""),
               confirmButtonText: t("ok"),

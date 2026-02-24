@@ -274,6 +274,57 @@ export const useTransactionHelper = (transactionType: string) => {
 
       transactionDetail = { ...transactionDetail, ...detail };
 
+      // The BTO Load condition is added Separate now, Change this based on the situation
+      // Make this common if possible
+      if(formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI"){
+        let rate = 0;
+        let disc = Number(transactionDetail.discount ?? 0);
+        let discPerc = Number(transactionDetail.discPerc ?? 0);
+        const qty = Number(transactionDetail.qty ?? 0);
+        const vatPerc = Number(transactionDetail.vatPerc ?? 0);
+        const unitPrice = Number(transactionDetail.unitPrice ?? 0);
+        const ratePlusTax = Number(transactionDetail.ratePlusTax ?? 0);
+        if (ratePlusTax > 0 && currentColumn === "ratePlusTax") {
+
+          const dval = (vatPerc / 100) + 1;
+          rate = Number((ratePlusTax / dval).toFixed(3));
+          detail.unitPrice = rate;
+        }
+        // If rate is 0, take unitPrice
+        if (rate === 0) {
+          rate = Number(detail.unitPrice ?? 0);
+        }
+        // Gross with 5 decimal rounding
+        const gross = Number((qty * rate).toFixed(5));
+        // If discount % entered (but not editing Discount field)
+        if (discPerc > 0 && currentColumn !== "discount") {
+          const calculatedDisc = Number(((discPerc * gross) / 100).toFixed(5));
+            if (calculatedDisc !== disc) {
+              disc = calculatedDisc;
+          }
+        }
+          // If Discount amount edited → recalc Disc %
+        if (rate > 0 && currentColumn === "discount" && gross !== 0) {
+          discPerc = Number(((100 * disc) / gross).toFixed(5));
+        }
+        // NetValue
+        const netValue = gross - disc;
+        // VAT (4 decimal rounding)
+        const vat = Number(((netValue * vatPerc) / 100).toFixed(4));
+        // NetAmount (round final value)
+        const netAmount = Number((netValue + vat).toFixed(2)); 
+        // change 2 if you use different numeric precision
+        // Cost per unit
+        const cost = qty !== 0 ? Number((netAmount / qty).toFixed(2)) : 0;
+        // Assign back to detail (equivalent to setting grid cells)
+        detail.netValue = netValue;
+        detail.discPerc = discPerc;
+        detail.discount = disc;
+        detail.vatAmount = vat;
+        detail.gross = gross;
+        detail.total = netAmount;
+        detail.cost = cost;
+      }else{
       const qty = Number(transactionDetail.qty || 0);
       const rate = Number(transactionDetail.cost || 0);
 
@@ -289,6 +340,7 @@ export const useTransactionHelper = (transactionType: string) => {
       const salesTotal = qty * salesRate;
 
       detail.salesTotal = salesTotal;
+      }
       result.transaction.details = [detail];
 
       if (!ignoreCalculateTotal && rowIndex >= 0) {
@@ -821,6 +873,40 @@ export const useTransactionHelper = (transactionType: string) => {
         Number(row.netValue || 0)
       );
 
+      // The BTO Load condition is added Separate now, Change this based on the situation
+      // Make this common if possible
+      if (voucherType === "BTO"  || voucherType === "BTI") {
+       detail.free = round(Number(row.free || 0), 4);
+       detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.unitPrice || 0) + Number(row.additionalExpense || 0)
+        );
+        detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.discountPer1 || 0)
+        );
+        detail.discount = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.discountAmt1 || 0)
+        );
+        detail.vatPerc = row.vatPercentage || 0
+        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.totalVatAmount || 0)
+        );
+        detail.total = getFormattedValueIgnoreRoundingToNumber(
+          Number(row.netAmount || 0)
+        );
+        // detail.barcodePrinted = "Y";
+        // detail.batchCreated = "Y";
+        detail.ratePlusTax = row.rateWithTax;
+        // Optional: If you need StdPurchasePrice comparison logic like C#
+        // detail.stdPurchasePrice = row.stdPurchasePrice;
+        
+        // If MSP logic required (similar to PI condition in C#)
+        // if (row.minSalePrice && Number(row.minSalePrice) > 0) {
+        //   detail.unitPrice = Number(row.minSalePrice);
+        //   detail.gross = getFormattedValueIgnoreRoundingToNumber(
+        //     Number(row.quantity || 0) * Number(row.minSalePrice)
+        //   );
+        // }
+    }
 
       // Calculate row amounts
       const res = calculateRowAmount(

@@ -459,7 +459,18 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       id: "toBranchWarehouseID",
                       valueKey: "id",
                       labelKey: "name",
-                    getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BranchWarehouses?DisplayType=StockWareHouse&branchId=${formState.transaction.master.branchID > 0  ? formState.transaction.master.branchID : userSession.currentBranchId}`
+                      getListUrl:
+                        formState.transaction.master.voucherType === "BTO"
+                          ? `${Urls.inv_transaction_base}${formState.transactionType}/Data/BranchWarehouses?DisplayType=StockWareHouse&branchId=${
+                              formState.transaction.master.branchID > 0
+                                ? formState.transaction.master.branchID
+                                : userSession.currentBranchId > 0
+                                ? userSession.currentBranchId
+                                : 1
+                            }`
+                          : formState.transaction.master.voucherType === "BTI"
+                          ? `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=StockWareHouse`
+                          : ""
                     }}
                     disabled={
                       formState.formElements.cbWarehouseID.disabled ||

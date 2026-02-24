@@ -581,7 +581,6 @@ const StockSummary = () => {
                   paging: false,
                   sorting: false,
                 }}
-              
                 columns={columns}
                 gridHeader={t("stock_report")}
                 dataUrl={Urls.stock_summary}
@@ -600,9 +599,7 @@ const StockSummary = () => {
                       : false,
                   valuationUsing: clientSession.isAppGlobal ? "APC" : "SPP",
                 }}
-                onFilterChanged={(filter: any) => {
-                  setFilter(filter);
-                }}
+               
                 reload={true}
                 gridId="grd_stock_summary"
                 childPopupProps={{
@@ -615,12 +612,7 @@ const StockSummary = () => {
                   enableFn: (data: any) => data?.id != 0,
                   origin: "abc",
                 }}
-                postData={{
-                  ...filter,
-                  fromDate: userSession.finFrom,
-                  toDate: filter.asOnDate,
-                }}
-                  filterText="{showBatchWise == true &&  (Batchwise) } 
+                filterText="{showBatchWise == true &&  (Batchwise) } 
                 {productID > 0 
                 || productGroupID > 0 
                 || brandID > 0 
@@ -638,6 +630,14 @@ const StockSummary = () => {
                 {supplierID > 0 && ,  Supplier :[supplier]}
                  : As On Date : {asOnDate}
                  :Stock Value : {valuationUsingName}  "
+                  onFilterChanged={(filter: any) => {
+                  setFilter(filter);
+                }}
+                postData={{
+                  ...filter,
+                  fromDate: userSession.finFrom,
+                  toDate: filter.asOnDate,
+                }}
                 onRowClick={(e) => handleRowClick(e.data)}
                 customToolbarItems={[
                   {

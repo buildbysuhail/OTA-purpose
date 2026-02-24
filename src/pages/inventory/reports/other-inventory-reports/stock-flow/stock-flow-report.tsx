@@ -660,7 +660,7 @@ const StockFlowReport = () => {
       },
       {
         dataField: "adjstk",
-        caption: t("adjstk"),
+        caption: t("adj_stk"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,
@@ -693,7 +693,7 @@ const StockFlowReport = () => {
       },
       {
         dataField: "adjval",
-        caption: t("adjval"),
+        caption: t("adj_val"),
         dataType: "number",
         allowSearch: true,
         allowFiltering: true,

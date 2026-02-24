@@ -5,7 +5,15 @@ import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
-const StockSummaryBStockList = () => {
+
+export interface StockSummaryBStockListProps {
+
+  productCode: any;
+  autoBarcode: any;
+  showServerStock: any;
+}
+  const StockSummaryBStockList = ({productCode, autoBarcode, showServerStock}:StockSummaryBStockListProps) => {
+  
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
@@ -80,10 +88,7 @@ const StockSummaryBStockList = () => {
                 dataUrl={Urls.stock_summary_b_stock_list}
                 hideGridAddButton={true}
                 method={ActionType.POST}
-                // postData={mergeObjectsRemovingIdenticalKeys(
-                //   postData,
-                //   contentProps
-                // )}
+                postData={{productCode:productCode,autoBarcode:autoBarcode,showServerStock:showServerStock}}
                 reload={true}
                 gridId="grd_stock_summary_b_stock_list"
               />

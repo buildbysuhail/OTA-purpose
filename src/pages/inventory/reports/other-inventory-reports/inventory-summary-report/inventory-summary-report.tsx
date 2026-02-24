@@ -189,6 +189,7 @@ const InventorySummaryReport = () => {
   //       customizeText: customizeSummaryRow,
   //     },
   //   ];
+  
 
   return (
     <Fragment>

@@ -295,7 +295,7 @@
   "execute": "Execute",
   "checkbox": "Checkbox",
   "user_id": "userID",
-  "branch_id": "branchID",
+  "branch_id": "BranchID",
   "counter_id": "counterID",
   "user_name": "userName",
   "user_type_code": "UserTypeCode",

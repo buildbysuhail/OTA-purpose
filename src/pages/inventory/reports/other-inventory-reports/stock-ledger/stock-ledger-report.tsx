@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import ErpDevGrid, {
   DrillDownCellTemplate,
   SummaryConfig,
@@ -12,9 +12,11 @@ import Urls from "../../../../../redux/urls";
 import StockLedgerFilter, {
   StockLedgerFilterInitialState,
 } from "./stock-ledger-report-filter";
+import { erpParseFloat } from "../../../../../utilities/Utils";
 
 const StockLedger = () => {
   const { t } = useTranslation("accountsReport");
+   const [balance, setBalance] = useState(0)
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
@@ -286,6 +288,21 @@ const StockLedger = () => {
       return getFormattedValue(value) || "0";
     };
   }, [getFormattedValue]);
+   const handleOnRowPrepared = (e: any) => {
+  if (e.rowType === "data") {
+    const grid = e.component;
+    const visibleRows = grid.getVisibleRows();
+    const lastRow = visibleRows[visibleRows.length - 1];
+
+    if (lastRow && lastRow.key === e.key) {
+      const balanceColIndex = e.columns.findIndex((col: any) => col.dataField === "balance");
+      if (balanceColIndex !== -1) {
+        const lastBalance = e.cells[balanceColIndex]?.value;
+        setBalance(lastBalance);
+      }
+    }
+  }
+};
   const customizeDate = (itemInfo: any) => `Total`;
   const summaryItems: SummaryConfig[] = [
     {
@@ -309,7 +326,12 @@ const StockLedger = () => {
       column: "balance",
       summaryType: "sum",
       valueFormat: "fixedPoint",
-      customizeText: customizeSummaryRow1,
+     customizeText: (e: any) => {
+      debugger;
+              const parsedValue = erpParseFloat(getFormattedValue(balance));
+              const result = getFormattedValue(parsedValue) || "0";
+              return result.toString()
+            },
     },
   ];
 
@@ -350,6 +372,7 @@ const StockLedger = () => {
                   isTransactionScreen: true,
                   drillDownCells: "voucherNo,",
                 }}
+                  onRowPrepared={handleOnRowPrepared}
               />
             </div>
           </div>

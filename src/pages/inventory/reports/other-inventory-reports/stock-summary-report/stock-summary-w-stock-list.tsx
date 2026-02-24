@@ -5,7 +5,12 @@ import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
-const StockSummaryWStockList = () => {
+export interface StockSummaryWStockListProps {
+  autoBarcode: any;
+}
+
+
+const StockSummaryWStockList = ({ autoBarcode }: StockSummaryWStockListProps) => {
   const { t } = useTranslation("accountsReport");
   const { getFormattedValue } = useNumberFormat();
   const columns: DevGridColumn[] = [
@@ -96,6 +101,7 @@ const StockSummaryWStockList = () => {
                 //   postData,
                 //   contentProps
                 // )}
+                postData={{ autoBarcode: autoBarcode }}
                 reload={true}
                 gridId="grd_stock_summary_w_stock_list"
               />

@@ -1,18 +1,25 @@
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import { ActionType } from "../../../../../redux/types";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import Urls from "../../../../../redux/urls";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import { APIClient } from "../../../../../helpers/api-client";
 
-const StockSummarySerials = () => {
+export interface StockSummarySerialsProps {
+  id: any;
+  autobarcode: any;
+}
+const api = new APIClient();
+  const StockSummarySerials = ({ id,autobarcode }: StockSummarySerialsProps ) => {
   const { getFormattedValue } = useNumberFormat();
+    // const [gridDataSource, setGridDataSource] = useState<any[]>([]);
   const { t } = useTranslation("accountsReport");
   const columns: DevGridColumn[] = [
     {
       dataField: "branchID",
-      caption: t("branchID"),
+      caption: t("branchId"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -26,6 +33,7 @@ const StockSummarySerials = () => {
       caption: t("product_name"),
       dataType: "string",
       allowSearch: true,
+      visible: false,
       allowFiltering: true,
       allowSorting: true,
       width: 80,
@@ -59,7 +67,7 @@ const StockSummarySerials = () => {
       allowFiltering: true,
       allowSorting: true,
       width: 60,
-      showInPdf: true,
+      visible: false,
       cellRender: (
         cellElement: any,
         cellInfo: any,
@@ -85,6 +93,17 @@ const StockSummarySerials = () => {
       },
     },
   ];
+  //  useEffect(() => {
+  //     const fetchGridData = async () => {
+  //         try {
+  //             const serialData = await api.getAsync(`${Urls.stock_summary_serials}${id}`);
+  //             setGridDataSource(serialData.data);
+  //         } catch (error) {
+  //             console.error("Error fetching price categories:", error);
+  //         }
+  //     };
+  //     fetchGridData();
+  // }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -102,10 +121,7 @@ const StockSummarySerials = () => {
                 dataUrl={Urls.stock_summary_serials}
                 hideGridAddButton={true}
                 method={ActionType.POST}
-                // postData={mergeObjectsRemovingIdenticalKeys(
-                //   postData,
-                //   contentProps
-                // )}
+                postData={{id:id,autoBarcode:autobarcode}}
                 reload={true}
                 gridId="grd_stock_summary_serials"
               />

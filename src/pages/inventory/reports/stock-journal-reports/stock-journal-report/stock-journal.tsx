@@ -138,7 +138,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
             const value =
               cellElement.data?.qty == null
                 ? ""
-                : getFormattedValue(cellElement.data.qty,false,4);
+                : getFormattedValue(cellElement.data.qty, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -148,7 +148,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
           } else {
             return cellElement.data?.qty == null
               ? ""
-              : getFormattedValue(cellElement.data.qty,false,4);
+              : getFormattedValue(cellElement.data.qty, false, 4);
           }
         },
       },
@@ -171,7 +171,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
             const value =
               cellElement.data?.cost == null
                 ? ""
-                : getFormattedValue(cellElement.data.cost,false,3);
+                : getFormattedValue(cellElement.data.cost, false, 3);
             return {
               ...exportCell,
               text: value,
@@ -181,7 +181,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
           } else {
             return cellElement.data?.cost == null
               ? ""
-              : getFormattedValue(cellElement.data.cost,false,3);
+              : getFormattedValue(cellElement.data.cost, false, 3);
           }
         },
       },
@@ -204,7 +204,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
             const value =
               cellElement.data?.total == null
                 ? ""
-                : getFormattedValue(cellElement.data.total,false,4);
+                : getFormattedValue(cellElement.data.total, false, 4);
             return {
               ...exportCell,
               text: value,
@@ -214,7 +214,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
           } else {
             return cellElement.data?.total == null
               ? ""
-              : getFormattedValue(cellElement.data.total,false,4);
+              : getFormattedValue(cellElement.data.total, false, 4);
           }
         },
       },
@@ -257,7 +257,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
         allowSorting: true,
         width: 100,
         showInPdf: true,
-       cellRender: (
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -267,7 +267,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
             const value =
               cellElement.data?.salesPrice == null
                 ? ""
-                : getFormattedValue(cellElement.data.salesPrice,false,2);
+                : getFormattedValue(cellElement.data.salesPrice, false, 2);
             return {
               ...exportCell,
               text: value,
@@ -277,7 +277,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
           } else {
             return cellElement.data?.salesPrice == null
               ? ""
-              : getFormattedValue(cellElement.data.salesPrice,false,2);
+              : getFormattedValue(cellElement.data.salesPrice, false, 2);
           }
         },
       },
@@ -290,7 +290,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
         allowSorting: true,
         width: 100,
         showInPdf: true,
-      cellRender: (
+        cellRender: (
           cellElement: any,
           cellInfo: any,
           filter: any,
@@ -316,7 +316,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
       },
       {
         dataField: "si",
-        caption: t("sl"),
+        caption: t("si"),
         dataType: "number",
         width: 100,
         allowSearch: true,
@@ -436,7 +436,7 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
                 }}
                 filterText="From {fromDate} To {toDate}"
                 columns={columns}
-                
+
                 gridHeader={t(gridHeader)}
                 dataUrl={dataUrl}
                 hideGridAddButton={true}
@@ -446,7 +446,19 @@ const StockJournalReport: FC<StockJournalSummaryProps> = ({
                 filterContent={<StockJournalReportFilter />}
                 filterWidth={700}
                 filterHeight={240}
-                filterInitialData={StockJournalReportFilterInitialState}
+                filterInitialData={{
+                  ...StockJournalReportFilterInitialState,
+                  fromWarehouse: location.pathname.includes("inventory/excess_stock_report")
+                    || location.pathname.includes("inventory/stock_journal_excess_stock_sp")
+                    ? 4
+                    : 0,
+                  toWarehouse: location.pathname.includes("inventory/damage_stock_report")
+                    ? 3
+                    : location.pathname.includes("inventory/shortage_stock_report")
+                      || location.pathname.includes("inventory/stock_journal_shortage_stock_sp")
+                      ? 2
+                      : 0,
+                }}
                 reload={true}
                 gridId={gridId}
               />

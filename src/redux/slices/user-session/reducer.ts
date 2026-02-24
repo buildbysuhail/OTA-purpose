@@ -192,6 +192,7 @@ export interface UserModel {
   counter_vr_prefix?: string | "";
   asUpdate?: boolean;
   maxDiscPercAllowed: number;
+  IsSyncServerDB: boolean;
 }
 export const initialUserSessionData: UserModel = {
   userId: 0,
@@ -239,6 +240,7 @@ export const initialUserSessionData: UserModel = {
   currentBranchDetails: initialBranchDetails,
   asUpdate: true,
   maxDiscPercAllowed: 0,
+  IsSyncServerDB: false,
 };
 
   // let ass =await getStorageString("up");

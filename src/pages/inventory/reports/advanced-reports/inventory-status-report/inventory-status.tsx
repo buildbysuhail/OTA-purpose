@@ -563,20 +563,20 @@ const InventoryStatusReport = () => {
     };
 
   const { getFormattedValue } = useNumberFormat();
-  const customizeSummaryRow = useMemo(() => {
-    return (itemInfo: { value: any }) => {
-      const value = itemInfo.value;
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        isNaN(value)
-      ) {
-        return "0";
-      }
-      return getFormattedValue(value) || "0";
-    };
-  }, [getFormattedValue]);
+  // const customizeSummaryRow = useMemo(() => {
+  //   return (itemInfo: { value: any }) => {
+  //     const value = itemInfo.value;
+  //     if (
+  //       value === null ||
+  //       value === undefined ||
+  //       value === "" ||
+  //       isNaN(value)
+  //     ) {
+  //       return "0";
+  //     }
+  //     return getFormattedValue(value) || "0";
+  //   };
+  // }, [getFormattedValue]);
   
   return (
     <Fragment>

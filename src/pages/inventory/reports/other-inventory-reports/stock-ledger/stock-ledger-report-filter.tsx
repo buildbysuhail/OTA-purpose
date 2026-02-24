@@ -96,7 +96,7 @@ const StockLedgerFilter = ({
           <ERPCheckbox
             id="showBatchWise"
             {...getFieldProps("showBatchWise")}
-            label={t("batchwise")}
+            label={t("batch_wise")}
             onChangeData={(data) =>
               handleFieldChange("showBatchWise", data.showBatchWise)
             }

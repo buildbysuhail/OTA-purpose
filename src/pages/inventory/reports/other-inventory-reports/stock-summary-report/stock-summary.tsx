@@ -15,12 +15,24 @@ import Urls from "../../../../../redux/urls";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import StockSummaryLedgerReport from "./stock-summary-ledger-report";
+import ERPButton from "../../../../../components/ERPComponents/erp-button";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import StockSummarySerials from "./stock-summary-serials";
+import StockSummaryBStockList from "./stock-summary-b-stock-list";
+import StockSummaryWStockList from "./stock-summary-w-stock-list";
+import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 
 const StockSummary = () => {
   const { t } = useTranslation("accountsReport");
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
+  const [showSerialGrid, setSerialGrid] = useState(false)
+  //  const [showHeaderFields, setShowHeaderFields] = useState(false);
+  const [showBranchStockList, setBranchStockList] = useState(false)
+  const [showWarehouseStockList, setWarehouseStockList] = useState(false)
+  const [searchFilters, setSearchFilters] = useState({ id: 0, autoBarcode: 0, productCode: "", product: "", showServerStock: false });
+
   const [filter, setFilter] = useState<any>(StockSummaryFilterInitialState);
   const clientSession = useSelector((state: RootState) => state.ClientSession);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -317,41 +329,7 @@ const StockSummary = () => {
         allowSorting: true,
         width: 100,
       },
-      {
-        dataField: "reOrderQty",
-        caption: t("order_qty"),
-        dataType: "number",
-        allowSearch: true,
-        allowFiltering: true,
-        allowSorting: true,
-        width: 80,
-        showInPdf: true,
-        cellRender: (
-          cellElement: any,
-          cellInfo: any,
-          filter: any,
-          exportCell: any
-        ) => {
-          if (exportCell != undefined) {
-            const value =
-              cellElement.data?.reOrderQty == null ||
-                cellElement.data?.reOrderQty == 0
-                ? ""
-                : cellElement.data.reOrderQty;
-            return {
-              ...exportCell,
-              text: value,
-              alignment: "right",
-              alignmentExcel: { horizontal: "right" },
-            };
-          } else {
-            return cellElement.data?.reOrderQty == null ||
-              cellElement.data?.reOrderQty == 0
-              ? ""
-              : cellElement.data.reOrderQty;
-          }
-        },
-      },
+
       {
         dataField: "warranty",
         caption: t("warranty"),
@@ -437,6 +415,63 @@ const StockSummary = () => {
         showInPdf: true,
       },
       {
+        dataField: "taxCategoryName",
+        caption: t("tax_category_name"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
+        dataField: "reOrderQty",
+        caption: t("re_order_qty"),
+        dataType: "number",
+        allowSearch: true,
+        visible: false,
+        allowFiltering: true,
+        allowSorting: true,
+        width: 80,
+        showInPdf: true,
+        cellRender: (
+          cellElement: any,
+          cellInfo: any,
+          filter: any,
+          exportCell: any
+        ) => {
+          if (exportCell != undefined) {
+            const value =
+              cellElement.data?.reOrderQty == null ||
+                cellElement.data?.reOrderQty == 0
+                ? 0
+                : cellElement.data.reOrderQty;
+            return {
+              ...exportCell,
+              text: value,
+              alignment: "right",
+              alignmentExcel: { horizontal: "right" },
+            };
+          } else {
+            return cellElement.data?.reOrderQty == null ||
+              cellElement.data?.reOrderQty == 0
+              ? 0
+              : cellElement.data.reOrderQty;
+          }
+        },
+      },
+      {
+        dataField: "Location",
+        caption: t("location"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        visible: false,
+        allowSorting: true,
+        width: 100,
+        showInPdf: true,
+      },
+      {
         dataField: "ProductImage",
         caption: t("product_image"),
         dataType: "string",
@@ -447,9 +482,13 @@ const StockSummary = () => {
         showInPdf: true,
       },
     ];
+
     return baseColumns.filter((column) => {
       if (column.dataField == "ProductImage") {
         return clientSession.isAppGlobal && filter.isProductwithimage;
+      }
+      if (column.dataField == "taxCategoryName") {
+        return clientSession.isAppGlobal;
       }
       return true;
     });
@@ -513,7 +552,22 @@ const StockSummary = () => {
       customizeText: customizeSummaryRow,
     },
   ];
-
+  const handleRowClick = (rowData: any) => {
+    // setShowHeaderFields(true)
+    setSearchFilters({
+      id: rowData.id,
+      autoBarcode: rowData.autoBarcode,
+      productCode: rowData.code,
+      product: rowData.product,
+      showServerStock: rowData.showServerStock
+    });
+  };
+  const handleShowServerStock = async (value: boolean) => {
+    setSearchFilters((prev) => ({
+      ...prev,
+      showServerStock: value,
+    }));
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -527,26 +581,9 @@ const StockSummary = () => {
                   paging: false,
                   sorting: false,
                 }}
-                filterText="{showBatchWise == true &&  (Batchwise) } 
-                {productID > 0 
-                || productGroupID > 0 
-                || brandID > 0 
-                || productCategoryID > 0
-                || wareHouseID > 0 && ,  Stock Report of } 
-                {productID <= 0 || productGroupID <= 0 
-                || brandID <= 0 || productCategoryID <= 0 
-                || wareHouseID <= 0 && , Stock Report of All Products } 
-                {productID > 0 &&   Product :[product]} 
-                {productGroupID > 0 && ,   Group Name : [productGroup]} 
-                {brandID > 0 && , Brand: [brand]}
-                {productCategoryID > 0 && , Product Category  : [productCategory]}
-                {wareHouseID > 0 && , Warehouse: [wareHouse]} 
-                {location != '' && ,  Location : [location]} 
-                {supplierID > 0 && ,  Supplier :[supplier]}
-                 : As On Date : {asOnDate}
-                 :Stock Value : {valuationUsingName}  "
+              
                 columns={columns}
-                gridHeader={t("stock_summary_report")}
+                gridHeader={t("stock_report")}
                 dataUrl={Urls.stock_summary}
                 hideGridAddButton={true}
                 enablefilter={true}
@@ -563,7 +600,7 @@ const StockSummary = () => {
                       : false,
                   valuationUsing: clientSession.isAppGlobal ? "APC" : "SPP",
                 }}
-                 onFilterChanged={(filter: any) => {
+                onFilterChanged={(filter: any) => {
                   setFilter(filter);
                 }}
                 reload={true}
@@ -583,11 +620,85 @@ const StockSummary = () => {
                   fromDate: userSession.finFrom,
                   toDate: filter.asOnDate,
                 }}
+                  filterText="{showBatchWise == true &&  (Batchwise) } 
+                {productID > 0 
+                || productGroupID > 0 
+                || brandID > 0 
+                || productCategoryID > 0
+                || wareHouseID > 0 &&    of } 
+                {productID <= 0 || productGroupID <= 0 
+                || brandID <= 0 || productCategoryID <= 0 
+                || wareHouseID <= 0 &&   of All Products } 
+                {productID > 0 &&   Product :[product]} 
+                {productGroupID > 0 && ,   Group Name : [productGroup]} 
+                {brandID > 0 && , Brand: [brand]}
+                {productCategoryID > 0 && , Product Category  : [productCategory]}
+                {wareHouseID > 0 && , Warehouse: [wareHouse]} 
+                {location != '' && ,  Location : [location]} 
+                {supplierID > 0 && ,  Supplier :[supplier]}
+                 : As On Date : {asOnDate}
+                 :Stock Value : {valuationUsingName}  "
+                onRowClick={(e) => handleRowClick(e.data)}
+                customToolbarItems={[
+                  {
+                    location: 'before',
+                    item: (
+                      <>
+                        <div className="flex gap-1 px-2">
+                          <div className="flex flex-col px-2">
+                            {((applicationSettings.branchSettings.maintainSynchronization == true && userSession.IsSyncServerDB == false) &&
+                              <ERPCheckbox
+                                id="showServerStock"
+                                label={t("show_server_stock")}
+                                checked={searchFilters.showServerStock}
+                                onChange={(e: any) => handleShowServerStock(!searchFilters.showServerStock)}
+                              />
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <ERPButton title={t("serials")} onClick={() => setSerialGrid(true)} />
+                            <ERPButton title={t("b_stock_list")} onClick={() => setBranchStockList(true)} />
+                            {(filter.showBatchWise == true &&
+                              <ERPButton title={t("w_stock_list")} onClick={() => setWarehouseStockList(true)} />
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )
+                  },
+                ]}
               />
             </div>
           </div>
         </div>
       </div>
+      <ERPModal
+        isOpen={showSerialGrid}
+        title={searchFilters.product}
+        width={650}
+        height={200}
+        isForm={true}
+        closeModal={() => setSerialGrid(false)}
+        content={<StockSummarySerials id={searchFilters.id} autobarcode={searchFilters.autoBarcode} />}
+      />
+      <ERPModal
+        isOpen={showBranchStockList}
+        title={searchFilters.product}
+        width={600}
+        height={200}
+        isForm={true}
+        closeModal={() => setBranchStockList(false)}
+        content={<StockSummaryBStockList productCode={searchFilters.productCode} autoBarcode={searchFilters.autoBarcode} showServerStock={searchFilters.showServerStock} />}
+      />
+      <ERPModal
+        isOpen={showWarehouseStockList}
+        title={searchFilters.product}
+        width={600}
+        height={200}
+        isForm={true}
+        closeModal={() => setWarehouseStockList(false)}
+        content={<StockSummaryWStockList autoBarcode={searchFilters.autoBarcode} />}
+      />
     </Fragment>
   );
 };

@@ -1260,5 +1260,6 @@
   "warehouse_id": "WarehouseID",
   "batch_wise": "Batchwise",
   "expiry_on": "Expiry On",
-  "ignore_groupwise": "Ignore Groupwise"
+  "ignore_groupwise": "Ignore Groupwise",
+  "from_branch": "From Branch"
 }

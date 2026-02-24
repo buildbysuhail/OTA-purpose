@@ -1260,6 +1260,7 @@
   "warehouse_id": "معرف المستودع",
   "batch_wise": "حسب الدفعة",
   "expiry_on": "تاريخ الانتهاء",
-  "ignore_groupwise": "تجاهل التصنيف المجموعي"
+  "ignore_groupwise": "تجاهل التصنيف المجموعي",
+  "from_branch":" من الفرع"
 
 }

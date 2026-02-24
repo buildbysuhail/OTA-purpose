@@ -5004,6 +5004,44 @@ const verified = Boolean(vch.master.pdtVerified);
 
   }
 
+    // The below code need to update after the end point response correct 
+    const refreshInventoryClick = async () => {
+      let status = false;
+      try {
+         const branches = await api.getAsync(Urls.select_branch);
+         debugger;
+        if (branches && branches.length > 0) {
+          for (let i = 2; i < branches.length; i++) {
+            const branchId = branches[i].branchID;
+            // The below code commented due to unavailability of end point
+            // const response = await api.postAsync(Urls.refreshAllBranches,{ branchId });
+
+            // if (!response) {
+            //   status = false;
+            //   break;
+            // }
+          }
+          if (status) {
+            ERPAlert.show({
+              icon: "success",
+              title: t("successfully_completed"),
+              text: t(""),
+              confirmButtonText: t("ok"),
+            });
+          } else {
+            ERPAlert.show({
+              icon: "success",
+              title: t("unexpected_error"),
+              text: t(""),
+              confirmButtonText: t("ok"),
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Refresh error:", error);
+      }
+    }
+
   return {
     downloadImportTemplateHeadersOnly,
     importFromExcel,
@@ -5054,5 +5092,6 @@ const verified = Boolean(vch.master.pdtVerified);
     loadProducts,
     handleResetStockToZero,
     HandleLoadStockCountBtn,
+    refreshInventoryClick
   };
 };

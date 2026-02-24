@@ -493,6 +493,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
     loadProducts,
     handleResetStockToZero,
     HandleLoadStockCountBtn,
+    refreshInventoryClick
     // fetchUserConfig
   } = useTransaction(
     transactionType ?? "",
@@ -1757,6 +1758,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                         clientSession={clientSession}
                         importFromExcel={importFromExcel}
                         loadProducts={loadProducts}
+                        refreshInventoryClick={refreshInventoryClick}
                       />
                     )}
                 </div>
@@ -1958,6 +1960,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                       ? "vertical"
                       : "horizontal"
                   }
+                  refreshInventoryClick={refreshInventoryClick}
                 />
 
                 {/* Total Summary */}
@@ -2006,6 +2009,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             clientSession={clientSession}
             importFromExcel={importFromExcel}
             loadProducts={loadProducts}
+            refreshInventoryClick={refreshInventoryClick}
           />
         )}
         {/* footer ends here */}

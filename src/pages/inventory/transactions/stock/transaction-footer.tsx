@@ -52,6 +52,7 @@ interface TransactionFooterProps {
   clientSession: any;
   importFromExcel?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   loadProducts: () => void;
+  refreshInventoryClick: () => void;
 }
 
 interface Confetti {
@@ -184,6 +185,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   clientSession,
   importFromExcel,
   loadProducts,
+  refreshInventoryClick
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -433,9 +435,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {/* {showWarehouseOutside && warehouseComponent}
                 <>{showAdjustmentOutside && adjustmentComponent}</> */}
                 {warehouseComponent}
-                <>{adjustmentComponent}</>
-                {priceCategoryComponent}
-                 {/* This is for stock branch transfer - may use the existing WH component */}
+                {/* This is for stock branch transfer - may use the existing WH component */}
                 <ERPDataCombobox
                     localInputBox={formState?.userConfig?.inputBoxStyle}
                     fetching={formState.transactionLoading}
@@ -458,19 +458,26 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       id: "toBranchWarehouseID",
                       valueKey: "id",
                       labelKey: "name",
-                      getListUrl: Urls.data_warehouse,
+                      getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=StockWareHouse`
                     }}
                     disabled={
                       formState.formElements.cbWarehouseID.disabled ||
                       formState.formElements.pnlMasters?.disabled
                     }
                   />
+                <>{adjustmentComponent}</>
+                {priceCategoryComponent}
                 <ERPButton 
                    title={t("load_products")} 
                    variant="secondary"
                    onClick={()=> handleLoadProductBtn()}
                    />
-                <ERPButton title={t("refresh_inventory")} variant="secondary" disabled={true}/>
+                <ERPButton 
+                  title={t("refresh_inventory")} 
+                  variant="secondary" 
+                  disabled={applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory ? false : true}
+                  onClick={refreshInventoryClick}
+                />
                 <AutoCalculationCheckbox
                   formState={formState}
                    dispatch={dispatch}

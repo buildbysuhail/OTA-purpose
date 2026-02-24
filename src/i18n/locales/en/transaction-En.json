@@ -1314,6 +1314,9 @@
   "generate": "Generate",
   "e_way_bill_details":"E-Way Bill Details",
   
-  "loaded_successfully!. please_save":"Loaded Successfully!. Please Save."
+  "loaded_successfully!. please_save":"Loaded Successfully!. Please Save.",
+  "please_select_branch":"Please select branch",
+  "successfully_completed":"Successfully Completed",
+  "unexpected_error":"UnExpected Error"
 
 }

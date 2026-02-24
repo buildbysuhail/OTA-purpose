@@ -73,7 +73,7 @@ const AdjustmentAmountInput: React.FC<AdjustmentAmountInputProps> = ({
         className="!m-0"
         noLabel={!formState.transactionLoading && formState.formElements.pnlMasters?.disabled !== true && formState.transaction.master.voucherType === VoucherType.PurchaseInvoice}
         label={t(formState.formElements.adjustmentAmount.label)}
-        readOnly
+        readOnly={formState.transaction.master.voucherType === "BTO" ? false : true}
         value={adjustmentAmountValue}
         disableEnterNavigation={true}
         onKeyDown={(e) => {

@@ -3,6 +3,7 @@ import { LoadAndSetTransVoucherFn } from "./use-transaction";
 import { APIClient } from "../../../../helpers/api-client";
 import { TransactionFormState } from "../transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
 
 interface VoucherNumberLoadProps {
   t: (key: string) => string;
@@ -53,8 +54,19 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
   }
 
   const handleLoadBtnClick = async () => {
+    if(loadVoucherType === "GR"){
+      if ((formState.transaction.master?.branchID ?? 0) <= 0) {
+        ERPAlert.show({
+          icon: "info",
+          title: t("please_select_branch"),
+          text: t(""),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return;
+      }
+    }
     try {
-      debugger;
       const res = await loadAndSetTransVoucher(
         false,
         Number(loadVoucherNumber),

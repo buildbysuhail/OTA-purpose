@@ -1311,7 +1311,10 @@
   "generate": "إنشاء",
   "e_way_bill_details": "تفاصيل فاتورة الطريق الإلكترونية",
 
-  "loaded_successfully!. please_save": "تم التحميل بنجاح!. يرجى الحفظ."
+  "loaded_successfully!. please_save": "تم التحميل بنجاح!. يرجى الحفظ.",
+  "please_select_branch": "يرجى اختيار الفرع",
+  "successfully_completed": "تم الإكمال بنجاح",
+  "unexpected_error": "خطأ غير متوقع"
 
   
 

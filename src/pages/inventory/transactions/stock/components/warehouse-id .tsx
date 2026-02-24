@@ -38,7 +38,7 @@ const WarehouseID = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
           id: "warehouseID",
           valueKey: "id",
           labelKey: "name",
-          getListUrl: Urls.data_warehouse,
+          getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/Warehouses?DisplayType=StockWareHouse`
         }}
         disabled={
           formState.formElements.cbWarehouseID.disabled ||

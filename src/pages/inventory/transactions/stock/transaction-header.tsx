@@ -733,7 +733,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                               labelKey: "name",
                             }}
                             data={formState.transaction.master}
-                            disabled={formState.branchCheckbox === false}
+                            disabled={!formState.branchCheckbox}
                             value={formState.transaction.master.branchID}
                             onSelectItem={(e: { label: string; value: string | number }) => {
                               dispatch(

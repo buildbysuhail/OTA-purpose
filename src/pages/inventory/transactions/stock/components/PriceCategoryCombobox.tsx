@@ -32,7 +32,7 @@ const PriceCategoryCombobox = React.forwardRef<
         );
         handleFieldKeyDown("priceCategoryID", "Enter");
       }}
-      value={formState.transaction.master.priceCategoryID}
+      value={formState.transaction.master.priceCategoryID || -2 }
       field={{
         id: "priceCategoryID",
         valueKey: "id",

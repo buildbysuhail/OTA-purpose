@@ -826,6 +826,8 @@ const Urls = {
   // SignalR
   signalr_join: '/Core/SignalR/Join',
   signalr_leave: '/Core/SignalR/Leave',
+
+  select_branch: "/Core/Branch/SelectBranch",
 };
 
 export default Urls;

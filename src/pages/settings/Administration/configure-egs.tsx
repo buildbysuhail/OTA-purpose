@@ -10,6 +10,7 @@ import ApiPortalRegistration from "./api-portal-registration";
 import Urls from "../../../redux/urls";
 import { APIClient } from "../../../helpers/api-client";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { handleResponse } from "../../../utilities/HandleResponse";
 
 const api = new APIClient();
 const ConfigureEgs: React.FC = () => {
@@ -86,13 +87,14 @@ const ConfigureEgs: React.FC = () => {
             const isSimulation = formData.isSimulation;
             const res = await api.postAsync(`${Urls.generate_production_csid}/?isSimulation=${isSimulation}`, {});
             // Need to manage the below section alert based on the response -  need discussion for this, now added for not forgetting
-            if(res){
-                ERPAlert.show({
-                title: t("warning"),
-                text: res?.message,
-                icon: "warning",
-            });
-            }
+            handleResponse(res);
+            // if(res ){
+            //     ERPAlert.show({
+            //     title: t("warning"),
+            //     text: res?.message,
+            //     icon: "warning",
+            // });
+            // }
         } catch (error) {
             console.error("Error", error);
         }

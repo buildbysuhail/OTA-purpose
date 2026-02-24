@@ -879,7 +879,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
       formState: any
     ): string => {
       // Helper function to format dates in dd/MM/yyyy format
-
       // Function to evaluate and replace placeholders and conditions
       const evaluateExpression = (expression: string, data: any): boolean => {
         // Create a safer scope for evaluating the expression by passing 'data' as an argument
@@ -1034,12 +1033,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     };
 
     const header = useMemo(() => {
-      if (!filterText || !filter) return filterText || "";
-      const data = filter;
+      debugger;
+      if (!filterText || (!filter && !postData)) return filterText || "";
+      const data = { ...filter, ...postData};
       const _gridHeader = filterText.toString();
       // Dynamically replace placeholders using a regular expression
       return formatStringWithConditions(_gridHeader, data);
-    }, [gridHeader, filter]);
+    }, [gridHeader, filter, postData]);
 
     const pageOrientation =
       preferences?.orientation === "landscape" ? "landscape" : "portrait";

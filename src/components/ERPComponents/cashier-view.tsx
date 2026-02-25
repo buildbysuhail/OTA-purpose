@@ -14,6 +14,7 @@ import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import urls from "../../redux/urls";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
+import { LedgerType } from "../../enums/ledger-types";
 
 export interface CashierViewData {
     id: number;
@@ -39,7 +40,7 @@ export interface SalesFormData {
     masterId:number;
     date: string;              // ISO string
     voucherNumber: number;
-    party: string;
+    // party: string;
     salesMan: string;
 
     netTotal: number;          // 2 decimal financial number
@@ -62,6 +63,7 @@ export interface SalesFormData {
 const CashierView: React.FC = () => {
     const { t } = useTranslation('transaction');
     const navigate = useNavigate();
+    const api = new APIClient();
     const [gridData, setGridData] = useState<CashierViewData[]>([]);
     const cacheRef = React.useRef<Map<string, CashierViewData[]>>(new Map());
     const columns: DevGridColumn[] = useMemo(() => [
@@ -206,7 +208,7 @@ const CashierView: React.FC = () => {
         masterId:0,
         date: new Date().toISOString(),
         voucherNumber: 0,
-        party: "",
+        // party: "",
         salesMan: "",
         netTotal: 0.0,
         billDiscount: 0.0,
@@ -235,7 +237,7 @@ const CashierView: React.FC = () => {
 
         try {
 
-            const api = new APIClient();
+           
             const res = await api.getAsync(`${urls.salesView}?Date=${currentDate}`);
 
             handlePlainResponse(res, () => {
@@ -307,7 +309,14 @@ const handleSave = async () => {
 
        const invMasterId =  await saveSalesBookingToSalesInvoice(masterId,billDiscount,cashReceived,ledgerID )
         if(invMasterId){
-
+           const saveRes = api.postAsync(urls.salesView,formData)
+           handlePlainResponse(saveRes,()=>{
+            if(formData.printReceipt){
+            // printReceipt(); pint need 
+            }
+            handleClear();
+            setGridData([])
+           })
         }else{
 
         }
@@ -355,7 +364,7 @@ const handleSave = async () => {
             masterId:0,
             date: new Date().toISOString().split('T')[0],
             voucherNumber: 0,
-            party: "",
+            // party: "",
             salesMan: "",
             netTotal: 0.0,
             billDiscount: 0.0,
@@ -376,7 +385,7 @@ const handleSave = async () => {
 
         setFormData((prev) => ({
             ...prev,
-            party: row.party ?? "",
+            // party: row.ledgerID,        // ← Use the ID, not the name string
             salesMan: row.salesMan ?? "",
             netTotal: Number(row.netTotal) || 0,
             billDiscount: Number(row.billDiscount) || 0,
@@ -384,7 +393,8 @@ const handleSave = async () => {
             grandTotal: Number(row.grandTotal) || 0,
             voucherType:row.voucherType??null,
             voucherForm:row.voucherForm??null,
-            ledgerID:Number(row.ledgerID) ||0
+            ledgerID:Number(row.ledgerID) ||0,
+            masterId: row.id, 
         }));
     };
 
@@ -485,13 +495,23 @@ const handleSave = async () => {
                         {/* Party */}
                         <div className="flex items-end justify-between">
                             <label className="w-20">{t("party")}</label>
-                            <ERPDataCombobox
-                                id="party"
-                                noLabel={true}
-                                options={[]}
-                                value={formData.party}
-                                onChange={(e) => handleChange("party", e?.value || e)}
-                            />
+
+                                            <ERPDataCombobox
+                                            id="ledgerID"
+                                            noLabel={true}
+                                              data={formData}
+                                              value={formData?.ledgerID}
+                                                field={{
+                                                    id: "ledgerID",
+                                                    //required: true,
+                                                    getListUrl:`${Urls.salesView}Data/AccLedgers`,
+                                                    params: `ledgerType=${LedgerType.Cash_Bank_Customers}`,
+                                                    valueKey: "id",
+                                                    labelKey: "name",
+                                                }}
+                                                customSize='sm'
+                                                onChange={(e) => handleChange("party", e?.value || e)}
+                                            />
                         </div>
 
                         {/* SalesMan */}

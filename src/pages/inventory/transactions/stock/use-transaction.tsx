@@ -2924,6 +2924,9 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       })();
 
+      const isToBranchStockVisible = formState.gridColumns?.find((x) => x.dataField == "ToBranchStock")?.visible;
+      const isBTOorBTI = (formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI") ? true : false;
+
       let payload = {
         useProductCode: data.useProductCode,
         productCode: data.productCode,
@@ -3051,7 +3054,6 @@ const verified = Boolean(vch.master.pdtVerified);
         outDetail.productID = product.productID;
         outDetail.barCode = product.autoBarcode;
         outDetail.productBatchID = product.productBatchID;
-
         // unit & brand
         outDetail.unit = product.unitName;
         outDetail.unitID = product.basicUnitID;
@@ -3065,6 +3067,53 @@ const verified = Boolean(vch.master.pdtVerified);
 
         // serial / description
         outDetail.productDescription = product.serialNumber;
+
+        if(isBTOorBTI){
+          outDetail.purchasePrice = product.stdPurchasePrice
+          let multiFactor = product.multiFactor ?? 0;
+          if(product.isUnit2BarCode){
+            outDetail.unit = product.unit2;
+            outDetail.unitID = product.unit2ID;
+            multiFactor = product.unit2Qty ?? multiFactor
+            outDetail.unitPrice = outDetail.unitPrice = product.unit2SalesPrice || 0;
+          }
+          if (product.isUnit3BarCode) {
+            outDetail.unit = product.unit3;
+            outDetail.unitID = product.unit3ID;
+            multiFactor = product.unit3Qty ?? multiFactor
+            outDetail.unitPrice = product.unit3SalesPrice || 0;
+          }
+          if(isToBranchStockVisible){
+              // string toBrStock = new PolosysERPInventoryClass.Masters.Products().GetBranchProductStock(dgvInventory.CurrentRow.Cells["ProductID"].Value.ToString(), dgvInventory.CurrentRow.Cells["ProductBatchID"].Value.ToString(), cbBranch.SelectedValue.ToString());
+              // dgvInventory.CurrentRow.Cells["ToBranchStock"].Value = toBrStock;
+              // string FromBrStock = new PolosysERPInventoryClass.Masters.Products().GetBranchProductStock(dgvInventory.CurrentRow.Cells["ProductID"].Value.ToString(), dgvInventory.CurrentRow.Cells["ProductBatchID"].Value.ToString(), PolosysFrameWork.General.BRANCHID.ToString());
+              // dgvInventory.CurrentRow.Cells["FromBrStock"].Value = FromBrStock;
+          }
+          outDetail.unitPrice = Number(product.stdPurchasePrice ?? 0);
+          outDetail.vatPerc = 0;
+          if(formState.userConfig?.useMSPasUnitPrice && product.minSalePrice > 0){
+            outDetail.unitPrice = product.minSalePrice
+          }
+          if(formState.userConfig?.userSalesPriceForStockTransfer && product.stdSalesPrice >0 ){
+            outDetail.unitPrice = product.stdSalesPrice;
+          }
+          if(multiFactor > 0){
+            const pPrice = outDetail.unitPrice;
+            outDetail.unitPrice = pPrice * multiFactor;
+
+          }
+          // if (chkShowProductInfoPopus.Checked)
+          // {
+          //     RefreshProductInfo(dt.Rows[0]["ProductID"].ToString());
+          // }
+          if(formState.userConfig?.userSalesPriceForStockTransfer){
+            const PriceCategoryPrice = product.priceCategoryPrice;
+            if(PriceCategoryPrice !=0){
+              outDetail.unitPrice = PriceCategoryPrice;
+              outDetail.discPerc = product.priceCategoryDiscPerc
+            }
+          }
+      }
 
         // default qty
         if (applicationSettings?.productsSettings?.setDefaultQty1) {
@@ -3104,16 +3153,18 @@ const verified = Boolean(vch.master.pdtVerified);
         outDetail.toWhouseStock = product.toWareHouseStockDetails; // check it
 
         // multi factor logic
-        if (product.multiFactor > 0) {
-          const pPrice = Number(product.stdPurchasePrice);
-          outDetail.cost = pPrice * product.multiFactor;
-          outDetail.unitPrice = pPrice * product.multiFactor;
+        if(!isBTOorBTI){
+          if (product.multiFactor > 0) {
+            const pPrice = Number(product.stdPurchasePrice);
+            outDetail.cost = pPrice * product.multiFactor;
+            outDetail.unitPrice = pPrice * product.multiFactor;
 
-          const sPrice = Number(product.stdSalesPrice);
-          outDetail.salesPrice = sPrice * product.multiFactor;
-        } else {
-          outDetail.unitPrice = Number(product.stdPurchasePrice);
-          outDetail.salesPrice = Number(product.stdSalesPrice);
+            const sPrice = Number(product.stdSalesPrice);
+            outDetail.salesPrice = sPrice * product.multiFactor;
+          } else {
+            outDetail.unitPrice = Number(product.stdPurchasePrice);
+            outDetail.salesPrice = Number(product.stdSalesPrice);
+          }
         }
 
         // stock transfer – use sales price

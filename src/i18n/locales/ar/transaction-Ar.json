@@ -1331,7 +1331,10 @@
   "costumer_state_required":"الولاية/المنطقة للعميل مطلوبة",
   "Invalid_Customer_GSTIN_format":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) للعميل غير صالح",
   "Invalid_Company_GSTIN_format":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) للشركة غير صالح",
-  "Only_accept_Numbers": "يقبل الأرقام فقط"
+  "Only_accept_Numbers": "يقبل الأرقام فقط",
+
+  "use_msp_as_unit_price": "استخدام الحد الأدنى لسعر البيع كسعر للوحدة",
+  "skip_non_mandatory_fields": "تخطي الحقول غير الإلزامية"
 
   
 

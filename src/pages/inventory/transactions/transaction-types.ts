@@ -526,6 +526,7 @@ export interface UserConfig {
   // stock
   userSalesPriceForStockTransfer?: boolean;
   useMSPasUnitPrice?: boolean;
+  skipNonMandatoryFields?: boolean;
 }
 
 export type FormElementsState = {

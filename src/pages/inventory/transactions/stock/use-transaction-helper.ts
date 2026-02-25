@@ -893,18 +893,42 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.total = getFormattedValueIgnoreRoundingToNumber(
           Number(row.netAmount || 0)
         );
+        // Check And Test the below Section
+        if(loadType === "PI"){
+          if(formState.userConfig?.useMSPasUnitPrice && row.minSalePrice > 0 ){
+            detail.unitPrice = row.minSalePrice
+            detail.gross = row.quantity * row.minSalePrice;
+          }
+
+        }
         // detail.barcodePrinted = "Y";
         // detail.batchCreated = "Y";
         detail.ratePlusTax = row.rateWithTax;
         // Optional: If you need StdPurchasePrice comparison logic like C#
         // detail.stdPurchasePrice = row.stdPurchasePrice;
         
-        // If MSP logic required (similar to PI condition in C#)
-        // if (row.minSalePrice && Number(row.minSalePrice) > 0) {
-        //   detail.unitPrice = Number(row.minSalePrice);
-        //   detail.gross = getFormattedValueIgnoreRoundingToNumber(
-        //     Number(row.quantity || 0) * Number(row.minSalePrice)
-        //   );
+        // Check And Test the below Section
+        if(loadType === "PI"){
+          if(formState.userConfig?.useMSPasUnitPrice){
+            detail.discPerc  = 0;
+            detail.discount  = 0;
+            detail.vatPerc   = 0;
+            detail.vatAmount = 0;
+            detail.unitPrice   = Number(row.unitPrice) || 0;
+            detail.ratePlusTax = detail.unitPrice;
+            detail.gross    = Number(row.grossValue) || 0;
+            detail.netValue = detail.gross;
+            detail.total    = detail.gross;
+          }
+        }
+        // if (iSBTOModify)
+        //    {
+        //     double PriceDiff = 0;
+        //     PriceDiff = Math.Abs(Convert.ToDouble(dgvInventory.Rows[i].Cells["UnitPrice"].Value) - PolosysFrameWork.General.Val(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString()));
+        //     if (Convert.ToDouble(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString()) > 0 && PriceDiff > 0.05)
+        //     {
+        //         dgvInventory.Rows[i].Cells["UnitPrice"].Value = Convert.ToDouble(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString());
+        //     }
         // }
     }
 

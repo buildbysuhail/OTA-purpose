@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import ERPCheckbox from "../../../../../components/ERPComponents/erp-checkbox";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import { TransactionUserConfig } from "../../purchase/transaction-user-config";
+import { TransactionUserConfig } from "../transaction-user-config";
 import { EllipsisVertical, KeyRound, Pencil, Printer, RefreshCw, Trash2, ChevronUp, BadgePlusIcon, Eraser, X, FileUp, History, Boxes, Group, DollarSign, Download, ShoppingCart, Upload, Barcode, Eye, FileText, Layout, PackageCheck, PackageSearch, Receipt, Users, UserCog, } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";

@@ -901,6 +901,16 @@ export const useTransactionHelper = (transactionType: string) => {
           }
 
         }
+        if(formState.transaction.master.invTransactionMasterID > 0){
+          detail.vatPerc = row.vatPercentage;
+          detail.vatAmount = row.totalVatAmount;
+        }else if(applicationSettings?.branchSettings?.applyVATOnPurchaseToBTO && formState.transaction.master.invTransactionMasterID === 0 ){
+          detail.vatPerc = row.vatPercentage;
+          detail.vatAmount = row.totalVatAmount;
+        }else{
+          detail.vatPerc = 0;
+          detail.vatAmount = 0;
+        }
         // detail.barcodePrinted = "Y";
         // detail.batchCreated = "Y";
         detail.ratePlusTax = row.rateWithTax;

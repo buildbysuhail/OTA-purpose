@@ -239,6 +239,10 @@ export const useTransactionHelper = (transactionType: string) => {
     // }
     let _grandTotal = netAmt;
     result.transaction!.master!.grandTotal = _grandTotal;
+    // Check this is correct added in below
+    if(formState.transaction.master.voucherType === VoucherType.BranchTransferOut || formState.transaction.master.voucherType === VoucherType.BranchTransferIn){
+       result.transaction!.master!.vatAmount = summary.vatAmount
+    }
     commonParams.formStateHandleFieldChangeKeysOnly &&
       dispatch &&
       dispatch(

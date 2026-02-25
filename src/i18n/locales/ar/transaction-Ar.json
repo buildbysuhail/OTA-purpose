@@ -1014,7 +1014,7 @@
   "opened": "مفتوح",
   "cr_card_amount": "بطاقة ائتمان/المبلغ",
   "cash_rcvd": "النقدية المستلمة",
-  "coupon_amount": "مبلغ القسيمة",
+  "coupon_amount": "مبلغ القسيمة",  
   "is_return_item": "هل هو صنف مرتجع",
   "kb": "لوحة المفاتيح",
   "enter": "إدخال",
@@ -1332,9 +1332,14 @@
   "Invalid_Customer_GSTIN_format":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) للعميل غير صالح",
   "Invalid_Company_GSTIN_format":"تنسيق رقم تعريف ضريبة السلع والخدمات (GSTIN) للشركة غير صالح",
   "Only_accept_Numbers": "يقبل الأرقام فقط",
-
-  "use_msp_as_unit_price": "استخدام الحد الأدنى لسعر البيع كسعر للوحدة",
-  "skip_non_mandatory_fields": "تخطي الحقول غير الإلزامية"
+  "use_msp_as_unit_price": "استخدام سعر البيع المقترح كوحدة السعر",
+  "skip_non_mandatory_fields": "تخطي الحقول غير الإلزامية",
+  
+  "converted_transaction": "تم تحويل المعاملة",
+  "the_voucher_already_processed": "تمت معالجة هذه القسيمة بالفعل، لا يمكن تحويلها مرة أخرى",
+  "the_invoice_already_processed": "تمت معالجة هذه الفاتورة بالفعل، لا يمكن تحويلها مرة أخرى",
+  "the_GRN_already_processed": "تمت معالجة هذه إشعار الاستلام بالفعل، لا يمكن تحويلها مرة أخرى",
+  "the_transaction_already_processed": "تمت معالجة هذه المعاملة بالفعل، لا يمكن تحويلها مرة أخرى"
 
   
 

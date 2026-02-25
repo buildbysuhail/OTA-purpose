@@ -1336,7 +1336,12 @@
   "Only_accept_Numbers": "Only accept Numbers",
 
   "use_msp_as_unit_price":"Use MSP as UnitPrice",
-  "skip_non_mandatory_fields":"Skip Non Mandatory Fields"
+  "skip_non_mandatory_fields":"Skip Non Mandatory Fields",
+  "the_transaction_already_processed": "The transaction already processed",
+  "the_GRN_already_processed": "The GRN already processed",
+  "the_invoice_already_processed": "The invoice already processed",
+  "the_voucher_already_processed": "The voucher already processed",
+  "converted_transaction": "Converted Transaction"
 
 
 }

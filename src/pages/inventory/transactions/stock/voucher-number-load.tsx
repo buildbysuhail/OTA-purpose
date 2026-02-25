@@ -4,6 +4,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import { TransactionFormState } from "../transaction-types";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import Urls from "../../../../redux/urls";
 
 interface VoucherNumberLoadProps {
   t: (key: string) => string;
@@ -37,7 +38,8 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
     vType = "BTI";
   }
   if (loadVoucherType === "PIImport") {
-    (vType = "PI"), (vForm = "Import");
+    vType = "PI",
+    vForm = "Import";
   }
   if (loadVoucherType === "OS") {
     vType = "OS";
@@ -47,47 +49,110 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
   }
   if (loadVoucherType === "GR") {
     vType = "GR";
-    voucherType = "GR";
+    // voucherType = "GR";
   }
   if (loadVoucherType === "PO") {
     vType = "PO";
   }
 
   const handleLoadBtnClick = async () => {
-    if(loadVoucherType === "GR"){
-      if ((formState.transaction.master?.branchID ?? 0) <= 0) {
-        ERPAlert.show({
+
+    // Check is converted transaction case
+    try {
+      const isConvertedTransaction = await api.postAsync(
+        `${Urls.inv_transaction_base}${formState.transactionType}/CheckTheTransactionIsConverted`,
+        {
+          voucherType: vType,
+          voucherPrefix: vPrefix,
+          voucherNumber: loadVoucherNumber,
+          convertedToVoucherType: voucherType,
+          voucherForm: vForm,
+        }
+      );
+      if(isConvertedTransaction === false){
+        if(loadVoucherType === "GR"){
+          if ((formState.transaction.master?.branchID ?? 0) <= 0) {
+            ERPAlert.show({
+              icon: "info",
+              title: t("please_select_branch"),
+              text: t(""),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+            });
+            return;
+          }
+        }
+        try {
+          const res = await loadAndSetTransVoucher(
+            false,
+            Number(loadVoucherNumber),
+            "",
+            voucherType,
+            vForm,
+            "",
+            0,
+            undefined,
+            true, // skip prompt
+            false,
+            vType,
+            undefined,
+            vPrefix,
+            undefined,
+            false // pnl master disable
+            // true
+          );
+        } catch (error) {
+          console.error("API failed", error);
+        }
+
+      }else{
+        if(vType === "BTI" || vType === "PO" || vType === "GR"){
+          ERPAlert.show({
           icon: "info",
-          title: t("please_select_branch"),
-          text: t(""),
+          title: t("converted_transaction"),
+          text: t("the_invoice_already_processed."),
           confirmButtonText: t("ok"),
           showCancelButton: false,
         });
-        return;
+         }else if(vType === "PI" && vForm === ""){
+          ERPAlert.show({
+          icon: "info",
+          title: t("converted_transaction"),
+          text: t("the_voucher_already_processed."),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+         }else if(vType === "PI" && vForm === "Import"){
+          ERPAlert.show({
+          icon: "info",
+          title: t("converted_transaction"),
+          text: t("the_invoice_already_processed."),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+         });  
+        }else if(vType === "GRN"){
+          ERPAlert.show({
+          icon: "info",
+          title: t("converted_transaction"),
+          text: t("the_GRN_already_processed."),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        }else if(vType === "OS"){
+          ERPAlert.show({
+          icon: "info",
+          title: t("converted_transaction"),
+          text: t("the_transaction_already_processed."),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        }
       }
+
+    } catch (error: any) {
+      console.error("Error in api call:", error);
     }
-    try {
-      const res = await loadAndSetTransVoucher(
-        false,
-        Number(loadVoucherNumber),
-        "",
-        voucherType,
-        vForm,
-        "",
-        0,
-        undefined,
-        true, // skip prompt
-        false,
-        vType,
-        undefined,
-        vPrefix,
-        undefined,
-        false // pnl master disable
-        // true
-      );
-    } catch (error) {
-      console.error("API failed", error);
-    }
+    
   };
 
   return (

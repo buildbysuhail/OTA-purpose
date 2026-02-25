@@ -53,7 +53,7 @@ export const imgField: OptionGroup[] = [
 ];
 
 export const qrCodeField: OptionGroup[] = [
-  { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData, "master___") },
+  { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields, "custom___") },
 ]
 
 export const bindingDemoData = {

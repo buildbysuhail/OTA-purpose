@@ -167,6 +167,12 @@ export const designerSectionsConfig: Record<string, Record<string, string[]>> = 
   STANDARD: {
     "en-er": ["properties", "header",  "table", "footer", ],
   },
+   "STANDARD ZATCA": {
+    "en-er": ["properties", "header",  "table", "footer", ],
+  },
+    "UNIVERSAL ZATCA": {
+    "en-er": ["properties", "header",  "table", "footer", ],
+  },
   UNIVERSAL: {
     "en-er": ["properties", "header",  "table", "footer", ],
   },

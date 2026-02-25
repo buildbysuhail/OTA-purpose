@@ -23,12 +23,12 @@ import { setTemplateCustomElements } from "../../redux/slices/templates/reducer"
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { useTranslation } from "react-i18next";
 import VoucherType, { accountsVoucherTypes, } from "../../enums/voucher-types";
-import { accountsFields, inventoryFields, barCodeField, imgField, ledgerReportFields, CheckFields } from "./fields";
+import { accountsFields, inventoryFields, barCodeField, imgField, ledgerReportFields, CheckFields, qrCodeField } from "./fields";
 import { containsArabicString, getPageDimensions, ptToPx, pxToPt, validateImageFile } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
-import { initialPrintMasterDto } from "../use-print-type-data";
+import { initialPrintCustomFields, initialPrintMasterDto } from "../use-print-type-data";
 import { hexToRgb } from "../../components/common/switcher/switcherdata/switcherdata";
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
@@ -2754,27 +2754,39 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
                       ) : selectedComponent.type ===
                         DesignerElementType.qrCode ? (
-                        <ERPDataCombobox
+                        // <ERPDataCombobox
 
-                          // onTextChange={}
-                          id="value"
-                          data={selectedComponent.qrCodeProps}
-                          label="QR Code Value"
-                          field={{
-                            id: "value",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={Object.keys(initialPrintMasterDto)?.map(
-                            (field, index) => ({
-                              value: field,
-                              label: field,
-                            })
-                          )}
-                          onChangeData={(data) =>
-                            handleQRCodePropertyChange("value", data.value)
-                          }
-                        />
+                        //   // onTextChange={}
+                        //   id="value"
+                        //   data={selectedComponent.qrCodeProps}
+                        //   label="QR Code Value"
+                        //   field={{
+                        //     id: "value",
+                        //     valueKey: "value",
+                        //     labelKey: "label",
+                        //   }}
+                        //   options={Object.keys(initialPrintCustomFields)?.map(
+                        //     (field, index) => ({
+                        //       value: field,
+                        //       label: field,
+                        //     })
+                        //   )}
+                        //   onChangeData={(data) =>
+                        //     handleQRCodePropertyChange("value", data.value)
+                        //   }
+                        // />
+                          <GroupedComboBox
+                            options={qrCodeField}
+                            value={selectedComponent.content}
+                            onChange={(selectedId) => {
+                              if (selectedId) {
+                                handlePropertyChange("content", selectedId)
+                              }
+                            }}
+                            label="Content"
+                            placeholder="Select content field..."
+                            className="w-full"
+                          />
                       ) : (
                         <ERPInput
                           id="content"

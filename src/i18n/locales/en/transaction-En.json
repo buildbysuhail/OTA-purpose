@@ -1123,7 +1123,7 @@
   "all_positive_stock_to_zero":"All Positive Stock To Zero",
   "all_negative_stock_to_zero":"All Negative Stock To Zero",
   "positive_stock_reset":"Positive Stock reset",
-  "do_you_want_to_reset_all_positive_stock_to_zero?":"Do you want to reset all positive stock to zero?",
+  "do_you_want_to_reset_all_positive_stock_to_zero":"Do you want to reset all positive stock to zero?",
   "do_you_want_to_reset_all_negative_stock_to_zero":"Do you want to reset all negative stock to zero?",
   "negative_stock_reset":"Negative Stock reset",
   "no_record_found_with_this_voucher_number":"No records found with this voucher number",
@@ -1313,7 +1313,7 @@
   "using_taxpro": "Using TaxPro",
   "generate": "Generate",
   "e_way_bill_details":"E-Way Bill Details",
-  "loaded_successfully!. please_save":"Loaded Successfully!. Please Save.",
+  "loaded_successfully!. please_save":"Loaded Successfully. Please Save.",
   
   "please_select_branch":"Please select branch",
   "successfully_completed":"Successfully Completed",

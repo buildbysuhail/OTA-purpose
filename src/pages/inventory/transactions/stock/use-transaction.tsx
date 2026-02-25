@@ -3655,7 +3655,19 @@ const verified = Boolean(vch.master.pdtVerified);
 
         case " ": {
           // Space key
-          if (formState.allowMultiUnits) {
+          // Managing multi unit condition cases
+          let multiUnitCheckStatus = false
+          const multiUnitVoucherTypes = ["ST", "DMG", "SH","EX"];
+          if (multiUnitVoucherTypes.includes(formState.transaction.master.voucherType ?? "")) {
+            if(formState.allowMultiUnits){
+              multiUnitCheckStatus = true;
+            }else{
+              multiUnitCheckStatus = false;
+            }
+          }else{
+            multiUnitCheckStatus = true;
+          }
+          if (multiUnitCheckStatus) {
             let outState: DeepPartial<TransactionFormState> = {
               transaction: { details: [] },
             };
@@ -4375,7 +4387,7 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       }
 
-      if(formState.transaction.master.voucherType === "EX"){
+      if(formState.transaction.master.voucherType === "EX" || formState.transaction.master.voucherType === "OS"){
         ERPAlert.show({
         icon: "info",
         title: t(""),
@@ -4951,7 +4963,7 @@ const verified = Boolean(vch.master.pdtVerified);
         alertText = "do_you_want_to_reset_all_positive_stock_to_zero"
         alertTittle = "positive_stock_reset"
       }else if(formState.allNegativeStockToZero){
-        alertText = "do_you_want_to_reset_all_negative_stock_to_zero?"
+        alertText = "do_you_want_to_reset_all_negative_stock_to_zero"
         alertTittle = "negative_stock_reset"
       }
 
@@ -5090,6 +5102,16 @@ const verified = Boolean(vch.master.pdtVerified);
     }));
 
     const details = [...mappedDetails, ...emptyRows];
+    // Show summary
+    const summaryRes = calculateSummary(details, formState, { result: {} });
+    if (summaryRes.summary) {
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: { summary: summaryRes.summary },
+          updateOnlyGivenDetailsColumns: false,
+        })
+      );
+    }
 
     // Update grid
     dispatch(formStateSetDetails(details));

@@ -237,6 +237,7 @@ export interface TransactionMaster {
   itemLoadVoucherPrefix?: string;
   itemLoadVoucherNumber?: number;
   soTotalAdvance?: string;
+  opDate?: string;
 }
 
 export interface TransactionMaster3 {

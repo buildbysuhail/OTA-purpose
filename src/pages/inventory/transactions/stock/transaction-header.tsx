@@ -549,12 +549,18 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                  t={t} 
               />
               {[VoucherType.OpeningStock].includes(formState.transaction.master.voucherType as VoucherType) && (
-                <div className="flex gap-1 pb-1.5">
+                <div className="flex gap-1 items-center">
                   <ERPDateInput
                       id="openingDate"
                       label={t("opening_date")}
-                      value={openingDate}
-                      onChange={(e: any) => setOpeningDate(e.target.value)}
+                      value={formState.transaction.master.opDate}
+                      onChange={(e) =>
+                        dispatch(
+                          formStateMasterHandleFieldChange({
+                            fields: { opDate: e.target.value },
+                          })
+                        )
+                      }
                     />
                   {/* Sales man */}
                   <Employee

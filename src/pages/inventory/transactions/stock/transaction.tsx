@@ -639,6 +639,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),
               voucherNumber: _voucherNo,
+              opDate: userSession.finFrom ? new Date(userSession.finFrom).toISOString() : undefined   // Check This(test)
 
             },
           },

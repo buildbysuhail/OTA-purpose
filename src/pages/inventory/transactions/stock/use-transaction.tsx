@@ -3113,7 +3113,173 @@ const verified = Boolean(vch.master.pdtVerified);
               outDetail.discPerc = product.priceCategoryDiscPerc
             }
           }
-      }
+          // If existing barcode added if increment qty is present - then work the below
+          // **AUTO INCREMENT SECTION
+          let details = [...formState.transaction.details];
+          const firstFreeRow = data.rowIndex;
+
+          if (formState.userConfig?.autoIncrementQty) {
+            const serial = product.serialNumber || "";
+            const autoBarcode = product.autoBarcode;
+
+            for (let i = 0; i < firstFreeRow; i++) {
+              if (i === data.rowIndex) continue;
+
+              const row = details[i];
+
+              if ((row.barCode || "") === (autoBarcode || "")) {
+                const rIndex = data.rowIndex;
+
+                const incrementValue = 1;
+
+                if (serial === "") {
+                  const updatedRow: TransactionDetail = {
+                    ...row,
+                    qty: Number(row.qty || 0) + incrementValue
+                  };
+
+                  const outRow = await calculateRowAmount(
+                    updatedRow,
+                    "qty",
+                    {
+                      result: {
+                        transaction: {
+                          details: [{ ...updatedRow, slNo: row.slNo }]
+                        }
+                      }
+                    },
+                    true,
+                    i
+                  );
+
+                  if (!outRow?.transaction?.details?.[0]) return null;
+
+                  const updatedDetails = [...details];
+                  updatedDetails[i] = outRow.transaction.details[0] as TransactionDetail;
+
+                  updatedDetails[rIndex] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[rIndex].slNo
+                  };
+
+                  const summaryRes = calculateSummary(updatedDetails, formState, { result: {} });
+                  const totalRes = await calculateTotal(
+                    formState.transaction.master,
+                    summaryRes.summary as SummaryItems,
+                    formState.formElements,
+                    { result: {} }
+                  );
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch: generateUniqueKey(),
+                        ...totalRes,
+                        summary: summaryRes.summary,
+                        transaction: {
+                          ...totalRes?.transaction,
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: i
+                    })
+                  );
+
+                  return null;
+                }
+
+                const desc = row.productDescription || "";
+
+                // C#: if ProductDescription.IndexOf(serial) == -1
+                if (!desc.includes(serial)) {
+                  const updatedRow: TransactionDetail = {
+                    ...row,
+                    qty: Number(row.qty || 0) + incrementValue,
+                    productDescription: desc ? `${desc},${serial}` : serial
+                  };
+
+                  const outRow = await calculateRowAmount(
+                    updatedRow,
+                    "qty",
+                    {
+                      result: {
+                        transaction: {
+                          details: [{ ...updatedRow, slNo: row.slNo }]
+                        }
+                      }
+                    },
+                    true,
+                    i
+                  );
+
+                  if (!outRow?.transaction?.details?.[0]) return null;
+
+                  const updatedDetails = [...details];
+                  updatedDetails[i] = outRow.transaction.details[0] as TransactionDetail;
+                  updatedDetails[rIndex] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[rIndex].slNo
+                  };
+
+                  const summaryRes = calculateSummary(updatedDetails, formState, { result: {} });
+                  const totalRes = await calculateTotal(
+                    formState.transaction.master,
+                    summaryRes.summary as SummaryItems,
+                    formState.formElements,
+                    { result: {} }
+                  );
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch: generateUniqueKey(),
+                        ...totalRes,
+                        summary: summaryRes.summary,
+                        transaction: {
+                          ...totalRes?.transaction,
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: i
+                    })
+                  );
+
+                  return null;
+                } else {
+                  await ERPAlert.show({
+                    icon: "warning",
+                    title: t("duplicate_serial"),
+                    text: `${t("serial_exist_in_row")}: ${i + 1}`,
+                    confirmButtonText: "OK"
+                  });
+                  const updatedDetails = [...details];
+                  updatedDetails[rIndex] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[rIndex].slNo
+                  };
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch: generateUniqueKey(),
+                        transaction: {
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: rIndex
+                    })
+                  );
+
+                  return null;
+                }
+              }
+            }
+          }
+        }
+        
 
         // default qty
         if (applicationSettings?.productsSettings?.setDefaultQty1) {
@@ -3321,6 +3487,7 @@ const verified = Boolean(vch.master.pdtVerified);
 
       return result;
     }
+
   };
 
   const handleChangeUnit = async (

@@ -105,7 +105,8 @@ const WarehouseIDFromTo = React.forwardRef<HTMLInputElement, WarehouseIDProps>(
       needsSpecialWarehouse && specialWarehouseId.current !== null
         ? specialWarehouseId.current
         : (rawValue === null || rawValue === undefined || rawValue === 0 ? -2 : rawValue);
-    const displayLabel = label ?? t(formState.formElements.cbWarehouseID.label);
+    const baseLabel = label ?? t(formState.formElements.cbWarehouseID.label);
+    const displayLabel = formState.transaction.master.voucherType === "ILR" ? `${baseLabel}/${t("van")}`: baseLabel;
 
     let comboType = ""
     if(formState.transaction.master.voucherType === "ST" && warehouseType === "from"){

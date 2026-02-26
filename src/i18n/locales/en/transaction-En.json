@@ -1341,7 +1341,9 @@
   "the_GRN_already_processed": "The GRN already processed",
   "the_invoice_already_processed": "The invoice already processed",
   "the_voucher_already_processed": "The voucher already processed",
-  "converted_transaction": "Converted Transaction"
+  "converted_transaction": "Converted Transaction",
+
+  "van":"VAN"
 
 
 }

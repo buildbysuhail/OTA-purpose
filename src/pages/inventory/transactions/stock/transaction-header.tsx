@@ -661,6 +661,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                       </div>
                     ) : (
                       <div className="pb-1.5">
+                        {/* Check wareHouse is needed in stock adjusted, if not needed, then remove it by adding condition */}
                         <WarehouseID
                         formState={formState}
                         dispatch={dispatch}
@@ -794,9 +795,9 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     <ERPInput
                       id="stockCount"
                       label={t("stock_count")}
-                      type="number"
-                      placeholder={t("prefix")}
+                      type="string"
                       className="w-16"
+                      placeholder=" "
                       value={formState.transaction.master.stockCountPrefix}
                       fetching={formState.transactionLoading}
                       onChange={(e) =>
@@ -806,13 +807,13 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           })
                         )
                       }
+                      labelClassName="font-medium"
                     />
                     <ERPInput
                       id="stockCountVhrNumber"
                       type="number"
                       noLabel={true}
                       className="w-28"
-                      placeholder={t("voucher_number")}
                       value={formState.transaction.master.stockCountVrNumber}
                       fetching={formState.transactionLoading}
                       onChange={(e) =>
@@ -1028,6 +1029,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                           </div>
                       </div>
                     )}
+
+                 {/* Load Vouchers section in Item load Request */}
+                 {[VoucherType.ItemLoadRequest].includes(formState.transaction.master.voucherType as VoucherType) && (
+                  <VoucherNumberLoad
+                    t={t}
+                    loadAndSetTransVoucher={loadAndSetTransVoucher}
+                    loadVoucherType="ILR"
+                    voucherType = {formState.transaction.master.voucherType}
+                    formState={formState}
+                    loadVoucherNumber={Number(formState.transaction.master.purInvNumber)}
+                    title="load_vouchers"
+                  />
+                 )}
               
                  {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
                    <div className="flex gap-1 items-end">

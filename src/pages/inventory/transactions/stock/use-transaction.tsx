@@ -3824,7 +3824,7 @@ const verified = Boolean(vch.master.pdtVerified);
           // Space key
           // Managing multi unit condition cases
           let multiUnitCheckStatus = false
-          const multiUnitVoucherTypes = ["ST", "DMG", "SH","EX"];
+          const multiUnitVoucherTypes = ["ST", "DMG", "SH","EX","SC","AD"];
           if (multiUnitVoucherTypes.includes(formState.transaction.master.voucherType ?? "")) {
             if(formState.allowMultiUnits){
               multiUnitCheckStatus = true;
@@ -4354,7 +4354,7 @@ const verified = Boolean(vch.master.pdtVerified);
       await workbook.xlsx.load(fileBuffer);
 
       // Get 'Purchase' worksheet
-      const purchaseWorksheet = workbook.getWorksheet("Purchase");
+      const purchaseWorksheet = workbook.getWorksheet("stock");
       if (!purchaseWorksheet) {
         throw new Error("Purchase worksheet not found in the Excel file");
       }

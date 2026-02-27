@@ -1622,10 +1622,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
    useEffect(() => {
-      console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
       async function calculateValues() {
-        console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
-        
         await calculateTotal(
         {
           ...formState.transaction.master
@@ -1655,12 +1652,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
       })
       }
       calculateValues();
-  }, [formState.transaction.master.hasCashPaid, formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff
+  }, [formState.transaction.master.hasCashPaid, formState.transaction.master.hasroundOff
       , formState.transaction.master.adjustmentAmount, formState.transaction.master.bankAmt, formState.transaction.master.couponAmt
       , formState.transaction.master.srAmount]);
       
    useEffect(() => {
-      console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
       // async function calculateValues() {
       //   console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
       //   let taxOnDisc=calculateTaxOnDiscount()

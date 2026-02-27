@@ -7121,11 +7121,7 @@ export const useTransaction = (
   };
   const applyTaxOnBillDiscount = async (billDiscount: number,) => {
 
-    if (
-      !applicationSettings.branchSettings.enableTaxOnBillDiscount
-    ) {
-      return;
-    }
+    
 
     try {
       const taxPerc = getMaxTaxPercInItemList();
@@ -7138,8 +7134,12 @@ export const useTransaction = (
         billDiscount / (1 + taxPerc / 100),
         2
       );
-
-      let taxOnDisc = roundAwayFromZero(
+      let taxOnDisc = 0;
+      if (
+      applicationSettings.branchSettings.enableTaxOnBillDiscount
+    ) {
+      
+      taxOnDisc = roundAwayFromZero(
         (billDiscTemp * taxPerc / 100), 3
       );
       if (Math.abs(billDiscount * 100 - taxOnDisc * 100) >= 0.75) {
@@ -7154,6 +7154,7 @@ export const useTransaction = (
       } else {
         taxOnDisc = billDiscount == 0 ? 0 : formState.transaction.master.taxOnDiscount || 0;
       }
+    }
       const res = await calculateTotal({ ...formState.transaction.master, taxOnDiscount: taxOnDisc, billDiscount: billDiscount }, formState.summary as SummaryItems, formState.formElements, {
         result: {
           transaction: {

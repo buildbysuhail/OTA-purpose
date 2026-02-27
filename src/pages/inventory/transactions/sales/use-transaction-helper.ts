@@ -3676,6 +3676,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   }
   async function calculateTaxOnDiscount(inputBillDiscount?: number, details?: TransactionDetail[], ignoreTaxOnDiscountCalculateTotal?:boolean) {
     try {
+      debugger;
       if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
       debugger;
       const decimalPoints = applicationSettings.mainSettings.decimalPoints;
@@ -3694,7 +3695,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       } else {
         taxOnBillDisc = oldTaxOnBillDisc;
       }
-      if(ignoreTaxOnDiscountCalculateTotal){
+      if(!ignoreTaxOnDiscountCalculateTotal){
         await calculateTotal(
         {
           ...formState.transaction.master

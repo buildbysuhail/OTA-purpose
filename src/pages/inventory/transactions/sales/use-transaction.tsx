@@ -2793,11 +2793,15 @@ export const useTransaction = (
   const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
     const validationResult = await validate();
     if (validationResult.isValid == true) {
-
+const isUnderCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/IsCashOrBank/${formState.transaction.master.ledgerID}`)
+if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDeliveryNote,VoucherType.PurchaseOrderTransist].includes(formState.transaction.master.voucherType as any) 
+  && isUnderCashOrBank){
       const tenderOk = await Tender()
       if (!tenderOk) {
         return;
       }
+}
+
       dispatch(
         formStateHandleFieldChange({
           fields: {

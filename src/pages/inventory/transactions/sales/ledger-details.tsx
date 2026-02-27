@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import Urls from "../../../../redux/urls";
@@ -10,6 +10,8 @@ import { formStateMasterHandleFieldChange } from "../reducer";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import PartiesManage from "../../../accounts/masters/parties/parties-manage";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { toggleParties } from "../../../../redux/slices/popup-reducer";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 interface LedgerDetailsProps {
   closeModal: () => void;
@@ -18,12 +20,52 @@ interface LedgerDetailsProps {
 
 const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
-  const [salesRoute, setSalesRoute] = useState(false);
-  const [mainSalesRoute, setMainSalesRoute] = useState<any>();
+  const [salesRoute, setSalesRoute]               = useState(false);
+  const [mainSalesRoute, setMainSalesRoute]       = useState<any>();
   const [ledgerInitialized, setLedgerInitialized] = useState(false);
-  const [openCustomerAddModal, setOpenCustomerAddModal] = useState(false);  // Customer add master modal opens
+  const [gridReload, setGridReload]               = useState<boolean>(true);
+
+  // useRef because we read it inside onContentReady callback.
+  // useState would cause stale closure — ref always gives current value.
+  const newPartyAddedRef = useRef<boolean>(false);
+
+  // Store the currently focused/selected ledgerID in a ref so that
+  // handleKeyDown always reads the latest value without needing to be
+  // recreated (avoids stale closure in keydown handler).
+  const selectedLedgerIDRef = useRef<any>(null);
+
+  const gridRef = useRef<any>(null);
+  const rootState = useRootState();
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  // ─── When PartiesManage saves successfully ────────────────────────────────
+  useEffect(() => {
+    if (rootState.PopupData.parties.reload === true) {
+      const gridInstance = gridRef.current?.instance?.();
+
+      if (gridInstance) {
+        // Wipe DevExtreme's cached sort and set ledgerID DESC.
+        // This makes the API receive sort=[{"selector":"ledgerID","desc":true}]
+        // so the newest party (highest ledgerID) is at skip=0 → row 0.
+        //
+        // NOTE: initialSort prop cannot do this because ErpDevGrid only applies
+        // it as a fallback when loadOptions.sort is empty. After first load,
+        // DevExtreme always populates loadOptions.sort from its own cache,
+        // so initialSort is permanently skipped. The only way to change sort
+        // after first load is to mutate the instance directly like this.
+        gridInstance.clearSorting();
+        gridInstance.columnOption("ledgerID", "sortOrder", "desc");
+        gridInstance.columnOption("ledgerID", "sortIndex", 0);
+      }
+
+      newPartyAddedRef.current = true; // tells onContentReady to select row 0
+      setLedgerInitialized(false);
+      setGridReload(true);
+    }
+  }, [rootState.PopupData.parties.reload]);
+
+  // ─── Grid columns ─────────────────────────────────────────────────────────
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "ledgerID",
@@ -134,43 +176,88 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
     },
   ];
 
+  // ─── Selects, focuses AND stores the key of row 0 ────────────────────────
+  const selectFirstRow = useCallback((gridInstance: any) => {
+    const visibleRows = gridInstance.getVisibleRows();
+    if (visibleRows.length === 0) return;
+
+    const firstKey = visibleRows[0].key;
+
+    // Keep ref in sync so handleKeyDown always has the latest ledgerID
+    selectedLedgerIDRef.current = firstKey;
+
+    // Both focusedRowIndex AND focusedRowKey must be set.
+    // focusedRowKey alone is not enough for DevExtreme to visually highlight.
+    gridInstance.option("focusedRowIndex", 0);
+    gridInstance.option("focusedRowKey", firstKey);
+
+    // selectRows highlights the checkbox/row background
+    gridInstance.selectRows([firstKey], false);
+
+    // Give focus to the grid element so keyboard events (Enter) fire
+    setTimeout(() => gridInstance.focus(), 50);
+  }, []);
+
+  // ─── onContentReady: runs after every data load ───────────────────────────
   const handleLedgerContentReady = useCallback(
     (e: any) => {
       const gridInstance = e.component;
       const visibleRows = gridInstance.getVisibleRows();
-      if (!ledgerInitialized && visibleRows.length > 0) {
-        gridInstance.option("focusedRowIndex", 0);
-        gridInstance.selectRows([visibleRows[0].key], false);
+      if (visibleRows.length === 0) return;
+
+      // Case 1: new party just added → consume the flag and select row 0
+      if (newPartyAddedRef.current) {
+        newPartyAddedRef.current = false;
         setLedgerInitialized(true);
-        setTimeout(() => {
-          gridInstance.focus();
-        }, 0);
+        selectFirstRow(gridInstance);
+        return;
+      }
+
+      // Case 2: initial open → select row 0 once
+      if (!ledgerInitialized) {
+        setLedgerInitialized(true);
+        selectFirstRow(gridInstance);
       }
     },
-    [ledgerInitialized]
+    [ledgerInitialized, selectFirstRow]
   );
 
+  // ─── Row click: keep selectedLedgerIDRef in sync ─────────────────────────
   const handleRowClick = useCallback((e: any) => {
     const grid = e.component;
     const key = e.key;
+
+    // Always keep the ref up to date with whatever row is clicked
+    selectedLedgerIDRef.current = key;
+
     grid.selectRows([key], false);
     grid.option("focusedRowKey", key);
+    grid.option("focusedRowIndex", e.rowIndex ?? 0);
     grid.focus();
   }, []);
 
+  // ─── KeyDown: reads from ref, never stale ────────────────────────────────
+  // Using a ref-based handler means we never need to add ledgerID to deps,
+  // which would cause the handler to be recreated and re-attached constantly.
   const handleKeyDown = useCallback((e: any) => {
-    const key = e.event?.key;
-    if (key === "Enter") {
-      const grid = e.component;
-      const focusedRowKey = grid.option("focusedRowKey");
-      dispatch(
-        formStateMasterHandleFieldChange({
-          fields: { ledgerID: focusedRowKey },
-        })
-      );
-      closeModal();
-    }
-  }, []);
+    const pressedKey = e.event?.key;
+    if (pressedKey !== "Enter") return;
+
+    const grid = e.component;
+
+    // Read from our ref first (most reliable), fall back to DX option
+    const ledgerID =
+      selectedLedgerIDRef.current ?? grid.option("focusedRowKey");
+
+    if (!ledgerID) return;
+
+    dispatch(
+      formStateMasterHandleFieldChange({
+        fields: { ledgerID },
+      })
+    );
+    closeModal();
+  }, [dispatch, closeModal]); // ← these are stable refs, no stale closure risk
 
   return (
     <>
@@ -202,12 +289,14 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
         </div>
         <ERPButton
           title={t('+')}
-          onClick={()=> setOpenCustomerAddModal(true)}
+          onClick={() => dispatch(toggleParties({ isOpen: true }))}
           className="px-2 w-fit"
         />
       </div>
+
       <div className="mt-4">
         <ErpDevGrid
+          ref={gridRef}
           columns={gridColumns}
           dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/LedgerList/${salesRoute && mainSalesRoute ? mainSalesRoute : 0}`}
           gridId="ledgerDetailsGrid"
@@ -223,12 +312,18 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
           hideGridHeader={false}
           enablefilter={false}
           hideToolbar={true}
-          remoteOperations={false}
+          remoteOperations={{
+            filtering: true,
+            paging: true,
+            sorting: true,
+            grouping: false,
+            summary: false,
+            groupPaging: false,
+          }}
           enableScrollButton={false}
           ShowGridPreferenceChooser={false}
           showPrintButton={false}
           focusedRowEnabled={true}
-          tabIndex={0}
           onContentReady={handleLedgerContentReady}
           onRowClick={handleRowClick}
           onKeyDown={handleKeyDown}
@@ -238,18 +333,22 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
             enabled: true,
             enterKeyDirection: "row",
           }}
+          reload={gridReload}
+          changeReload={(reload: boolean) => setGridReload(reload)}
         />
       </div>
+
       <ERPModal
-        isOpen={openCustomerAddModal}
+        isOpen={rootState.PopupData.parties.isOpen || false}
         title="Customer"
         width={950}
         height={700}
-        closeModal={() => setOpenCustomerAddModal(false)}
+        closeModal={() => {
+          dispatch(toggleParties({ isOpen: false, key: null, reload: false }));
+        }}
         content={<MemoizedPartiesManage type={"Cust"} />}
       />
     </>
   );
 };
-
 export default LedgerDetails;

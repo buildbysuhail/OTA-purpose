@@ -1343,7 +1343,12 @@
   "the_voucher_already_processed": "The voucher already processed",
   "converted_transaction": "Converted Transaction",
 
-  "van":"VAN"
+  "van":"VAN",
+  "wrong_discount_or_value_please_check_values":"Wrong discount or value, please check values",
+  "Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible":"Inventory of selected branch is not linked with Main branch, BTO not possible",
+  "please_select_valid_to_branch_warehouse": "Please Select Valid To Branch warehouse",
+  "please_select_valid_from_branch_warehouse": "Please Select Valid From Branch Warehouse"
+
 
 
 }

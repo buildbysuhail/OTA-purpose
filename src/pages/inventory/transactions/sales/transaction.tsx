@@ -148,20 +148,21 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
   const handleClearControls = async () => {
     // 1) Guard: check voucher locked
-    if (formState?.transaction?.master?.isLocked) {
-      ERPAlert.show({
-        title: t("warning"),
-        text: t("voucher_is_locked"),
-        icon: "warning",
-      });
-      return;
-    }
+    // if (formState?.transaction?.master?.isLocked) {
+    //   ERPAlert.show({
+    //     title: t("warning"),
+    //     text: t("voucher_is_locked"),
+    //     icon: "warning",
+    //   });
+    //   return;
+    // }
 
     try {
       // 2) Ask for confirmation
       const result: any = await ERPAlert.show({
         title: t("clearing_transaction_question"),
-        text: t("once_clearing_this_transaction_cannot_be_recovered"),
+        // text: t("one_clearing_this_transaction_cannot_be_recovered"),
+        text: t("clearing_transaction_question"),
         icon: "question",
         showCancelButton: true,
         confirmButtonText: t("yes"),
@@ -1622,10 +1623,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
    useEffect(() => {
-      console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
       async function calculateValues() {
-        console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
-        
         await calculateTotal(
         {
           ...formState.transaction.master
@@ -1655,12 +1653,11 @@ const TransactionForm: React.FC<TransactionProps> = ({
       })
       }
       calculateValues();
-  }, [formState.transaction.master.hasCashPaid, formState.transaction.master.billDiscount, formState.transaction.master.hasroundOff
+  }, [formState.transaction.master.hasCashPaid, formState.transaction.master.hasroundOff
       , formState.transaction.master.adjustmentAmount, formState.transaction.master.bankAmt, formState.transaction.master.couponAmt
       , formState.transaction.master.srAmount]);
       
    useEffect(() => {
-      console.log('[transaction.tsx] useEffect triggered - calling calculateValues');
       // async function calculateValues() {
       //   console.log('[transaction.tsx] calculateValues() called - about to call _calculateTotal');
       //   let taxOnDisc=calculateTaxOnDiscount()

@@ -741,6 +741,19 @@ const verified = Boolean(vch.master.pdtVerified);
 
     return response;
   };
+  // ---------------------- Need To Make function and api call correct after getting the details about the backend process -------------
+  const checkBranchIsCommonInventory = async (branchID: number): Promise<boolean> => {
+    let result = true;
+    const response = await api.getAsync(`/Branch/CheckBranchIsCommonInventoryOrNot?branchId=${branchID}`);
+    if(response.length > 0){
+      if(response?.useMainBranchInventory === false){
+        result = false;
+        return false;
+      }
+    }
+    return result;
+  };
+  // ----------------------------------------------------------------------------------------------------------------------------------------
 
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
@@ -854,6 +867,194 @@ const verified = Boolean(vch.master.pdtVerified);
         return false;
       }
     }
+
+     //  ---------------------------------BTO, BTI Validation---------------------------------------------------
+// --------------validation error massages------------------
+
+        if(master.voucherType === VoucherType.BranchTransferIn || master.voucherType === VoucherType.BranchTransferOut){
+          // Grand total check
+          if (master.grandTotal < 0) {
+            await ERPAlert.show({
+              icon: "error",
+              title: t("validation_error"),
+              text: t("wrong_discount_or_value_please_check_value"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+            });
+            return false;
+          }
+          //   // Zero Quantity validation
+          for (let i = 0; i < lastRowIndex; i++) {
+            if (Number(details[i].qty) === 0) {
+              const confirm = await ERPAlert.show({
+                icon: "warning",
+                title: t("validation_error"),
+                text: t(`zero_qty_in_row ${i + 1} do_you_want_to_continue?`),
+                confirmButtonText: t("ok"),
+              });
+
+              if (!confirm) return false;
+            }
+          }
+          if (Number(master.fromWarehouseID || 0) < 1) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("validation_error"),
+              text: t("please_select_valid_from_branch_warehouse"),
+              confirmButtonText: t("ok"),
+            });
+            return false;
+          }
+          debugger;
+          if (Number(master.branchID || 0) < 2) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("validation_error"),
+              text: t("please_select_valid_to_branch_warehouse"),
+              confirmButtonText: t("ok"),
+            });
+            return false;
+          }
+          
+          const selectedBranchId = Number(master.branchID || 0);          
+          const currentBranchId = Number(userSession.currentBranchId || 0)
+
+          const showNotLinkedMsg = async () => {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("validation_error"),
+              text: t("Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+            });
+          };
+          // Case 1: selected branch is Main (1) -> check current branch
+          if (selectedBranchId === 1) {
+            const isLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
+            if (!isLinked) {
+              await showNotLinkedMsg();
+              return false;
+            }
+          }
+          // Case 2: selected branch is NOT main, but current is Main -> check selected branch
+          else if (selectedBranchId !== 1 && currentBranchId === 1) {
+            const isLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
+            if (!isLinked) {
+              await showNotLinkedMsg();
+              return false;
+            }
+          }
+          // Case 3: both are NOT main -> check BOTH branches
+          else if (selectedBranchId !== 1 && currentBranchId !== 1) {
+            const isSelectedLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
+            if (!isSelectedLinked) {
+              await showNotLinkedMsg();
+              return false;
+            }
+
+            const isCurrentLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
+            if (!isCurrentLinked) {
+              await showNotLinkedMsg();
+              return false;
+            }
+          }
+             // Party selection check
+          if (selectedBranchId <= 0) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("validation_error"),
+              text: t("branch_should_be_selected"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+            });
+            return false;
+          }
+
+          if (selectedBranchId === currentBranchId) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("validation_error"),
+              text: t("please_select_different_branch_to_transfer"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+            });
+            return false;
+          }
+
+          if (Number(master.salesManID || 0) <= 0) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("validation_error"),
+              text: t("select_valid_salesman"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+            })
+            return false;
+          }
+
+          // --------------------------------showNegativeStockWarning---------------------------------
+
+          // let showNegativeStockWarning = applicationSettings.inventorySettings.showNegStockWarning;
+
+          // if (userSession.dbIdValue === "BAHAMDOON") {
+          //   showNegativeStockWarning = master.negativeStockModeFromWarehouse; 
+          // }
+
+          // if(applicationSettings.inventorySettings.showNegStockWarning && userSession.dbIdValue === "BAHAMDOON"){
+
+          // } 
+// -------------------------------------------------------------------------------------------------
+          // if (showNegativeStockWarning === "Block") {
+          //   for (let i = 0; i < lastRowIndex; i++) {
+          //     const row = details[i];
+
+          //     const qty = Number(row.qty || 0);
+          //     const prevQty = Number(row.prevQty || 0);     // C# used Qty.Tag (previous qty)
+          //     let qtyDiff = qty - prevQty;
+
+          //     const stock = Number(row.stock || 0);
+
+          //     // C# MultiFactor = GetProductUnitQty(productBatchId, unitId)
+          //     // Use row.unitMultiFactor if you already have it, else call API once per row or cache it.
+          //     const multiFactor = Number(row.unitMultiFactor || 1);
+          //     qtyDiff = qtyDiff * multiFactor;
+
+          //     if (qtyDiff > stock) {
+          //       await ERPAlert.show({
+          //         icon: "warning",
+          //         title: t("validation_error"),
+          //         text: t("negative_stock_in_row_cant_proceed", { row: i + 1 }),
+          //         confirmButtonText: t("ok"),
+          //         showCancelButton: false,
+          //       });
+          //       return false;
+          //     }
+          //   }
+          // }
+
+
+// ---------------------getIsInvTransactionActiveOrInvoiced--------------
+
+          // if (Number(master.pdtInvTransMasterID || 0) > 0) {
+
+          //   const active = await getIsInvTransactionActiveOrInvoiced(
+          //     master.pdtInvTransMasterID
+          //   );
+
+          //   if (active === 0) {
+          //     await ERPAlert.show({
+          //       icon: "warning",
+          //       title: t("validation_error"),
+          //       text: t("already_converted"),
+          //       confirmButtonText: t("ok"),
+          //     });
+
+          //     return false;
+          //   }
+          // }
+        }
+
+    // ----------------------------------------------------------------------------------------
 
     //   // Zero Quantity validation
     //   for (let i = 0; i < lastRowIndex; i++) {

@@ -41,9 +41,9 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
       width: 66,
     },
     {
-      dataField: "refNo",
+      dataField: "voucherNumber",
       caption: t("ref_no"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -87,7 +87,7 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
       width: 73,
     },
     {
-      dataField: "beforeAddAmount",
+      dataField: "rate",
       caption: t("before_add_amount"),
       dataType: "number",
       allowSorting: true,
@@ -165,16 +165,7 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
       visible: false,
       width: 100,
     },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      visible: false,
-      width: 100,
-    },
+   
     {
       dataField: "mrp",
       caption: t("mrp"),
@@ -197,9 +188,9 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
       width: 74,
     },
     {
-      dataField: "billNumber",
+      dataField: "voucherNumber",
       caption: t("bill_number"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -318,7 +309,7 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
     },
     {
       dataField: "refNo",
-      caption: t("ref_no"),
+      caption: t("delivery_note_number"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,

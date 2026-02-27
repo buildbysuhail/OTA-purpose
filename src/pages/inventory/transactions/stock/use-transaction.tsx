@@ -2601,24 +2601,40 @@ const verified = Boolean(vch.master.pdtVerified);
 
   const handleRefresh = async () => {
     try {
-      // const currentLedgerId = formState.row.ledgerID;
-      // const currentMasterAccountId = formState.masterAccountID;
 
-      dispatch(
+      let branchId = -1;
+      let employeeId= -2;
+      let employeeDisableStatus = false;
+      if(userSession.employeeId >0 ){
+        employeeId = userSession.employeeId;
+        if(userSession.dbIdValue?.trim() ==="DURRAH_RYD"){
+           employeeDisableStatus = true;
+        }
+      }
+      // Expand the condition after checking other forms
+      if(formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI"){
+        dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
             formElements: {
-              ledgerID: { reload: true },
-              masterAccount: { reload: true },
+              cbEmployee: { disabled: employeeDisableStatus}
             },
             transaction: {
               master: {
-                ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+                branchID: branchId,
+                fromWarehouseID: -2,
+                toBranchWarehouseID: -2,
+                driverID: -2,
+                deliveryManID: -2,
+                employeeID: employeeId,
+                vehicleID: -2,
+                voucherForm: -2
               },
             },
           },
         })
       );
+      }
     } catch (error) {
       console.error("Error refreshing data:", error);
     }
@@ -3106,6 +3122,17 @@ const verified = Boolean(vch.master.pdtVerified);
           // {
           //     RefreshProductInfo(dt.Rows[0]["ProductID"].ToString());
           // }
+
+          if (formState.userConfig?.showProductInfoPopup) {
+                dispatch(
+                  commonParams.formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      productInfo: true,
+                    },
+                  })
+                );
+              }
+
           if(formState.userConfig?.userSalesPriceForStockTransfer){
             const PriceCategoryPrice = product.priceCategoryPrice;
             if(PriceCategoryPrice !=0){
@@ -3972,15 +3999,15 @@ const verified = Boolean(vch.master.pdtVerified);
             }
           } else if (columnName == "unitPrice") {
             if (!formState.productInfo == true) {
-              if (formState.userConfig?.showProductInfoPopup) {
-                dispatch(
-                  commonParams.formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      productInfo: true,
-                    },
-                  })
-                );
-              }
+              // if (formState.userConfig?.showProductInfoPopup) {
+              //   dispatch(
+              //     commonParams.formStateHandleFieldChangeKeysOnly({
+              //       fields: {
+              //         productInfo: true,
+              //       },
+              //     })
+              //   );
+              // }
             }
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);

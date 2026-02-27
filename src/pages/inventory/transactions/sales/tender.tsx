@@ -147,12 +147,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       totalNet = totalNet + additionalAmt;
     }
     const round = formState.transaction.master.roundAmount || 0; // round amount
+    const taxOnDiscValue = formState.transaction.master.taxOnDiscount;
 
     // Set the values into state initially
     setAddAmount(additionalAmt)
     setCouponAmt(couponAmt);
     setTotal(totalNet);
     setRoundOf(round);
+    setTaxOnDiscAmount(taxOnDiscValue)
     // Set maxTaxPercentage from settings
     if(applicationSettings.branchSettings.enableTaxOnBillDiscount){
       const maxTaxPercentage = getMaxTaxPercInItemList()
@@ -176,7 +178,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     useEffect(() => {
       // Net total calculation
       let calculatedNetTotal = (total + addAmount + roundOf) - (couponAmt);
-      calculatedNetTotal = total - discAmount + taxOnDiscAmount;
+      calculatedNetTotal = total - discAmount - taxOnDiscAmount;
       // Set net Total value
       setNetTotal(calculatedNetTotal);
       const totalReceived = cashRcvd;

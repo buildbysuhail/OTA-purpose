@@ -10,6 +10,7 @@ import OrderNo from "./components/order-number";
 import { LoadAndSetTransVoucherFn } from "./use-transaction";
 import { formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { TransactionFormState } from "../transaction-types";
+import VoucherType from "../../../../enums/voucher-types";
 
 interface MoreOptionsModalContentProps {
   formState: TransactionFormState;
@@ -440,6 +441,9 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
             </div>
 
             {/* Notes */}
+            {formState.transaction.master.voucherType !== VoucherType.BranchTransferOut &&
+             formState.transaction.master.voucherType !== VoucherType.BranchTransferIn
+            && (
             <div>
               <div className="font-bold text-xs sm:text-sm mb-2 sm:mb-3 bg-gray-200 px-2 py-1">
                 {t("notes")}
@@ -472,6 +476,7 @@ const MoreOptionsModalContent: React.FC<MoreOptionsModalContentProps> = ({ formS
                
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

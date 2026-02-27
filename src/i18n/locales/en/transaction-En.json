@@ -1123,7 +1123,7 @@
   "all_positive_stock_to_zero":"All Positive Stock To Zero",
   "all_negative_stock_to_zero":"All Negative Stock To Zero",
   "positive_stock_reset":"Positive Stock reset",
-  "do_you_want_to_reset_all_positive_stock_to_zero?":"Do you want to reset all positive stock to zero?",
+  "do_you_want_to_reset_all_positive_stock_to_zero":"Do you want to reset all positive stock to zero?",
   "do_you_want_to_reset_all_negative_stock_to_zero":"Do you want to reset all negative stock to zero?",
   "negative_stock_reset":"Negative Stock reset",
   "no_record_found_with_this_voucher_number":"No records found with this voucher number",
@@ -1313,7 +1313,7 @@
   "using_taxpro": "Using TaxPro",
   "generate": "Generate",
   "e_way_bill_details":"E-Way Bill Details",
-  "loaded_successfully!. please_save":"Loaded Successfully!. Please Save.",
+  "loaded_successfully!. please_save":"Loaded Successfully. Please Save.",
   
   "please_select_branch":"Please select branch",
   "successfully_completed":"Successfully Completed",
@@ -1333,6 +1333,17 @@
   "costumer_state_required":"Customer state is required",
   "Invalid_Company_GSTIN_format":"Invalid Company GSTIN format",
   "Invalid_Customer_GSTIN_format": "Invalid Customer GSTIN format",
-  "Only_accept_Numbers": "Only accept Numbers"
+  "Only_accept_Numbers": "Only accept Numbers",
+
+  "use_msp_as_unit_price":"Use MSP as UnitPrice",
+  "skip_non_mandatory_fields":"Skip Non Mandatory Fields",
+  "the_transaction_already_processed": "The transaction already processed",
+  "the_GRN_already_processed": "The GRN already processed",
+  "the_invoice_already_processed": "The invoice already processed",
+  "the_voucher_already_processed": "The voucher already processed",
+  "converted_transaction": "Converted Transaction",
+
+  "van":"VAN"
+
 
 }

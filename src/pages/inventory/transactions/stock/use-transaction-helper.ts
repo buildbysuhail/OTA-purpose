@@ -92,6 +92,11 @@ export const useTransactionHelper = (transactionType: string) => {
     state.formElements.btnPrint.disabled = !isClosed
       ? hasRight(state.formCode, UserAction.Print)
       : false;
+    if(state.transaction.master.voucherType === "BTI"){
+      state.formElements.btnSave.disabled = true;
+      state.formElements.btnEdit.disabled = true;
+      state.formElements.btnDelete.disabled = true;
+    }
     return state;
   };
   const disableControlsFn = (
@@ -99,6 +104,15 @@ export const useTransactionHelper = (transactionType: string) => {
   ): TransactionFormState => {
     state.formElements.pnlMasters.disabled = true;
     state.formElements.dxGrid.disabled = true;
+    state.formElements.txtData.visible = false;
+    state.formElements.pnlProductBatches.visible = false;
+    if (["ST", "DMG", "EX", "SH", "SC"].includes(state.transaction.master.voucherType)){
+      state.formElements.voucherNumberUpDownBtns.disabled = false
+    }
+    if (["BTO", "BTI"].includes(state.transaction.master.voucherType)){
+      state.formElements.lblproductName.visible = false;
+      state.formElements.pnlAmountSummary.disabled = false;
+    }
     return state;
   };
   const validateTransactionDate = (
@@ -239,6 +253,10 @@ export const useTransactionHelper = (transactionType: string) => {
     // }
     let _grandTotal = netAmt;
     result.transaction!.master!.grandTotal = _grandTotal;
+    // Check this is correct added in below
+    if(formState.transaction.master.voucherType === VoucherType.BranchTransferOut || formState.transaction.master.voucherType === VoucherType.BranchTransferIn){
+       result.transaction!.master!.vatAmount = summary.vatAmount
+    }
     commonParams.formStateHandleFieldChangeKeysOnly &&
       dispatch &&
       dispatch(
@@ -548,10 +566,12 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Enable amount summary panel
-      if (!result.formElements.pnlAmountSummary) {
+      if (["BTO", "BTI"].includes(formState.transaction?.master?.voucherType)){
+        if (!result.formElements.pnlAmountSummary) {
         result.formElements.pnlAmountSummary = { disabled: false };
-      } else {
-        result.formElements.pnlAmountSummary.disabled = false;
+        } else {
+          result.formElements.pnlAmountSummary.disabled = false;
+        }
       }
 
       // Dispatch the updated state
@@ -893,18 +913,52 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.total = getFormattedValueIgnoreRoundingToNumber(
           Number(row.netAmount || 0)
         );
+        // Check And Test the below Section
+        if(loadType === "PI"){
+          if(formState.userConfig?.useMSPasUnitPrice && row.minSalePrice > 0 ){
+            detail.unitPrice = row.minSalePrice
+            detail.gross = row.quantity * row.minSalePrice;
+          }
+
+        }
+        if(formState.transaction.master.invTransactionMasterID > 0){
+          detail.vatPerc = row.vatPercentage;
+          detail.vatAmount = row.totalVatAmount;
+        }else if(applicationSettings?.branchSettings?.applyVATOnPurchaseToBTO && formState.transaction.master.invTransactionMasterID === 0 ){
+          detail.vatPerc = row.vatPercentage;
+          detail.vatAmount = row.totalVatAmount;
+        }else{
+          detail.vatPerc = 0;
+          detail.vatAmount = 0;
+        }
         // detail.barcodePrinted = "Y";
         // detail.batchCreated = "Y";
         detail.ratePlusTax = row.rateWithTax;
         // Optional: If you need StdPurchasePrice comparison logic like C#
         // detail.stdPurchasePrice = row.stdPurchasePrice;
         
-        // If MSP logic required (similar to PI condition in C#)
-        // if (row.minSalePrice && Number(row.minSalePrice) > 0) {
-        //   detail.unitPrice = Number(row.minSalePrice);
-        //   detail.gross = getFormattedValueIgnoreRoundingToNumber(
-        //     Number(row.quantity || 0) * Number(row.minSalePrice)
-        //   );
+        // Check And Test the below Section
+        if(loadType === "PI"){
+          if(formState.userConfig?.useMSPasUnitPrice){
+            detail.discPerc  = 0;
+            detail.discount  = 0;
+            detail.vatPerc   = 0;
+            detail.vatAmount = 0;
+            detail.unitPrice   = Number(row.unitPrice) || 0;
+            detail.ratePlusTax = detail.unitPrice;
+            detail.gross    = Number(row.grossValue) || 0;
+            detail.netValue = detail.gross;
+            detail.total    = detail.gross;
+          }
+        }
+        // if (iSBTOModify)
+        //    {
+        //     double PriceDiff = 0;
+        //     PriceDiff = Math.Abs(Convert.ToDouble(dgvInventory.Rows[i].Cells["UnitPrice"].Value) - PolosysFrameWork.General.Val(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString()));
+        //     if (Convert.ToDouble(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString()) > 0 && PriceDiff > 0.05)
+        //     {
+        //         dgvInventory.Rows[i].Cells["UnitPrice"].Value = Convert.ToDouble(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString());
+        //     }
         // }
     }
 

@@ -3,32 +3,43 @@ import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { ChevronRight, Settings, Palette, Layout, Building2, Grid, Mouse, Undo } from "lucide-react";
+import {
+  ChevronRight,
+  Settings,
+  Palette,
+  Layout,
+  Building2,
+  Grid,
+  Mouse,
+  Undo,
+} from "lucide-react";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { AppState, inputBox, } from "../../../../redux/slices/app/types";
+import { AppState, inputBox } from "../../../../redux/slices/app/types";
 import InputBoxStyling from "../../../../components/ERPComponents/erp-inputboxStyle-preference";
 import { hexToRgb } from "../../../../components/common/switcher/switcherdata/switcherdata";
 import { useTranslation } from "react-i18next";
 import { useAppState } from "../../../../utilities/hooks/useAppState";
 import { ERPScrollArea } from "../../../../components/ERPComponents/erp-scrollbar";
-import { formStateHandleFieldChange, formStateHandleFieldChangeKeysOnly, formStateMasterHandleFieldChange } from "../reducer";
+import {
+  formStateHandleFieldChange,
+  formStateHandleFieldChangeKeysOnly,
+  formStateMasterHandleFieldChange,
+} from "../reducer";
 import { UserConfig } from "../transaction-types";
 import { appInitialState } from "../../../../redux/slices/app/reducer";
 import useDebounce from "../../../transaction-base/use-debounce";
+import VoucherType from "../../../../enums/voucher-types";
 
 const api = new APIClient();
 
 interface TransactionUserConfigProps {
   phone?: boolean;
   transactionType: string;
-  undoEditMode?: (
-    isEdit: boolean,
-    transactionMasterId: number
-  ) => void;
+  undoEditMode?: (isEdit: boolean, transactionMasterId: number) => void;
 }
 
 interface SectionProps {
@@ -38,11 +49,19 @@ interface SectionProps {
   icon?: React.ReactNode;
 }
 
-const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultExpanded = false, icon }) => {
+const CollapsibleSection: React.FC<SectionProps> = ({
+  title,
+  children,
+  defaultExpanded = false,
+  icon,
+}) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   return (
     <div className="mb-2 bg-white dark:bg-dark-bg-card rounded-xl shadow-sm border border-gray-200 dark:border-dark-border overflow-hidden">
-      <button onClick={() => setIsExpanded(!isExpanded)} className="w-full p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-hover-bg dark:to-dark-border hover:from-gray-100 hover:to-gray-200 dark:hover:from-dark-border dark:hover:to-gray-700 transition-all duration-300 ease-in-out flex items-center justify-between text-left group">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-hover-bg dark:to-dark-border hover:from-gray-100 hover:to-gray-200 dark:hover:from-dark-border dark:hover:to-gray-700 transition-all duration-300 ease-in-out flex items-center justify-between text-left group"
+      >
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-dark-bg shadow-sm group-hover:shadow-md transition-shadow duration-300">
             {icon}
@@ -51,12 +70,20 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultEx
             {title}
           </h3>
         </div>
-        <div className={`transform transition-transform duration-300 ease-in-out ${isExpanded ? 'rotate-90' : 'rotate-0'}`}>
+        <div
+          className={`transform transition-transform duration-300 ease-in-out ${
+            isExpanded ? "rotate-90" : "rotate-0"
+          }`}
+        >
           <ChevronRight className="w-4 h-4 text-gray-500 dark:text-dark-text group-hover:text-gray-700 dark:group-hover:text-white" />
         </div>
       </button>
 
-      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+      <div
+        className={`overflow-hidden transition-all duration-500 ease-in-out ${
+          isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
         <div className="p-2 border-t border-gray-100 dark:border-dark-border bg-white dark:bg-dark-bg-card">
           {children}
         </div>
@@ -65,17 +92,30 @@ const CollapsibleSection: React.FC<SectionProps> = ({ title, children, defaultEx
   );
 };
 
-export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ phone = false, transactionType, undoEditMode }) => {
-  const formState = useAppSelector((state: RootState) => state.InventoryTransaction);
+export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({
+  phone = false,
+  transactionType,
+  undoEditMode,
+}) => {
+  const formState = useAppSelector(
+    (state: RootState) => state.InventoryTransaction
+  );
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const dispatch = useDispatch();
   const { t } = useTranslation("transaction");
-  const [isExpanded, setIsExpanded] = useState<boolean>(formState.userConfig?.isExpanded || false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(
+    formState.userConfig?.isExpanded || false
+  );
   const { appState, updateAppState } = useAppState();
   const isRtl = appState.locale.rtl;
   const [stockUpdate, setStockUpdate] = useState<boolean>(false);
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   useEffect(() => {
-    dispatch(formStateHandleFieldChange({ fields: { privConfig: JSON.stringify(formState.userConfig || {}) } }));
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { privConfig: JSON.stringify(formState.userConfig || {}) },
+      })
+    );
   }, []);
 
   const handleToggle = () => {
@@ -85,11 +125,15 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       ...formState.userConfig,
       isExpanded: newValue,
     };
-    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+    dispatch(
+      formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } })
+    );
   };
 
   const handleStockUpdateChange = (value: boolean) => {
-    dispatch(formStateMasterHandleFieldChange({ fields: { stockUpdate: value } }));
+    dispatch(
+      formStateMasterHandleFieldChange({ fields: { stockUpdate: value } })
+    );
   };
 
   const handleInputBoxChange = (field: keyof inputBox, value: any) => {
@@ -101,14 +145,17 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         [field]: value,
       },
     };
-    dispatch(formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } }));
+    dispatch(
+      formStateHandleFieldChange({ fields: { userConfig: updatedUserConfig } })
+    );
   };
 
   const handleUndoClick = () => {
-    undoEditMode?.(formState.transaction.master.invTransactionMasterID > 0, formState.transaction.master.invTransactionMasterID);
-  }
-
-  console.log("uc mjjjjjjjjj22222:", formState?.userConfig?.editInNewTab);
+    undoEditMode?.(
+      formState.transaction.master.invTransactionMasterID > 0,
+      formState.transaction.master.invTransactionMasterID
+    );
+  };
 
   // const postUserConfig = async () => {
   //   try {
@@ -121,7 +168,7 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
   //         formStateHandleFieldChangeKeysOnly({
   //           fields: {
   //             userConfig: {themeName: 'Custom',},
-  //             isUserConfigOpen: false 
+  //             isUserConfigOpen: false
   //           },
   //         })
   //       );
@@ -136,7 +183,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
       ...(formState.userConfig || {}),
       [field]: value,
     };
-    dispatch(formStateHandleFieldChangeKeysOnly({ fields: { userConfig: {[field]: value} } }));
+    dispatch(
+      formStateHandleFieldChangeKeysOnly({
+        fields: { userConfig: { [field]: value } },
+      })
+    );
   };
 
   const handleScrollbarChange = (field: keyof AppState, value: any) => {
@@ -147,7 +198,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
     updateAppState(_appState);
   };
 
-  const debouncedHandleScrollbarChange = useDebounce(handleScrollbarChange, 300);
+  const debouncedHandleScrollbarChange = useDebounce(
+    handleScrollbarChange,
+    300
+  );
   const debouncedHandleFieldChange = useDebounce(handleFieldChange, 300);
   // const resetThemeChange = async () => {
   //   try {
@@ -179,13 +233,16 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
   const rgbToHex = (rgb: string): string => {
     if (!rgb) return "#000000";
-    const [r, g, b] = rgb.split(',').map(Number);
+    const [r, g, b] = rgb.split(",").map(Number);
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
   };
 
   return (
     <>
-      <div className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+      <div
+        className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto p-2"
+        style={{ msOverflowStyle: "none", scrollbarWidth: "none" }}
+      >
         {/* View Toggle Section */}
         <div className="mb-2 p-3 sm:p-4 bg-gradient-to-br from-[#eff6ff] via-[#eef2ff] to-[#faf5ff] dark:from-dark-bg dark:via-dark-hover-bg dark:to-dark-border rounded-xl border border-[#bfdbfe] dark:border-dark-border shadow-sm">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -205,7 +262,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
 
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
               <div className="flex items-center justify-between sm:justify-start gap-3">
-                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{isExpanded ? t("expanded_view") : t("compact_view")}</span>
+                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
+                  {isExpanded ? t("expanded_view") : t("compact_view")}
+                </span>
                 <div className="relative inline-block w-16 h-8 flex-shrink-0">
                   <input
                     type="checkbox"
@@ -216,33 +275,72 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   />
                   <label
                     htmlFor="toggle-view"
-                    className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${isExpanded ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]" : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"}`}>
-                    <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${isExpanded ? isRtl ? "translate-x-[-2rem]" : "translate-x-8" : "translate-x-0"}`} ></div>
+                    className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${
+                      isExpanded
+                        ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]"
+                        : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"
+                    }`}
+                  >
+                    <div
+                      className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${
+                        isExpanded
+                          ? isRtl
+                            ? "translate-x-[-2rem]"
+                            : "translate-x-8"
+                          : "translate-x-0"
+                      }`}
+                    ></div>
                   </label>
                 </div>
               </div>
 
-              <div className={`flex items-center justify-between sm:justify-start ${formState.transaction.master.voucherType === "LPO" ? "hidden" : "block"} gap-3`}>
-                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">{t("footer_position")}</span>
+              <div
+                className={`flex items-center justify-between sm:justify-start ${
+                  formState.transaction.master.voucherType === "LPO"
+                    ? "hidden"
+                    : "block"
+                } gap-3`}
+              >
+                <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
+                  {t("footer_position")}
+                </span>
                 <div className="relative inline-block w-16 h-8 flex-shrink-0">
                   <input
                     type="checkbox"
                     id="footer-position"
                     className="sr-only"
-                    checked={formState.userConfig?.footerPosition === 'right'}
+                    checked={formState.userConfig?.footerPosition === "right"}
                     onChange={() => {
-                      const newPosition = formState.userConfig?.footerPosition === 'bottom' ? 'right' : 'bottom';
-                      handleFieldChange('footerPosition', newPosition);
+                      const newPosition =
+                        formState.userConfig?.footerPosition === "bottom"
+                          ? "right"
+                          : "bottom";
+                      handleFieldChange("footerPosition", newPosition);
                     }}
                   />
                   <label
                     htmlFor="footer-position"
-                    className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${formState.userConfig?.footerPosition === 'right' ? 'bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]' : 'bg-gray-300 dark:bg-gray-600 shadow-gray-200'}`}>
-                    <div className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${formState.userConfig?.footerPosition === "right" ? isRtl ? "-translate-x-8" : "translate-x-8" : "translate-x-0"}`}></div>
+                    className={`block cursor-pointer rounded-full p-1 transition-all duration-300 ease-in-out shadow-inner ${
+                      formState.userConfig?.footerPosition === "right"
+                        ? "bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] shadow-[#bfdbfe]"
+                        : "bg-gray-300 dark:bg-gray-600 shadow-gray-200"
+                    }`}
+                  >
+                    <div
+                      className={`w-6 h-6 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out ${
+                        formState.userConfig?.footerPosition === "right"
+                          ? isRtl
+                            ? "-translate-x-8"
+                            : "translate-x-8"
+                          : "translate-x-0"
+                      }`}
+                    ></div>
                   </label>
                 </div>
                 <span className="text-sm text-gray-700 dark:text-dark-text font-medium">
-                  {formState.userConfig?.footerPosition === 'bottom' ? t('bottom') : t('right')}
+                  {formState.userConfig?.footerPosition === "bottom"
+                    ? t("bottom")
+                    : t("right")}
                 </span>
               </div>
             </div>
@@ -250,150 +348,196 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         </div>
 
         {/* Main Configuration Options - All checkboxes in one section */}
-        <CollapsibleSection title={t("configuration_options")} defaultExpanded={true} icon={<Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6 relative">
-            <div className="space-y-2">
-              <ERPCheckbox
-                id="useBarcode"
-                label={t("use_barcode")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.useBarcode}
-                onChangeData={(e) => handleFieldChange("useBarcode", e.useBarcode)}
-
-              />
-              {/* <ERPCheckbox
-                    id="resizeGrid"
-                    label={t("resize_grid")}
-                    data={formState.userConfig}
-                    checked={formState?.userConfig?.resizeGrid}
-                    onChangeData={(e) => handleFieldChange("resizeGrid", e.resizeGrid)}
-                  /> */}
-              <ERPCheckbox
-                id="showProductInfoPopup"
-                label={t("show_product_info_popup")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.showProductInfoPopup}
-                onChangeData={(e) => handleFieldChange("showProductInfoPopup", e.showProductInfoPopup)}
-              />
-              <ERPCheckbox
-                id="showPurchaserOnly"
-                label={t("show_purchaser_only")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.showPurchaserOnly}
-                onChangeData={(e) => handleFieldChange("showPurchaserOnly", e.showPurchaserOnly)}
-              />
-              <ERPCheckbox
-                id="useSupplierProductCode"
-                label={t("use_supplier_product_code")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.useSupplierProductCode}
-                onChangeData={(e) => handleFieldChange("useSupplierProductCode", e.useSupplierProductCode)}
-              />
-              {formState.transaction.master.voucherType === 'PR' && (
+        <CollapsibleSection
+          title={t("configuration_options")}
+          defaultExpanded={true}
+          icon={
+            <Settings className="w-4 h-4 text-[#2563eb] dark:text-[#60a5fa]" />
+          }
+        >
+          <div className="flex flex-row">
+            <div className="flex flex-wrap space-y-1 px-4">
+              {/* ------------- Common Fields-------------------- */}
+              {![VoucherType.OpeningStock].includes(formState.transaction.master.voucherType as VoucherType) && (
+              <>
                 <ERPCheckbox
-                  id="enableVoucherPrefix"
-                  label={t("enable_voucher_prefix")}
+                  id="useBarcode"
+                  label={t("use_barcode")}
                   data={formState.userConfig}
-                  checked={formState.userConfig?.enableVoucherPrefix}
-                  onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
+                  checked={formState?.userConfig?.useBarcode}
+                  onChangeData={(e) =>
+                    handleFieldChange("useBarcode", e.useBarcode)
+                  }
+                  className="w-1/3 mt-1"
                 />
-              )}
-              {/* {formState.formElements.printOnSave.visible && ( */}
+
                 <ERPCheckbox
-                  localInputBox={formState?.userConfig?.inputBoxStyle}
-                  id="printOnSave"
-                  label={t(formState.formElements.printOnSave.label)}
-                  checked={formState.userConfig?.printOnSave}
-                  onChange={(e) => dispatch(formStateHandleFieldChange({ fields: { printOnSave: e.target.checked }, }))}
-                  disabled={formState.formElements.printOnSave?.disabled}
+                  id="resizeGrid"
+                  label={t("resize_grid")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.resizeGrid}
+                  onChangeData={(e) =>
+                    handleFieldChange("resizeGrid", e.resizeGrid)
+                  }
+                  className="w-1/3"
                 />
-              {/* )} */}
-            </div>
 
-            <div className="space-y-2">
-              <ERPCheckbox
-                id="enableItemCodeSearchInNameColumn"
-                label={t("enable_item_code_search_in_name_column")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.enableItemCodeSearchInNameColumn}
-                onChangeData={(e) => handleFieldChange("enableItemCodeSearchInNameColumn", e.enableItemCodeSearchInNameColumn)}
-              />
-              <ERPCheckbox
-                id="holdSameCode"
-                label={t("hold_same_code")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.holdSameCode}
-                onChangeData={(e) => handleFieldChange("holdSameCode", e.holdSameCode)}
-              />
-              <ERPCheckbox
-                id="printPreview"
-                label={t("print_preview")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.printPreview ?? false}
-                onChangeData={(e) => handleFieldChange("printPreview", e.printPreview)}
-              />
-              <ERPCheckbox
-                id="dummyProducts"
-                label={t("dummy_products")}
-                data={formState}
-                checked={formState?.dummyProducts}
-                onChangeData={(e) => dispatch(formStateHandleFieldChange({ fields: { dummyProducts: e.dummyProducts } }))}
-              />
-              <ERPCheckbox
-                id="duplicationMessage"
-                label={t("duplication_message")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.duplicationMessage}
-                onChangeData={(e) => handleFieldChange("duplicationMessage", e.duplicationMessage)}
-              />
-            </div>
+                <ERPCheckbox
+                  id="roundOff"
+                  label={t("round_off")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.roundOff}
+                  onChangeData={(e) =>
+                    handleFieldChange("roundOff", e.roundOff)
+                  }
+                  className="w-1/3"
+                />
 
-            <div className="space-y-2">
-              <ERPCheckbox
-                id="setDefaultQuantity"
-                label={t("set_default_quantity")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.setDefaultQuantity}
-                onChangeData={(e) => handleFieldChange("setDefaultQuantity", e.setDefaultQuantity)}
-              />
-              <ERPCheckbox
-                id="useInSearch"
-                label={t("use_in_search")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.useInSearch}
-                onChangeData={(e) => handleFieldChange("useInSearch", e.useInSearch)}
-              />
-              <ERPCheckbox
-                id="useCodeSearch"
-                label={t("use_code_search")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.useCodeSearch}
-                onChangeData={(e) => handleFieldChange("useCodeSearch", e.useCodeSearch)}
-              />
-              <ERPCheckbox
-                id="barCodePrev"
-                label={t("show_barcode_preview")}
-                data={formState.userConfig}
-                checked={formState?.userConfig?.barCodePrev}
-                onChangeData={(e) => handleFieldChange("barCodePrev", e.barCodePrev)}
-              />
-              <ERPCheckbox
-                id="stockUpdate"
-                label={t("stock_update")}
-                data={formState.transaction.master}
-                checked={formState.transaction.master.stockUpdate}
-                onChangeData={(e) => handleStockUpdateChange(e.stockUpdate)}
-              />
-              <ERPCheckbox
-                id="editInNewTab"
-                label={t("edit_in_new_tab")}
-                data={formState.transaction.master}
-                checked={formState?.userConfig?.editInNewTab}
-                onChangeData={(e) => handleFieldChange("editInNewTab", e.editInNewTab)}
-              />
+                <ERPCheckbox
+                  id="duplicationMessage"
+                  label={t("duplication_message")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.duplicationMessage}
+                  onChangeData={(e) =>
+                    handleFieldChange(
+                      "duplicationMessage",
+                      e.duplicationMessage
+                    )
+                  }
+                  className="w-1/3"
+                />
+
+                <ERPCheckbox
+                  id="discAmtReadOnly"
+                  label={t("disc_amt_read_only")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.discAmtReadOnly}
+                  onChangeData={(e) =>
+                    handleFieldChange("discAmtReadOnly", e.discAmtReadOnly)
+                  }
+                  className="w-1/3"
+                />
+
+                <ERPCheckbox
+                  id="printPreview"
+                  label={t("print_preview")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.printPreview ?? false}
+                  onChangeData={(e) =>
+                    handleFieldChange("printPreview", e.printPreview)
+                  }
+                  className="w-1/3"
+                />
+              </>
+              )}
+
+              {/* -------------------Fields in ST,BTO,BTI--------------------- */}
+
+              {[VoucherType.StockTransfer, VoucherType.BranchTransferOut, VoucherType.BranchTransferIn,].includes(formState.transaction.master.voucherType as VoucherType) && (
+                <>
+                  <ERPCheckbox
+                    id="userSalesPriceForStockTransfer"
+                    label={t("use_sales_price_to_transfer")}
+                    data={formState.userConfig}
+                    checked={
+                      formState?.userConfig?.userSalesPriceForStockTransfer
+                    }
+                    onChangeData={(e) =>
+                      handleFieldChange(
+                        "userSalesPriceForStockTransfer",
+                        e.userSalesPriceForStockTransfer
+                      )
+                    }
+                    className="w-1/3"
+                  />
+                </>
+              )}
+
+              {/* -------------------Fields in Stock Adjuster----------------------- */}
+
+              {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
+                <>
+                  <ERPCheckbox
+                    id="enableItemCodeSearchInNameColumn"
+                    label={t("enable_item_code_search_in_name_column")}
+                    data={formState.userConfig}
+                    checked={
+                      formState?.userConfig?.enableItemCodeSearchInNameColumn
+                    }
+                    onChangeData={(e) =>
+                      handleFieldChange(
+                        "enableItemCodeSearchInNameColumn",
+                        e.enableItemCodeSearchInNameColumn
+                      )
+                    }
+                    className="w-1/3"
+                  />
+                </>
+              )}
+
+              {/* --------------------Fields in BTO, BTI----------------------- */}
+
+              {[VoucherType.BranchTransferOut, VoucherType.BranchTransferIn,].includes(formState.transaction.master.voucherType as VoucherType) && (
+                <>
+                  <ERPCheckbox
+                    id="showProductInfoPopup"
+                    label={t("show_product_info_popup")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.showProductInfoPopup}
+                    onChangeData={(e) =>
+                      handleFieldChange(
+                        "showProductInfoPopup",
+                        e.showProductInfoPopup
+                      )
+                    }
+                    className="w-1/3"
+                  />
+
+                  <ERPCheckbox
+                    id="autoIncrementQty"
+                    label={t("auto_increment_qty")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.autoIncrementQty}
+                    onChangeData={(e) =>
+                      handleFieldChange("autoIncrementQty", e.autoIncrementQty)
+                    }
+                    className="w-1/3"
+                  />
+
+                  <ERPCheckbox
+                    id="useMSPasUnitPrice"
+                    label={t("use_msp_as_unit_price")}
+                    data={formState.userConfig}
+                    checked={applicationSettings?.inventorySettings?.bTOUsingMSP ? formState?.userConfig?.useMSPasUnitPrice ?? true : false}
+                    onChangeData={(e) =>
+                      handleFieldChange(
+                        "useMSPasUnitPrice",
+                        e.useMSPasUnitPrice
+                      )
+                    }
+                    className="w-1/3"
+                    disabled={applicationSettings?.inventorySettings?.bTOUsingMSP ? false : true }
+                  />
+
+                  <ERPCheckbox
+                    id="skipNonMandatoryFields"
+                    label={t("skip_non_mandatory_fields")}
+                    data={formState.userConfig}
+                    checked={formState?.userConfig?.skipNonMandatoryFields}
+                    onChangeData={(e) =>
+                      handleFieldChange(
+                        "skipNonMandatoryFields",
+                        e.skipNonMandatoryFields
+                      )
+                    }
+                    className="w-1/3"
+                  />
+                </>
+              )}
             </div>
           </div>
-          <div className="absolute top-[200px] right-[30px]">
+          {/* Check if the below undo Section is available in stock, if have uncomment it */}
+          {/* <div className="absolute top-[200px] right-[30px]">
             {formState.transaction.master.invTransactionMasterID > 0 && (
               <button
                 className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 ease-in-out hover:scale-105 active:scale-95"
@@ -403,12 +547,17 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <Undo className="w-4 h-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
               </button>
             )}
-          </div>
+          </div> */}
         </CollapsibleSection>
 
-
         {/* Cost Center Settings */}
-        <CollapsibleSection title={t("cost_center_settings")} defaultExpanded={false} icon={<Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />}>
+        <CollapsibleSection
+          title={t("cost_center_settings")}
+          defaultExpanded={false}
+          icon={
+            <Building2 className="w-4 h-4 text-[#7c3aed] dark:text-[#a78bfa]" />
+          }
+        >
           <ERPDataCombobox
             id="presetCostenterId"
             data={formState.userConfig}
@@ -419,12 +568,20 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(e) => handleFieldChange("presetCostenterId", e.presetCostenterId)}
+            onChangeData={(e) =>
+              handleFieldChange("presetCostenterId", e.presetCostenterId)
+            }
           />
         </CollapsibleSection>
 
         {/* Layout & Dimensions */}
-        <CollapsibleSection title={t("layout_dimensions")} defaultExpanded={false} icon={<Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />}>
+        <CollapsibleSection
+          title={t("layout_dimensions")}
+          defaultExpanded={false}
+          icon={
+            <Layout className="w-4 h-4 text-[#0891b2] dark:text-[#22d3ee]" />
+          }
+        >
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-end gap-4">
               <ERPInput
@@ -435,7 +592,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 className="w-full"
                 data={formState.userConfig}
                 value={formState?.userConfig?.maxWidth}
-                onChangeData={(e: { maxWidth: any }) => handleFieldChange("maxWidth", e.maxWidth)}
+                onChangeData={(e: { maxWidth: any }) =>
+                  handleFieldChange("maxWidth", e.maxWidth)
+                }
               />
               <ERPInput
                 id="gridMaxWidth"
@@ -445,7 +604,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 className="w-full"
                 data={formState.userConfig}
                 value={formState?.userConfig?.gridMaxWidth}
-                onChangeData={(e: { gridMaxWidth: any }) => handleFieldChange("gridMaxWidth", e.gridMaxWidth)}
+                onChangeData={(e: { gridMaxWidth: any }) =>
+                  handleFieldChange("gridMaxWidth", e.gridMaxWidth)
+                }
               />
               <ERPInput
                 id="gridHeight"
@@ -455,14 +616,18 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 className="w-full"
                 data={formState.userConfig}
                 value={formState?.userConfig?.gridHeight}
-                onChangeData={(e: { gridHeight: any }) => handleFieldChange("gridHeight", e.gridHeight)}
+                onChangeData={(e: { gridHeight: any }) =>
+                  handleFieldChange("gridHeight", e.gridHeight)
+                }
               />
               <ERPCheckbox
                 id="useNewFooter"
                 label={t("use_new_footer")}
                 data={formState.userConfig}
                 checked={formState?.userConfig?.useNewFooter ?? false}
-                onChangeData={(e) => handleFieldChange("useNewFooter", e.useNewFooter)}
+                onChangeData={(e) =>
+                  handleFieldChange("useNewFooter", e.useNewFooter)
+                }
               />
             </div>
 
@@ -484,19 +649,31 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 <ERPButton
                   title={t("left")}
-                  variant={formState?.userConfig?.alignment === "left" ? "primary" : "secondary"}
+                  variant={
+                    formState?.userConfig?.alignment === "left"
+                      ? "primary"
+                      : "secondary"
+                  }
                   onClick={() => handleFieldChange("alignment", "left")}
                   className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                 />
                 <ERPButton
                   title={t("center")}
-                  variant={formState?.userConfig?.alignment === "center" ? "primary" : "secondary"}
+                  variant={
+                    formState?.userConfig?.alignment === "center"
+                      ? "primary"
+                      : "secondary"
+                  }
                   onClick={() => handleFieldChange("alignment", "center")}
                   className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                 />
                 <ERPButton
                   title={t("right")}
-                  variant={formState?.userConfig?.alignment === "right" ? "primary" : "secondary"}
+                  variant={
+                    formState?.userConfig?.alignment === "right"
+                      ? "primary"
+                      : "secondary"
+                  }
                   onClick={() => handleFieldChange("alignment", "right")}
                   className="flex-1 sm:flex-none min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                 />
@@ -506,7 +683,13 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         </CollapsibleSection>
 
         {/* Scrollbar Settings */}
-        <CollapsibleSection title={t("scrollbar_settings")} defaultExpanded={false} icon={<Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />}>
+        <CollapsibleSection
+          title={t("scrollbar_settings")}
+          defaultExpanded={false}
+          icon={
+            <Mouse className="w-4 h-4 text-[#8b5cf6] dark:text-[#a78bfa]" />
+          }
+        >
           <div className="space-y-4">
             <div className="p-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -516,16 +699,24 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   </h6>
                   <div className="space-y-1">
                     {["md", "sm"].map((width) => (
-                      <div key={width} className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200">
+                      <div
+                        key={width}
+                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-hover-bg transition-all duration-200"
+                      >
                         <input
                           type="radio"
                           name="data-page-scrollbar"
                           className="ti-form-radio w-4 h-4 text-[#8b5cf6] focus:ring-[#8b5cf6] focus:ring-2"
                           id={`scrollbar-${width}`}
                           checked={appState.scrollbarWidth === width}
-                          onChange={() => { handleScrollbarChange("scrollbarWidth", width); }}
+                          onChange={() => {
+                            handleScrollbarChange("scrollbarWidth", width);
+                          }}
                         />
-                        <label htmlFor={`scrollbar-${width}`} className="text-sm font-medium text-gray-700 dark:text-dark-text cursor-pointer">
+                        <label
+                          htmlFor={`scrollbar-${width}`}
+                          className="text-sm font-medium text-gray-700 dark:text-dark-text cursor-pointer"
+                        >
                           {width === "md" ? t("normal") : t("thin")}
                         </label>
                       </div>
@@ -537,11 +728,20 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                     <div className="flex items-center gap-2">
                       <div
                         className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                        style={{ backgroundColor: `rgb(${formState.userConfig?.scrollbarColor ?? "128, 128, 128"})` }}>
+                        style={{
+                          backgroundColor: `rgb(${
+                            formState.userConfig?.scrollbarColor ??
+                            "128, 128, 128"
+                          })`,
+                        }}
+                      >
                         <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                         <input
                           type="color"
-                          value={rgbToHex(formState.userConfig?.scrollbarColor || "128,128,128")}
+                          value={rgbToHex(
+                            formState.userConfig?.scrollbarColor ||
+                              "128,128,128"
+                          )}
                           onChange={(e) => {
                             const rgb = hexToRgb(e.target?.value);
                             if (rgb) {
@@ -559,7 +759,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                           {t("scrollbar_color")}
                         </label>
                         <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-2 rounded-md break-all">
-                          rgb({formState.userConfig?.scrollbarColor || "128,128,128"})
+                          rgb(
+                          {formState.userConfig?.scrollbarColor ||
+                            "128,128,128"}
+                          )
                         </div>
                       </div>
                     </div>
@@ -580,21 +783,44 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                           {t("scroll_down_to_see_the_effect")}
                         </p>
                         <p>{t("normal_and_thin_options_are_available")}</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit.
+                        </p>
+                        <p>
+                          Sed do eiusmod tempor incididunt ut labore et dolore
+                          magna aliqua.
+                        </p>
+                        <p>
+                          Ut enim ad minim veniam, quis nostrud exercitation
+                          ullamco.
+                        </p>
                         <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
+                        <p>
+                          Duis aute irure dolor in reprehenderit in voluptate
+                          velit esse.
+                        </p>
                         <p>Cillum dolore eu fugiat nulla pariatur.</p>
                         <p>Excepteur sint occaecat cupidatat non proident.</p>
-                        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
-                        <p>Aut odit aut fugit, sed quia consequuntur magni dolores.</p>
+                        <p>
+                          Sunt in culpa qui officia deserunt mollit anim id est
+                          laborum.
+                        </p>
+                        <p>
+                          Nemo enim ipsam voluptatem quia voluptas sit
+                          aspernatur.
+                        </p>
+                        <p>
+                          Aut odit aut fugit, sed quia consequuntur magni
+                          dolores.
+                        </p>
                         <p>Eos qui ratione voluptatem sequi nesciunt.</p>
                         <p>Neque porro quisquam est, qui dolorem ipsum quia.</p>
                         <p>Dolor sit amet, consectetur, adipisci velit.</p>
                         <p>Sed quia non numquam eius modi tempora incidunt.</p>
-                        <p>Ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                        <p>
+                          Ut labore et dolore magnam aliquam quaerat voluptatem.
+                        </p>
                       </div>
                     </ERPScrollArea>
                   </div>
@@ -605,14 +831,23 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
         </CollapsibleSection>
 
         {/* Color & Theme Settings */}
-        <CollapsibleSection title={t("color_theme_settings")} defaultExpanded={false} icon={<Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />}>
+        <CollapsibleSection
+          title={t("color_theme_settings")}
+          defaultExpanded={false}
+          icon={
+            <Palette className="w-4 h-4 text-[#db2777] dark:text-[#f472b6]" />
+          }
+        >
           <div className="space-y-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: `rgb(${formState.userConfig?.outerPageBg})` }}>
+                    style={{
+                      backgroundColor: `rgb(${formState.userConfig?.outerPageBg})`,
+                    }}
+                  >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
@@ -620,7 +855,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("outerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "outerPageBg",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -641,7 +879,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: `rgb(${formState.userConfig?.innerPageBg})` }}>
+                    style={{
+                      backgroundColor: `rgb(${formState.userConfig?.innerPageBg})`,
+                    }}
+                  >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
@@ -649,7 +890,10 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("innerPageBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "innerPageBg",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -670,15 +914,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: `rgb(${formState.userConfig?.footerBg || '248,248,255'})` }}>
+                    style={{
+                      backgroundColor: `rgb(${
+                        formState.userConfig?.footerBg || "248,248,255"
+                      })`,
+                    }}
+                  >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.footerBg ? rgbToHex(formState.userConfig.footerBg) : '#f8f8ff'}
+                      value={
+                        formState.userConfig?.footerBg
+                          ? rgbToHex(formState.userConfig.footerBg)
+                          : "#f8f8ff"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("footerBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "footerBg",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -712,7 +968,11 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title={t("grid_settings")} defaultExpanded={false} icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}>
+        <CollapsibleSection
+          title={t("grid_settings")}
+          defaultExpanded={false}
+          icon={<Grid className="w-4 h-4 text-[#059669] dark:text-[#34d399]" />}
+        >
           <div className="space-y-4">
             {/* Existing grid settings fields */}
             <div className="flex flex-wrap items-end gap-2">
@@ -723,7 +983,9 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   type="number"
                   data={formState.userConfig}
                   value={formState.userConfig?.gridFontSize || 0}
-                  onChangeData={(e: { gridFontSize: any }) => handleFieldChange("gridFontSize", parseInt(e.gridFontSize))}
+                  onChangeData={(e: { gridFontSize: any }) =>
+                    handleFieldChange("gridFontSize", parseInt(e.gridFontSize))
+                  }
                 />
               </div>
               <div className="w-full sm:w-32">
@@ -733,7 +995,12 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   label={t("row_height")}
                   data={formState.userConfig}
                   value={formState.userConfig?.gridRowHeight || 0}
-                  onChangeData={(e: { gridRowHeight: any }) => handleFieldChange("gridRowHeight", parseInt(e.gridRowHeight))}
+                  onChangeData={(e: { gridRowHeight: any }) =>
+                    handleFieldChange(
+                      "gridRowHeight",
+                      parseInt(e.gridRowHeight)
+                    )
+                  }
                 />
               </div>
               <div className="w-full sm:w-32">
@@ -743,7 +1010,12 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   label={t("header_row_height")}
                   data={formState.userConfig}
                   value={formState.userConfig?.gridHeaderRowHeight || 0}
-                  onChangeData={(e: { gridHeaderRowHeight: any }) => handleFieldChange("gridHeaderRowHeight", parseInt(e.gridHeaderRowHeight))}
+                  onChangeData={(e: { gridHeaderRowHeight: any }) =>
+                    handleFieldChange(
+                      "gridHeaderRowHeight",
+                      parseInt(e.gridHeaderRowHeight)
+                    )
+                  }
                 />
               </div>
               <div className="w-full sm:w-32">
@@ -755,7 +1027,12 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                   label={t("grid_border_radius_px")}
                   data={formState.userConfig}
                   value={formState.userConfig?.gridBorderRadius ?? 0}
-                  onChangeData={(e: { gridBorderRadius: any }) => handleFieldChange("gridBorderRadius", parseInt(e.gridBorderRadius))}
+                  onChangeData={(e: { gridBorderRadius: any }) =>
+                    handleFieldChange(
+                      "gridBorderRadius",
+                      parseInt(e.gridBorderRadius)
+                    )
+                  }
                 />
               </div>
               <ERPCheckbox
@@ -763,14 +1040,18 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 label={t("bold")}
                 data={formState.userConfig}
                 checked={formState.userConfig?.gridIsBold || false}
-                onChangeData={(e: { gridIsBold: boolean }) => handleFieldChange("gridIsBold", e.gridIsBold)}
+                onChangeData={(e: { gridIsBold: boolean }) =>
+                  handleFieldChange("gridIsBold", e.gridIsBold)
+                }
               />
               <ERPCheckbox
                 id="showColumnBorder"
                 label={t("show_column_border")}
                 data={formState.userConfig}
                 checked={formState.userConfig?.showColumnBorder ?? true}
-                onChangeData={(e: { showColumnBorder: boolean }) => handleFieldChange("showColumnBorder", e.showColumnBorder)}
+                onChangeData={(e: { showColumnBorder: boolean }) =>
+                  handleFieldChange("showColumnBorder", e.showColumnBorder)
+                }
               />
             </div>
 
@@ -780,15 +1061,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: formState.userConfig?.gridBorderColor ? `rgb(${formState.userConfig.gridBorderColor})` : "#000000" }}>
+                    style={{
+                      backgroundColor: formState.userConfig?.gridBorderColor
+                        ? `rgb(${formState.userConfig.gridBorderColor})`
+                        : "#000000",
+                    }}
+                  >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.gridBorderColor ? rgbToHex(formState.userConfig.gridBorderColor) : "#000000"}
+                      value={
+                        formState.userConfig?.gridBorderColor
+                          ? rgbToHex(formState.userConfig.gridBorderColor)
+                          : "#000000"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("gridBorderColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "gridBorderColor",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -810,15 +1103,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: formState.userConfig?.gridHeaderBg ? `rgb(${formState.userConfig.gridHeaderBg})` : "#ffffff" }}>
+                    style={{
+                      backgroundColor: formState.userConfig?.gridHeaderBg
+                        ? `rgb(${formState.userConfig.gridHeaderBg})`
+                        : "#ffffff",
+                    }}
+                  >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.gridHeaderBg ? rgbToHex(formState.userConfig.gridHeaderBg) : "#ffffff"}
+                      value={
+                        formState.userConfig?.gridHeaderBg
+                          ? rgbToHex(formState.userConfig.gridHeaderBg)
+                          : "#ffffff"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("gridHeaderBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "gridHeaderBg",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -840,16 +1145,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: formState.userConfig?.gridHeaderFontColor ? `rgb(${formState.userConfig.gridHeaderFontColor})` : "#1f2937" }}
+                    style={{
+                      backgroundColor: formState.userConfig?.gridHeaderFontColor
+                        ? `rgb(${formState.userConfig.gridHeaderFontColor})`
+                        : "#1f2937",
+                    }}
                   >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.gridHeaderFontColor ? rgbToHex(formState.userConfig.gridHeaderFontColor) : "#1f2937"}
+                      value={
+                        formState.userConfig?.gridHeaderFontColor
+                          ? rgbToHex(formState.userConfig.gridHeaderFontColor)
+                          : "#1f2937"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("gridHeaderFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "gridHeaderFontColor",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -860,7 +1176,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       {t("grid_header_font_color")}
                     </label>
                     <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                      rgb({formState.userConfig?.gridHeaderFontColor || "31,41,55"})
+                      rgb(
+                      {formState.userConfig?.gridHeaderFontColor || "31,41,55"})
                     </div>
                   </div>
                 </div>
@@ -871,16 +1188,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: formState.userConfig?.activeRowBg ? `rgb(${formState.userConfig.activeRowBg})` : "#e3f2fd" }}
+                    style={{
+                      backgroundColor: formState.userConfig?.activeRowBg
+                        ? `rgb(${formState.userConfig.activeRowBg})`
+                        : "#e3f2fd",
+                    }}
                   >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.activeRowBg ? rgbToHex(formState.userConfig.activeRowBg) : "#e3f2fd"}
+                      value={
+                        formState.userConfig?.activeRowBg
+                          ? rgbToHex(formState.userConfig.activeRowBg)
+                          : "#e3f2fd"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("activeRowBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "activeRowBg",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -900,16 +1228,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: formState.userConfig?.gridFooterBg ? `rgb(${formState.userConfig.gridFooterBg})` : "#f8f9fa" }}
+                    style={{
+                      backgroundColor: formState.userConfig?.gridFooterBg
+                        ? `rgb(${formState.userConfig.gridFooterBg})`
+                        : "#f8f9fa",
+                    }}
                   >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.gridFooterBg ? rgbToHex(formState.userConfig.gridFooterBg) : "#f8f9fa"}
+                      value={
+                        formState.userConfig?.gridFooterBg
+                          ? rgbToHex(formState.userConfig.gridFooterBg)
+                          : "#f8f9fa"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("gridFooterBg", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "gridFooterBg",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -930,16 +1269,27 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                 <div className="flex items-center gap-2">
                   <div
                     className="relative h-12 w-12 rounded-xl border-2 border-gray-300 dark:border-dark-border flex items-center justify-center overflow-hidden cursor-pointer hover:border-gray-400 transition-all duration-300 shadow-sm hover:shadow-md"
-                    style={{ backgroundColor: formState.userConfig?.gridFooterFontColor ? `rgb(${formState.userConfig.gridFooterFontColor})` : "#000000" }}
+                    style={{
+                      backgroundColor: formState.userConfig?.gridFooterFontColor
+                        ? `rgb(${formState.userConfig.gridFooterFontColor})`
+                        : "#000000",
+                    }}
                   >
                     <i className="ri-palette-line text-white text-sm absolute pointer-events-none drop-shadow-md"></i>
                     <input
                       type="color"
-                      value={formState.userConfig?.gridFooterFontColor ? rgbToHex(formState.userConfig.gridFooterFontColor) : "#000000"}
+                      value={
+                        formState.userConfig?.gridFooterFontColor
+                          ? rgbToHex(formState.userConfig.gridFooterFontColor)
+                          : "#000000"
+                      }
                       onChange={(e) => {
                         const rgb = hexToRgb(e.target?.value);
                         if (rgb) {
-                          debouncedHandleFieldChange("gridFooterFontColor", `${rgb.r},${rgb.g},${rgb.b}`);
+                          debouncedHandleFieldChange(
+                            "gridFooterFontColor",
+                            `${rgb.r},${rgb.g},${rgb.b}`
+                          );
                         }
                       }}
                       className="opacity-0 w-full h-full cursor-pointer"
@@ -950,7 +1300,8 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
                       {t("grid_footer_font_color")}
                     </label>
                     <div className="text-xs text-gray-800 dark:text-dark-text font-mono bg-gray-100 dark:bg-dark-hover-bg p-1 rounded-md">
-                      rgb({formState.userConfig?.gridFooterFontColor || "0,0,0"})
+                      rgb({formState.userConfig?.gridFooterFontColor || "0,0,0"}
+                      )
                     </div>
                   </div>
                 </div>
@@ -1004,7 +1355,6 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               className="min-w-[140px] transition-all duration-300"
             />
           </div> */}
-
     </>
   );
 };

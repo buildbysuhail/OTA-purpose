@@ -53,7 +53,7 @@ export const imgField: OptionGroup[] = [
 ];
 
 export const qrCodeField: OptionGroup[] = [
-  { groupName: 'Master', options: modelToListFromObject<TransactionMaster>(TransactionMasterInitialData, "master___") },
+  { groupName: 'Custom', options: modelToListFromObject<PrintCustomFields>(initialPrintCustomFields, "custom___") },
 ]
 
 export const bindingDemoData = {
@@ -117,3 +117,34 @@ export const bindingDemoData = {
   "[Header9]": "Due Date: 03-Aug-2025",
   "[Header10]": "Page 1 of 1",
 };
+
+export const shortcutGroups = [
+  {
+    group: "History",
+    items: [
+      { keys: ["Ctrl", "Z"],              description: "Undo last action" },
+      { keys: ["Ctrl", "Shift", "Z"],     description: "Redo last action " },
+      { keys: ["Ctrl", "Y"],              description: "Redo last action (alt)" },
+      
+    ],
+  },
+  {
+    group: "Canvas",
+    items: [
+      { keys: ["Ctrl", "S"],              description: "Save template" },
+      { keys: ["Ctrl", "+"],              description: "Zoom in" },
+      { keys: ["Ctrl", "-"],              description: "Zoom out" },
+      { keys: ["Ctrl", "0"],              description: "Reset zoom to 100%" },
+      { keys: ["Esc"],                    description: "Deselect element" },
+    ],
+  },
+  {
+    group: "Selected Element",
+    items: [
+      { keys: ["Delete"],                 description: "Delete element" },
+      { keys: ["↑ ↓ ← →"],               description: "Move element (1 pt)" },
+      { keys: ["Shift", "↑ ↓ ← →"],      description: "Move element (10 pt)" },
+      { keys: ["Alt", "↑ ↓ ← →"],        description: "Resize element" },
+    ],
+  },
+];

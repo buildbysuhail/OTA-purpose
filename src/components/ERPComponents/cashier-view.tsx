@@ -14,6 +14,7 @@ import { APIClient } from "../../helpers/api-client";
 import Urls from "../../redux/urls";
 import urls from "../../redux/urls";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
+import { LedgerType } from "../../enums/ledger-types";
 
 export interface CashierViewData {
     id: number;
@@ -36,10 +37,11 @@ export interface CashierViewData {
     ledgerID: number;
 }
 export interface SalesFormData {
-    masterId:number;
+    balanceDr:number;
+    masterId: number;
     date: string;              // ISO string
     voucherNumber: number;
-    party: string;
+    // party: string;
     salesMan: string;
 
     netTotal: number;          // 2 decimal financial number
@@ -62,6 +64,7 @@ export interface SalesFormData {
 const CashierView: React.FC = () => {
     const { t } = useTranslation('transaction');
     const navigate = useNavigate();
+    const api = new APIClient();
     const [gridData, setGridData] = useState<CashierViewData[]>([]);
     const cacheRef = React.useRef<Map<string, CashierViewData[]>>(new Map());
     const columns: DevGridColumn[] = useMemo(() => [
@@ -203,10 +206,11 @@ const CashierView: React.FC = () => {
         Math.round((value + Number.EPSILON) * 100) / 100;
 
     const [formData, setFormData] = useState<SalesFormData>({
-        masterId:0,
+        balanceDr:0,
+        masterId: 0,
         date: new Date().toISOString(),
         voucherNumber: 0,
-        party: "",
+        // party: "",
         salesMan: "",
         netTotal: 0.0,
         billDiscount: 0.0,
@@ -235,7 +239,7 @@ const CashierView: React.FC = () => {
 
         try {
 
-            const api = new APIClient();
+
             const res = await api.getAsync(`${urls.salesView}?Date=${currentDate}`);
 
             handlePlainResponse(res, () => {
@@ -259,92 +263,99 @@ const CashierView: React.FC = () => {
                     : value,
         }));
     };
-const saveSalesBookingToSalesInvoice = async (
-    invTransactionMasterID:number,
-    billDiscount:number,
-    cashReceived:number,
-    ledgerID:number,
-): Promise<number> => {
-    try {
-        // 🔎 Log parameters (equivalent to debugging C# call)
-        console.log("SaveSalesBookingToSalesInvoice called with:");
-        console.log("InvTransactionMasterID:", invTransactionMasterID);
-        console.log("BillDiscount:", billDiscount);
-        console.log("CashReceived:", cashReceived);
-        console.log("LedgerID:", ledgerID);
+    const saveSalesBookingToSalesInvoice = async (
+        invTransactionMasterID: number,
+        billDiscount: number,
+        cashReceived: number,
+        ledgerID: number,
+    ): Promise<number> => {
+        try {
+            // 🔎 Log parameters (equivalent to debugging C# call)
+            console.log("SaveSalesBookingToSalesInvoice called with:");
+            console.log("InvTransactionMasterID:", invTransactionMasterID);
+            console.log("BillDiscount:", billDiscount);
+            console.log("CashReceived:", cashReceived);
+            console.log("LedgerID:", ledgerID);
 
-        // Example API call (replace with your actual endpoint)
-        // const response = await api.post("/sales/save-booking-to-invoice", {
-        //     invTransactionMasterID,
-        //     billDiscount,
-        //     cashReceived,
-        //     ledgerID,
-        // });
+            // Example API call (replace with your actual endpoint)
+            // const response = await api.post("/sales/save-booking-to-invoice", {
+            //     invTransactionMasterID,
+            //     billDiscount,
+            //     cashReceived,
+            //     ledgerID,
+            // });
 
-        return  0;
-    } catch (error) {
-        console.error("Error saving sales booking:", error);
-        return 0;
-    }
-};
-const handleSave = async () => {
-    try {
-        const {
-            balanceToPay,
-            cashReceived,
-            grandTotal,
-            billDiscount,
-            ledgerID,
-            masterId
-        } = formData;
-
-        // ✅ Validation (same logic as C#)
-        if (
-            balanceToPay >= 0 &&
-            cashReceived >= grandTotal &&
-            grandTotal > 0
-        ) {
-
-       const invMasterId =  await saveSalesBookingToSalesInvoice(masterId,billDiscount,cashReceived,ledgerID )
-        if(invMasterId){
-
-        }else{
-
+            return 0;
+        } catch (error) {
+            console.error("Error saving sales booking:", error);
+            return 0;
         }
-       
+    };
+    const handleSave = async () => {
+        try {
+            const {
+                balanceToPay,
+                cashReceived,
+                grandTotal,
+                billDiscount,
+                ledgerID,
+                masterId
+            } = formData;
 
-        
-        //     if (response?.data?.id > 0) {
-        //         // ✅ Log action
-        //         await api.post("/audit/log", {
-        //             message: `User saved sales booking to sales invoices - Voucher ${formData.voucherNumber}`,
-        //             action: "save",
-        //             formCode: formCode,
-        //         });
+            // ✅ Validation (same logic as C#)
+            if (
+                balanceToPay >= 0 &&
+                cashReceived >= grandTotal &&
+                grandTotal > 0
+            ) {
 
-        //         // ✅ Print if required
-        //         if (formData.printSalesInvoice) {
-        //             printReceipt();
-        //         }
+                const invMasterId = await saveSalesBookingToSalesInvoice(masterId, billDiscount, cashReceived, ledgerID)
+                if (invMasterId) {
+                    const saveRes = api.postAsync(urls.salesView, formData)
+                    handlePlainResponse(saveRes, () => {
+                        if (formData.printReceipt) {
+                            // printReceipt(); pint need 
+                        }
+                        handleClear();
+                        setGridData([])
+                    })
+                } else {
 
-        //         // ✅ Clear form
-        //         resetForm();
+                }
 
-        //         // ✅ Refresh grid
-        //         refreshSalesViewList();
-        //     } else {
-        //         throw new Error("Save failed");
-        //     }
-        
-        // } else {
-        //     showError("Validation failed");
-        // }
-    }
-    } catch (error) {
-        console.error(error);
-        // showError("Error while saving");
-    }
-};
+
+
+                //     if (response?.data?.id > 0) {
+                //         // ✅ Log action
+                //         await api.post("/audit/log", {
+                //             message: `User saved sales booking to sales invoices - Voucher ${formData.voucherNumber}`,
+                //             action: "save",
+                //             formCode: formCode,
+                //         });
+
+                //         // ✅ Print if required
+                //         if (formData.printSalesInvoice) {
+                //             printReceipt();
+                //         }
+
+                //         // ✅ Clear form
+                //         resetForm();
+
+                //         // ✅ Refresh grid
+                //         refreshSalesViewList();
+                //     } else {
+                //         throw new Error("Save failed");
+                //     }
+
+                // } else {
+                //     showError("Validation failed");
+                // }
+            }
+        } catch (error) {
+            console.error(error);
+            // showError("Error while saving");
+        }
+    };
 
     const handlePrint = () => {
         console.log("Printing:", formData);
@@ -352,10 +363,11 @@ const handleSave = async () => {
 
     const handleClear = () => {
         setFormData({
-            masterId:0,
+            balanceDr:0,
+            masterId: 0,
             date: new Date().toISOString().split('T')[0],
             voucherNumber: 0,
-            party: "",
+            // party: "",
             salesMan: "",
             netTotal: 0.0,
             billDiscount: 0.0,
@@ -376,15 +388,16 @@ const handleSave = async () => {
 
         setFormData((prev) => ({
             ...prev,
-            party: row.party ?? "",
+            // party: row.ledgerID,        // ← Use the ID, not the name string
             salesMan: row.salesMan ?? "",
             netTotal: Number(row.netTotal) || 0,
             billDiscount: Number(row.billDiscount) || 0,
             roundAmount: Number(row.roundAmount) || 0,
             grandTotal: Number(row.grandTotal) || 0,
-            voucherType:row.voucherType??null,
-            voucherForm:row.voucherForm??null,
-            ledgerID:Number(row.ledgerID) ||0
+            voucherType: row.voucherType ?? null,
+            voucherForm: row.voucherForm ?? null,
+            ledgerID: Number(row.ledgerID) || 0,
+            masterId: row.id,
         }));
     };
 
@@ -415,8 +428,20 @@ const handleSave = async () => {
             ...prev,
             balanceToPay: roundToTwo(prev.cashReceived - prev.grandTotal),
         }));
-    }, [formData.cashReceived,formData.grandTotal]);
+    }, [formData.cashReceived, formData.grandTotal]);
 
+ const featchBalance = async()=>{
+   const bal = await api.getAsync(`${urls.salesView}LedgerBalance/${formData.ledgerID}`)
+   if (typeof bal === "number") {
+            setFormData(prev => ({
+            ...prev,
+            balanceDr: bal,
+        }));
+   }
+ }
+    useEffect(()=>{
+        featchBalance()
+    },[formData.ledgerID])
     return (
         <>
             <div className="flex bg-gray-100 relative">
@@ -471,9 +496,9 @@ const handleSave = async () => {
 
                         {/* View Booking Button */}
                         <div className="flex items-end justify-between">
-                            <a href="#" className="text-blue-600 text-xs underline">
-                                Bal: 0.00
-                            </a>
+                            <span className="text-blue-600 text-xs underline">
+                              {`Bal: ${formData.balanceDr} DR`}  
+                            </span>
                             <ERPButton
                                 title={t("view_booking")}
                                 variant="secondary"
@@ -485,12 +510,22 @@ const handleSave = async () => {
                         {/* Party */}
                         <div className="flex items-end justify-between">
                             <label className="w-20">{t("party")}</label>
+
                             <ERPDataCombobox
-                                id="party"
+                                id="ledgerID"
                                 noLabel={true}
-                                options={[]}
-                                value={formData.party}
-                                onChange={(e) => handleChange("party", e?.value || e)}
+                                data={formData}
+                                value={formData?.ledgerID}
+                                field={{
+                                    id: "ledgerID",
+                                    //required: true,
+                                    getListUrl: `${Urls.salesView}Data/AccLedgers`,
+                                    params: `ledgerType=${LedgerType.Cash_Bank_Customers}`,
+                                    valueKey: "id",
+                                    labelKey: "name",
+                                }}
+                                customSize='sm'
+                                onChange={(e) => handleChange("ledgerID", e?.value || e)}
                             />
                         </div>
 

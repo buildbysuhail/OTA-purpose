@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback, useMemo, useLayoutEffect } from "react";
-import { Settings, Minus, Menu, Edit, Scan, Printer, X, Image, QrCode as QrCodeIcon, Package, } from "lucide-react";
+import { Settings, Minus, Menu, Edit, Scan, Printer, X, Image, QrCode as QrCodeIcon, Package, Keyboard } from "lucide-react";
 import JsBarcode from "jsbarcode";
 import html2canvas from "html2canvas";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
@@ -23,12 +23,12 @@ import { setTemplateCustomElements } from "../../redux/slices/templates/reducer"
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { useTranslation } from "react-i18next";
 import VoucherType, { accountsVoucherTypes, } from "../../enums/voucher-types";
-import { accountsFields, inventoryFields, barCodeField, imgField, ledgerReportFields, CheckFields } from "./fields";
+import { accountsFields, inventoryFields, barCodeField, imgField, ledgerReportFields, CheckFields, qrCodeField, shortcutGroups } from "./fields";
 import { containsArabicString, getPageDimensions, ptToPx, pxToPt, validateImageFile } from "../InvoiceDesigner/utils/pdf-util";
 import { QRCodeComponent } from "./QRCodeComponent";
 import GroupedComboBox from "../../components/ERPComponents/erp-grouped-combo";
 import { AccessPrinterList } from "../InvoiceDesigner/utils/get_printers";
-import { initialPrintMasterDto } from "../use-print-type-data";
+import { initialPrintCustomFields, initialPrintMasterDto } from "../use-print-type-data";
 import { hexToRgb } from "../../components/common/switcher/switcherdata/switcherdata";
 import { generateUniqueKey } from "../../utilities/Utils";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
@@ -168,7 +168,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const [activeTab, setActiveTab] = useState(forCustomRows ? "element" : "page");
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
   const isHeader = customTemplate?.split(".")[0] ?? "";
-  const appState = useAppState();
+  const { appState } = useAppState();
   const inputFile = useRef<HTMLInputElement>(null);
   const inputImgFile = useRef<HTMLInputElement>(null);
   const { id } = useParams();
@@ -187,6 +187,18 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const [rightSidebarWidth, setRightSidebarWidth] = useState(380);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const [toolbarHeightPt, setToolbarHeightPt] = useState(0);
+  const [openShortkey, setOpenShortKey] = useState(false)
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const isRtl = appState.locale.rtl;
+
+  const popupStyle = {
+    top: "45px",
+    [isRtl ? "right" : "left"]: "-231px",
+    // width: "273px",
+    minWidth: "273px",
+    maxWidth: "350px",
+  };
 
 
   useLayoutEffect(() => {
@@ -1923,11 +1935,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.contentEditable === 'true';
-
+      // ── Normalise key so Shift doesn't change case ──────────
+      const key = e.key.toLowerCase();
       // ============ UNDO: Ctrl+Z (Windows/Linux) or Cmd+Z (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === 'z' &&
+        key === 'z' &&
         !e.shiftKey &&
         !isInputElement &&
         canUndo
@@ -1942,7 +1955,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ REDO: Ctrl+Shift+Z (Windows/Linux) or Cmd+Shift+Z (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === 'z' &&
+        key === 'z' &&
         e.shiftKey &&
         !isInputElement &&
         canRedo
@@ -1957,7 +1970,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============((Alternative): Ctrl+Y (Windows/Linux) or Cmd+Y (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === 'y' &&
+        key === 'y' &&
         !isInputElement &&
         canRedo
       ) {
@@ -1970,7 +1983,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
       // ============ DELETE: Delete key or Backspace ============
       if (
-        (e.key === 'Delete') &&
+        (key === 'delete') &&
         selectedComponent &&
         !isInputElement
       ) {
@@ -1985,7 +1998,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
 
       // ============ DESELECT: Escape key ============
-      if (e.key === 'Escape') {
+      if (key === 'escape') {
         e.preventDefault();
         e.stopPropagation();
         console.log('Deselect triggered');
@@ -1998,7 +2011,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ ARROW KEYS: Move or Resize selected component ============
       if (
         selectedComponent &&
-        ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) &&
+        ['arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key) &&
         !isInputElement
       ) {
         e.preventDefault();
@@ -2010,34 +2023,34 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         if (e.altKey) {
           // -------- RESIZE MODE (Alt+Arrow) --------
           console.log('Resize mode');
-          switch (e.key) {
-            case 'ArrowUp':
+          switch (key) {
+            case 'arrowup':
               height = Math.max(20, height - step);
               break;
-            case 'ArrowDown':
+            case 'arrowdown':
               height = Math.max(20, height + step);
               break;
-            case 'ArrowLeft':
+            case 'arrowleft':
               width = Math.max(20, width - step);
               break;
-            case 'ArrowRight':
+            case 'arrowright':
               width = Math.max(20, width + step);
               break;
           }
         } else {
           // -------- MOVE MODE (Arrow only) --------
           console.log('Move mode');
-          switch (e.key) {
-            case 'ArrowUp':
+          switch (key) {
+            case 'arrowup':
               y = Math.max(0, y - step);
               break;
-            case 'ArrowDown':
+            case 'arrowdown':
               y = y + step;
               break;
-            case 'ArrowLeft':
+            case 'arrowleft':
               x = Math.max(0, x - step);
               break;
-            case 'ArrowRight':
+            case 'arrowright':
               x = x + step;
               break;
           }
@@ -2069,7 +2082,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ SAVE: Ctrl+S (Windows/Linux) or Cmd+S (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === 's' &&
+        key === 's' &&
         !isInputElement
       ) {
         e.preventDefault();
@@ -2082,7 +2095,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ ZOOM IN: Ctrl++ (Windows/Linux) or Cmd++ (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        (e.key === '+' || e.key === '=') &&
+        (key === '+' || key === '=') &&
         !isInputElement
       ) {
         e.preventDefault();
@@ -2095,7 +2108,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ ZOOM OUT: Ctrl+- (Windows/Linux) or Cmd+- (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === '-' &&
+        key === '-' &&
         !isInputElement
       ) {
         e.preventDefault();
@@ -2108,7 +2121,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ ZOOM TO 100%: Ctrl+0 (Windows/Linux) or Cmd+0 (Mac) ============
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === '0' &&
+        key === '0' &&
         !isInputElement
       ) {
         e.preventDefault();
@@ -2122,7 +2135,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // (Advanced feature - optional)
       if (
         (e.ctrlKey || e.metaKey) &&
-        e.key === 'g' &&
+        key === 'g' &&
         !isInputElement
       ) {
         e.preventDefault();
@@ -2413,7 +2426,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             />
             <ERPButton
               startIcon="ri-arrow-go-forward-fill"
-              title="Redo (Ctrl+Y)"
+              title="Redo (Ctrl+Shift+Z)"
               onClick={handleRedo}
               foreColor="white"
               variant="custom"
@@ -2432,9 +2445,39 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
               loading={loading}
             />
             {/* Optional: Show history counter */}
-            <div className="text-xs text-gray-500 px-2 border-l border-gray-300">
+            {/* <div className="text-xs text-gray-500 px-2 border-l border-gray-300">
               {historyIndex + 1}/{history.length}
+            </div> */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "2px",
+                minWidth: "52px",          // ← reserve space so siblings never shift
+                justifyContent: "center",
+                padding: "2px 8px",
+                borderLeft: "1px solid #d1d5db",
+                fontVariantNumeric: "tabular-nums",  // ← digits are same width
+                fontSize: "0.7rem",
+                color: "#9ca3af",
+                fontFamily: "monospace",
+                transition: "opacity 0.15s ease",    // ← smooth flash on change
+                opacity: 1,
+              }}
+              key={historyIndex}   // ← triggers re-mount animation on change
+            >
+              <span
+                style={{
+                  animation: "counterPop 0.2s ease-out",
+                }}
+              >
+                {historyIndex + 1}
+              </span>
+              <span style={{ color: "#d1d5db", margin: "0 1px" }}>/</span>
+              <span>{history.length}</span>
             </div>
+            {/* Shortcuts button */}
+            {/* <KeyboardShortcutsDropdown /> */}
           </div>
         </div>
 
@@ -2579,9 +2622,62 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
               <h2 className="text-sm font-semibold text-gray-700">
                 {t('properties')}
               </h2>
-              <button className="p-1 hover:bg-gray-100 rounded">
-                <Settings className="w-4 h-4" />
-              </button>
+              {/* Popup Menu */}
+              <div className="relative">
+                <button
+                  ref={buttonRef}
+                  title={t("short key")}
+                  onClick={() => setOpenShortKey(!openShortkey)}
+                  className={`flex items-center dark:bg-dark-bg-card dark:hover:bg-dark-hover-bg bg-gray-100 p-1.5 md:p-3  rounded-md hover:bg-gray-200 transition-colors`}>
+                  <Keyboard className="w-4 h-4 dark:text-dark-text text-gray-600 hover:text-gray-800 transition-colors" />
+                </button>
+                {openShortkey && (
+                  <div
+                    ref={popupRef}
+                    className="absolute rounded-lg bg-white dark:bg-[#1f2937] text-black dark:text-[#f3f4f6] shadow-xl border border-[#e5e7eb] dark:border-[#374151] p-2 z-50 backdrop-blur-sm"
+                    style={popupStyle}>
+                    <nav className="w-full">
+                      <ul className="space-y-3 max-h-80 overflow-y-auto scrollbar-thin">
+                        {shortcutGroups.map((group) => (
+                          <li key={group.group}>
+                            {/* Group Title */}
+                            <div className="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                              {group.group}
+                            </div>
+
+                            <ul className="space-y-1">
+                              {group.items.map((item, index) => (
+                                <li key={index}>
+                                  <div className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-[#eff6ff] hover:text-[#1d4ed8] dark:hover:bg-[#1e3a8a4d] dark:hover:text-[#93c5fd] transition-all duration-200">
+
+                                    {/* Description */}
+                                    <span className="text-sm font-medium">
+                                      {item.description}
+                                    </span>
+
+                                    {/* Keys */}
+                                    <div className="flex items-center gap-1">
+                                      {item.keys.map((key, keyIndex) => (
+                                        <kbd
+                                          key={keyIndex}
+                                          className="px-2 py-[2px] text-xs font-semibold bg-gray-200 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600 shadow-sm"
+                                        >
+                                          {key}
+                                        </kbd>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                        ))}
+                      </ul>
+                    </nav>
+                  </div>
+                )}
+              </div>
+
             </div>
             <Tabs value={activeTab} onChange={handleTabChange}>
               {!forCustomRows && <Tab label="Page" value="page" />}
@@ -2754,26 +2850,38 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
                       ) : selectedComponent.type ===
                         DesignerElementType.qrCode ? (
-                        <ERPDataCombobox
+                        // <ERPDataCombobox
 
-                          // onTextChange={}
-                          id="value"
-                          data={selectedComponent.qrCodeProps}
-                          label="QR Code Value"
-                          field={{
-                            id: "value",
-                            valueKey: "value",
-                            labelKey: "label",
+                        //   // onTextChange={}
+                        //   id="value"
+                        //   data={selectedComponent.qrCodeProps}
+                        //   label="QR Code Value"
+                        //   field={{
+                        //     id: "value",
+                        //     valueKey: "value",
+                        //     labelKey: "label",
+                        //   }}
+                        //   options={Object.keys(initialPrintCustomFields)?.map(
+                        //     (field, index) => ({
+                        //       value: field,
+                        //       label: field,
+                        //     })
+                        //   )}
+                        //   onChangeData={(data) =>
+                        //     handleQRCodePropertyChange("value", data.value)
+                        //   }
+                        // />
+                        <GroupedComboBox
+                          options={qrCodeField}
+                          value={selectedComponent.content}
+                          onChange={(selectedId) => {
+                            if (selectedId) {
+                              handlePropertyChange("content", selectedId)
+                            }
                           }}
-                          options={Object.keys(initialPrintMasterDto)?.map(
-                            (field, index) => ({
-                              value: field,
-                              label: field,
-                            })
-                          )}
-                          onChangeData={(data) =>
-                            handleQRCodePropertyChange("value", data.value)
-                          }
+                          label="Content"
+                          placeholder="Select content field..."
+                          className="w-full"
                         />
                       ) : (
                         <ERPInput

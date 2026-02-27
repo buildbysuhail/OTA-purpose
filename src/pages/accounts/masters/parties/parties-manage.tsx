@@ -66,6 +66,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           country: "Saudi Arabia",
           registrationType: "Regular",
           drCr: "Dr",
+          salesRouteID:1
         },
       },
       isMessages: true,
@@ -420,6 +421,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("sales_route")}
               disabled={rootState.PopupData.parties.mode == "view"}
               fetching={formState?.loading !== false ? true : false}
+              enableClearOption={false}
             />
 
             <ERPInput

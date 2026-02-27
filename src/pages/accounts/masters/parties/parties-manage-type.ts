@@ -167,7 +167,7 @@ export const initialPartiesData = {
     cstNumber: "",
     modifiedUserID: "",
     partyCategoryID: "",
-    salesRouteID: "",
+    salesRouteID: 1,
     isCommon: "",
     document1: "",
     document2: "",

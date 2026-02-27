@@ -3122,6 +3122,17 @@ const verified = Boolean(vch.master.pdtVerified);
           // {
           //     RefreshProductInfo(dt.Rows[0]["ProductID"].ToString());
           // }
+
+          if (formState.userConfig?.showProductInfoPopup) {
+                dispatch(
+                  commonParams.formStateHandleFieldChangeKeysOnly({
+                    fields: {
+                      productInfo: true,
+                    },
+                  })
+                );
+              }
+
           if(formState.userConfig?.userSalesPriceForStockTransfer){
             const PriceCategoryPrice = product.priceCategoryPrice;
             if(PriceCategoryPrice !=0){
@@ -3988,15 +3999,15 @@ const verified = Boolean(vch.master.pdtVerified);
             }
           } else if (columnName == "unitPrice") {
             if (!formState.productInfo == true) {
-              if (formState.userConfig?.showProductInfoPopup) {
-                dispatch(
-                  commonParams.formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      productInfo: true,
-                    },
-                  })
-                );
-              }
+              // if (formState.userConfig?.showProductInfoPopup) {
+              //   dispatch(
+              //     commonParams.formStateHandleFieldChangeKeysOnly({
+              //       fields: {
+              //         productInfo: true,
+              //       },
+              //     })
+              //   );
+              // }
             }
             const res = focusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);

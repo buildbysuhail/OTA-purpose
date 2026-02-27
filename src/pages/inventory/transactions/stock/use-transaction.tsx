@@ -2601,24 +2601,40 @@ const verified = Boolean(vch.master.pdtVerified);
 
   const handleRefresh = async () => {
     try {
-      // const currentLedgerId = formState.row.ledgerID;
-      // const currentMasterAccountId = formState.masterAccountID;
 
-      dispatch(
+      let branchId = -1;
+      let employeeId= -2;
+      let employeeDisableStatus = false;
+      if(userSession.employeeId >0 ){
+        employeeId = userSession.employeeId;
+        if(userSession.dbIdValue?.trim() ==="DURRAH_RYD"){
+           employeeDisableStatus = true;
+        }
+      }
+      // Expand the condition after checking other forms
+      if(formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI"){
+        dispatch(
         formStateHandleFieldChangeKeysOnly({
           fields: {
             formElements: {
-              ledgerID: { reload: true },
-              masterAccount: { reload: true },
+              cbEmployee: { disabled: employeeDisableStatus}
             },
             transaction: {
               master: {
-                ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
+                branchID: branchId,
+                fromWarehouseID: -2,
+                toBranchWarehouseID: -2,
+                driverID: -2,
+                deliveryManID: -2,
+                employeeID: employeeId,
+                vehicleID: -2,
+                voucherForm: -2
               },
             },
           },
         })
       );
+      }
     } catch (error) {
       console.error("Error refreshing data:", error);
     }
@@ -3113,7 +3129,173 @@ const verified = Boolean(vch.master.pdtVerified);
               outDetail.discPerc = product.priceCategoryDiscPerc
             }
           }
-      }
+          // If existing barcode added if increment qty is present - then work the below
+          // **AUTO INCREMENT SECTION
+          let details = [...formState.transaction.details];
+          const firstFreeRow = data.rowIndex;
+
+          if (formState.userConfig?.autoIncrementQty) {
+            const serial = product.serialNumber || "";
+            const autoBarcode = product.autoBarcode;
+
+            for (let i = 0; i < firstFreeRow; i++) {
+              if (i === data.rowIndex) continue;
+
+              const row = details[i];
+
+              if ((row.barCode || "") === (autoBarcode || "")) {
+                const rIndex = data.rowIndex;
+
+                const incrementValue = 1;
+
+                if (serial === "") {
+                  const updatedRow: TransactionDetail = {
+                    ...row,
+                    qty: Number(row.qty || 0) + incrementValue
+                  };
+
+                  const outRow = await calculateRowAmount(
+                    updatedRow,
+                    "qty",
+                    {
+                      result: {
+                        transaction: {
+                          details: [{ ...updatedRow, slNo: row.slNo }]
+                        }
+                      }
+                    },
+                    true,
+                    i
+                  );
+
+                  if (!outRow?.transaction?.details?.[0]) return null;
+
+                  const updatedDetails = [...details];
+                  updatedDetails[i] = outRow.transaction.details[0] as TransactionDetail;
+
+                  updatedDetails[rIndex] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[rIndex].slNo
+                  };
+
+                  const summaryRes = calculateSummary(updatedDetails, formState, { result: {} });
+                  const totalRes = await calculateTotal(
+                    formState.transaction.master,
+                    summaryRes.summary as SummaryItems,
+                    formState.formElements,
+                    { result: {} }
+                  );
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch: generateUniqueKey(),
+                        ...totalRes,
+                        summary: summaryRes.summary,
+                        transaction: {
+                          ...totalRes?.transaction,
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: i
+                    })
+                  );
+
+                  return null;
+                }
+
+                const desc = row.productDescription || "";
+
+                // C#: if ProductDescription.IndexOf(serial) == -1
+                if (!desc.includes(serial)) {
+                  const updatedRow: TransactionDetail = {
+                    ...row,
+                    qty: Number(row.qty || 0) + incrementValue,
+                    productDescription: desc ? `${desc},${serial}` : serial
+                  };
+
+                  const outRow = await calculateRowAmount(
+                    updatedRow,
+                    "qty",
+                    {
+                      result: {
+                        transaction: {
+                          details: [{ ...updatedRow, slNo: row.slNo }]
+                        }
+                      }
+                    },
+                    true,
+                    i
+                  );
+
+                  if (!outRow?.transaction?.details?.[0]) return null;
+
+                  const updatedDetails = [...details];
+                  updatedDetails[i] = outRow.transaction.details[0] as TransactionDetail;
+                  updatedDetails[rIndex] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[rIndex].slNo
+                  };
+
+                  const summaryRes = calculateSummary(updatedDetails, formState, { result: {} });
+                  const totalRes = await calculateTotal(
+                    formState.transaction.master,
+                    summaryRes.summary as SummaryItems,
+                    formState.formElements,
+                    { result: {} }
+                  );
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch: generateUniqueKey(),
+                        ...totalRes,
+                        summary: summaryRes.summary,
+                        transaction: {
+                          ...totalRes?.transaction,
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: i
+                    })
+                  );
+
+                  return null;
+                } else {
+                  await ERPAlert.show({
+                    icon: "warning",
+                    title: t("duplicate_serial"),
+                    text: `${t("serial_exist_in_row")}: ${i + 1}`,
+                    confirmButtonText: "OK"
+                  });
+                  const updatedDetails = [...details];
+                  updatedDetails[rIndex] = {
+                    ...initialTransactionDetailData,
+                    slNo: updatedDetails[rIndex].slNo
+                  };
+
+                  dispatch(
+                    formStateHandleFieldChangeKeysOnly({
+                      fields: {
+                        resetSearch: generateUniqueKey(),
+                        transaction: {
+                          details: updatedDetails
+                        }
+                      },
+                      updateOnlyGivenDetailsColumns: true,
+                      rowIndex: rIndex
+                    })
+                  );
+
+                  return null;
+                }
+              }
+            }
+          }
+        }
+        
 
         // default qty
         if (applicationSettings?.productsSettings?.setDefaultQty1) {
@@ -3321,6 +3503,7 @@ const verified = Boolean(vch.master.pdtVerified);
 
       return result;
     }
+
   };
 
   const handleChangeUnit = async (
@@ -3655,7 +3838,19 @@ const verified = Boolean(vch.master.pdtVerified);
 
         case " ": {
           // Space key
-          if (formState.allowMultiUnits) {
+          // Managing multi unit condition cases
+          let multiUnitCheckStatus = false
+          const multiUnitVoucherTypes = ["ST", "DMG", "SH","EX","SC","AD"];
+          if (multiUnitVoucherTypes.includes(formState.transaction.master.voucherType ?? "")) {
+            if(formState.allowMultiUnits){
+              multiUnitCheckStatus = true;
+            }else{
+              multiUnitCheckStatus = false;
+            }
+          }else{
+            multiUnitCheckStatus = true;
+          }
+          if (multiUnitCheckStatus) {
             let outState: DeepPartial<TransactionFormState> = {
               transaction: { details: [] },
             };
@@ -4175,7 +4370,7 @@ const verified = Boolean(vch.master.pdtVerified);
       await workbook.xlsx.load(fileBuffer);
 
       // Get 'Purchase' worksheet
-      const purchaseWorksheet = workbook.getWorksheet("Purchase");
+      const purchaseWorksheet = workbook.getWorksheet("stock");
       if (!purchaseWorksheet) {
         throw new Error("Purchase worksheet not found in the Excel file");
       }
@@ -4375,7 +4570,7 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       }
 
-      if(formState.transaction.master.voucherType === "EX"){
+      if(formState.transaction.master.voucherType === "EX" || formState.transaction.master.voucherType === "OS"){
         ERPAlert.show({
         icon: "info",
         title: t(""),
@@ -4951,7 +5146,7 @@ const verified = Boolean(vch.master.pdtVerified);
         alertText = "do_you_want_to_reset_all_positive_stock_to_zero"
         alertTittle = "positive_stock_reset"
       }else if(formState.allNegativeStockToZero){
-        alertText = "do_you_want_to_reset_all_negative_stock_to_zero?"
+        alertText = "do_you_want_to_reset_all_negative_stock_to_zero"
         alertTittle = "negative_stock_reset"
       }
 
@@ -5090,6 +5285,16 @@ const verified = Boolean(vch.master.pdtVerified);
     }));
 
     const details = [...mappedDetails, ...emptyRows];
+    // Show summary
+    const summaryRes = calculateSummary(details, formState, { result: {} });
+    if (summaryRes.summary) {
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: { summary: summaryRes.summary },
+          updateOnlyGivenDetailsColumns: false,
+        })
+      );
+    }
 
     // Update grid
     dispatch(formStateSetDetails(details));

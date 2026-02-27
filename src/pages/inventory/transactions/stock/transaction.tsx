@@ -115,30 +115,42 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }, []);
 
   const handleClearControls = async () => {
-    // 1) Guard: check voucher locked
-    if (formState?.transaction?.master?.isLocked) {
-      ERPAlert.show({
-        title: t("warning"),
-        text: t("voucher_is_locked"),
-        icon: "warning",
-      });
-      return;
-    }
 
     try {
-      // 2) Ask for confirmation
-      const result: any = await ERPAlert.show({
-        title: t("clearing_transaction_question"),
-        text: t("once_clearing_this_transaction_cannot_be_recovered"),
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: t("yes"),
-        cancelButtonText: t("no"),
-      });
 
-      console.log("ERPAlert result:", result);
+      const voucherType = formState.transaction.master.voucherType;
+      const grandTotal = formState.transaction.master.grandTotal ?? 0;
+      let result: any = null;
 
-      // 3) Normalize confirmation result (supports multiple shapes)
+      if (["BTO", "BTI"].includes(voucherType)) {
+        if (grandTotal !== 0) {
+          result = await ERPAlert.show({
+            title: t("clearing_transaction_question"),
+            text: t("once_clearing_this_transaction_cannot_be_recovered"),
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+          });
+        } else {
+          const maybePromise = clearControls(formState.isEdit,formState.transaction.master.invTransactionMasterID);
+          if (maybePromise && typeof maybePromise.then === "function") {
+            await maybePromise;
+          }
+          return;
+        }
+      } else {
+        // Other voucher types - always ask confirmation
+        result = await ERPAlert.show({
+          title: t("clearing_transaction_question"),
+          text: t("once_clearing_this_transaction_cannot_be_recovered"),
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+        });
+      }
+
       const confirmed =
         !!result &&
         (result.isConfirmed === true ||
@@ -149,12 +161,6 @@ const TransactionForm: React.FC<TransactionProps> = ({
         // user cancelled
         return;
       }
-
-      // 4) Call clearControls and await if it returns a promise
-      console.log("Calling clearControls...", {
-        isEdit: formState?.isEdit,
-        id: formState?.transaction?.master?.invTransactionMasterID,
-      });
 
       const maybePromise = clearControls(
         formState.isEdit,
@@ -639,6 +645,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
               transactionDate: softwareDate.toISOString(),
               purchaseInvoiceDate: moment().local().toISOString(),
               voucherNumber: _voucherNo,
+              opDate: userSession.finFrom ? new Date(userSession.finFrom).toISOString() : undefined   // Check This(test)
 
             },
           },

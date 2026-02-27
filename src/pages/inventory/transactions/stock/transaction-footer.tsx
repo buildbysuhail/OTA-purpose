@@ -454,7 +454,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         })
                       );
                     }}
-                    value={formState.transaction.master.fromWarehouseID}
+                    value={formState.transaction.master.toBranchWarehouseID || -2 }
                     field={{
                       id: "toBranchWarehouseID",
                       valueKey: "id",

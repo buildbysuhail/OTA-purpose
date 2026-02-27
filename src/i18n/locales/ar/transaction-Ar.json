@@ -1119,7 +1119,7 @@
   "all_positive_stock_to_zero": "تصفير جميع المخزون الموجب",
   "all_negative_stock_to_zero": "تصفير جميع المخزون السالب",
   "positive_stock_reset": "إعادة تعيين المخزون الموجب",
-  "do_you_want_to_reset_all_positive_stock_to_zero?": "هل تريد تصفير جميع المخزون الموجب؟",
+  "do_you_want_to_reset_all_positive_stock_to_zero": "هل تريد تصفير جميع المخزون الموجب؟",
   "do_you_want_to_reset_all_negative_stock_to_zero": "هل تريد تصفير جميع المخزون السالب؟",
   "negative_stock_reset": "إعادة تعيين المخزون السالب",
   "no_record_found_with_this_voucher_number": "لم يتم العثور على سجلات برقم السند هذا",
@@ -1339,7 +1339,9 @@
   "the_voucher_already_processed": "تمت معالجة هذه القسيمة بالفعل، لا يمكن تحويلها مرة أخرى",
   "the_invoice_already_processed": "تمت معالجة هذه الفاتورة بالفعل، لا يمكن تحويلها مرة أخرى",
   "the_GRN_already_processed": "تمت معالجة هذه إشعار الاستلام بالفعل، لا يمكن تحويلها مرة أخرى",
-  "the_transaction_already_processed": "تمت معالجة هذه المعاملة بالفعل، لا يمكن تحويلها مرة أخرى"
+  "the_transaction_already_processed": "تمت معالجة هذه المعاملة بالفعل، لا يمكن تحويلها مرة أخرى",
+
+  "van": "شاحنة صغيرة"
 
   
 

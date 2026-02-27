@@ -35,7 +35,7 @@ export const useDebouncedInput = <T>(
   const initialValueRef = useRef(initialValue);
   initialValueRef.current = initialValue;
 
-  useEffect(() => {
+  useEffect(() => { 
     // Only trigger onDebouncedChange if user has actually interacted with the input
     if (hasUserInteracted.current && debouncedValue !== initialValueRef.current) {
       callbackRef.current(debouncedValue, eventRef.current);

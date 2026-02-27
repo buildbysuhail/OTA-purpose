@@ -92,6 +92,11 @@ export const useTransactionHelper = (transactionType: string) => {
     state.formElements.btnPrint.disabled = !isClosed
       ? hasRight(state.formCode, UserAction.Print)
       : false;
+    if(state.transaction.master.voucherType === "BTI"){
+      state.formElements.btnSave.disabled = true;
+      state.formElements.btnEdit.disabled = true;
+      state.formElements.btnDelete.disabled = true;
+    }
     return state;
   };
   const disableControlsFn = (
@@ -99,6 +104,15 @@ export const useTransactionHelper = (transactionType: string) => {
   ): TransactionFormState => {
     state.formElements.pnlMasters.disabled = true;
     state.formElements.dxGrid.disabled = true;
+    state.formElements.txtData.visible = false;
+    state.formElements.pnlProductBatches.visible = false;
+    if (["ST", "DMG", "EX", "SH", "SC"].includes(state.transaction.master.voucherType)){
+      state.formElements.voucherNumberUpDownBtns.disabled = false
+    }
+    if (["BTO", "BTI"].includes(state.transaction.master.voucherType)){
+      state.formElements.lblproductName.visible = false;
+      state.formElements.pnlAmountSummary.disabled = false;
+    }
     return state;
   };
   const validateTransactionDate = (
@@ -552,10 +566,12 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Enable amount summary panel
-      if (!result.formElements.pnlAmountSummary) {
+      if (["BTO", "BTI"].includes(formState.transaction?.master?.voucherType)){
+        if (!result.formElements.pnlAmountSummary) {
         result.formElements.pnlAmountSummary = { disabled: false };
-      } else {
-        result.formElements.pnlAmountSummary.disabled = false;
+        } else {
+          result.formElements.pnlAmountSummary.disabled = false;
+        }
       }
 
       // Dispatch the updated state

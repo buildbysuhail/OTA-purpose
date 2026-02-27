@@ -15,6 +15,7 @@ import Urls from "../../redux/urls";
 import urls from "../../redux/urls";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
 import { LedgerType } from "../../enums/ledger-types";
+import { useTransaction } from "../../pages/inventory/transactions/sales/use-transaction";
 
 export interface CashierViewData {
     id: number;
@@ -60,6 +61,7 @@ export interface SalesFormData {
     voucherType: string | null;
     voucherForm: string | null;
 }
+
 
 const CashierView: React.FC = () => {
     const { t } = useTranslation('transaction');
@@ -200,7 +202,41 @@ const CashierView: React.FC = () => {
             visible: false,
         },
     ], []);
+const {
+    save,
+    initializeFormElements,
 
+  } = useTransaction("SalesInvoice",undefined,undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    "SI",
+    "",
+
+
+  );
     //correctround
     const roundToTwo = (value: number) =>
         Math.round((value + Number.EPSILON) * 100) / 100;
@@ -305,12 +341,17 @@ const CashierView: React.FC = () => {
             // ✅ Validation (same logic as C#)
             if (
                 balanceToPay >= 0 &&
-                cashReceived >= grandTotal &&
+                cashReceived >= grandTotal && 
                 grandTotal > 0
             ) {
 
+                const apiRes = await api.getAsync(`${urls.salesView}`) 
+                const sdfd =  await initializeFormElements("SI","","","SI","Sales Invoice",0,formData.masterId,true)
+
                 const invMasterId = await saveSalesBookingToSalesInvoice(masterId, billDiscount, cashReceived, ledgerID)
                 if (invMasterId) {
+                //   await save(),
+
                     const saveRes = api.postAsync(urls.salesView, formData)
                     handlePlainResponse(saveRes, () => {
                         if (formData.printReceipt) {
@@ -322,34 +363,6 @@ const CashierView: React.FC = () => {
                 } else {
 
                 }
-
-
-
-                //     if (response?.data?.id > 0) {
-                //         // ✅ Log action
-                //         await api.post("/audit/log", {
-                //             message: `User saved sales booking to sales invoices - Voucher ${formData.voucherNumber}`,
-                //             action: "save",
-                //             formCode: formCode,
-                //         });
-
-                //         // ✅ Print if required
-                //         if (formData.printSalesInvoice) {
-                //             printReceipt();
-                //         }
-
-                //         // ✅ Clear form
-                //         resetForm();
-
-                //         // ✅ Refresh grid
-                //         refreshSalesViewList();
-                //     } else {
-                //         throw new Error("Save failed");
-                //     }
-
-                // } else {
-                //     showError("Validation failed");
-                // }
             }
         } catch (error) {
             console.error(error);

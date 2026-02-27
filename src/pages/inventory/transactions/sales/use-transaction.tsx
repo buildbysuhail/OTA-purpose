@@ -96,23 +96,23 @@ export type initializeFormElementsFn = (
   voucherNo: number,
   transactionMasterID: number,
   isInitial?: boolean
-) => void // ✅ fix return type
+) => Promise<void> // ✅ fix return type
 
 const api = new APIClient();
 export const useTransaction = (
   transactionType: string,
-  btnSaveRef: any,
-  btnAddRef: any,
-  focusToNextColumn: (
+  btnSaveRef?: any,
+  btnAddRef?: any,
+  focusToNextColumn?: (
     rowIndex: number,
     column: string,
     excludedColumns?: (keyof TransactionDetail)[]
   ) => { column: string; rowIndex: number } | null,
-  focusColumn: (
+  focusColumn?: (
     rowIndex: number,
     column: string
   ) => { column: string; rowIndex: number } | null,
-  focusCurrentColumn: (
+  focusCurrentColumn?: (
     rowIndex: number,
     column: string
   ) => { column: string; rowIndex: number } | null,
@@ -149,6 +149,16 @@ export const useTransaction = (
   const softwareDate = useAppSelector(
     (state: RootState) => state.ClientSession.softwareDate
   );
+  const safeFocusToNextColumn =
+  focusToNextColumn ??
+  ((rowIndex: number, column: string) => null);
+
+const safeFocusColumn =
+  focusColumn ??
+  ((rowIndex: number, column: string) => null);
+const safeFocusCurrentColumn  =
+focusCurrentColumn ??
+ ((rowIndex: number, column: string) => null);
   const {
     attachDetails,
     attachMaster,
@@ -171,7 +181,7 @@ export const useTransaction = (
     removeGiftFromGrid,
     enableControls
 
-  } = useTransactionHelper(transactionType, focusToNextColumn, focusColumn);
+  } = useTransactionHelper(transactionType, safeFocusToNextColumn, safeFocusColumn);
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -2137,7 +2147,7 @@ export const useTransaction = (
         });
         if (confirm !== true) {
           const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
-          const res = focusColumn(rowIndex, "qty");
+          const res = safeFocusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
           return {
             master: master,
@@ -2164,7 +2174,7 @@ export const useTransaction = (
 
         if (confirm !== true) {
           const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
-          const res = focusColumn(rowIndex, "qty");
+          const res = safeFocusColumn(rowIndex, "qty");
           setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
 
           return {
@@ -2182,7 +2192,7 @@ export const useTransaction = (
             });
 
             const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
-            const res = focusColumn(rowIndex, "qty");
+            const res = safeFocusColumn(rowIndex, "qty");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
 
             return {
@@ -2208,7 +2218,7 @@ export const useTransaction = (
           });
           if (!confirm) {
             const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
-            const res = focusColumn(rowIndex, "qty");
+            const res = safeFocusColumn(rowIndex, "qty");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
             return {
               master: master,
@@ -3484,7 +3494,7 @@ export const useTransaction = (
       );
 
       if (focusFirstRow && editableColumns && editableColumns.length > 0) {
-        const res = focusColumn(0, editableColumns[0].dataField ?? "");
+        const res = safeFocusColumn(0, editableColumns[0].dataField ?? "");
         setCurrentCell(
           res,
           formState.transaction.details[0] as TransactionDetail,
@@ -5153,10 +5163,10 @@ export const useTransaction = (
               onCancel: () => { return false; },
             });
             if (confirm) {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             } else {
-              const res = focusCurrentColumn(rowIndex, columnName);
+              const res = safeFocusCurrentColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
             return { ...result, handled: true, preventDefault: true };
@@ -5179,10 +5189,10 @@ export const useTransaction = (
               onCancel: () => { return false; },
             });
             if (confirm) {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             } else {
-              const res = focusCurrentColumn(rowIndex, columnName);
+              const res = safeFocusCurrentColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
             return { ...result, handled: true, preventDefault: true };
@@ -5203,10 +5213,10 @@ export const useTransaction = (
               onCancel: () => { return false; },
             });
             if (confirm) {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             } else {
-              const res = focusCurrentColumn(rowIndex, columnName);
+              const res = safeFocusCurrentColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
             return { ...result, handled: true, preventDefault: true };
@@ -5227,17 +5237,17 @@ export const useTransaction = (
               onCancel: () => { return false; },
             });
             if (confirm) {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             } else {
-              const res = focusCurrentColumn(rowIndex, columnName);
+              const res = safeFocusCurrentColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
             return { ...result, handled: true, preventDefault: true };
           }
         } else {
           // Need to check is this will effecting other cases
-          const res = focusToNextColumn(rowIndex, columnName);
+          const res = safeFocusToNextColumn(rowIndex, columnName);
           setCurrentCell(res, data, false);
         }
       }
@@ -5509,7 +5519,7 @@ export const useTransaction = (
           }
           if (columnName === "barCode") {
             const details = formState.transaction.details;
-            const res = focusColumn(rowIndex, "qty");
+            const res = safeFocusColumn(rowIndex, "qty");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
           }
           break;
@@ -5537,7 +5547,7 @@ export const useTransaction = (
         case "U":
           if (columnName === "barCode") {
             const details = formState.transaction.details;
-            const res = focusColumn(rowIndex, "unitPrice");
+            const res = safeFocusColumn(rowIndex, "unitPrice");
             setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
           }
           break;
@@ -5547,11 +5557,11 @@ export const useTransaction = (
           const details = formState.transaction.details;
           if (columnName === "barCode") {
             if (formState.gridColumns?.find((x) => x.dataField === "ratePlusTax")?.readOnly === false) {
-              const res = focusColumn(rowIndex, "ratePlusTax");
+              const res = safeFocusColumn(rowIndex, "ratePlusTax");
               setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
             } else {
               if (formState.gridColumns?.find((x) => x.dataField === "unitPrice")?.readOnly === false) {
-                const res = focusColumn(rowIndex, "unitPrice");
+                const res = safeFocusColumn(rowIndex, "unitPrice");
                 setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
               }
             }
@@ -5777,7 +5787,7 @@ export const useTransaction = (
             if (!isNullOrUndefinedOrEmpty(value)) {
               await handleRemoveItem(value);
             } else {
-              // const res = focusToNextColumn(rowIndex, columnName);
+              // const res = safeFocusToNextColumn(rowIndex, columnName);
               // setCurrentCell(res, data);
             }
             break;
@@ -5801,7 +5811,7 @@ export const useTransaction = (
                 true
               );
             } else {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
           } else if (columnName == "product") {
@@ -5823,7 +5833,7 @@ export const useTransaction = (
                 true
               );
             } else {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, false);
             }
           } else if (columnName == "barCode") {
@@ -5849,12 +5859,12 @@ export const useTransaction = (
               console.log('🔍 loadProductDetailsByAutoBarcode completed');
             } else {
               console.log('⚠️ Barcode value is empty, focusing next column');
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
           } else if (columnName == "unitDiscount") {
             // Need to check the working
-            const res = focusToNextColumn(rowIndex, columnName);
+            const res = safeFocusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, false);
           } else if (columnName == "qty") {
             const ShowNegativeStockWarning = applicationSettings.inventorySettings.showRateWarning;
@@ -5915,7 +5925,7 @@ export const useTransaction = (
             if (applicationSettings.productsSettings.giftOnBilling) {
               await removeGiftFromGrid();
             }
-            const res = focusToNextColumn(rowIndex, columnName);
+            const res = safeFocusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
 
           } else if (columnName == "unitPrice") {
@@ -5933,7 +5943,7 @@ export const useTransaction = (
             //     );
             //   }
             // }
-            // const res = focusToNextColumn(rowIndex, columnName);
+            // const res = safeFocusToNextColumn(rowIndex, columnName);
             // setCurrentCell(res, data, rowIndex != res?.rowIndex);
           } else if (columnName == "unitPriceFC") {
             if (
@@ -5959,17 +5969,17 @@ export const useTransaction = (
                 },
               });
               if (confirm) {
-                const res = focusToNextColumn(rowIndex, columnName);
+                const res = safeFocusToNextColumn(rowIndex, columnName);
                 setCurrentCell(res, data, rowIndex != res?.rowIndex);
                 break;
               } else {
-                const res = focusCurrentColumn(rowIndex, columnName);
+                const res = safeFocusCurrentColumn(rowIndex, columnName);
                 setCurrentCell(res, data, false);
               }
             }
           } else if (columnName == "margin" || columnName == "salesPrice" || columnName == "ratePlusTax") {
             // check the below written code and compare with 1050 - check its working
-            const res = focusToNextColumn(rowIndex, columnName);
+            const res = safeFocusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
 
 
@@ -6015,11 +6025,11 @@ export const useTransaction = (
             //       },
             //     });
             //     if (confirm) {
-            //       const res = focusToNextColumn(rowIndex, columnName);
+            //       const res = safeFocusToNextColumn(rowIndex, columnName);
             //       setCurrentCell(res, data, rowIndex != res?.rowIndex);
             //       break;
             //     } else {
-            //       const res = focusCurrentColumn(rowIndex, columnName);
+            //       const res = safeFocusCurrentColumn(rowIndex, columnName);
             //       setCurrentCell(res, data, false);
             //     }
             //   }
@@ -6029,7 +6039,7 @@ export const useTransaction = (
             //   data.salesPrice > 0
             // ) {
             //   if (data.unitPrice > data.salesPrice) {
-            //     const res = focusCurrentColumn(rowIndex, columnName);
+            //     const res = safeFocusCurrentColumn(rowIndex, columnName);
             //     setCurrentCell(res, data, false);
             //   }
             // }
@@ -6065,7 +6075,7 @@ export const useTransaction = (
               }))
               break;
             } else {
-              const res = focusToNextColumn(rowIndex, columnName);
+              const res = safeFocusToNextColumn(rowIndex, columnName);
               setCurrentCell(res, data, rowIndex != res?.rowIndex);
             }
 
@@ -6226,7 +6236,7 @@ export const useTransaction = (
               await removeGiftFromGrid();
 
             }
-            const res = focusToNextColumn(rowIndex, columnName);
+            const res = safeFocusToNextColumn(rowIndex, columnName);
             setCurrentCell(res, data, rowIndex != res?.rowIndex);
           }
           break;
@@ -6979,7 +6989,7 @@ export const useTransaction = (
                   updateOnlyGivenDetailsColumns: true,
                 })
               );
-              const res = focusCurrentColumn(lastRowIndex, "qty");
+              const res = safeFocusCurrentColumn(lastRowIndex, "qty");
               setCurrentCell(res, details[lastRowIndex], lastRowIndex != res?.rowIndex);
             }
           }

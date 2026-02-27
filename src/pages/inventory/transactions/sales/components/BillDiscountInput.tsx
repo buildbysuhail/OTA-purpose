@@ -72,7 +72,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
       type="number"
       labelDirection={footerLayout === "vertical" ? "horizontal" : "vertical"}
       label={t(formState.formElements.billDiscount.label)}
-      value={formState.billDiscountPerc}
+      value={value}
       disableEnterNavigation={true}
       onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "billDiscount"); }}
       onChange={(e) => onChange(Number(e.target.value))}
@@ -107,7 +107,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
       type="number"
       labelDirection={footerLayout === "vertical" ? "horizontal" : "vertical"}
       label={t(formState.formElements.billDiscount.label)}
-      value={formState.transaction.master.billDiscount}
+      value={valuePerc}
       noLabel
       disableEnterNavigation={true}
       onKeyDown={(e) => { handleKeyDown && handleKeyDown(e, "billDiscount"); }}

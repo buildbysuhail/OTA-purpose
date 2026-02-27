@@ -420,6 +420,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("sales_route")}
               disabled={rootState.PopupData.parties.mode == "view"}
               fetching={formState?.loading !== false ? true : false}
+              enableClearOption={false}
             />
 
             <ERPInput

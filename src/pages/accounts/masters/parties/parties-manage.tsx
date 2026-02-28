@@ -23,6 +23,8 @@ import { handleResponse } from "../../../../utilities/HandleResponse";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import { removeStorageString } from "../../../../utilities/storage-utils";
+import { formStateHandleFieldChangeKeysOnly } from "../../../inventory/transactions/reducer";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
@@ -52,7 +54,20 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     } = useFormManager<PartiesData>({
       url: Urls.parties,
       onClose: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: false })), [dispatch]),
-      onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
+      onSuccess: useCallback(async () => {
+        const key = btoa("AccLedgers");
+        await removeStorageString(key);
+                        dispatch(
+                          formStateHandleFieldChangeKeysOnly({
+                            fields: { formElements: {ledgerID: { reload: true }} },
+                          })
+                        )
+        dispatch(toggleParties({
+          isOpen: false,
+          key: null,
+          reload: true
+        }));
+      }, [dispatch]),
       key: rootState.PopupData.parties.key,
       useApiClient: true,
       initialData: {
@@ -66,7 +81,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           country: "Saudi Arabia",
           registrationType: "Regular",
           drCr: "Dr",
-          salesRouteID:1
+          salesRouteID: 1
         },
       },
       isMessages: true,

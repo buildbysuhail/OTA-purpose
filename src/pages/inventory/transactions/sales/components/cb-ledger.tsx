@@ -5,6 +5,7 @@ import { useNumberFormat } from "../../../../../utilities/hooks/use-number-forma
 import VoucherType from "../../../../../enums/voucher-types";
 import { updateFormElement, formStateMasterHandleFieldChange } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
+import { formStateHandleFieldChangeKeysOnly } from "../../../../accounts/transactions/reducer";
 
 interface LedgerProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
@@ -17,6 +18,8 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
     const { getFormattedValue } = useNumberFormat();
     console.log("mj23");
     console.log({ formState: formState.transactionLoading });
+
+
     return (
       <>
         {formState.formElements.ledgerID.visible && (
@@ -36,11 +39,11 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               // transactionLoading={true}
               changeReload={() =>
                 dispatch(
-                  updateFormElement({
-                    fields: { ledgerID: { reload: false } },
-                  })
+                                          formStateHandleFieldChangeKeysOnly({
+                                            fields: { formElements: {ledgerID: { reload: false }} },
+                                          })
                 )
-              }
+              } 
               onKeyDown={(e) => {
                 handleKeyDown && handleKeyDown(e, "ledgerID");
               }}

@@ -7133,6 +7133,51 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
       // showAlert(err.message || "GiftOnBilling Error");
     }
   };
+
+  // Click Tax on Discount apply Button In Footer
+  const taxOnDiscountApplyButton = async () => {
+    const currentBillDiscount = formState.transaction.master.billDiscount;
+    try {
+      const taxPerc = getMaxTaxPercInItemList();
+      const billDiscTemp = currentBillDiscount;
+      const netDisc = roundAwayFromZero(billDiscTemp / (1 + taxPerc / 100),2);
+      let taxOnDisc = 0;
+      if(taxPerc > 0){
+        if (applicationSettings.branchSettings.enableTaxOnBillDiscount || applicationSettings.branchSettings.maintainKSA_EInvoice) {
+        taxOnDisc = roundAwayFromZero((billDiscTemp - netDisc ), 2);
+        if (Math.abs(billDiscTemp * 100 - taxOnDisc * 100) >= 0.75) {
+          const dp = applicationSettings.mainSettings.decimalPoints;
+          const factor = Math.pow(10, dp);
+          taxOnDisc =
+            Math.sign(taxOnDisc) *
+            Math.round(Math.abs(taxOnDisc) * factor) /
+            factor;
+        } else {
+          taxOnDisc = billDiscTemp == 0 ? 0 : formState.transaction.master.taxOnDiscount || 0;
+        }
+      }
+     }
+      const res = await calculateTotal({ ...formState.transaction.master, taxOnDiscount: taxOnDisc, billDiscount: netDisc }, formState.summary as SummaryItems, formState.formElements, {
+        result: {
+          transaction: {
+            master: {
+              taxOnDiscount: taxOnDisc,
+              billDiscount: netDisc,
+            }
+          }
+        }
+      });
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: res
+        },)
+      );
+
+    } catch {
+      // intentionally ignored (same as C#)
+    }
+  };
+
   const applyTaxOnBillDiscount = async (billDiscount: number,) => {
 
     
@@ -7995,6 +8040,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
     _purchaseGridCol,
     gridCode,
     initializeFormElements,
-    calculateTaxOnDiscount
+    calculateTaxOnDiscount,
+    taxOnDiscountApplyButton
   };
 };

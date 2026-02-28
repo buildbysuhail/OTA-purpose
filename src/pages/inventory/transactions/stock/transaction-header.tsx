@@ -1126,6 +1126,19 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     disabled={formState.formElements.pnlMasters?.disabled}
                   />
                 )}
+
+                {/* {formState.transaction.master.voucherType === VoucherType.ItemLoadRequest &&
+                  userSession.dbIdValue === "572054329920" &&  (
+                <ERPButton
+                 title="Load"
+                 variant="secondary"
+                //  onClick={handleButtonClick}
+                //  disabled={formState.transactionLoading}
+                 className="dark:bg-dark-bg-card dark:text-dark-text dark:hover:bg-dark-hover-bg"
+                />
+                )} */}
+
+
                 {/* {[VoucherType.ItemLoadRequest].includes(formState.transaction.master.voucherType as VoucherType) && (
                 <ERPCheckbox
                   id="allowMultiUnit"

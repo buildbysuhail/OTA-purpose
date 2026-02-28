@@ -25,13 +25,7 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   const [ledgerInitialized, setLedgerInitialized] = useState(false);
   const [gridReload, setGridReload]               = useState<boolean>(true);
 
-  // useRef because we read it inside onContentReady callback.
-  // useState would cause stale closure — ref always gives current value.
   const newPartyAddedRef = useRef<boolean>(false);
-
-  // Store the currently focused/selected ledgerID in a ref so that
-  // handleKeyDown always reads the latest value without needing to be
-  // recreated (avoids stale closure in keydown handler).
   const selectedLedgerIDRef = useRef<any>(null);
 
   const gridRef = useRef<any>(null);
@@ -45,15 +39,6 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       const gridInstance = gridRef.current?.instance?.();
 
       if (gridInstance) {
-        // Wipe DevExtreme's cached sort and set ledgerID DESC.
-        // This makes the API receive sort=[{"selector":"ledgerID","desc":true}]
-        // so the newest party (highest ledgerID) is at skip=0 → row 0.
-        //
-        // NOTE: initialSort prop cannot do this because ErpDevGrid only applies
-        // it as a fallback when loadOptions.sort is empty. After first load,
-        // DevExtreme always populates loadOptions.sort from its own cache,
-        // so initialSort is permanently skipped. The only way to change sort
-        // after first load is to mutate the instance directly like this.
         gridInstance.clearSorting();
         gridInstance.columnOption("ledgerID", "sortOrder", "desc");
         gridInstance.columnOption("ledgerID", "sortIndex", 0);

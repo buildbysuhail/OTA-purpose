@@ -5737,31 +5737,34 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                   },
                 })
               );
-              // Need a api call for changing unit price
-              // const units = formState.batchesUnits?.filter(
-              //   (xer) => xer.productBatchID == detail.productBatchID
-              // );
-              // const unitIndex =
-              //   units?.findIndex((xer) => xer.value == detail.unitID) ?? 0;
-              // const nextUnitIndex =
-              //   unitIndex < (units?.length ?? 0) - 1 ? unitIndex + 1 : 0;
-              // if (!units) {
-              //   return { handled: true };
-              // }
-              // const unitName = units[nextUnitIndex].label;
-              // const unitID = units[nextUnitIndex].value;
-              // outDetail.unit = unitName;
-              // outDetail.unitID = unitID;
-              // 
 
-              // handleChangeUnit(
-              //   outDetail,
-              //   detail,
-              //   actualPriceVisible ?? false,
-              //   outState,
-              //   columnName,
-              //   isMobRow ? -1 : rowIndex
-              // );
+              const params = new URLSearchParams({
+                productBatchId: String(detail.productBatchID ?? "0"),
+                priceCategoryId: String(nextPriceCategoryId ?? "0"),
+                unitId: String(detail.unitID ?? "0"),
+                vatPerc: String(detail.vatPerc ?? 0)
+              });
+
+              const pData = await api.getAsync(
+                `${Urls.inv_transaction_base}${transactionType}/priceCategoryDetails?${params.toString()}`
+              );
+
+              const updatedDetail = {
+                ...outDetail,
+                unitPrice: pData.unitPrice,
+                purchasePrice: pData.purchasePrice,
+              };
+              outState = await calculateRowAmount(
+                Object.assign(detail, { ...outDetail }),
+                columnName as any,
+                {
+                  result: {
+                    transaction: {
+                      details: [updatedDetail],
+                    },
+                  },
+                }, false
+              );
             }
           }
           break;

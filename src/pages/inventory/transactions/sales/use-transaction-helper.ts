@@ -48,7 +48,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     roundAmount,
     RoundAmountGlobal,
     getFormattedValue,
-    roundAwayFromZero
+    roundAwayFromZero,
+    getFormattedValueIgnoreRounding
   } = useNumberFormat();
 
   const { hasRight } = useUserRights();
@@ -420,9 +421,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.cst = getFormattedValueIgnoreRoundingToNumber(ExciseTax);
         detail.netValue = getFormattedValueIgnoreRoundingToNumber(NetValue);
         detail.discPerc = getFormattedValueIgnoreRoundingToNumber(DiscPerc);
-        detail.discount = getFormattedValueIgnoreRoundingToNumber(Disc);
+        detail.discount = Number(getFormattedValue(Disc));
         detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(round(UnitDiscount, 5));
-        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
+        detail.vatAmount = Number(getFormattedValueIgnoreRounding(Vat));
 
         let NetAmount = NetValue + Vat;
 
@@ -635,7 +636,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         detail.discPerc = getFormattedValueIgnoreRoundingToNumber(DiscPerc);
         detail.discount = getFormattedValueIgnoreRoundingToNumber(Disc);
         detail.unitDiscount = getFormattedValueIgnoreRoundingToNumber(round(UnitDiscount, 5));
-        detail.vatAmount = getFormattedValueIgnoreRoundingToNumber(Vat);
+        detail.vatAmount = Number(getFormattedValue(Vat));  
         detail.gross = getFormattedValueIgnoreRoundingToNumber(Gross);
         detail.total = NetAmount;
 
@@ -1071,10 +1072,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           const columnKey = _columnKey as keyof SummaryItems;
           if ((config.showInColumn || config.column) == "vatAmount") {
             (result.summary as any)[columnKey] = round(
-              calculatedValue,
-              undefined,
-              true
-            );
+              calculatedValue,2,true);
           } else {
             (result.summary as any)[columnKey] = round(calculatedValue);
           }
@@ -3039,7 +3037,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
             uRate =
               Number(outDetail.ratePlusTax || 0) / (1 + taxPerc / 100);
 
-            outDetail.unitPrice = round(uRate);
+            outDetail.unitPrice = getFormattedValueIgnoreRoundingToNumber(uRate);
           }
         }
 
@@ -3563,12 +3561,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         itemGross = 0,
         grossPerc = 0,
         itemDisc = 0,
-        discPerc = 0;
-
+        discPerc = 0,
+        taxOndiscount = 0;
       let details = [...formState.transaction.details.filter(
         (x) => x.productID > 0
       )];
       billDisc = formState.transaction.master.billDiscount;
+      taxOndiscount = formState.transaction.master.taxOnDiscount;
       outState.transaction!.master!.billDiscount = 0;
       // Calculate total gross for items with productID > 0
       totalGross = formState.summary.total;
@@ -3579,7 +3578,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           const item = details[i];
           itemGross = item.total ?? 0;
           grossPerc = (itemGross / totalGross) * 100;
-          itemDisc = (billDisc * grossPerc) / 100;
+          itemDisc = ((billDisc + taxOndiscount ) * grossPerc) / 100;
           discPerc = round((itemDisc / itemGross) * 100, 5);
 
           const detail = { slNo: item.slNo, discPerc: discPerc };
@@ -3601,20 +3600,29 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           result: {},
         });
         let totalRes = await calculateTotal(
-          formState.transaction.master,
+          {...formState.transaction.master,billDiscount:0, taxOnDiscount:0},
           summaryRes
             ? (summaryRes.summary as SummaryItems)
             : initialInventoryTotals,
           formState.formElements,
           {
-            result: {},
+            result: {
+              transaction:{
+                master:{
+                  billDiscount:0,
+                  taxOnDiscount:0
+                }
+            }
+          },
           }
         );
         if (totalRes) {
           totalRes.summary = summaryRes.summary;
           totalRes.transaction = totalRes.transaction ?? {};
           totalRes.transaction.master = totalRes.transaction.master ?? {};
-          totalRes.transaction.master.billDiscount = 0;
+          // totalRes.transaction.master.billDiscount = 0;
+          // totalRes.transaction.master.taxOnDiscount = 0;
+          totalRes.billDiscountPerc = 0;
           totalRes.transaction.details = details
 
           dispatch(
@@ -3793,7 +3801,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     const additionalAmt = Number(master.adjustmentAmount ?? 0);
 
     // write vat to result.master
-    result.transaction!.master!.vatAmount = round(tax);
+    // result.transaction!.master!.vatAmount = round(tax);
     // If India, populate tax breakup
     if (clientSession.isAppGlobal === true) {
 
@@ -3877,7 +3885,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       // update taxed value in result.master
       result.transaction!.master!.taxOnDiscount = taxOnBilldisc;
-      result.transaction!.master!.vatAmount = tax;
     }
 
     // For India: recalc tax breakdown source (if needed) and set totalTax
@@ -3903,6 +3910,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       result.transaction!.master!.totalTax = [VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.SalesInvoice].includes(formState.transaction.master.voucherType as any) ? toTaxFormat(tax) : round(tax);
     }
 
+    // Test this will effect other places
+    result.transaction!.master!.vatAmount = result.transaction!.master!.totalTax;
 
 
     // if netVal+tax differs and not India, recalc netAmt (mirrors C#)

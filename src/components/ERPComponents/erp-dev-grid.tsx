@@ -1578,8 +1578,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
           if (dynamicProps?.isTransactionScreen) {
             const params = handleInvoke(event.data);
             if (params) {
+              const path = `/${params.transactionBase ?? ''}/${params.transactionType}`.replace(/\/{2,}/g, '/');
               const url = new URL(
-                `${window.location.origin}${params.transactionBase}/${params.transactionType}`
+                `${window.location.origin}${path}`
               );
 
               // Append all parameters from the `params` object

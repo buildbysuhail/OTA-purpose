@@ -643,16 +643,60 @@ const TransactionGrid: React.FC<{
           return (
             <ERPGridActions
               view={{
-                visible: false,
                 type: "popup",
-                action: () =>
-                  dispatch(
-                    toggleTransactionPopup({
-                      isOpen: true,
-                      key: cellElement?.data?.accTransactionDetailID,
-                      reload: false,
-                    })
-                  ),
+                action: () => {
+                  const row = cellElement.data;
+                  const transactionMasterID = parseInt(
+                    row.invTransactionMasterID || "0",
+                    10
+                  );
+
+                  const vchtype = row.voucherType;
+                  const voucherform = row.voucherForm;
+
+                  const prefix = row.voucherPrefix;
+                  const vchno = row.voucherNumber;
+                  const financialYearID = parseInt(
+                    row.financialYearID || "0",
+                    10
+                  );
+
+                  const tr = transactionRoutes.find(
+                    (x: any) => x.voucherType === vchtype
+                  );
+
+                  let transactionData = {};
+                  if (parseInt(vchno, 10) > 0) {
+                    transactionData = {
+                      transactionMasterID,
+                      formType: voucherform,
+                      voucherPrefix: prefix,
+                      voucherType: vchtype,
+                      financialYearID,
+                      voucherNo: parseInt(vchno, 10),
+                      formCode: tr?.formCode,
+                      transactionType: tr?.transactionType,
+                      transactionBase: tr?.transactionBase,
+                      title: tr?.title,
+                      drCr: tr?.drCr,
+                    };
+                  }
+                  const url = new URL(
+                    `${window.location.origin}/${TransactionBase.Sales}/${transactionType}`
+                  );
+
+                  // Append all parameters from the `params` object
+                  Object.entries(transactionData).forEach(([key, value]) => {
+                    url.searchParams.append(key, String(value));
+                  });
+
+                  if (formState?.userConfig?.editInNewTab) {
+                    window.open(url.toString(), "_blank");
+                  } else {
+                    const path = url.pathname + url.search;
+                    navigate(path);
+                  }
+                },
               }}
               edit={{
                 type: "popup",
@@ -694,14 +738,14 @@ const TransactionGrid: React.FC<{
                     };
                   }
                   const url = new URL(
-                    `${window.location.origin}/${TransactionBase.Purchase}/${transactionType}`
+                    `${window.location.origin}/${TransactionBase.Sales}/${transactionType}`
                   );
 
                   // Append all parameters from the `params` object
                   Object.entries(transactionData).forEach(([key, value]) => {
                     url.searchParams.append(key, String(value));
                   });
-
+                  url.searchParams.append("isEdit", "true");
                   if (formState?.userConfig?.editInNewTab) {
                     window.open(url.toString(), "_blank");
                   } else {

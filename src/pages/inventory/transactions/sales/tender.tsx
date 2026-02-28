@@ -147,7 +147,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       totalNet = totalNet + additionalAmt;
     }
     const round = formState.transaction.master.roundAmount || 0; // round amount
-    const taxOnDiscValue = formState.transaction.master.taxOnDiscount;
+    const taxOnDiscValue = Number(formState.transaction.master.taxOnDiscount) || 0;
 
     // Set the values into state initially
     setAddAmount(additionalAmt)
@@ -623,7 +623,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               <label className="text-black text-xs font-medium mb-1 block">{t("total")}</label>
               <input
                 type="text"
-                value={total.toFixed(2)}
+                value={Number(total??0).toFixed(2)}
                 readOnly
                 className="w-full bg-gray-100 text-red-500 text-right text-2xl font-bold px-3 py-2 rounded-md border border-gray-200 outline-none"
               />
@@ -644,7 +644,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <input
                   type="number"
                   min="0"
-                  value={Number(discPercent.toFixed(2))}
+                  value={Number(Number(discPercent??0).toFixed(2))}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     handleDiscPercentChange(val < 0 ? 0 : val);
@@ -681,7 +681,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 </button>
                 <input
                   type="text"
-                  value={taxOnDiscAmount.toFixed(2)}
+                  value={Number(taxOnDiscAmount??0).toFixed(2)}
                   readOnly
                   className="flex-1 min-w-0 bg-gray-100 text-red-500 text-right text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none"
                 />
@@ -693,7 +693,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               <label className="text-black text-xs font-medium mb-1 block">{t('net_total')}</label>
               <input
                 type="text"
-                value={netTotal.toFixed(2)}
+                value={Number(netTotal??0).toFixed(2)}
                 readOnly
                 className="w-full bg-gray-100 text-black text-right text-2xl font-bold px-3 py-2 rounded-md border border-gray-200 outline-none"
               />
@@ -746,7 +746,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <CreditCard size={18} className="text-gray-500" />
                 <span className="text-black text-sm font-medium">{t("bank_card")}</span>
               </div>
-              <span className="text-blue-500 font-bold text-lg">{totalBankCardAmount.toFixed(1)}</span>
+              <span className="text-blue-500 font-bold text-lg">{(totalBankCardAmount??0).toFixed(1)}</span>
             </div>
 
             {/* UPI */}
@@ -768,7 +768,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <Smartphone size={18} className="text-gray-500" />
                 <span className="text-black text-sm font-medium">{t("qr_pay")}</span>
               </div>
-              <span className="text-blue-500 text-lg font-semibold">{totalQrPayAmount.toFixed(1)}</span>
+              <span className="text-blue-500 text-lg font-semibold">{(totalQrPayAmount??0).toFixed(1)}</span>
             </div></div>
             : 
             <div>
@@ -858,7 +858,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
               <label className="text-black text-xs font-medium mb-1 block">{t('balance')}</label>
               <input
                 type="text"
-                value={balance.toFixed(2)}
+                value={Number(balance??0).toFixed(2)}
                 readOnly
                 className="w-full bg-gray-100 text-red-500 text-right text-2xl font-bold px-3 py-2 rounded-md border border-gray-200 outline-none"
               />
@@ -918,7 +918,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   <label className="text-black text-xs font-medium mb-1 block">{t("amount")}</label>
                   <input
                     type="number"
-                    value={Number(Number(uPIDetails?.amount).toFixed(2))}
+                    value={Number(Number(uPIDetails?.amount || 0).toFixed(2))}
                     onChange={(e) =>
                       setUPIDetails((prev: any) => {
                         return {

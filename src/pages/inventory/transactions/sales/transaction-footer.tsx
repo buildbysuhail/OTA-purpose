@@ -73,6 +73,7 @@ interface TransactionFooterProps {
   onFooterHeightChange?: (height: number) => void;
   handleLoadSr: any;
   importFromExcel:(event: React.ChangeEvent<HTMLInputElement>) => void;
+  taxOnDiscountApplyButton: any;
 }
 
 interface Confetti {
@@ -206,7 +207,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   costCenterRef,
   onFooterHeightChange,
   handleLoadSr,
-  importFromExcel
+  importFromExcel,
+  taxOnDiscountApplyButton,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -743,6 +745,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   label={t("credit_card_amount")}
                   type="number"
                   value={creditAmtValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                 />
               ))}
@@ -776,6 +779,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     label={t('sr_amount')}
                     type="number"
                     value={srAmountValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                   />
                 </div>
@@ -967,6 +971,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   label={t("credit_card_amount")}
                   type="number"
                   value={creditAmtValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                 />
               ))}
@@ -1000,6 +1005,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       label={t('sr_amount')}
                       type="number"
                       value={srAmountValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                     />
                   </div>
@@ -1159,6 +1165,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       label={t("credit_card_amount")}
                       type="number"
                       value={creditAmtValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                     />
                   </li>
@@ -1190,6 +1197,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         label={t('sr_amount')}
                         type="number"
                         value={srAmountValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                         className="flex-1"
                       />
@@ -1481,6 +1489,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     label={t("credit_card_amount")}
                     type="number"
                     value={creditAmtValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCreditAmtChange(e.target.value)}
                   />
                 </div>
@@ -1513,6 +1522,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                         label={t('sr_amount')}
                         type="number"
                         value={srAmountValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                       />
                     </div>
@@ -1746,7 +1756,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <TaxOnDiscount
                 formState={formState}
                 dispatch={dispatch}
-                taxOnDiscBtnClick={applyTaxOnBillDiscount}
+                taxOnDiscBtnClick={taxOnDiscountApplyButton}
                 t={t}
               />
               <BillDiscountLabel
@@ -1908,6 +1918,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   label={t('sr_amount')}
                   type="number"
                   value={srAmountValue}
+                    disabled={formState.formElements.pnlMasters?.disabled}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSrAmountChange(e.target.value)}
                 />
               </div>
@@ -2175,7 +2186,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <TaxOnDiscount
           formState={formState}
           dispatch={dispatch}
-          taxOnDiscBtnClick={applyTaxOnBillDiscount}
+          taxOnDiscBtnClick={taxOnDiscountApplyButton}
           t={t}
         />
         <BillDiscountLabel

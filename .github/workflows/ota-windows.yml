@@ -22,6 +22,7 @@ jobs:
       - name: Build Windows app
         env:
           GH_TOKEN: ${{ secrets.CDN_GITHUB_TOKEN }}
+          VITE_STORAGE_FETCH_TOKEN: ${{ secrets.CDN_GITHUB_TOKEN }}
           NODE_OPTIONS: "--max-old-space-size=8192"
         shell: bash
         run: |
@@ -29,5 +30,6 @@ jobs:
           VERSION="${TAG#win-ota-}"
           echo "Setting version to $VERSION"
           npm version $VERSION --no-git-tag-version
+          sed -i "s/GH_TOKEN_PLACEHOLDER/${GH_TOKEN}/g" electron/main.cjs
           npm run build
           npx electron-builder --win --publish always

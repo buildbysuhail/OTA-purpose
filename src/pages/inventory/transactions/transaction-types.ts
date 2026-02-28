@@ -693,7 +693,7 @@ export interface TransactionFormState {
   showbillwise?: boolean;
   ledgerBillWiseLoading?: boolean;
   ledgerBillWiseSaving?: boolean;
-  tenderOpen?: boolean;
+  tenderWindow?: {isOpen?:boolean; isFromSave?: boolean};
   templateChooserModal?: boolean;
   srOpen?: boolean;
   vatChecked?: boolean;

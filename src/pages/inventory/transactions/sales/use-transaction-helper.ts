@@ -289,7 +289,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
       // Flags
       const isEdit = form?.isEdit ?? false;
-      const TenderClosed = formState?.tenderOpen !== true;
+      const TenderClosed = formState?.tenderWindow?.isOpen !== true;
 
       // ---------------- RatePlusTax -> UnitPrice conversion (exact C# behavior) ----------------
       if (RatePlusTax > 0 && (currentColumn === "ratePlusTax" || currentColumn === "netConvert")) {

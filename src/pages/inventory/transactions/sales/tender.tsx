@@ -138,17 +138,40 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   useEffect(() => {
     const additionalAmt = formState.transaction.master.adjustmentAmount; // Additional amount
     const couponAmt = formState.transaction.master.couponAmt || 0;  // Coupon anount
+    const initialCardAmount = formState.transaction.master.bankAmt;
+    const isFromSave = formState.tenderWindow?.isFromSave;
+
     let totalNet = 0;
     if(allowMultiPayment){
       totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0); // Total summary value is using Now check It
       totalNet = totalNet + additionalAmt + roundOf - couponAmt;
+      if(initialCardAmount > 0){
+        setBankCardDetails((prev: any) => {
+          return {
+            ...prev,
+            amount: initialCardAmount
+          }
+        })
+        setPaymentMode("CARD")
+      }
     }else{
-      totalNet = formState.summary.netValue || 0;
-      totalNet = totalNet + additionalAmt;
+      if(isFromSave){
+         totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
+        totalNet = totalNet + additionalAmt;
+      }else{
+        totalNet = formState.summary.netValue || 0;
+        totalNet = totalNet + additionalAmt;
+      }
     }
     const round = formState.transaction.master.roundAmount || 0; // round amount
     const taxOnDiscValue = Number(formState.transaction.master.taxOnDiscount) || 0;
 
+    if(isFromSave && !allowMultiPayment){
+       if(initialCardAmount > 0){
+        setCardEnabled(true)
+       }
+       setCardAmt(initialCardAmount)
+    }
     // Set the values into state initially
     setAddAmount(additionalAmt)
     setCouponAmt(couponAmt);
@@ -425,6 +448,12 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     }
     if(bankCardDetails?.amount > 0 ){
       dispatch(formStateTransactionBankCardAddRowsAddSingle(bankCardDetails));
+      setBankCardDetails((prev: any) => {
+          return {
+            ...prev,
+            amount: 0
+          }
+        })
     }else{
       ERPAlert.show({
         icon: "info",
@@ -680,7 +709,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   <ChevronDown size={16} color="#fff" />
                 </button>
                 <input
-                  type="text"
+                  type="number"
                   value={Number(taxOnDiscAmount??0).toFixed(2)}
                   readOnly
                   className="flex-1 min-w-0 bg-gray-100 text-red-500 text-right text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none"
@@ -715,7 +744,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <input
                   type="number"
                   min="0"
-                  value={cashRcvd}
+                  value={cashRcvd.toFixed(3)}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     setCashRcvd(val < 0 ? 0 : val);
@@ -803,7 +832,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <input
                   type="number"
                   min="0"
-                  value={cardAmt}
+                  value={Number(cardAmt || 0).toFixed(2)}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     setCardAmt(val < 0 ? 0 : val);
@@ -848,7 +877,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                         }
                       })
                     }
-                    disabled={!ledgerEnabled}
+                    disabled={!ledgerEnabled || formState.tenderWindow?.isFromSave}
                   />
                 </div>
             </div>}

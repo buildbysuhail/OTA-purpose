@@ -512,7 +512,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     if (applicationSettings.accountsSettings.showTenderDialogInSales) {
       dispatch(
         formStateHandleFieldChange({
-          fields: { tenderOpen: true }
+          fields: { tenderWindow:{ isOpen: true }}
         })
       )
     }
@@ -521,7 +521,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   const handleTenderClose = () => {
     dispatch(
       formStateHandleFieldChange({
-        fields: { tenderOpen: false }
+        fields: { tenderWindow:{ isOpen: false, isFromSave: false }}
       })
     )
   }
@@ -2225,9 +2225,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   if (formState.userConfig?.footerPosition === "right") {
     return (
       <>
-        {formState.tenderOpen && (
+        {formState.tenderWindow?.isOpen && (
           <Tender
-            isOpen={formState.tenderOpen}
+            isOpen={formState.tenderWindow?.isOpen}
             onClose={handleTenderClose}
             t={t}
           />
@@ -2278,9 +2278,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         {dropupState !== 'closed' && hasDropupContent && (
           <div className="fixed inset-0 bg-black/20 dark:bg-black/30 backdrop-blur-sm z-30" onClick={() => setDropupState('closed')} />
         )}
-        {formState.tenderOpen && (
+        {formState.tenderWindow?.isOpen && (
           <Tender
-            isOpen={formState.tenderOpen}
+            isOpen={formState.tenderWindow?.isOpen}
             onClose={handleTenderClose}
             t={t}
           />

@@ -2743,9 +2743,7 @@ focusCurrentColumn ??
 
         dispatch(
           formStateHandleFieldChange({
-            fields: {
-              tenderOpen: true,
-            }
+            fields: { tenderWindow:{ isOpen: true, isFromSave: true }}
           })
         );
       } else {

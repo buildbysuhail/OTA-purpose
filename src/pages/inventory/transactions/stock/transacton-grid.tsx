@@ -668,7 +668,7 @@ const userSession = useSelector((state:RootState) => state.UserSession)
                     };
                   }
                   const url = new URL(
-                    `${window.location.origin}/${TransactionBase.Purchase}/${transactionType}`
+                    `${window.location.origin}/${TransactionBase.StockJournal}/${transactionType}`
                   );
 
                   // Append all parameters from the `params` object

@@ -101,6 +101,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   financialYearID,
   isTeller = false,
   isPos = false,
+  isEdit = false
   // localInputBox,
 }) => {
   const [_st, setSt] = useState<UserConfig>(initialUserConfig);
@@ -254,6 +255,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
   const discountRef = useRef<HTMLInputElement>(null);
   const chequeStatusRef = useRef<HTMLInputElement>(null);
   const employeeRef = useRef<HTMLInputElement>(null);
+  const hasTriggeredEditRef = useRef(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const contentRef = useRef(null);
@@ -749,6 +752,36 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
   );
+
+  
+useEffect(() => {
+  // Only auto-trigger if:
+  // 1. isEdit prop is true
+  // 2. Transaction is loaded (has a real ID)
+  // 3. Haven't already triggered it
+  if (
+    !isEdit ||
+    hasTriggeredEditRef.current ||
+    !formState.transaction.master.invTransactionMasterID ||
+    formState.transaction.master.invTransactionMasterID <= 0
+  ) {
+    return;
+  }
+
+  // Also wait until the form is not in loading state
+  if (formState.transactionLoading) return;
+
+  hasTriggeredEditRef.current = true;
+
+  const runEdit = async () => {
+    await handleEdit();
+  };
+  runEdit();
+}, [
+  isEdit,
+  formState.transaction.master.invTransactionMasterID,
+  formState.transactionLoading,
+]);
 
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings

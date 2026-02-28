@@ -19,19 +19,30 @@ const api = new APIClient();
 const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
   
   const [searchParams] = useSearchParams();
-    const getParamOrProp = <T extends string | number >(
-      key: keyof TransactionProps,
-      isNumber: boolean = false
-    ): T | undefined => {
-      const paramValue = searchParams.get(key as string);
-      if (paramValue != undefined && paramValue !== null) {
-        return isNumber ? (Number(paramValue) as T) : (paramValue as T);
-      }
-      return undefined ;
-    };
+const getParamOrProp = <T extends string | number | boolean>(
+  key: keyof TransactionProps,
+  type: "string" | "number" | "boolean" = "string"
+): T | undefined => {
+  const paramValue = searchParams.get(key as string);
+
+  if (paramValue !== null && paramValue !== undefined) {
+    switch (type) {
+      case "number":
+        return Number(paramValue) as T;
+
+      case "boolean":
+        return (paramValue === "true") as T;
+
+      default:
+        return paramValue as T;
+    }
+  }
+
+  return undefined;
+};
   
     // State initialization
-    const [input, setInput] = useState({
+    const [input, setInput] = useState<TransactionProps>({
       voucherType: getParamOrProp<string>("voucherType") || props.voucherType,
       transactionType: getParamOrProp<string>("transactionType") || props.transactionType,
       formCode: getParamOrProp<string>("formCode") || props.formCode,
@@ -39,9 +50,10 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
       formType: getParamOrProp<string>("formType") || props.formType,
       title: getParamOrProp<string>("title") || props.title,
       drCr: getParamOrProp<string>("drCr") || props.drCr,
-      voucherNo: getParamOrProp<number>("voucherNo", true)  || props.voucherNo || 0,
-      transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
-      financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
+      voucherNo: getParamOrProp<number>("voucherNo", "number")  || props.voucherNo || 0,
+      transactionMasterID: getParamOrProp<number>("transactionMasterID", "number")  || props.transactionMasterID || 0,
+      financialYearID: getParamOrProp<number>("financialYearID", "number")  || props.financialYearID || 0,
+      isEdit: getParamOrProp<boolean>("isEdit", "boolean")  ?? props.isEdit ?? false,
     });
   
     // Sync state when query parameters or props change
@@ -55,9 +67,10 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
         formType: getParamOrProp<string>("formType") || props.formType,
         title: getParamOrProp<string>("title") || props.title,
         drCr: getParamOrProp<string>("drCr") || props.drCr,
-        voucherNo: getParamOrProp<number>("voucherNo", true)  || props.voucherNo || 0,
-        transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
-        financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
+        voucherNo: getParamOrProp<number>("voucherNo", "number")  || props.voucherNo || 0,
+        transactionMasterID: getParamOrProp<number>("transactionMasterID", "number")  || props.transactionMasterID || 0,
+        financialYearID: getParamOrProp<number>("financialYearID", "number")  || props.financialYearID || 0,
+        isEdit: getParamOrProp<boolean>("isEdit", "boolean")  ?? props.isEdit ?? false,
       });
     }, [searchParams, props]); // Runs when query params or props change
 
@@ -87,6 +100,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
     voucherNo: undefined as number | undefined,
     transactionMasterID: undefined as number | undefined,
     financialYearID: undefined as number | undefined,
+    isEdit:undefined as boolean | undefined,
   });
 
   const goBack = async () => {
@@ -118,9 +132,10 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
       formType: getParamOrProp<string>("formType") || props.formType,
       title: getParamOrProp<string>("title") || props.title,
       drCr: getParamOrProp<string>("drCr") || props.drCr,
-      voucherNo: getParamOrProp<number>("voucherNo", true)  || props.voucherNo || 0,
-      transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
-      financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
+      voucherNo: getParamOrProp<number>("voucherNo", "number")  || props.voucherNo || 0,
+      transactionMasterID: getParamOrProp<number>("transactionMasterID", "number")  || props.transactionMasterID || 0,
+      financialYearID: getParamOrProp<number>("financialYearID", "number")  || props.financialYearID || 0,
+      isEdit: getParamOrProp<boolean>("isEdit", "boolean")  ?? props.isEdit ?? false,
     }
     let isDirty =false;
     Object.keys(_input).forEach((key) => {
@@ -214,9 +229,10 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
       formType: getParamOrProp<string>("formType") || props.formType,
       title: getParamOrProp<string>("title") || props.title,
       drCr: getParamOrProp<string>("drCr") || props.drCr,
-      voucherNo: getParamOrProp<number>("voucherNo", true)  || props.voucherNo || 0,
-      transactionMasterID: getParamOrProp<number>("transactionMasterID", true)  || props.transactionMasterID || 0,
-      financialYearID: getParamOrProp<number>("financialYearID", true)  || props.financialYearID || 0,
+      voucherNo: getParamOrProp<number>("voucherNo", "number")  || props.voucherNo || 0,
+      transactionMasterID: getParamOrProp<number>("transactionMasterID", "number")  || props.transactionMasterID || 0,
+      financialYearID: getParamOrProp<number>("financialYearID", "number")  || props.financialYearID || 0,
+      isEdit: getParamOrProp<boolean>("isEdit", "boolean")  ?? props.isEdit ?? false,
     };
     const asf = {formType: _event.data.formType,
       voucherNo: _event.data.lastVNo,
@@ -263,6 +279,7 @@ const TransactionFormContainer: React.FC<TransactionProps> = (props) => {
             voucherNo={readyToShowVoucher.input.voucherNo}
             transactionMasterID={readyToShowVoucher.input.transactionMasterID}
             transactionType={readyToShowVoucher.input.transactionType}
+            isEdit={readyToShowVoucher.input.isEdit}
             isPos={props.isPos}
           />
         )

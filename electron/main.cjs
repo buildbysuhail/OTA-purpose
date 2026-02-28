@@ -1,14 +1,63 @@
 const { autoUpdater } = require("electron-updater");
-const { app, BrowserWindow, protocol, session, ipcMain } = require("electron");
+const { app, BrowserWindow, protocol, session, ipcMain, dialog } = require("electron");
 const fs = require("fs");
 const path = require("path");
-const { execSync, execFile } = require("child_process");
+const { execSync } = require("child_process");
 const os = require("os");
+const log = require("electron-log");
+
+
+// Configure electron-log to write to a file.
+// Logs will be saved to:
+// on Windows: %USERPROFILE%\AppData\Roaming\polosys-erp\logs\main.log
+// on macOS: ~/Library/Logs/polosys-erp/main.log
+// on Linux: ~/.config/polosys-erp/logs/main.log
+log.transports.file.resolvePathFn = () => path.join(app.getPath("userData"), "logs/main.log");
+Object.assign(console, log.functions);
 
 console.log("APP PATH:", process.cwd());
 
-app.whenReady().then(() => {
-  autoUpdater.checkForUpdatesAndNotify();
+// electron-updater will automatically use electron-log. No need to set the logger explicitly.
+
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for update...');
+});
+autoUpdater.on('update-available', (info) => {
+  console.log('Update available.', info);
+});
+autoUpdater.on('update-not-available', (info) => {
+  console.log('Update not available.', info);
+});
+autoUpdater.on('error', (err) => {
+  console.error('Error in auto-updater. ' + err);
+});
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  console.log(log_message);
+});
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Update downloaded', info);
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update Ready',
+    message: `A new version of your app (v${info.version}) has already been downloaded.`,
+    buttons: ['Restart Now', 'Later']
+  }).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
+// Explicitly set the update provider to avoid issues where
+// auto-detection might fall back to legacy methods like the .atom feed.
+autoUpdater.setFeedURL({
+  provider: 'github',
+  owner: 'mahirpolosys',
+  repo: 'live-update',
+  private: true,
+  // token: "GH_TOKEN_PLACEHOLDER"
+  token: "{process.env.VITE_STORAGE_FETCH_TOKEN}"
 });
 
 // Allow file access
@@ -44,7 +93,7 @@ function createWindow() {
 
   if (isDev) {
     // Adjust dev URL as needed
-    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL || "http://192.168.20.3:5173");
+    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL || "http://192.168.20.2:5173");
   } else {
     mainWindow.loadURL("app://./index.html");
   }
@@ -55,6 +104,11 @@ function createWindow() {
 let mainWindow = null;
 
 app.whenReady().then(() => {
+  // Add a .catch() to handle promise rejection and avoid the UnhandledPromiseRejectionWarning.
+  autoUpdater.checkForUpdatesAndNotify().catch(err => {
+    console.error('Failed to check for updates on startup:', err);
+  });
+
   const distPath = path.join(app.getAppPath(), "dist");
 
   const ses = session.defaultSession;
@@ -94,7 +148,7 @@ app.whenReady().then(() => {
 
       if (!originToAllow) {
         if (isDev) {
-          originToAllow = process.env.VITE_DEV_SERVER_URL || 'http://192.168.20.3:5173';
+          originToAllow = process.env.VITE_DEV_SERVER_URL || 'http://192.168.20.2:5173';
         } else {
           originToAllow = 'app://.';
         }

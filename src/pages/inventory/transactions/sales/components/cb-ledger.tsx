@@ -3,9 +3,9 @@ import ERPDataCombobox from "../../../../../components/ERPComponents/erp-data-co
 import Urls from "../../../../../redux/urls";
 import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 import VoucherType from "../../../../../enums/voucher-types";
-import { updateFormElement, formStateMasterHandleFieldChange } from "../../reducer";
+import { updateFormElement, formStateMasterHandleFieldChange, formStateHandleFieldChangeKeysOnly } from "../../reducer";
 import { VoucherElementProps } from "../../transaction-types";
-import { formStateHandleFieldChangeKeysOnly } from "../../../../accounts/transactions/reducer";
+
 
 interface LedgerProps extends VoucherElementProps {
   handleFieldKeyDown: (field: string, key: string) => void;
@@ -39,11 +39,11 @@ const PartyLedger = React.forwardRef<HTMLInputElement, LedgerProps>(
               // transactionLoading={true}
               changeReload={() =>
                 dispatch(
-                                          formStateHandleFieldChangeKeysOnly({
-                                            fields: { formElements: {ledgerID: { reload: false }} },
-                                          })
+                  formStateHandleFieldChangeKeysOnly({
+                    fields: { formElements: { ledgerID: { reload: false } } },
+                  })
                 )
-              } 
+              }
               onKeyDown={(e) => {
                 handleKeyDown && handleKeyDown(e, "ledgerID");
               }}

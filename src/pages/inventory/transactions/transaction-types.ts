@@ -44,6 +44,7 @@ export interface TransactionProps {
   financialYearID?: number;
   isTeller?: boolean | false;
   isPos?: boolean | false;
+  isEdit?:boolean
   // localInputBox?: inputBox;
 }
 

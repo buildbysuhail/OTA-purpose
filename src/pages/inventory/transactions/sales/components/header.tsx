@@ -27,7 +27,7 @@ import ERPAlert from "../../../../../components/ERPComponents/erp-sweet-alert";
 import { LoadAndSetTransVoucherFn } from "../use-transaction";
 import { useAppSelector } from "../../../../../utilities/hooks/useAppDispatch";
 import { usePurchasePrint } from "../../../../transaction-base/use-commen-barcode-print";
-
+ 
 const api = new APIClient();
 interface HeaderProps extends VoucherElementProps {
   loadTemporaryRows: () => Promise<void>;

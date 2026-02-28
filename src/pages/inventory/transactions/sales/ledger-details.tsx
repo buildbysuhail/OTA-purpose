@@ -20,14 +20,14 @@ interface LedgerDetailsProps {
 
 const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
-  const [salesRoute, setSalesRoute]               = useState(false);
-  const [mainSalesRoute, setMainSalesRoute]       = useState<any>();
+  const [salesRoute, setSalesRoute] = useState(false);
+  const [mainSalesRoute, setMainSalesRoute] = useState<any>();
   const [ledgerInitialized, setLedgerInitialized] = useState(false);
-  const [gridReload, setGridReload]               = useState<boolean>(true);
+  const [gridReload, setGridReload] = useState<boolean>(true);
 
   const newPartyAddedRef = useRef<boolean>(false);
   const selectedLedgerIDRef = useRef<any>(null);
-
+  const ledgerInitializedRef = useRef<any>(null);
   const gridRef = useRef<any>(null);
   const rootState = useRootState();
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
@@ -36,12 +36,16 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   // ─── When PartiesManage saves successfully ────────────────────────────────
   useEffect(() => {
     if (rootState.PopupData.parties.reload === true) {
+      
+      newPartyAddedRef.current = false;  
+      ledgerInitializedRef.current = false; 
       const gridInstance = gridRef.current?.instance?.();
-
       if (gridInstance) {
-        gridInstance.clearSorting();
-        gridInstance.columnOption("ledgerID", "sortOrder", "desc");
-        gridInstance.columnOption("ledgerID", "sortIndex", 0);
+      gridInstance.beginUpdate();
+      gridInstance.clearSorting();
+      gridInstance.columnOption("ledgerID", "sortOrder", "desc");
+      gridInstance.columnOption("ledgerID", "sortIndex", 0);
+      gridInstance.endUpdate();
       }
 
       newPartyAddedRef.current = true; // tells onContentReady to select row 0
@@ -167,20 +171,25 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
     if (visibleRows.length === 0) return;
 
     const firstKey = visibleRows[0].key;
-
-    // Keep ref in sync so handleKeyDown always has the latest ledgerID
     selectedLedgerIDRef.current = firstKey;
 
-    // Both focusedRowIndex AND focusedRowKey must be set.
-    // focusedRowKey alone is not enough for DevExtreme to visually highlight.
+    // Use beginUpdate/endUpdate to batch all option changes
+    // so they don't each trigger onContentReady separately
+    gridInstance.beginUpdate();
     gridInstance.option("focusedRowIndex", 0);
     gridInstance.option("focusedRowKey", firstKey);
-
-    // selectRows highlights the checkbox/row background
     gridInstance.selectRows([firstKey], false);
+    gridInstance.endUpdate();
 
-    // Give focus to the grid element so keyboard events (Enter) fire
-    setTimeout(() => gridInstance.focus(), 50);
+    // Focus the actual cell — longer delay to survive the endUpdate repaint
+    setTimeout(() => {
+      try {
+        const cellElement = gridInstance.getCellElement(0, 0);
+        if (cellElement) {
+          cellElement.focus();
+        }
+      } catch (_) { }
+    }, 150);
   }, []);
 
   // ─── onContentReady: runs after every data load ───────────────────────────
@@ -193,18 +202,20 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
       // Case 1: new party just added → consume the flag and select row 0
       if (newPartyAddedRef.current) {
         newPartyAddedRef.current = false;
+        ledgerInitializedRef.current = true;
         setLedgerInitialized(true);
         selectFirstRow(gridInstance);
         return;
       }
 
-      // Case 2: initial open → select row 0 once
-      if (!ledgerInitialized) {
+      // Case 2: initial open → use REF (not state) to avoid stale closure
+      if (!ledgerInitializedRef.current) {
+        ledgerInitializedRef.current = true;
         setLedgerInitialized(true);
         selectFirstRow(gridInstance);
       }
     },
-    [ledgerInitialized, selectFirstRow]
+    [selectFirstRow] // selectFirstRow is stable (no deps), so this is stable too
   );
 
   // ─── Row click: keep selectedLedgerIDRef in sync ─────────────────────────

@@ -712,7 +712,8 @@ const TransactionForm: React.FC<TransactionProps> = ({
     _purchaseGridCol,
     gridCode,
     initializeFormElements,
-    calculateTaxOnDiscount
+    calculateTaxOnDiscount,
+    taxOnDiscountApplyButton
 
   } = useTransaction(
     transactionType ?? "",
@@ -1912,6 +1913,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                        onFooterHeightChange={handleFooterHeightChange}
                        handleLoadSr={handleLoadSr}
                        importFromExcel={importFromExcel}
+                       taxOnDiscountApplyButton={taxOnDiscountApplyButton}
                       />
                     )}
                 </div>
@@ -2129,6 +2131,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
                   onFooterHeightChange={handleFooterHeightChange}
                   handleLoadSr={handleLoadSr}
                   importFromExcel={importFromExcel}
+                  taxOnDiscountApplyButton={taxOnDiscountApplyButton}
                 />
 
                 {/* Total Summary */}
@@ -2183,6 +2186,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
             onFooterHeightChange={handleFooterHeightChange}
             handleLoadSr={handleLoadSr}
             importFromExcel={importFromExcel}
+            taxOnDiscountApplyButton={taxOnDiscountApplyButton}
           />
         )}
         {/* footer ends here */}

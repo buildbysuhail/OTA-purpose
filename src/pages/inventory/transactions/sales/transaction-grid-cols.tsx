@@ -249,7 +249,7 @@ export const purchaseGridCol = (
         readOnly: true,
         width: 100,
         alignment: "right",
-        decimalPoint: applicationSettings?.mainSettings?.decimalPoints,
+        decimalPoint: 4
       },
       {
         dataField: "cstPerc",

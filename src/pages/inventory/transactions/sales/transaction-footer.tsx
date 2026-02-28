@@ -73,6 +73,7 @@ interface TransactionFooterProps {
   onFooterHeightChange?: (height: number) => void;
   handleLoadSr: any;
   importFromExcel:(event: React.ChangeEvent<HTMLInputElement>) => void;
+  taxOnDiscountApplyButton: any;
 }
 
 interface Confetti {
@@ -206,7 +207,8 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
   costCenterRef,
   onFooterHeightChange,
   handleLoadSr,
-  importFromExcel
+  importFromExcel,
+  taxOnDiscountApplyButton,
 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isOpentwo, setIsOpentwo] = useState(false);
@@ -1746,7 +1748,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               <TaxOnDiscount
                 formState={formState}
                 dispatch={dispatch}
-                taxOnDiscBtnClick={applyTaxOnBillDiscount}
+                taxOnDiscBtnClick={taxOnDiscountApplyButton}
                 t={t}
               />
               <BillDiscountLabel
@@ -2175,7 +2177,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
         <TaxOnDiscount
           formState={formState}
           dispatch={dispatch}
-          taxOnDiscBtnClick={applyTaxOnBillDiscount}
+          taxOnDiscBtnClick={taxOnDiscountApplyButton}
           t={t}
         />
         <BillDiscountLabel

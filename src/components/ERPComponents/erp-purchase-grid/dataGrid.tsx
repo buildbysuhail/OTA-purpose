@@ -3248,6 +3248,7 @@ const hidColumns: string[] = [
               >
                 {columns?.map((column, colIndex) => {
                   const isFirstColumn = colIndex === 0;
+                  const columnName = column.dataField;
                   const isLastColumn = colIndex === columns.length - 1;
                   const isFixed = isFirstColumn || isLastColumn;
                   const showBorder =
@@ -3269,7 +3270,7 @@ const hidColumns: string[] = [
                           const rounded = getFormattedValue(
                             num,
                             false,
-                            applicationSettings.mainSettings.decimalPoints ?? 2
+                            columnName === "vatAmount" ? 2 : applicationSettings.mainSettings.decimalPoints ?? 2  // Vat amount 2 decimal places
                           );
 
                           return rounded;

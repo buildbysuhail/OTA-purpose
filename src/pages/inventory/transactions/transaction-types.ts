@@ -387,6 +387,7 @@ export interface TransactionDetail {
   pOTransDetailID: number;
   pO_PITransDetailIDs: number;
   pO_PITransDetailQtys: number;
+  orderTransDetailID: number;
   netConvert?: string;
   customer_LSP?: number;
   nLA_StdSalesPrice?: number;

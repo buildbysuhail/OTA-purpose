@@ -5786,8 +5786,8 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
 
         case "Enter":
           if (columnName !== "serial" && columnName !== "imf" && columnName !== "actionCol") {  // Add another btn columns
-            event.preventDefault();
-            event.stopPropagation();
+            event.preventDefault?.();
+            event.stopPropagation?.();
           }
           let data = _isMobRow ? { ...(formState.row ?? initialTransactionDetailData) } : { ...formState.transaction.details[rowIndex] };
           if (columnName == "actionCol") {
@@ -6182,6 +6182,8 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               })
             );
           } else if (columnName == "memoEditor") {
+            console.log('Opening memo editor for row:', rowIndex);
+            
             const data: TransactionDetail =
               _isMobRow
                 ? (formState.row ?? initialTransactionDetailData)

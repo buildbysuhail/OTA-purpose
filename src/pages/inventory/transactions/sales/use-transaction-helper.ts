@@ -86,20 +86,20 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       ? hasRight(state.formCode, UserAction.Add) &&
       (state?.transaction?.details?.length ?? 0) > 0
       : false;
-
-    state.formElements.btnEdit.disabled = !isClosed
-      ? hasRight(state.formCode, UserAction.Edit)
+  debugger;
+    state.formElements.btnEdit.disabled = !isClosed && state.formElements.btnEdit.disabled==false
+      ? !hasRight(state.formCode, UserAction.Edit)
       : false;
 
-    state.formElements.btnProductSummary.visible = !isClosed
+    state.formElements.btnProductSummary.visible = !isClosed && state.formElements.btnProductSummary.disabled==false
       ? hasRight("PSUMRPT", UserAction.Show)
       : false;
 
-    state.formElements.btnDelete.disabled = !isClosed
+    state.formElements.btnDelete.disabled = !isClosed  && state.formElements.btnDelete.disabled==false
       ? hasRight(state.formCode, UserAction.Delete)
       : false;
 
-    state.formElements.btnPrint.disabled = !isClosed
+    state.formElements.btnPrint.disabled = !isClosed  && state.formElements.btnPrint.disabled==false
       ? hasRight(state.formCode, UserAction.Print)
       : false;
     return state;

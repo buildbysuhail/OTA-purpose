@@ -723,7 +723,7 @@ focusCurrentColumn ??
     if (loadVType === "SO" || loadVType === "SQ" || loadVType === "GD" || loadVType === "GDQ") {
       if (vch.master?.invTransactionMasterID > 0) {
         // uncomment after check - show in 1050 - checkIt
-        nextVoucher = await getNextVoucherNumber(
+        nextVoucher = await getNextVoucherNumber(     
           formType || (formState.transaction.master.voucherForm ?? ""),
           out_voucherType || (formState.transaction.master.voucherType ?? ""),
           voucherPrefix || (formState.transaction.master.voucherPrefix ?? ""),
@@ -4300,7 +4300,9 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
       });
       return;
     }
-    if (formState.transaction.master.isLocked) {
+    if (formState.transaction.master.isLocked &&
+      !applicationSettings.branchSettings.createCreditNoteAutomaticallyOnSalesEdit
+     ) {
       ERPAlert.show({
         title: t("warning"),
         text: t("voucher_is_locked"),
@@ -7341,7 +7343,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
           slNo: generateUniqueKey()
         })) : []
       };
-      _formState = {
+      _formState = {   
         ...TransactionFormStateInitialData,
         initialFormType: formType ?? "",
         initialVrType: voucherType ?? "",
@@ -7430,7 +7432,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
         disabled:
           !(applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
             (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
-              applicationSettings.mainSettings.roundingMethod === "No Rounding")),
+              applicationSettings.mainSettings.roundingMethod === "No Rounding")),     
       },
 
       // 🧾 Cost Centre
@@ -7660,7 +7662,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
 
       _formState.userConfig!.duplicationMessage = _formState.userConfig!.duplicationMessage ?? applicationSettings.inventorySettings.showProductDuplicationMessage
       _formState.userConfig!.focusToQtyAfterBarcode = _formState.userConfig!.focusToQtyAfterBarcode ?? applicationSettings.productsSettings.focusToQtyAfterBarcode
-      _formState.userConfig!.roundOff = (
+      _formState.userConfig!.roundOff = !(
         applicationSettings.mainSettings.pOSRoundingMethod === "No Rounding" ||
         (applicationSettings.mainSettings.pOSRoundingMethod === "Not Set" &&
           applicationSettings.mainSettings.roundingMethod === "No Rounding")
@@ -7977,7 +7979,8 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
     //  
     // _formState = await loadLedgerData(_formState) as any;
     // _formState.isInitialLedger = true;
-    setTransVoucher(_formState, true);
+    const __formState = setUserRightsFn(JSON.parse(JSON.stringify(_formState)), userSession, hasRight);
+    setTransVoucher(__formState, true);
     // if (voucherNo != undefined && voucherNo > 0) {
     //   dispatch(
     //     setUserRight({ userSession: userSession, hasRight: hasRight })

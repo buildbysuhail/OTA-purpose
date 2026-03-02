@@ -518,7 +518,7 @@ export const useTransaction = (
     voucherPrefix?: string,
     voucherType?: string,
     voucherForm?: string,
-    manualInvoiceNumber?: any,
+    manualInvoiceNumber?: string,
     isPDTTrans: boolean = false,
     pDTInvTransMasterID?: number,
     loadVType: string = "",
@@ -604,7 +604,7 @@ export const useTransaction = (
         ...(vch?.master || {}),
         voucherType: out_voucherType || (formState.transaction.master.voucherType ?? ""),
         voucherForm: out_voucherForm || (formState.transaction.master.voucherForm ?? ""),
-       } as TransactionMaster,
+         } as TransactionMaster,
       details: refactorDetails(
         vch.details,
         voucherForm ?? vch.master.voucherForm,

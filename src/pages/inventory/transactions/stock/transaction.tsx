@@ -661,6 +661,9 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
           printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
         };
+        if(voucherType!=="EX" && voucherType!="EX-SP"){
+          // formState.formElements.
+        }
       } else {
         _formState = (await loadTransVoucher(
           false,

@@ -29,6 +29,7 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   const selectedLedgerIDRef = useRef<any>(null);
   const ledgerInitializedRef = useRef<any>(null);
   const gridRef = useRef<any>(null);
+  const wasPartiesModalOpenRef = useRef(false);
   const rootState = useRootState();
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   const dispatch = useDispatch();
@@ -168,10 +169,12 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
   // ─── Selects, focuses AND stores the key of row 0 ────────────────────────
   const selectFirstRow = useCallback((gridInstance: any) => {
     const visibleRows = gridInstance.getVisibleRows();
+    console.log("[selectFirstRow] visibleRows count:", visibleRows.length);
     if (visibleRows.length === 0) return;
 
     const firstKey = visibleRows[0].key;
     selectedLedgerIDRef.current = firstKey;
+    console.log("[selectFirstRow] firstKey:", firstKey, "| ref set to:", selectedLedgerIDRef.current);
 
     // Use beginUpdate/endUpdate to batch all option changes
     // so they don't each trigger onContentReady separately
@@ -181,22 +184,42 @@ const LedgerDetails: React.FC<LedgerDetailsProps> = ({ closeModal, t }) => {
     gridInstance.selectRows([firstKey], false);
     gridInstance.endUpdate();
 
-    // Focus the actual cell — longer delay to survive the endUpdate repaint
+    // Focus the grid row — use getRowElement so it looks like row selection, not cell selection
     setTimeout(() => {
       try {
-        const cellElement = gridInstance.getCellElement(0, 0);
-        if (cellElement) {
-          cellElement.focus();
+        const rowElement = gridInstance.getRowElement(0);
+        console.log("[selectFirstRow] rowElement found:", !!rowElement);
+        if (rowElement && rowElement[0]) {
+          gridInstance.focus(rowElement[0]);
+          console.log("[selectFirstRow] after gridInstance.focus(row) -> activeElement:", document.activeElement?.tagName, document.activeElement?.className);
         }
       } catch (_) { }
     }, 150);
   }, []);
+
+  // ─── Refocus grid when parties modal closes ────────────────────────────────
+  useEffect(() => {
+    const isOpen = rootState.PopupData.parties.isOpen || false;
+    console.log("[modalClose effect] isOpen:", isOpen, "| wasOpen:", wasPartiesModalOpenRef.current);
+    if (wasPartiesModalOpenRef.current && !isOpen) {
+      console.log("[modalClose effect] modal just closed → calling selectFirstRow in 200ms");
+      setTimeout(() => {
+        const gridInstance = gridRef.current?.instance?.();
+        console.log("[modalClose effect] gridInstance found:", !!gridInstance);
+        if (gridInstance) {
+          selectFirstRow(gridInstance);
+        }
+      }, 200);
+    }
+    wasPartiesModalOpenRef.current = isOpen;
+  }, [rootState.PopupData.parties.isOpen, selectFirstRow]);
 
   // ─── onContentReady: runs after every data load ───────────────────────────
   const handleLedgerContentReady = useCallback(
     (e: any) => {
       const gridInstance = e.component;
       const visibleRows = gridInstance.getVisibleRows();
+      console.log("[onContentReady] visibleRows:", visibleRows.length, "| initialized:", ledgerInitializedRef.current, "| newPartyAdded:", newPartyAddedRef.current);
       if (visibleRows.length === 0) return;
 
       // Case 1: new party just added → consume the flag and select row 0

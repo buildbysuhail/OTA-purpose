@@ -1204,3 +1204,11 @@ export type LoadSrParams = {
   voucherPrefix: string;
   voucherForm: string;
 };
+
+export interface TenderResult {
+  bankCardDetails: any;
+  cashReceived: number;
+  bankAmt: number;
+  billDiscount: number;
+  upiDetails: any;
+}

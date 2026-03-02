@@ -781,7 +781,13 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           },
         })
       )
-      resolveTenderPromise(true);
+      resolveTenderPromise({
+        bankCardDetails:formState.transaction.bankCardDetails,
+        upiDetails: formState.transaction.uPIDetails,
+        cashReceived: updatedCash,
+        bankAmt: totalBankCardAmount + totalQrPayAmount + cardAmount,
+        billDiscount: discAmount
+      });
       onClose();
     }
   };
@@ -837,13 +843,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   className="w-1/2 min-w-0 bg-gray-100 text-black text-right text-lg font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
                 />
                 <input
-                  ref={(el) => {
-                    discAmountRef.current = el;
-                    if (el && !el.disabled) {
-                      el.focus();
-                      el.select();
-                    }
-                  }}
+                ref={discAmountRef}
+                // ref={(el) => {
+                //     discAmountRef.current = el;
+                //     if (el && !el.disabled) {
+                //       el.focus();
+                //       el.select();
+                //     }
+                //   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();

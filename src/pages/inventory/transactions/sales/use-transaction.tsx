@@ -26,7 +26,7 @@ import { getStorageString, setStorageString, } from "../../../../utilities/stora
 import { getApLocalData, getApLocalDataByUrl } from "../../../../redux/cached-urls";
 import { formStateHandleFieldChangeKeysOnly, formStateHandleFieldChange, formStateTransactionMasterHandleFieldChange, formStateTransactionUpdate, clearState, formStateMasterHandleFieldChange, formStateClearDetails, formStateClearAttachments, formStateTransactionDetailsRowRemove, formStateSetDetails, updateFormElement, } from "../reducer";
 import { transactionInitialData, initialInventoryTotals, TransactionMasterInitialData, initialTransactionDetailData, initialTransactionDetails2, initialUserConfig, initialFormElements, TransactionFormStateInitialData, TransactionMaster3InitialData, } from "../transaction-type-data";
-import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, ColumnModel, } from "../transaction-types";
+import { TransactionDetail, UserConfig, TransactionFormState, SummaryItems, TransactionMaster, TransactionData, LoadProductDetailsByAutoBarcodeProps, CommonParams, DataAutoBarcode, ExcelRowData, LoadSrParams, ColumnModel, TenderResult, } from "../transaction-types";
 import PostedTransactionLabel from "./components/PostedTransactionLabel";
 import { SalesAuthorization } from "./components/AuthorizationSales";
 import { getInitialPreference } from "../../../../utilities/dx-grid-preference-updater";
@@ -45,11 +45,11 @@ import { usePurchasePrint } from "../../../transaction-base/use-commen-barcode-p
 //   alignment: "left" | "center" | "right";
 // }
 
-let tenderResolver: ((value: boolean) => void) | null = null;
+let tenderResolver: ((value?: TenderResult) => void) | null = null;
 // Function to resolve the tender promise from outside
-export const resolveTenderPromise = (success: boolean) => {
+export const resolveTenderPromise = (value?: TenderResult) => {
   if (tenderResolver) {
-    tenderResolver(success);
+    tenderResolver(value);
     tenderResolver = null;
   }
 };
@@ -2730,7 +2730,7 @@ focusCurrentColumn ??
     await save("LPQ");
   };
 
-  const Tender = (): Promise<boolean> => {
+  const Tender = (): Promise<any> => {
     return new Promise((resolve) => {
       if (formState.transaction.master.voucherType === "SID") {
         resolve(true);
@@ -2801,11 +2801,12 @@ focusCurrentColumn ??
   const save = async (saveMode: "" | "LPO" | "LPQ" = "") => {
     const validationResult = await validate();
     if (validationResult.isValid == true) {
+      let tenderRes;
 const isUnderCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/IsCashOrBank/${formState.transaction.master.ledgerID}`)
 if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDeliveryNote,VoucherType.PurchaseOrderTransist].includes(formState.transaction.master.voucherType as any) 
   && isUnderCashOrBank){
-      const tenderOk = await Tender()
-      if (!tenderOk) {
+      tenderRes = await Tender()
+      if (!tenderRes) {
         return;
       }
 }
@@ -2931,6 +2932,14 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                     // 🔹 GatePass Items
                     // gatePassItems: formState.transaction.gatePassItems ?? []
                   };
+      
+      if(tenderRes){
+        params.master.cashReceived = tenderRes?.cashReceived;
+        params.master.bankAmt = tenderRes.bankAmt;
+        params.master.billDiscount = tenderRes?.billDiscount;
+        params.bankCardDetails = tenderRes.bankCardDetails ?? [];
+        params.upiDetails = tenderRes.upiDetails ?? [];
+      }
       // let params = {
       //   master: {
       //     ...sanitizedMaster,

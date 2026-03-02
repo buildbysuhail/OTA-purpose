@@ -942,9 +942,9 @@ useEffect(() => {
 
   const onProcessSelected = useCallback(async (masterIds: string, branchIDs: string, voucherNumbers: string, referenceNumber: string, loadType: string = "GRN", voucherType: string) => {
     if (masterIds.length > 0) {
-
+const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualPrice")?.visible ?? false;
       dispatch(formStateHandleFieldChange({ fields: { loading: { isLoading: true, text: `${loadType == "GRN" ? 'Please wait while loading GRN Items' : 'Please wait while loading Order Items'}` } } }));
-      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds}`)
+      const PendingTransDetails: any = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/PendingTransactionsByMasterIds`, `masterIDs=${masterIds} & branchIDs = ${branchIDs} & isActualPriceVisible = ${isActualPriceVisible}`)
       if (PendingTransDetails && PendingTransDetails.details && PendingTransDetails.details.length > 0) {
         const calculatedDetails: TransactionDetail[] = [];
         const refactoredDetails = await refactorDetails(PendingTransDetails.details?.map((x: any) => {

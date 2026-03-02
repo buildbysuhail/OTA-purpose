@@ -239,6 +239,10 @@ export interface TransactionMaster {
   itemLoadVoucherNumber?: number;
   soTotalAdvance?: string;
   opDate?: string;
+  activeStatus?: boolean;
+  adjustMentType?: string;
+  amount?: number;
+  employeeIncentive?: number;
 }
 
 export interface TransactionMaster3 {

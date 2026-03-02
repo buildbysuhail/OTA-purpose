@@ -197,6 +197,10 @@ export const TransactionMasterInitialData: TransactionMaster = {
   refDate: new Date().toISOString(),
   note1: "",
   note2: "",
+  activeStatus:true,
+  amount:0,
+  adjustMentType:"",
+  employeeIncentive:0,
 }
 export const initialTransactionDetailData: TransactionDetail = {
   slNo: "",
@@ -313,6 +317,7 @@ export const initialTransactionDetailData: TransactionDetail = {
   purchaseCost: 0,
   taxCategoryID: 0,
   productCategoryID: 0,
+  orderTransDetailID:0,
 };
 
   export const initialCouponDetails: CouponDetails = {

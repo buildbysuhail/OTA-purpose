@@ -7377,7 +7377,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
             costCentreID:
               userConfig?.presetCostenterId ?? 0 > 0
                 ? userConfig?.presetCostenterId ?? 0
-                : TransactionFormStateInitialData.transaction.master.costCentreID,
+                : applicationSettings.accountsSettings.defaultCostCenterID,
             employeeID: formState.userConfig?.holdSalesMan ? formState.transaction.master.employeeID : userSession.employeeId > 0
               ? userSession.employeeId
               : voucher.master.employeeID,

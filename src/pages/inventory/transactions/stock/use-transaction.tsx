@@ -798,7 +798,15 @@ const verified = Boolean(vch.master.pdtVerified);
       return false;
     }
     }
-
+    // if(master.invTransactionMasterID>0)
+    // {
+    //     int Active = new PolosysERPInventoryClass.Transaction.InventoryTransactionMaster().GetIsInvTransactionIsActiveOrInvoiced(PDTInvTransMasterID);
+    //     if (Active == 0)
+    //     {
+    //         PolosysFrameWork.General.ShowMessageBox("Already converted.");
+    //         return false;
+    //     }
+    // }
     // Transaction date check
     const transDateValidation = validateTransactionDate(
       new Date(new Date(formState.transaction.master.transactionDate)),
@@ -814,15 +822,7 @@ const verified = Boolean(vch.master.pdtVerified);
       });
     }
 
-    //     if(PDTInvTransMasterID>0)
-    // {
-    //     int Active = new PolosysERPInventoryClass.Transaction.InventoryTransactionMaster().GetIsInvTransactionIsActiveOrInvoiced(PDTInvTransMasterID);
-    //     if (Active == 0)
-    //     {
-    //         PolosysFrameWork.General.ShowMessageBox("Already converted.");
-    //         return false;
-    //     }
-    //     }
+    
     //     if (PolosysFrameWork.General.ValiddateTransactionDate(dtpTransDate.Value) == 0)
     //     {
     //         PolosysFrameWork.General.ShowMessageBox("Transaction Date validation failed(Check Financial Year period)", "Invalid Transaction Date");

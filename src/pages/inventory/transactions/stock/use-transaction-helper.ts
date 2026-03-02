@@ -74,7 +74,7 @@ export const useTransactionHelper = (transactionType: string) => {
     const isClosed = userSession.financialYearStatus === "Closed";
     state.formElements.btnSave.disabled = !isClosed
       ? hasRight(state.formCode, UserAction.Add) &&
-        (state?.transaction?.details?.length ?? 0) > 0
+      (state?.transaction?.details?.length ?? 0) > 0
       : false;
 
     state.formElements.btnEdit.disabled = !isClosed
@@ -92,7 +92,7 @@ export const useTransactionHelper = (transactionType: string) => {
     state.formElements.btnPrint.disabled = !isClosed
       ? hasRight(state.formCode, UserAction.Print)
       : false;
-    if(state.transaction.master.voucherType === "BTI"){
+    if (state.transaction.master.voucherType === "BTI") {
       state.formElements.btnSave.disabled = true;
       state.formElements.btnEdit.disabled = true;
       state.formElements.btnDelete.disabled = true;
@@ -106,10 +106,10 @@ export const useTransactionHelper = (transactionType: string) => {
     state.formElements.dxGrid.disabled = true;
     state.formElements.txtData.visible = false;
     state.formElements.pnlProductBatches.visible = false;
-    if (["ST", "DMG", "EX", "SH", "SC"].includes(state.transaction.master.voucherType)){
+    if (["ST", "DMG", "EX", "SH", "SC"].includes(state.transaction.master.voucherType)) {
       state.formElements.voucherNumberUpDownBtns.disabled = false
     }
-    if (["BTO", "BTI"].includes(state.transaction.master.voucherType)){
+    if (["BTO", "BTI"].includes(state.transaction.master.voucherType)) {
       state.formElements.lblproductName.visible = false;
       state.formElements.pnlAmountSummary.disabled = false;
     }
@@ -152,7 +152,7 @@ export const useTransactionHelper = (transactionType: string) => {
       if (
         applicationSettings.mainSettings?.allowPostdatedTrans &&
         moment(transDate).local().format("YYYY-MM-DD") !==
-          moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
+        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
       ) {
         if (
           hasBlockedRight == undefined ||
@@ -162,7 +162,7 @@ export const useTransactionHelper = (transactionType: string) => {
           maxPostDate.setHours(0, 0, 0, 0); // Removes time part
           maxPostDate.setDate(
             maxPostDate.getDate() +
-              (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
+            (applicationSettings.mainSettings?.postDatedTransInNumbers || 0)
           );
 
           const transDateOnly = new Date(transDate);
@@ -186,7 +186,7 @@ export const useTransactionHelper = (transactionType: string) => {
       if (
         applicationSettings.mainSettings?.allowPredatedTrans &&
         moment(transDate).local().format("YYYY-MM-DD") !==
-          moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
+        moment(softwareDate, "DD/MM/YYYY").local().format("YYYY-MM-DD")
       ) {
         if (
           hasBlockedRight == undefined ||
@@ -196,7 +196,7 @@ export const useTransactionHelper = (transactionType: string) => {
           minPreDate.setHours(0, 0, 0, 0); // Removes time part
           minPreDate.setDate(
             minPreDate.getDate() -
-              (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
+            (applicationSettings.mainSettings?.preDatedTransInNumbers || 0)
           );
 
           const transDateOnly = new Date(transDate);
@@ -252,10 +252,10 @@ export const useTransactionHelper = (transactionType: string) => {
     //   result.transaction.master.master3 = {};
     // }
     let _grandTotal = netAmt;
-    result.transaction!.master!.grandTotal =round(_grandTotal,applicationSettings.mainSettings.decimalPoints) ;
+    result.transaction!.master!.grandTotal = round(_grandTotal, applicationSettings.mainSettings.decimalPoints);
     // Check this is correct added in below
-    if(formState.transaction.master.voucherType === VoucherType.BranchTransferOut || formState.transaction.master.voucherType === VoucherType.BranchTransferIn){
-       result.transaction!.master!.vatAmount = summary.vatAmount
+    if (formState.transaction.master.voucherType === VoucherType.BranchTransferOut || formState.transaction.master.voucherType === VoucherType.BranchTransferIn) {
+      result.transaction!.master!.vatAmount = summary.vatAmount
     }
     commonParams.formStateHandleFieldChangeKeysOnly &&
       dispatch &&
@@ -294,7 +294,7 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // The BTO Load condition is added Separate now, Change this based on the situation
       // Make this common if possible
-      if(formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI"){
+      if (formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI") {
         let rate = 0;
         let disc = Number(transactionDetail.discount ?? 0);
         let discPerc = Number(transactionDetail.discPerc ?? 0);
@@ -317,11 +317,11 @@ export const useTransactionHelper = (transactionType: string) => {
         // If discount % entered (but not editing Discount field)
         if (discPerc > 0 && currentColumn !== "discount") {
           const calculatedDisc = Number(((discPerc * gross) / 100).toFixed(5));
-            if (calculatedDisc !== disc) {
-              disc = calculatedDisc;
+          if (calculatedDisc !== disc) {
+            disc = calculatedDisc;
           }
         }
-          // If Discount amount edited → recalc Disc %
+        // If Discount amount edited → recalc Disc %
         if (rate > 0 && currentColumn === "discount" && gross !== 0) {
           discPerc = Number(((100 * disc) / gross).toFixed(5));
         }
@@ -330,7 +330,7 @@ export const useTransactionHelper = (transactionType: string) => {
         // VAT (4 decimal rounding)
         const vat = Number(((netValue * vatPerc) / 100).toFixed(4));
         // NetAmount (round final value)
-        const netAmount = Number((netValue + vat).toFixed(2)); 
+        const netAmount = Number((netValue + vat).toFixed(2));
         // change 2 if you use different numeric precision
         // Cost per unit
         const cost = qty !== 0 ? Number((netAmount / qty).toFixed(2)) : 0;
@@ -342,22 +342,22 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.gross = gross;
         detail.total = netAmount;
         detail.cost = cost;
-      }else{
-      const qty = Number(transactionDetail.qty || 0);
-      const rate = Number(transactionDetail.cost || 0);
+      } else {
+        const qty = Number(transactionDetail.qty || 0);
+        const rate = Number(transactionDetail.cost || 0);
 
-      const gross = qty * rate;
-      const netValue = gross;
-      const netAmount = netValue;
+        const gross = qty * rate;
+        const netValue = gross;
+        const netAmount = netValue;
 
-      detail.netValue = getFormattedValueIgnoreRoundingToNumber(netValue);
-      detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);
-      detail.total =getFormattedValueIgnoreRoundingToNumber(netAmount);
+        detail.netValue = getFormattedValueIgnoreRoundingToNumber(netValue);
+        detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);
+        detail.total = getFormattedValueIgnoreRoundingToNumber(netAmount);
 
-      const salesRate = Number(transactionDetail.salesPrice || 0);
-      const salesTotal = qty * salesRate;
+        const salesRate = Number(transactionDetail.salesPrice || 0);
+        const salesTotal = qty * salesRate;
 
-      detail.salesTotal =getFormattedValueIgnoreRoundingToNumber(salesTotal);
+        detail.salesTotal = getFormattedValueIgnoreRoundingToNumber(salesTotal);
       }
       result.transaction.details = [detail];
 
@@ -566,9 +566,9 @@ export const useTransactionHelper = (transactionType: string) => {
       }
 
       // Enable amount summary panel
-      if (["BTO", "BTI"].includes(formState.transaction?.master?.voucherType)){
+      if (["BTO", "BTI"].includes(formState.transaction?.master?.voucherType)) {
         if (!result.formElements.pnlAmountSummary) {
-        result.formElements.pnlAmountSummary = { disabled: false };
+          result.formElements.pnlAmountSummary = { disabled: false };
         } else {
           result.formElements.pnlAmountSummary.disabled = false;
         }
@@ -895,9 +895,9 @@ export const useTransactionHelper = (transactionType: string) => {
 
       // The BTO Load condition is added Separate now, Change this based on the situation
       // Make this common if possible
-      if (voucherType === "BTO"  || voucherType === "BTI") {
-       detail.free = round(Number(row.free || 0), 4);
-       detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
+      if (voucherType === "BTO" || voucherType === "BTI") {
+        detail.free = round(Number(row.free || 0), 4);
+        detail.unitPrice = getFormattedValueIgnoreRoundingToNumber(
           Number(row.unitPrice || 0) + Number(row.additionalExpense || 0)
         );
         detail.discPerc = getFormattedValueIgnoreRoundingToNumber(
@@ -914,20 +914,20 @@ export const useTransactionHelper = (transactionType: string) => {
           Number(row.netAmount || 0)
         );
         // Check And Test the below Section
-        if(loadType === "PI"){
-          if(formState.userConfig?.useMSPasUnitPrice && row.minSalePrice > 0 ){
+        if (loadType === "PI") {
+          if (formState.userConfig?.useMSPasUnitPrice && row.minSalePrice > 0) {
             detail.unitPrice = row.minSalePrice
             detail.gross = row.quantity * row.minSalePrice;
           }
 
         }
-        if(formState.transaction.master.invTransactionMasterID > 0){
+        if (formState.transaction.master.invTransactionMasterID > 0) {
           detail.vatPerc = row.vatPercentage;
           detail.vatAmount = row.totalVatAmount;
-        }else if(applicationSettings?.branchSettings?.applyVATOnPurchaseToBTO && formState.transaction.master.invTransactionMasterID === 0 ){
+        } else if (applicationSettings?.branchSettings?.applyVATOnPurchaseToBTO && formState.transaction.master.invTransactionMasterID === 0) {
           detail.vatPerc = row.vatPercentage;
           detail.vatAmount = row.totalVatAmount;
-        }else{
+        } else {
           detail.vatPerc = 0;
           detail.vatAmount = 0;
         }
@@ -936,19 +936,19 @@ export const useTransactionHelper = (transactionType: string) => {
         detail.ratePlusTax = row.rateWithTax;
         // Optional: If you need StdPurchasePrice comparison logic like C#
         // detail.stdPurchasePrice = row.stdPurchasePrice;
-        
+
         // Check And Test the below Section
-        if(loadType === "PI"){
-          if(formState.userConfig?.useMSPasUnitPrice){
-            detail.discPerc  = 0;
-            detail.discount  = 0;
-            detail.vatPerc   = 0;
+        if (loadType === "PI") {
+          if (formState.userConfig?.useMSPasUnitPrice) {
+            detail.discPerc = 0;
+            detail.discount = 0;
+            detail.vatPerc = 0;
             detail.vatAmount = 0;
-            detail.unitPrice   = Number(row.unitPrice) || 0;
+            detail.unitPrice = Number(row.unitPrice) || 0;
             detail.ratePlusTax = detail.unitPrice;
-            detail.gross    = Number(row.grossValue) || 0;
+            detail.gross = Number(row.grossValue) || 0;
             detail.netValue = detail.gross;
-            detail.total    = detail.gross;
+            detail.total = detail.gross;
           }
         }
         // if (iSBTOModify)
@@ -960,7 +960,7 @@ export const useTransactionHelper = (transactionType: string) => {
         //         dgvInventory.Rows[i].Cells["UnitPrice"].Value = Convert.ToDouble(ds.Tables[0].Rows[i]["StdPurchasePrice"].ToString());
         //     }
         // }
-    }
+      }
 
       // Calculate row amounts
       const res = calculateRowAmount(
@@ -1137,7 +1137,7 @@ export const useTransactionHelper = (transactionType: string) => {
       // Supplier reference
       outputRow.supplierProductReferenceCode =
         detail.supplierReferenceProductCode;
-      
+
       // GR Transaction details
       // outputRow.gRTransDetailID = detail.grTransDetailsID;
 
@@ -1240,51 +1240,83 @@ export const useTransactionHelper = (transactionType: string) => {
   const attachMaster = (formState: TransactionFormState) => {
     const master: TransactionMaster = {
       ...formState.transaction.master,
-      master3: {
-        ...TransactionMaster3InitialData,
-        ...(formState.transaction.master.master3 || {}),
-      },
-      address2:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? formState.transaction.master.address2
-          : "",
-      address3:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? formState.transaction.master.address3
-          : "",
-      address4:
-        formState.transaction.master.voucherType == VoucherType.PurchaseReturn
-          ? formState.transaction.master.address4
-          : "",
     };
-
-    master.partyName = !isNullOrUndefinedOrEmpty(master.displayName)
-      ? master.displayName
-      : master.partyName;
     master.invTransactionMasterID = formState.isEdit
       ? master.invTransactionMasterID
       : 0;
-    // master.bankDate = new Date().toISOString();
-    master.prevTransDate =
-      master.transactionDate == ""
-        ? moment().local().toISOString()
-        : master.prevTransDate;
-    master.cashAmt = master.cashReceived;
-    master.fromWarehouseID =
-      master.fromWarehouseID > 0
-        ? master.fromWarehouseID
-        : master.voucherType == VoucherType.PurchaseReturn
-        ? 0
-        : 1;
-    master.stockUpdate = master.stockUpdate;
-    master.ledgerID = isNullOrUndefinedOrZero(master.ledgerID)
-      ? 0
-      : master.ledgerID;
-    master.supplyType =
-      master.supplyType == undefined || master.supplyType == null
-        ? ""
-        : master.supplyType.toString();
+    master.activeStatus = true;
 
+    master.address1 = "";
+    master.address2 = "";
+    master.address3 = "";
+    master.address4 = "";
+
+    master.adjustmentAmount = 0;
+    master.adjustMentType = "Add";
+
+    master.amount = 0;
+    master.billDiscount = 0;
+    master.cashReceived = 0;
+    master.cashReturned = 0;
+
+    master.partyName = "";
+
+    master.deliveryDate = master.transactionDate;
+    master.deliveryManID = 0;
+    // master.deliveryNoteNumber = formState.deliveryNoteNumber;
+    master.despatchDocumentNumber = "";
+
+    master.driverID = master.deliveryManID;
+
+    master.dueDays = 0;
+
+    master.employeeID = 1;
+    master.employeeIncentive = 0;
+
+    master.gatePassNo = "Initiated";
+
+    master.inventoryLedgerID = 0;
+    master.ledgerID = 0;
+    master.orderNumber = 0;
+
+    master.purchaseInvoiceNumber = "";
+
+    master.quotationNumber = 0;
+
+    master.referalAgentID = 0;
+
+    // master.remarks = formState.remarks;
+
+    master.roundAmount = 0;
+
+    master.salesManID = master.employeeID;
+
+    master.dueDate = master.transactionDate;
+    master.orderDate = master.transactionDate;
+    master.purchaseInvoiceDate = master.transactionDate;
+    master.quotationDate = master.transactionDate;
+    master.despatchDate = master.transactionDate;
+
+    // master.fromWarehouseID = Number(formState.fromWarehouseID || 0);
+    // master.toWarehouseID = Number(formState.toWarehouseID || 0);
+
+    master.despatchDocumentNumber = "";
+
+    // master.voucherNumber = formState.voucherNumber;
+    // master.voucherPrefix = formState.voucherPrefix;
+    master.voucherForm = "";
+    // master.voucherType = VOUCHERTYPE;
+
+    master.totalDiscount = 0;
+    master.vatAmount = 0;
+
+    master.totalGross = Number(master.grandTotal || 0);
+    master.grandTotal = Number(master.grandTotal || 0);
+
+    master.financialYearID = userSession.finId??0;
+
+    // master.mannualInvoiceNumber = master.mannualInvoiceNumber;
+    master.stockUpdate = true;
     let _master = sanitizeDataAdvanced(
       { ...master },
       TransactionMasterInitialData

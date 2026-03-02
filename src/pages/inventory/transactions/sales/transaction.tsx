@@ -954,17 +954,7 @@ useEffect(() => {
           const _element = { ...refactoredDetails[index] };
 
           const element = { ..._element };
-          element.gRTransDetailID = loadType == "GRN" ? _element.invTransactionDetailID ?? 0 : 0;
-          if (applicationSettings.inventorySettings.carryForwardPurchaseOrderQtyToPurchase) {
-            element.pOTransDetailID = _element.invTransactionDetailID ?? 0
-          } else {
-            element.pO_PITransDetailIDs = _element.invTransactionDetailID ?? 0
-            try {
-              element.pO_PITransDetailQtys = _element.poTransDetailsIDTag
-            } catch (error) {
-
-            }
-          }
+           element.sOTransDetailID = _element.invTransactionDetailID ?? 0;
           const calculated =await calculateRowAmount(
             element,
             "barCode",

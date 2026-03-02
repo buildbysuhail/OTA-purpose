@@ -954,7 +954,7 @@ useEffect(() => {
           const _element = { ...refactoredDetails[index] };
 
           const element = { ..._element };
-           element.sOTransDetailID = _element.invTransactionDetailID ?? 0;
+           element.orderTransDetailID = _element.invTransactionDetailID ?? 0;
           const calculated =await calculateRowAmount(
             element,
             "barCode",

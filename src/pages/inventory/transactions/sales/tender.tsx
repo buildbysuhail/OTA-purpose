@@ -39,7 +39,9 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const [cardAmt, setCardAmt] = useState<number>(0);
   const [cardEnabled, setCardEnabled] = useState<boolean>(false);
   const [balance, setBalance] = useState<number>(0);
-  const discAmountRef = useRef<HTMLInputElement>(null);
+  const discAmountRef = useRef<HTMLInputElement | null>(null);
+  const cashRcvdRef = useRef<HTMLInputElement | null>(null);
+  const applyBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const [couponAmt, setCouponAmt] = useState(0);
   const [addAmount, setAddAmount] = useState(0);
@@ -51,6 +53,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const [uPIDetails, setUPIDetails] = useState<SettlementDetails>(initialSettlement);
   const [bankCardDetails, setBankCardDetails] = useState<SettlementDetails>(initialSettlement);
   const [paymentMode, setPaymentMode] = useState<"CARD" | "UPI" | null>(null);
+  const [disableSettlement, setDisableSettlement] = useState(false);
   let isBillEdited = formState.transaction.master.invTransactionMasterID > 0  // Found in 1050, but check is using
   let isCreditable = false   // Found in 1050, but check is using!
   let isExcessCashRcpt = false  // Found in 1050, but check is using
@@ -62,6 +65,52 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   // Calculate total Qr and Bank card amount in tender Global
   const totalQrPayAmount =formState.transaction.uPIDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
   const totalBankCardAmount =formState.transaction.bankCardDetails?.reduce((sum: number, row: SettlementDetails) => sum + Number(row.amount || 0), 0 ) || 0;
+
+  const [upiList, setUpiList] = useState([]);
+  const [bankCards, setBankCards] = useState([]);
+  // Load Banc Card Details
+  useEffect(() => {
+    const loadBankCards = async () => {
+      const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${formState.transactionType}/Data/BankCards`
+      );
+      const data = await response;
+      if (data && data.length > 0) {
+        setBankCards(data);
+        const defaultCard = data[0];
+        setBankCardDetails((prev: any) => ({
+          ...prev,
+          paymentTypeID: defaultCard.id,
+          paymentName: defaultCard.name,
+          ledgerId: Number(defaultCard.alias)
+        }));
+      }
+    };
+
+    loadBankCards();
+  }, []);
+
+  // Load UPI details
+  useEffect(() => {
+    const loadUPIs = async () => {
+      const response = await api.getAsync(
+        `${Urls.inv_transaction_base}${formState.transactionType}/Data/UPIs`
+      );
+      const data = await response;
+      if (data && data.length > 0) {
+        setUpiList(data);
+        const defaultUPI = data[0];
+        setUPIDetails((prev: any) => ({
+          ...prev,
+          paymentTypeID: defaultUPI.id,
+          paymentName: defaultUPI.name,
+          ledgerId: Number(defaultUPI.alias)
+        }));
+      }
+    };
+    loadUPIs();
+  }, []);
+
 
   // Function For getting maximum vat percentage for tax on disc
   function getMaxTaxPercInItemList(): number {
@@ -145,15 +194,6 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     if(allowMultiPayment){
       totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0); // Total summary value is using Now check It
       totalNet = totalNet + additionalAmt + roundOf - couponAmt;
-      if(initialCardAmount > 0){
-        setBankCardDetails((prev: any) => {
-          return {
-            ...prev,
-            amount: initialCardAmount
-          }
-        })
-        setPaymentMode("CARD")
-      }
     }else{
       if(isFromSave){
          totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
@@ -207,7 +247,24 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       const totalReceived = cashRcvd;
       const cardAmount = cardEnabled ? cardAmt : 0;
       // Calculate balance value
-      setBalance(calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount));
+      const calculatedBalance = calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount)
+      setBalance(calculatedBalance);
+      if(allowMultiPayment){
+        const initialCardAmount = formState.transaction.master.bankAmt;
+        const isFromSave = formState.tenderWindow?.isFromSave;
+        if(initialCardAmount > 0){
+          if(isFromSave){
+            setBankCardDetails((prev: any) => {
+            return {
+              ...prev,
+              amount: calculatedBalance
+            }
+          })
+          }
+
+        setPaymentMode("CARD")
+      }
+      }
     }, [total, discAmount, taxOnDiscAmount, cashRcvd, totalQrPayAmount, totalBankCardAmount, cardAmt, cardEnabled]);
 
   // cash received button click 
@@ -433,6 +490,100 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   }
   }
 
+  // Validate Bank card Section
+  const validateCardTypeAndLedger = (): boolean => {
+    if (!ledgerEnabled) {
+      // Card type not selected
+      if (bankCardDetails.paymentTypeID === 0) {
+        ERPAlert.show({
+          icon: "info",
+          title: t("please_specify_the_cardType!"),
+          showCancelButton: false,
+          text: "",
+          confirmButtonText: t("ok"),
+        });
+
+        setDisableSettlement(true);
+        return false;
+      }else{
+        setDisableSettlement(false)
+      }
+      // Card selected but ledger not found
+      if (bankCardDetails.ledgerId <= 0) {
+        ERPAlert.show({
+          icon: "info",
+          title: t("ledger_not_found_please_check!"),
+          showCancelButton: false,
+          text: "",
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+    }
+    else {
+      if (bankCardDetails.paymentTypeID === 0) {
+        ERPAlert.show({
+          icon: "info",
+          title: t("please_specify_the_cardType!"),
+          showCancelButton: false,
+          text: "",
+          confirmButtonText: t("ok"),
+        });
+
+        setDisableSettlement(true);
+        return false;
+      }else{
+        setDisableSettlement(false)
+      }
+    }
+    return true;
+  };
+
+  // Validate UPI section
+  const validateUPIAndLedger = (): boolean => {
+      if (bankCardDetails.paymentTypeID === 0) {
+        if(clientSession.isAppGlobal){
+          ERPAlert.show({
+          icon: "info",
+          title: t("please_specify_the_upi_type!"),
+          showCancelButton: false,
+          text: "",
+          confirmButtonText: t("ok"),
+        });
+        setDisableSettlement(true);
+        return false;
+        }else{
+          ERPAlert.show({
+          icon: "info",
+          title: t("please_specify_the_qr_type_type!"),
+          showCancelButton: false,
+          text: "",
+          confirmButtonText: t("ok"),
+        });
+
+        setDisableSettlement(true);
+        return false;
+        }
+      }else{
+      setDisableSettlement(false)
+      }
+      // Check the below ledger is need to be in gcc and global
+      // if (bankCardDetails.ledgerId <= 0) {
+      //   ERPAlert.show({
+      //     icon: "info",
+      //     title: t("ledger_not_found_please_check!"),
+      //     showCancelButton: false,
+      //     text: "",
+      //     confirmButtonText: t("ok"),
+      //   });
+
+      //   return false;
+      // }
+
+    return true;
+  };
+
+
   // Function for add click in BAnk card
   const handleBankCardAddClick =()=> {
     if(bankCardDetails?.amount > balance ){
@@ -445,7 +596,10 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
         onConfirm: ()=> { return false }
       });
       return false;
-    }
+      }
+      if (!validateCardTypeAndLedger()) {
+        return false;
+      }
     if(bankCardDetails?.amount > 0 ){
       dispatch(formStateTransactionBankCardAddRowsAddSingle(bankCardDetails));
       setBankCardDetails((prev: any) => {
@@ -683,7 +837,24 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   className="w-1/2 min-w-0 bg-gray-100 text-black text-right text-lg font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
                 />
                 <input
-                  ref={discAmountRef}
+                  ref={(el) => {
+                    discAmountRef.current = el;
+                    if (el && !el.disabled) {
+                      el.focus();
+                      el.select();
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      setTimeout(() => {
+                        if (cashRcvdRef.current) {
+                          cashRcvdRef.current.focus();
+                          cashRcvdRef.current.select();
+                        }
+                      }, 0);
+                    }
+                  }}
                   type="number"
                   min="0"
                   value={discAmount}
@@ -742,12 +913,22 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   </button>
                 )}
                 <input
+                  ref={cashRcvdRef}
                   type="number"
                   min="0"
-                  value={cashRcvd.toFixed(3)}
+                  value={Number(cashRcvd).toFixed(3)}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     setCashRcvd(val < 0 ? 0 : val);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+
+                      setTimeout(() => {
+                        applyBtnRef.current?.focus();
+                      }, 0);
+                    }
                   }}
                   className="flex-1 min-w-0 bg-gray-100 text-black text-right text-xl font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
                 />
@@ -763,7 +944,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-200 bg-gray-100 hover:bg-gray-50"
               }`}
-              onClick={() => setPaymentMode(paymentMode === "CARD" ? null : "CARD")}
+              onClick={() => {
+                setPaymentMode(paymentMode === "CARD" ? null : "CARD");
+                if(paymentMode !== "CARD"){
+                  if (!validateCardTypeAndLedger()) {
+                    return false;
+                  }
+                }
+              }}
             >
               <div className="flex items-center gap-3">
                 <input
@@ -785,7 +973,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-200 bg-gray-100 hover:bg-gray-50"
               }`}
-              onClick={() => setPaymentMode(paymentMode === "UPI" ? null : "UPI")}
+              onClick={() => {
+                setPaymentMode(paymentMode === "UPI" ? null : "UPI");
+                if(paymentMode !== "UPI"){
+                  if (!validateUPIAndLedger()) {
+                    return false;
+                  }
+                }
+              }}
             >
               <div className="flex items-center gap-3">
                 <input
@@ -896,8 +1091,15 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
             {/* Apply Button */}
             <div className="flex justify-center pt-2">
               <button
+                ref={applyBtnRef}
                 type="button"
                 onClick={handleApply}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleApply();
+                  }
+                }}
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-base"
               >
                 {t("apply")}
@@ -921,9 +1123,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                     variant="outlined"
                     className="tender-combobox"
                     style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    disabled={disableSettlement}
+                    options={upiList}
                     field={{
                       id: "id",
-                      getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/UPIs`,
+                      // getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/UPIs`,  // Loaded Using useEffect
                       valueKey: "id",
                       labelKey: "name",
                       nameKey: "alias",
@@ -956,6 +1160,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                         }
                       })
                     }
+                    disabled={disableSettlement}
                     className="w-full bg-white text-black text-right text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
                   />
                 </div>
@@ -974,6 +1179,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                         }
                       })
                     }
+                    disabled={disableSettlement}
                     className="w-full bg-white text-black text-base font-medium px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400"
                   />
                 </div>
@@ -982,6 +1188,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <button
                   type="button"
                   onClick={handleQRPayAddClick}
+                  disabled={disableSettlement}
                   className="w-full bg-blue-400 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <span>+</span> {t("add_payment")}
@@ -1030,9 +1237,10 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                     variant="outlined"
                     className="tender-combobox"
                     style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    options={bankCards}
                     field={{
                       id: "id",
-                      getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BankCards`,
+                      // getListUrl: `${Urls.inv_transaction_base}${formState.transactionType}/Data/BankCards`,  // Loaded Using useEffect
                       valueKey: "id",
                       labelKey: "name",
                       nameKey: "alias",
@@ -1058,6 +1266,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                       checked={ledgerEnabled}
                       onChange={(e) => setLedgerEnabled(e.target.checked)}
                       className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+                      disabled={disableSettlement}
                     />
                     <label className="text-black text-xs font-medium">{t('ledger')}</label>
                   </div>
@@ -1083,7 +1292,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                         }
                       })
                     }
-                    disabled={!ledgerEnabled}
+                    disabled={!ledgerEnabled || disableSettlement}
                   />
                 </div>
 
@@ -1093,6 +1302,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   <input
                     type="number"
                     value={bankCardDetails?.amount || 0}
+                    disabled={disableSettlement}
                     onChange={(e) =>
                       setBankCardDetails((prev: any) => {
                         return {
@@ -1111,6 +1321,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   <input
                     type="text"
                     value={bankCardDetails?.description || ''}
+                    disabled={disableSettlement}
                     onChange={(e) =>
                       setBankCardDetails((prev: any) => {
                         return {
@@ -1129,6 +1340,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <button
                   type="button"
                   onClick={handleBankCardAddClick}
+                  disabled={disableSettlement}
                   className="w-full bg-blue-400 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <span>+</span> {t("add_payment")}

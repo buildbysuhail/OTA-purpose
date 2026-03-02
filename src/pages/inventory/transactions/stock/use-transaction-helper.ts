@@ -252,7 +252,7 @@ export const useTransactionHelper = (transactionType: string) => {
     //   result.transaction.master.master3 = {};
     // }
     let _grandTotal = netAmt;
-    result.transaction!.master!.grandTotal = _grandTotal;
+    result.transaction!.master!.grandTotal =round(_grandTotal,applicationSettings.mainSettings.decimalPoints) ;
     // Check this is correct added in below
     if(formState.transaction.master.voucherType === VoucherType.BranchTransferOut || formState.transaction.master.voucherType === VoucherType.BranchTransferIn){
        result.transaction!.master!.vatAmount = summary.vatAmount
@@ -350,14 +350,14 @@ export const useTransactionHelper = (transactionType: string) => {
       const netValue = gross;
       const netAmount = netValue;
 
-      detail.netValue = netValue;
-      detail.gross = gross;
-      detail.total = netAmount;
+      detail.netValue = getFormattedValueIgnoreRoundingToNumber(netValue);
+      detail.gross = getFormattedValueIgnoreRoundingToNumber(gross);
+      detail.total =getFormattedValueIgnoreRoundingToNumber(netAmount);
 
       const salesRate = Number(transactionDetail.salesPrice || 0);
       const salesTotal = qty * salesRate;
 
-      detail.salesTotal = salesTotal;
+      detail.salesTotal =getFormattedValueIgnoreRoundingToNumber(salesTotal);
       }
       result.transaction.details = [detail];
 

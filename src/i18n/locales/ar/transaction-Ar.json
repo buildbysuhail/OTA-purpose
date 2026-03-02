@@ -1144,7 +1144,7 @@
   "print_packing_slip": "طباعة قسيمة التعبئة",
   "save_temporary": "حفظ مؤقت",
   "pending_order_list": "قائمة الطلبات المعلقة",
-  "pending_goods_delivery_list": "قائمة توصيل البضائع المعلقة",
+  "pending_goods_delivery_list": "قائمة تسليم البضائع المعلقة",
 
   "this_is_not_vat_invoice": "هذه ليست فاتورة ضريبية",
   "this_facility_only_available_for_cash/card_customers": "هذه الميزة متاحة فقط لعملاء الدفع نقداً أو بالبطاقة",
@@ -1341,7 +1341,16 @@
   "the_GRN_already_processed": "تمت معالجة هذه إشعار الاستلام بالفعل، لا يمكن تحويلها مرة أخرى",
   "the_transaction_already_processed": "تمت معالجة هذه المعاملة بالفعل، لا يمكن تحويلها مرة أخرى",
 
-  "van": "شاحنة صغيرة"
+  "van": "شاحنة صغيرة",
+  "wrong_discount_or_value_please_check_values": "خصم أو قيمة غير صحيحة، يرجى التحقق من القيم",
+  "Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible": "مخزون الفرع المحدد غير مرتبط بالفرع الرئيسي، طلب تحويل الفرع (BTO) غير ممكن",
+  "please_select_valid_to_branch_warehouse": "يرجى تحديد مستودع فرع الوصول بشكل صحيح",
+  "please_select_valid_from_branch_warehouse": "يرجى تحديد مستودع فرع المصدر بشكل صحيح",
+  
+  "please_specify_the_cardType!": "يرجى تحديد نوع البطاقة!",
+  "ledger_not_found_please_check!": "دفتر الأستاذ غير موجود. يرجى التحقق!",
+  "please_specify_the_upi_type!": "يرجى تحديد نوع UPI!",
+  "please_specify_the_qr_type_type!": "يرجى تحديد نوع رمز QR"
 
   
 

@@ -253,12 +253,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
         const initialCardAmount = formState.transaction.master.bankAmt;
         const isFromSave = formState.tenderWindow?.isFromSave;
         if(initialCardAmount > 0){
-          setBankCardDetails((prev: any) => {
-          return {
-            ...prev,
-            amount: calculatedBalance
+          if(isFromSave){
+            setBankCardDetails((prev: any) => {
+            return {
+              ...prev,
+              amount: calculatedBalance
+            }
+          })
           }
-        })
 
         setPaymentMode("CARD")
       }

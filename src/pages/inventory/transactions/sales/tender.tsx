@@ -68,6 +68,17 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
 
   const [upiList, setUpiList] = useState([]);
   const [bankCards, setBankCards] = useState([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        discAmountRef.current?.focus();
+        discAmountRef.current?.select();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   // Load Banc Card Details
   useEffect(() => {
     const loadBankCards = async () => {
@@ -833,7 +844,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <input
                   type="number"
                   min="0"
-                  value={Number(Number(discPercent??0).toFixed(2))}
+                  value={Number(Number(discPercent??0))}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     handleDiscPercentChange(val < 0 ? 0 : val);
@@ -844,16 +855,10 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 />
                 <input
                 ref={discAmountRef}
-                // ref={(el) => {
-                //     discAmountRef.current = el;
-                //     if (el && !el.disabled) {
-                //       el.focus();
-                //       el.select();
-                //     }
-                //   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
+                      e.stopPropagation();
                       setTimeout(() => {
                         if (cashRcvdRef.current) {
                           cashRcvdRef.current.focus();
@@ -923,7 +928,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   ref={cashRcvdRef}
                   type="number"
                   min="0"
-                  value={Number(cashRcvd).toFixed(3)}
+                  value={Number(cashRcvd)}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     setCashRcvd(val < 0 ? 0 : val);
@@ -931,7 +936,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-
+                      e.stopPropagation();
                       setTimeout(() => {
                         applyBtnRef.current?.focus();
                       }, 0);

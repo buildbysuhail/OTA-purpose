@@ -735,9 +735,9 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {showCostCentreOutside && costCentreComponent}
               </>
             )}
-            {(applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
+            {/* {(applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
               attachmentComponent
-            )}
+            )} */}
             <div className="w-full sm:w-auto sm:max-w-[270px] gap-0.5 flex flex-wrap sm:flex-nowrap">
               {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
@@ -954,6 +954,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           {/* first half - Warehouse and Cost Centre on same row */}
           <div className="flex flex-row flex-wrap items-end gap-2 min-w-0">
             {showWarehouseOutside && warehouseComponent}
+            {priceCategoryComponent}
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
               <>{showCostCentreOutside && costCentreComponent}</>
             )}
@@ -1148,7 +1149,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </li>
                 )}
                 {/* Field 7: Attachment */}
-                {verticalVisibleFields <= 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+                {/* {verticalVisibleFields <= 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
                   <li>
                     <button className="text-[#2563eb]">
                       <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
@@ -1156,7 +1157,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       </span>
                     </button>
                   </li>
-                )}
+                )} */}
                 {/* Field 8: Credit Card Amount */}
                 {verticalVisibleFields <= 8 && formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
                   <li>
@@ -1472,7 +1473,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {/* Field 7: Attachment */}
-              {verticalVisibleFields > 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+              {/* {verticalVisibleFields > 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
                 <div className="w-full mt-1">
                   <button className="text-[#2563eb] dark:text-[#60a5fa]">
                     <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
@@ -1480,7 +1481,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </span>
                   </button>
                 </div>
-              )}
+              )} */}
               {/* Field 8: Credit Card Amount */}
               {verticalVisibleFields > 8 && formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
                 <div className="w-full mt-1">
@@ -1869,11 +1870,11 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             )}
           </>
         )}
-        {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
+        {/* {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
           <div className="w-full mb-2 sm:mb-0 sm:w-auto">
             {attachmentComponent}
           </div>
-        )}
+        )} */}
         {!showSecondHalf && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0 flex">
             {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(

@@ -2466,19 +2466,19 @@ const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualP
           )}
         </ERPResizableSidebar> */}
 
-        <ERPResizableSidebar
+        {/* <ERPResizableSidebar
           minWidth={350}
           isOpen={isAttachmentOpen}
           setIsOpen={setIsAttachmentOpen}
           children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
-        />
+        /> */}
 
-        <ERPResizableSidebar
+        {/* <ERPResizableSidebar
           minWidth={350}
           isOpen={isHistoryOpen}
           setIsOpen={setIsHistoryOpen}
           children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
-        />
+        /> */}
 
         {formState.openUnsavedPrompt == true && (
           <UnsavedChangesModal

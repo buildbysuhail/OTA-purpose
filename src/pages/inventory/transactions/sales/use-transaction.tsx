@@ -5748,14 +5748,13 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               );
 
               const params = new URLSearchParams({
-                productBatchId: String(detail.productBatchID ?? "0"),
-                priceCategoryId: String(nextPriceCategoryId ?? "0"),
-                unitId: String(detail.unitID ?? "0"),
-                vatPerc: String(detail.vatPerc ?? 0)
+                ProductBatchID: String(detail.productBatchID ?? "0"),
+                PriceCategoryID: String(nextPriceCategoryId ?? "0"),
+                UnitID: String(detail.unitID ?? "0"),
               });
 
               const pData = await api.getAsync(
-                `${Urls.inv_transaction_base}${transactionType}/priceCategoryDetails?${params.toString()}`
+                `${Urls.inv_transaction_base}${transactionType}/PriceCategoryDetails?${params.toString()}`
               );
 
               const updatedDetail = {
@@ -5764,15 +5763,15 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                 purchasePrice: pData.purchasePrice,
               };
               outState = await calculateRowAmount(
-                Object.assign(detail, { ...outDetail }),
+                Object.assign(detail, { ...outDetail, ...updatedDetail}),
                 columnName as any,
                 {
                   result: {
                     transaction: {
                       details: [updatedDetail],
                     },
-                  },
-                }, false
+                  },formStateHandleFieldChangeKeysOnly
+                }, false, rowIndex, 
               );
             }
           }

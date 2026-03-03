@@ -514,7 +514,7 @@ export interface UserConfig {
   autoIncrementQty?: boolean;
   initialFocusToCustomer?: boolean;
   showSearchPopupWindowAutomatically?: boolean;
-  enableVoucherPrefixAndDate?: boolean;
+  // enableVoucherPrefixAndDate?: boolean;
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
   showSrInProductInfoPopup?: boolean;
@@ -524,6 +524,7 @@ export interface UserConfig {
   stockOutConfirmation?: boolean;
   taxOnMRP?: boolean;
   taxOnFreeItem?: boolean;
+  enableTransactionDate?: boolean;
   //india
   autoEwayBill?: boolean;
   disableEinvoice?: boolean;

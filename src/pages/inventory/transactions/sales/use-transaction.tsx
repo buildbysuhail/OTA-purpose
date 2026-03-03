@@ -7938,7 +7938,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
       } else if (isInitial && _formState.userConfig?.initialFocusToCustomer) {
         ledgerIdRef?.current?.focus();
         ledgerIdRef?.current?.select();
-      } else if (applicationSettings.mainSettings.maintainBusinessType === "Distribution") {
+      } else if (applicationSettings.mainSettings.maintainBusinessType === "Distribution" && _formState.userConfig?.enableTransactionDate) {
         setTimeout(() => {
           transactionDateRef?.current?.focus();
         }, 0);

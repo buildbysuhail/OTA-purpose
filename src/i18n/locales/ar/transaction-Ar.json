@@ -1350,7 +1350,9 @@
   "please_specify_the_cardType!": "يرجى تحديد نوع البطاقة!",
   "ledger_not_found_please_check!": "دفتر الأستاذ غير موجود. يرجى التحقق!",
   "please_specify_the_upi_type!": "يرجى تحديد نوع UPI!",
-  "please_specify_the_qr_type_type!": "يرجى تحديد نوع رمز QR"
+  "please_specify_the_qr_type_type!": "يرجى تحديد نوع رمز QR",
+
+  "enable_transaction_date": "تفعيل تاريخ المعاملة"
 
   
 

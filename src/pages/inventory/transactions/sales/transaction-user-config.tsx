@@ -476,14 +476,24 @@ export const TransactionUserConfig: React.FC<TransactionUserConfigProps> = ({ ph
               {/* ------------------------------------------------------------- */}
 
               {![VoucherType.SalesQuotation, VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as VoucherType) &&
+                <>
                 <ERPCheckbox
-                  id="enableVoucherPrefixAndDate"
-                  label={t("enable_voucher_prefix_and_date")}
+                  id="enableVoucherPrefix"
+                  label={t("enable_voucher_prefix")}
                   data={formState.userConfig}
-                  checked={formState?.userConfig?.enableVoucherPrefixAndDate}
-                  onChangeData={(e) => handleFieldChange("enableVoucherPrefixAndDate", e.enableVoucherPrefixAndDate)}
+                  checked={formState?.userConfig?.enableVoucherPrefix}
+                  onChangeData={(e) => handleFieldChange("enableVoucherPrefix", e.enableVoucherPrefix)}
                   className="w-1/3"
                 />
+                <ERPCheckbox
+                  id="enableTransactionDate"
+                  label={t("enable_transaction_date")}
+                  data={formState.userConfig}
+                  checked={formState?.userConfig?.enableTransactionDate}
+                  onChangeData={(e) => handleFieldChange("enableTransactionDate", e.enableTransactionDate)}
+                  className="w-1/3"
+                />
+                </>
               }
 
               {/* ---------------------------------------------------- */}

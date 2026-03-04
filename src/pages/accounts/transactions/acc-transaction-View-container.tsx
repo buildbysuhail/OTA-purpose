@@ -59,6 +59,9 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
 
   const { t } = useTranslation("transaction");
   const selectedRowIdRef = useRef<number>(0);
+  // const hasScrolledToInitialRow = useRef<boolean>(false);
+  // const gridRef = useRef<any>(null);
+
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
@@ -98,6 +101,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
           const rowId = el.getAttribute('data-row-id');
           if (rowId === String(input.transactionMasterID)) {
             el.classList.add('selected');
+         
           }
         });
       });
@@ -106,8 +110,10 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
 
   const onRowClick = useCallback(
     (event: any) => {
+      debugger;
       const _event = event.data != undefined ? event : event?.event;
-      const clickedRow = _event.data;
+      const clickedRow = _event.data
+      
       const transactionMasterID = parseInt(
         (input.isInvTrans ? clickedRow.invTransactionMasterID : clickedRow.accTransactionMasterID) || "0",
         10
@@ -117,7 +123,8 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
       // Update state to pass to child component
       setInput((prev) => ({
         ...prev,
-        transactionMasterID: transactionMasterID
+        transactionMasterID: transactionMasterID,
+        voucherNo:clickedRow.voucherNumber
       }));
       // Update UI directly without re-render
       requestAnimationFrame(() => {
@@ -128,6 +135,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
           const rowId = el.getAttribute('data-row-id');
           if (rowId === String(transactionMasterID)) {
             el.classList.add('selected');
+         
           }
         });
       });
@@ -142,6 +150,120 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
+
+  // const handleContentReady = useCallback((e: any) => {
+  //   if (hasScrolledToInitialRow.current) return;
+  //   if (!input.transactionMasterID) return;
+
+  //   const instance = e.component;
+  //   const keyExpr = input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID";
+
+  //   try {
+  //     // DevExtreme virtual scroll API — works even if row is not rendered yet
+  //     instance.getScrollable()?.scrollToItem(
+  //       { id: input.transactionMasterID }
+  //     );
+  //   } catch {
+  //     // fallback: use navigateToRow which is the correct DevExtreme API
+  //   }
+
+  //   // navigateToRow is the correct DevExtreme method for virtual scrolling
+  //   instance.navigateToRow(input.transactionMasterID)
+  //     .then(() => {
+  //       hasScrolledToInitialRow.current = true;
+  //       // After navigation, apply selected class
+  //       requestAnimationFrame(() => {
+  //         document.querySelectorAll('.grid-row-item.selected').forEach(el => {
+  //           el.classList.remove('selected');
+  //         });
+  //         const targetEl = document.querySelector(
+  //           `.grid-row-item[data-row-id="${input.transactionMasterID}"]`
+  //         );
+  //         if (targetEl) {
+  //           targetEl.classList.add('selected');
+  //         }
+  //       });
+  //     })
+  //     .catch(() => {
+  //       // navigateToRow may not return a promise in all versions, handle gracefully
+  //       hasScrolledToInitialRow.current = true;
+  //     });
+  // }, [input.transactionMasterID, input.isInvTrans]);
+
+  //   const handleKeyDown = useCallback((e: any) => {
+  //   const key = e.event?.key;
+  //   if (!key) return;
+
+  //   if (key === 'ArrowDown' || key === 'ArrowUp') {
+  //     // Let DevExtreme handle the focus movement, then sync our selection
+  //     setTimeout(() => {
+  //       if (!gridRef.current) return;
+  //       const instance = gridRef.current.instance();
+  //       const focusedRowKey = instance.option('focusedRowKey');
+  //       if (!focusedRowKey) return;
+
+  //       const rows = instance.getVisibleRows();
+  //       const focusedRow = rows.find((r: any) => r.key === focusedRowKey);
+  //       if (!focusedRow) return;
+
+  //       const transactionMasterID = focusedRowKey;
+  //       selectedRowIdRef.current = transactionMasterID;
+
+  //       // Update CSS classes
+  //       requestAnimationFrame(() => {
+  //         document.querySelectorAll('.grid-row-item.selected').forEach(el => {
+  //           el.classList.remove('selected');
+  //         });
+  //         const targetEl = document.querySelector(
+  //           `.grid-row-item[data-row-id="${transactionMasterID}"]`
+  //         );
+  //         if (targetEl) {
+  //           targetEl.classList.add('selected');
+  //         }
+  //       });
+  //     }, 50); // small delay to let DevExtreme update focusedRowKey first
+  //   }
+
+  //   if (key === 'Enter') {
+  //     if (!gridRef.current) return;
+  //     const instance = gridRef.current.instance();
+  //     const focusedRowKey = instance.option('focusedRowKey');
+  //     if (!focusedRowKey) return;
+
+  //     const rows = instance.getVisibleRows();
+  //     const focusedRow = rows.find((r: any) => r.key === focusedRowKey);
+  //     if (!focusedRow?.data) return;
+
+  //     // Simulate onRowClick with the focused row data
+  //     const clickedRow = focusedRow.data;
+  //     const transactionMasterID = parseInt(
+  //       (input.isInvTrans
+  //         ? clickedRow.invTransactionMasterID
+  //         : clickedRow.accTransactionMasterID) || "0",
+  //       10
+  //     );
+
+  //     selectedRowIdRef.current = transactionMasterID;
+  //     setInput((prev) => ({
+  //       ...prev,
+  //       transactionMasterID: transactionMasterID,
+  //       voucherNo: clickedRow.voucherNumber,
+  //     }));
+
+  //     requestAnimationFrame(() => {
+  //       document.querySelectorAll('.grid-row-item.selected').forEach(el => {
+  //         el.classList.remove('selected');
+  //       });
+  //       const targetEl = document.querySelector(
+  //         `.grid-row-item[data-row-id="${transactionMasterID}"]`
+  //       );
+  //       if (targetEl) {
+  //         targetEl.classList.add('selected');
+  //       }
+  //     });
+  //   }
+  // }, [input.isInvTrans]);
+
 
   const columnstwo: DevGridColumn[] = useMemo(() => {
     const isInvTrans = (input.isInvTrans);
@@ -348,6 +470,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
   const MemoizedGrid = useMemo(() => {
     return (
       <ERPDevGrid
+        // ref={gridRef} 
         columns={columnstwo}
         keyExpr={input.isInvTrans ? "invTransactionMasterID" : "accTransactionMasterID"}
         height={"89vh"}
@@ -362,6 +485,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
           sorting: true,
         }}
         focusedRowEnabled
+        focusedRowKey={input.transactionMasterID}  
         gridAddButtonIcon="ri-add-line"
         showPrintButton={false}
         pageSize={40}
@@ -376,7 +500,8 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
         className="HistorySidebarcustomtwo"
         ShowGridPreferenceChooser={false}
         onRowClick={onRowClick}
-        // searchQuery={searchQuery}
+        //  onContentReady={handleContentReady}
+        //  onKeyDown={handleKeyDown}
         showOptions={false}
         t={t}
       />

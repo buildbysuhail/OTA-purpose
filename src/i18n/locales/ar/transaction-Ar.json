@@ -1367,7 +1367,8 @@
   "product_unit_id_is_missing_please_cross_check": "معرف وحدة المنتج مفقود، يرجى التحقق من:",
   "zero_qty_entered_in_row": "تم إدخال كمية صفرية في الصف",
   "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row": "سيتم تجاهل الأصناف المدخلة بعد صف فارغ. يرجى حذف الصف الفارغ:",
-  "please_enter_remarks_to_cotinue": "يرجى إدخال الملاحظات للمتابعة"
+  "please_enter_remarks_to_cotinue": "يرجى إدخال الملاحظات للمتابعة",
+  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled": "لا يجب أن يكون تاريخ المعاملة لاحقاً للتاريخ الحالي عند تفعيل الفاتورة الإلكترونية في المملكة العربية السعودية"
   
 
 }

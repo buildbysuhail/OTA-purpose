@@ -1404,7 +1404,7 @@ focusCurrentColumn ??
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
-          text: t("transaction_date_should_not_be_post_dated"),
+          text: t("transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled"),
           confirmButtonText: t("ok"),
         });
         return {
@@ -1594,6 +1594,7 @@ focusCurrentColumn ??
         isValid: false
       };
     }
+    debugger;
     // CODE CHECKED########
     // ============ Transaction Date Validation ============
     const transDateValidation = validateTransactionDate(

@@ -2009,11 +2009,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       master.creditAmt = master.grandTotal;
       master.cashAmt = 0;
     }
-    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
-      master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt - m.srAmount
+    if (userSession.dbIdValue !== "543140180640" && clientSession.isAppGlobal && master.voucherType == VoucherType.SalesInvoice) {
+      master.cashAmt = m.grandTotal - m.bankAmt - master.creditAmt - master.couponAmt - master.srAmount
     }
     if (userSession.dbIdValue !== "543140180640" && !clientSession.isAppGlobal && m.voucherType == VoucherType.SalesInvoice) {
-      master.cashAmt = m.grandTotal - m.bankAmt - m.creditAmt - m.couponAmt;
+      master.cashAmt = m.grandTotal - m.bankAmt - master.creditAmt - master.couponAmt;
     }
 
     if (master.cashAmt > master.grandTotal && master.voucherType == VoucherType.SalesReturn && !clientSession.isAppGlobal) {

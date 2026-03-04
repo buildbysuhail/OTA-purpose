@@ -1356,7 +1356,10 @@
 
   "enable_transaction_date":"Enable Transaction Date",
   "discount_zero":"Discount Zero",
-  "discount_is_zero_do_you_want_to_continue":"Discount is zero, Do you want to continue?"
+  "discount_is_zero_do_you_want_to_continue":"Discount is zero, Do you want to continue?",
+  "enter_notes":"Enter Notes",
+  "token_no":"Token Number",
+  "please_type_here":"Please type here..."
 
 
 

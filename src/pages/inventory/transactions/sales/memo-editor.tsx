@@ -48,7 +48,7 @@ const MemoEditorModal: React.FC<MemoEditorModalProps> = ({ isOpen, onClose, t, r
       closeModal={onClose}
       title={t("memo_editor")}
       width={600}
-      height={400}
+      height={380}
       content={
         <div className="w-full modal-content">
           <div className="flex flex-col gap-4">
@@ -57,16 +57,22 @@ const MemoEditorModal: React.FC<MemoEditorModalProps> = ({ isOpen, onClose, t, r
                 id="memo"
                 label={t("memo")}
                 value={memoText}
+                noLabel={true}
                 onChange={(e) => setMemoText(e.target.value)}
-                className="w-full h-64 text-sm"
-                placeholder={t("enter_memo_here")}
+                className="w-full h-64 text-md"
+                placeholder={t("please_type_here")}
               />
             </div>
 
             {/* Action Buttons */}
             <div className='flex items-center justify-end gap-2'>
               <ERPButton
-                title={t('set')}
+                title={t('close')}
+                onClick={onClose}
+                variant='secondary'
+              />
+              <ERPButton
+                title={t('apply')}
                 onClick={handleSet}
                 variant='primary'
               />

@@ -721,39 +721,21 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   ): void => {
     try {
       const detail = formState.transaction.details[rowIndex];
-      const formType = formState.transaction.master.voucherForm;
-      const exchangeRate = Number(
-        formState.transaction.master.exchangeRate || 0
-      );
-
       // Initialize variables
       let qty = Number(detail.qty || 0);
       let gross = Number(detail.gross || 0);
       let uRate = Number(detail.unitPrice || 0);
-      let grossFC = Number(detail.grossFC || 0);
-      let uRateFC = Number(detail.unitPriceFC || 0);
-
       // Prevent division by zero
       if (qty === 0) {
         return;
       }
 
-      if (formType === "Import") {
-        // Handle Import form type - Foreign Currency calculations
-        if (grossFC > 0) {
-          const calculatedURateFC = grossFC / qty;
-
-          if (calculatedURateFC !== uRateFC) {
-            uRateFC = calculatedURateFC;
-            uRate = uRateFC * exchangeRate;
-
-            // Update form state
-            const unitPriceFC = round(uRateFC, 4);
-            const unitPrice = round(uRate, 4);
-
-            // Recalculate row amounts
-            calculateRowAmount(
-              { ...detail, unitPriceFC: unitPrice, unitPrice: unitPriceFC },
+      if(gross > 0){
+        if(gross / qty !== uRate){
+          uRate = gross/qty;
+          const unitPriceValue = getFormattedValueIgnoreRounding(uRate)
+          calculateRowAmount(
+              { ...detail, unitPrice: Number(unitPriceValue) },
               currentColumn as any,
               {
                 formStateHandleFieldChangeKeysOnly:
@@ -761,7 +743,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
                 result: {
                   transaction: {
                     details: [
-                      { unitPriceFC: unitPrice, unitPrice: unitPriceFC },
+                      { unitPrice: Number(unitPriceValue) },
                     ],
                   },
                 },
@@ -769,34 +751,6 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               false,
               rowIndex
             );
-          }
-        }
-      } else {
-        // Handle other form types - Local Currency calculations
-        if (gross > 0) {
-          const calculatedURate = gross / qty;
-
-          if (calculatedURate !== uRate) {
-            uRate = calculatedURate;
-
-            // Update form state
-            const unitPrice = round(uRate, 4);
-
-            // Recalculate row amounts
-            calculateRowAmount(
-              { ...detail, unitPrice: unitPrice },
-              currentColumn as any,
-              {
-                formStateHandleFieldChangeKeysOnly:
-                  formStateHandleFieldChangeKeysOnly,
-                result: {
-                  transaction: { details: [{ unitPrice: unitPrice }] },
-                },
-              },
-              false,
-              rowIndex
-            );
-          }
         }
       }
     } catch (error) {

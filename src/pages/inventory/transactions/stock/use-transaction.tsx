@@ -188,6 +188,9 @@ export const useTransaction = (
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
+  const safeFocusColumn =
+    focusColumn ??
+    ((rowIndex: number, column: string) => null);
   const { printBarcode } = usePurchasePrint();
 
   const { printVoucher } = useCommenPrint();
@@ -525,7 +528,7 @@ export const useTransaction = (
     loadFType?: string,
     loadPrefix?: string,
     transactionMasterID?: number,
-    
+
   ) => {
     let voucher: TransactionFormState = JSON.parse(
       JSON.stringify({
@@ -554,7 +557,7 @@ export const useTransaction = (
     const params: Record<any, any> = {
       VoucherNumber: voucherNumber, // Ensuring it's always a string
       voucherPrefix: voucherPrefix,
-      voucherType: loadVType === "" ? out_voucherType : loadVType ,
+      voucherType: loadVType === "" ? out_voucherType : loadVType,
       voucherForm: loadVType === "" ? out_voucherForm : voucherForm,
       IsUsingManualInvoiceNo: usingManualInvNumber,
       ManualInvoiceNumber: manualInvoiceNumber,
@@ -574,9 +577,9 @@ export const useTransaction = (
         ...transactionInitialData,
         details: !deviceInfo.isMobile
           ? Array.from({ length: 30 }, (_, index) => ({
-              ...initialTransactionDetailData,
-              slNo: generateUniqueKey(),
-            }))
+            ...initialTransactionDetailData,
+            slNo: generateUniqueKey(),
+          }))
           : [],
       };
     }
@@ -599,12 +602,12 @@ export const useTransaction = (
     }
     voucher.allowStockUpdate = vch.stockUpdate;
     voucher.transaction = {
-      ...(vch || {}), 
-       master: {
+      ...(vch || {}),
+      master: {
         ...(vch?.master || {}),
         voucherType: out_voucherType || (formState.transaction.master.voucherType ?? ""),
         voucherForm: out_voucherForm || (formState.transaction.master.voucherForm ?? ""),
-         } as TransactionMaster,
+      } as TransactionMaster,
       details: refactorDetails(
         vch.details,
         voucherForm ?? vch.master.voucherForm,
@@ -613,24 +616,24 @@ export const useTransaction = (
       ),
       attachments: [...(vch?.attachments || [])],
     };
-const remarks = String(vch.master.pdtRemarks ?? "");
-const verified = Boolean(vch.master.pdtVerified);
+    const remarks = String(vch.master.pdtRemarks ?? "");
+    const verified = Boolean(vch.master.pdtVerified);
 
-      if (remarks !== "0000") {
-        voucher.formElements.pdtStatus = {
-          ...voucher.formElements.pdtStatus,
-          visible: true,
-          text: verified
-            ? `PDT Verified Successfully : [${remarks}]`
-            : `PDT Not Verified : [${remarks}]`,
-          color: verified ? "green" : "red",
-        };
-      } else {
-        voucher.formElements.pdtStatus = {
-          ...voucher.formElements.pdtStatus,
-          visible: false,
-        };
-      }
+    if (remarks !== "0000") {
+      voucher.formElements.pdtStatus = {
+        ...voucher.formElements.pdtStatus,
+        visible: true,
+        text: verified
+          ? `PDT Verified Successfully : [${remarks}]`
+          : `PDT Not Verified : [${remarks}]`,
+        color: verified ? "green" : "red",
+      };
+    } else {
+      voucher.formElements.pdtStatus = {
+        ...voucher.formElements.pdtStatus,
+        visible: false,
+      };
+    }
     const summaryRes = calculateSummary(voucher.transaction.details, voucher, {
       result: {},
     });
@@ -660,10 +663,10 @@ const verified = Boolean(vch.master.pdtVerified);
     voucher.formElements.lblPosted.visible = voucher.isPostedTransaction;
     voucher.formElements.cbCostCentre.disabled =
       voucher.transaction.master.costCentreID <= 0 &&
-      (formState.userConfig?.presetCostenterId ?? 0) > 0
+        (formState.userConfig?.presetCostenterId ?? 0) > 0
         ? true
         : false;
-    
+
     if (voucher.transaction.attachments) {
       voucher.transaction.attachments = refactorAttachments(
         voucher.transaction
@@ -721,16 +724,14 @@ const verified = Boolean(vch.master.pdtVerified);
     const response =
       voucherType !== "LPO"
         ? await api.getAsync(
-            `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
-            `formType=${formType ? formType : ""}&voucherType=${
-              voucherType ? voucherType : ""
-            }&voucherPrefix=${
-              voucherPrefix ? voucherPrefix : ""
-            }&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false}`
-          )
+          `${Urls.inv_transaction_base}${transactionType}/GetNextVoucherNumber/`,
+          `formType=${formType ? formType : ""}&voucherType=${voucherType ? voucherType : ""
+          }&voucherPrefix=${voucherPrefix ? voucherPrefix : ""
+          }&isVoucherPrefix=${isVoucherPrefix ? isVoucherPrefix : false}`
+        )
         : undefined;
 
-    const nextVoucherNumber = response || {voucherNumber: 1, voucherPrefix: ""};
+    const nextVoucherNumber = response || { voucherNumber: 1, voucherPrefix: "" };
 
     return nextVoucherNumber;
   };
@@ -745,8 +746,8 @@ const verified = Boolean(vch.master.pdtVerified);
   const checkBranchIsCommonInventory = async (branchID: number): Promise<boolean> => {
     let result = true;
     const response = await api.getAsync(`/Branch/CheckBranchIsCommonInventoryOrNot?branchId=${branchID}`);
-    if(response.length > 0){
-      if(response?.useMainBranchInventory === false){
+    if (response.length > 0) {
+      if (response?.useMainBranchInventory === false) {
         result = false;
         return false;
       }
@@ -763,41 +764,42 @@ const verified = Boolean(vch.master.pdtVerified);
     const firstFreeRow = details.findIndex((d) => !d.productBatchID);
     const lastRowIndex = firstFreeRow === -1 ? details.length : firstFreeRow;
     // Check if warehouse id
-    if(master.voucherType !== VoucherType.StockTransfer && master.voucherType !== VoucherType.DamageEntry && master.voucherType !== VoucherType.ExcessStock &&
-       master.voucherType !== VoucherType.ShortageStock && master.voucherType !== VoucherType.ItemLoadRequest ){
-      if (!master.fromWarehouseID ) {
-      await ERPAlert.show({
-        icon: "warning",
-        title: t("validation_error"),
-        text: t("Please Select the  Warehouse !"),
-        confirmButtonText: t("ok"),
-      });
-      return false;
+    if (master.voucherType !== VoucherType.StockTransfer && master.voucherType !== VoucherType.DamageEntry && master.voucherType !== VoucherType.ExcessStock &&
+      master.voucherType !== VoucherType.ShortageStock && master.voucherType !== VoucherType.ItemLoadRequest) {
+      if (!master.fromWarehouseID) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("please_select_the_warehouse"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
     }
-    }
-    else{
-    // Ware house validation
-    if (!master.fromWarehouseID || !master.toWarehouseID) {
-      await ERPAlert.show({
-        icon: "warning",
-        title: t("validation_error"),
-        text: t("Please Select the  Warehouse!"),
-        confirmButtonText: t("ok"),
-      });
-      return false;
-    }
+    else {
+      // Ware house validation
+      if (!master.fromWarehouseID || !master.toWarehouseID) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("please_select_the_warehouse"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
 
-    // Same Ware house validation
-    if (master.fromWarehouseID === master.toWarehouseID ) {
-      await ERPAlert.show({
-        icon: "warning",
-        title: t("validation_error"),
-        text: t("Please Select the Different Warehouse !!"),
-        confirmButtonText: t("ok"),
-      });
-      return false;
+      // Same Ware house validation
+      if (master.fromWarehouseID === master.toWarehouseID) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("please_select_the_different_warehouse"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
     }
-    }
+    //already in backend
     // if(master.invTransactionMasterID>0)
     // {
     //     int Active = new PolosysERPInventoryClass.Transaction.InventoryTransactionMaster().GetIsInvTransactionIsActiveOrInvoiced(PDTInvTransMasterID);
@@ -808,7 +810,8 @@ const verified = Boolean(vch.master.pdtVerified);
     //     }
     // }
     // Transaction date check
-    const transDateValidation = validateTransactionDate(
+    if(![VoucherType.ItemLoadRequest,VoucherType.OpeningStock].includes(master.voucherType as any)){
+     const transDateValidation = validateTransactionDate(
       new Date(new Date(formState.transaction.master.transactionDate)),
       false,
       undefined,
@@ -821,20 +824,14 @@ const verified = Boolean(vch.master.pdtVerified);
         icon: "warning",
       });
     }
-
-    
-    //     if (PolosysFrameWork.General.ValiddateTransactionDate(dtpTransDate.Value) == 0)
-    //     {
-    //         PolosysFrameWork.General.ShowMessageBox("Transaction Date validation failed(Check Financial Year period)", "Invalid Transaction Date");
-    //         return false;
-    //     }
-
+    }
+   
     //  No stock items validation
     if (lastRowIndex === 0) {
       await ERPAlert.show({
         icon: "warning",
-        title: t("validation_error"),
-        text: t("Please Enter the Stock Details, No Data in Detail Fields"),
+        title: t("no_data_in_detail_fields"),
+       text: t("please_enter_the_stock_details"),
         confirmButtonText: t("ok"),
       });
       return false;
@@ -848,11 +845,7 @@ const verified = Boolean(vch.master.pdtVerified);
         await ERPAlert.show({
           icon: "warning",
           title: t("validation_error"),
-          text: t(
-            `Invalid Item Details in Row ${
-              i + 1
-            } Please correct it or remove the row.`
-          ),
+         text: `${t("invalid_item_details_in_row")} ${i + 1}. ${t("please_correct_it_or_remove_the_row")}`,
           confirmButtonText: t("ok"),
         });
         return false;
@@ -862,198 +855,241 @@ const verified = Boolean(vch.master.pdtVerified);
         await ERPAlert.show({
           icon: "warning",
           title: t("validation_error"),
-          text: t(`"Product Unit ID is missing  Please cross-check:${i + 1}`),
+          text: `${t("product_unit_id_is_missing_please_cross_check")} ${i + 1}`,
         });
         return false;
       }
+      if (!row.qty) {
+        const confirm = await ERPAlert.show({
+          icon: "question",
+          title: t("zero_value"),
+          text: `${t("zero_qty_entered_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+        if (!confirm) {
+          const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
+          const res = safeFocusColumn(rowIndex, "qty");
+          setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+          return false;
+        }
+      }
+    }
+    // Find first blank row (similar to FirstFreeRow)
+    const firstFreeRow1 = details.findIndex(
+      (x) => !x.productBatchID && !x.productID
+    );
+
+    if (firstFreeRow1 !== -1) {
+      for (let i = firstFreeRow1 + 1; i < details.length; i++) {
+        const row = details[i];
+
+        if (row.productID) {
+          await ERPAlert.show({
+            icon: "warning",
+            title: t("validation_error"),
+            text: `${t("items_entered_after_blank_row_will_be_skipped_please_remove_blank_row")} ${firstFreeRow1 + 1}.`, confirmButtonText: t("ok"),
+          });
+          return false;
+        }
+      }
     }
 
-     //  ---------------------------------BTO, BTI Validation---------------------------------------------------
-// --------------validation error massages------------------
+    //  ---------------------------------BTO, BTI Validation---------------------------------------------------
+    // --------------validation error massages------------------
 
-        if(master.voucherType === VoucherType.BranchTransferIn || master.voucherType === VoucherType.BranchTransferOut){
-          // Grand total check
-          if (master.grandTotal < 0) {
-            await ERPAlert.show({
-              icon: "error",
-              title: t("validation_error"),
-              text: t("wrong_discount_or_value_please_check_value"),
-              confirmButtonText: t("ok"),
-              showCancelButton: false,
-            });
-            return false;
-          }
-          //   // Zero Quantity validation
-          for (let i = 0; i < lastRowIndex; i++) {
-            if (Number(details[i].qty) === 0) {
-              const confirm = await ERPAlert.show({
-                icon: "warning",
-                title: t("validation_error"),
-                text: t(`zero_qty_in_row ${i + 1} do_you_want_to_continue?`),
-                confirmButtonText: t("ok"),
-              });
+    if (master.voucherType === VoucherType.BranchTransferIn || master.voucherType === VoucherType.BranchTransferOut) {
+      // Grand total check
+      if (master.grandTotal < 0) {
+        await ERPAlert.show({
+          icon: "error",
+          title: t("validation_error"),
+          text: t("wrong_discount_or_value_please_check_value"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+      //   // Zero Quantity validation
+      for (let i = 0; i < lastRowIndex; i++) {
+        if (Number(details[i].qty) === 0) {
+          const confirm = await ERPAlert.show({
+            icon: "warning",
+            title: t("validation_error"),
+            text: t(`zero_qty_in_row ${i + 1} do_you_want_to_continue?`),
+            confirmButtonText: t("ok"),
+          });
 
-              if (!confirm) return false;
-            }
-          }
-          if (Number(master.fromWarehouseID || 0) < 1) {
-            await ERPAlert.show({
-              icon: "warning",
-              title: t("validation_error"),
-              text: t("please_select_valid_from_branch_warehouse"),
-              confirmButtonText: t("ok"),
-            });
-            return false;
-          }
-          debugger;
-          if (Number(master.branchID || 0) < 2) {
-            await ERPAlert.show({
-              icon: "warning",
-              title: t("validation_error"),
-              text: t("please_select_valid_to_branch_warehouse"),
-              confirmButtonText: t("ok"),
-            });
-            return false;
-          }
-          
-          const selectedBranchId = Number(master.branchID || 0);          
-          const currentBranchId = Number(userSession.currentBranchId || 0)
+          if (!confirm) return false;
+        }
+      }
+      if (Number(master.fromWarehouseID || 0) < 1) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("please_select_valid_from_branch_warehouse"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
+      debugger;
+      if (Number(master.branchID || 0) < 2) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("please_select_valid_to_branch_warehouse"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+      }
 
-          const showNotLinkedMsg = async () => {
-            await ERPAlert.show({
-              icon: "warning",
-              title: t("validation_error"),
-              text: t("Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible"),
-              confirmButtonText: t("ok"),
-              showCancelButton: false,
-            });
-          };
-          // Case 1: selected branch is Main (1) -> check current branch
-          if (selectedBranchId === 1) {
-            const isLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
-            if (!isLinked) {
-              await showNotLinkedMsg();
-              return false;
-            }
-          }
-          // Case 2: selected branch is NOT main, but current is Main -> check selected branch
-          else if (selectedBranchId !== 1 && currentBranchId === 1) {
-            const isLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
-            if (!isLinked) {
-              await showNotLinkedMsg();
-              return false;
-            }
-          }
-          // Case 3: both are NOT main -> check BOTH branches
-          else if (selectedBranchId !== 1 && currentBranchId !== 1) {
-            const isSelectedLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
-            if (!isSelectedLinked) {
-              await showNotLinkedMsg();
-              return false;
-            }
+      const selectedBranchId = Number(master.branchID || 0);
+      const currentBranchId = Number(userSession.currentBranchId || 0)
 
-            const isCurrentLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
-            if (!isCurrentLinked) {
-              await showNotLinkedMsg();
-              return false;
-            }
-          }
-             // Party selection check
-          if (selectedBranchId <= 0) {
-            await ERPAlert.show({
-              icon: "warning",
-              title: t("validation_error"),
-              text: t("branch_should_be_selected"),
-              confirmButtonText: t("ok"),
-              showCancelButton: false,
-            });
-            return false;
-          }
-
-          if (selectedBranchId === currentBranchId) {
-            await ERPAlert.show({
-              icon: "warning",
-              title: t("validation_error"),
-              text: t("please_select_different_branch_to_transfer"),
-              confirmButtonText: t("ok"),
-              showCancelButton: false,
-            });
-            return false;
-          }
-
-          if (Number(master.salesManID || 0) <= 0) {
-            await ERPAlert.show({
-              icon: "warning",
-              title: t("validation_error"),
-              text: t("select_valid_salesman"),
-              confirmButtonText: t("ok"),
-              showCancelButton: false,
-            })
-            return false;
-          }
-
-          // --------------------------------showNegativeStockWarning---------------------------------
-
-          // let showNegativeStockWarning = applicationSettings.inventorySettings.showNegStockWarning;
-
-          // if (userSession.dbIdValue === "BAHAMDOON") {
-          //   showNegativeStockWarning = master.negativeStockModeFromWarehouse; 
-          // }
-
-          // if(applicationSettings.inventorySettings.showNegStockWarning && userSession.dbIdValue === "BAHAMDOON"){
-
-          // } 
-// -------------------------------------------------------------------------------------------------
-          // if (showNegativeStockWarning === "Block") {
-          //   for (let i = 0; i < lastRowIndex; i++) {
-          //     const row = details[i];
-
-          //     const qty = Number(row.qty || 0);
-          //     const prevQty = Number(row.prevQty || 0);     // C# used Qty.Tag (previous qty)
-          //     let qtyDiff = qty - prevQty;
-
-          //     const stock = Number(row.stock || 0);
-
-          //     // C# MultiFactor = GetProductUnitQty(productBatchId, unitId)
-          //     // Use row.unitMultiFactor if you already have it, else call API once per row or cache it.
-          //     const multiFactor = Number(row.unitMultiFactor || 1);
-          //     qtyDiff = qtyDiff * multiFactor;
-
-          //     if (qtyDiff > stock) {
-          //       await ERPAlert.show({
-          //         icon: "warning",
-          //         title: t("validation_error"),
-          //         text: t("negative_stock_in_row_cant_proceed", { row: i + 1 }),
-          //         confirmButtonText: t("ok"),
-          //         showCancelButton: false,
-          //       });
-          //       return false;
-          //     }
-          //   }
-          // }
-
-
-// ---------------------getIsInvTransactionActiveOrInvoiced--------------
-
-          // if (Number(master.pdtInvTransMasterID || 0) > 0) {
-
-          //   const active = await getIsInvTransactionActiveOrInvoiced(
-          //     master.pdtInvTransMasterID
-          //   );
-
-          //   if (active === 0) {
-          //     await ERPAlert.show({
-          //       icon: "warning",
-          //       title: t("validation_error"),
-          //       text: t("already_converted"),
-          //       confirmButtonText: t("ok"),
-          //     });
-
-          //     return false;
-          //   }
-          // }
+      const showNotLinkedMsg = async () => {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+      };
+      // Case 1: selected branch is Main (1) -> check current branch
+      if (selectedBranchId === 1) {
+        const isLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
+        if (!isLinked) {
+          await showNotLinkedMsg();
+          return false;
+        }
+      }
+      // Case 2: selected branch is NOT main, but current is Main -> check selected branch
+      else if (selectedBranchId !== 1 && currentBranchId === 1) {
+        const isLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
+        if (!isLinked) {
+          await showNotLinkedMsg();
+          return false;
+        }
+      }
+      // Case 3: both are NOT main -> check BOTH branches
+      else if (selectedBranchId !== 1 && currentBranchId !== 1) {
+        const isSelectedLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
+        if (!isSelectedLinked) {
+          await showNotLinkedMsg();
+          return false;
         }
 
+        const isCurrentLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
+        if (!isCurrentLinked) {
+          await showNotLinkedMsg();
+          return false;
+        }
+      }
+      // Party selection check
+      if (selectedBranchId <= 0) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("branch_should_be_selected"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+
+      if (selectedBranchId === currentBranchId) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("please_select_different_branch_to_transfer"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+
+      if (Number(master.salesManID || 0) <= 0) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("validation_error"),
+          text: t("select_valid_salesman"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        })
+        return false;
+      }
+
+      // --------------------------------showNegativeStockWarning---------------------------------
+
+      // let showNegativeStockWarning = applicationSettings.inventorySettings.showNegStockWarning;
+
+      // if (userSession.dbIdValue === "BAHAMDOON") {
+      //   showNegativeStockWarning = master.negativeStockModeFromWarehouse; 
+      // }
+
+      // if(applicationSettings.inventorySettings.showNegStockWarning && userSession.dbIdValue === "BAHAMDOON"){
+
+      // } 
+      // -------------------------------------------------------------------------------------------------
+      // if (showNegativeStockWarning === "Block") {
+      //   for (let i = 0; i < lastRowIndex; i++) {
+      //     const row = details[i];
+
+      //     const qty = Number(row.qty || 0);
+      //     const prevQty = Number(row.prevQty || 0);     // C# used Qty.Tag (previous qty)
+      //     let qtyDiff = qty - prevQty;
+
+      //     const stock = Number(row.stock || 0);
+
+      //     // C# MultiFactor = GetProductUnitQty(productBatchId, unitId)
+      //     // Use row.unitMultiFactor if you already have it, else call API once per row or cache it.
+      //     const multiFactor = Number(row.unitMultiFactor || 1);
+      //     qtyDiff = qtyDiff * multiFactor;
+
+      //     if (qtyDiff > stock) {
+      //       await ERPAlert.show({
+      //         icon: "warning",
+      //         title: t("validation_error"),
+      //         text: t("negative_stock_in_row_cant_proceed", { row: i + 1 }),
+      //         confirmButtonText: t("ok"),
+      //         showCancelButton: false,
+      //       });
+      //       return false;
+      //     }
+      //   }
+      // }
+
+
+      // ---------------------getIsInvTransactionActiveOrInvoiced--------------
+
+      // if (Number(master.pdtInvTransMasterID || 0) > 0) {
+
+      //   const active = await getIsInvTransactionActiveOrInvoiced(
+      //     master.pdtInvTransMasterID
+      //   );
+
+      //   if (active === 0) {
+      //     await ERPAlert.show({
+      //       icon: "warning",
+      //       title: t("validation_error"),
+      //       text: t("already_converted"),
+      //       confirmButtonText: t("ok"),
+      //     });
+
+      //     return false;
+      //   }
+      // }
+    }
+    if(master.voucherType==VoucherType.ItemLoadRequest && master.remarks==""){
+      //For ILR have same warehouse check but not working so not added 
+       await ERPAlert.show({
+          title: t("validation_error"),
+          text: t("please_enter_remarks_to_cotinue"),
+          confirmButtonText: t("ok"),
+        });
+        return false;
+    }
     // ----------------------------------------------------------------------------------------
 
     //   // Zero Quantity validation
@@ -1076,8 +1112,7 @@ const verified = Boolean(vch.master.pdtVerified);
         await ERPAlert.show({
           title: t("validation_error"),
           text: t(
-            `Items entered after a blank row will be skipped.Please remove blank Row:: ${
-              lastRowIndex + 1
+            `Items entered after a blank row will be skipped.Please remove blank Row:: ${lastRowIndex + 1
             }`
           ),
           confirmButtonText: t("ok"),
@@ -1461,13 +1496,13 @@ const verified = Boolean(vch.master.pdtVerified);
             saveMode === "LPO"
               ? "PO"
               : saveMode === "LPQ"
-              ? "PQ"
-              : master.voucherType,
+                ? "PQ"
+                : master.voucherType,
           customerType:
             !clientSession.isAppGlobal &&
-            master.voucherType == "PR" &&
-            master.customerType == "" &&
-            applicationSettings.branchSettings.maintainKSA_EInvoice
+              master.voucherType == "PR" &&
+              master.customerType == "" &&
+              applicationSettings.branchSettings.maintainKSA_EInvoice
               ? "B2C"
               : master.customerType,
           transactionDate:
@@ -1485,13 +1520,13 @@ const verified = Boolean(vch.master.pdtVerified);
         const saveRes =
           formState.transaction.master.invTransactionMasterID > 0
             ? await api.putAsync(
-                `${Urls.inv_transaction_base}${transactionType}`,
-                params
-              )
+              `${Urls.inv_transaction_base}${transactionType}`,
+              params
+            )
             : await api.postAsync(
-                `${Urls.inv_transaction_base}${transactionType}`,
-                params
-              );
+              `${Urls.inv_transaction_base}${transactionType}`,
+              params
+            );
         if (saveRes.isOk == true) {
           dispatch(
             formStateTransactionUpdate({
@@ -1642,8 +1677,8 @@ const verified = Boolean(vch.master.pdtVerified);
         formState.transaction.master.voucherType == VoucherType.PurchaseReturn
           ? applicationSettings.inventorySettings?.defaultPurchaseReturnAcc
           : formState.transaction.master.voucherType == "DNS"
-          ? applicationSettings.inventorySettings?.defaultSalesAcc
-          : applicationSettings.inventorySettings?.defaultPurchaseAcc,
+            ? applicationSettings.inventorySettings?.defaultSalesAcc
+            : applicationSettings.inventorySettings?.defaultPurchaseAcc,
       ledgerID: applicationSettings.accountsSettings.defaultCashAcc,
       isLocked: false,
       grandTotal: 0,
@@ -2804,37 +2839,37 @@ const verified = Boolean(vch.master.pdtVerified);
     try {
 
       let branchId = -1;
-      let employeeId= -2;
+      let employeeId = -2;
       let employeeDisableStatus = false;
-      if(userSession.employeeId >0 ){
+      if (userSession.employeeId > 0) {
         employeeId = userSession.employeeId;
-        if(userSession.dbIdValue?.trim() ==="DURRAH_RYD"){
-           employeeDisableStatus = true;
+        if (userSession.dbIdValue?.trim() === "DURRAH_RYD") {
+          employeeDisableStatus = true;
         }
       }
       // Expand the condition after checking other forms
-      if(formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI"){
+      if (formState.transaction.master.voucherType === "BTO" || formState.transaction.master.voucherType === "BTI") {
         dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: {
-            formElements: {
-              cbEmployee: { disabled: employeeDisableStatus}
-            },
-            transaction: {
-              master: {
-                branchID: branchId,
-                fromWarehouseID: -2,
-                toBranchWarehouseID: -2,
-                driverID: -2,
-                deliveryManID: -2,
-                employeeID: employeeId,
-                vehicleID: -2,
-                voucherForm: -2
+          formStateHandleFieldChangeKeysOnly({
+            fields: {
+              formElements: {
+                cbEmployee: { disabled: employeeDisableStatus }
+              },
+              transaction: {
+                master: {
+                  branchID: branchId,
+                  fromWarehouseID: -2,
+                  toBranchWarehouseID: -2,
+                  driverID: -2,
+                  deliveryManID: -2,
+                  employeeID: employeeId,
+                  vehicleID: -2,
+                  voucherForm: -2
+                },
               },
             },
-          },
-        })
-      );
+          })
+        );
       }
     } catch (error) {
       console.error("Error refreshing data:", error);
@@ -2874,17 +2909,17 @@ const verified = Boolean(vch.master.pdtVerified);
         ? selectVoucherData[0].lastPrefix
         : "";
       const getVoucherNumberRes = await getNextVoucherNumber(
-              formState.transaction.master.voucherForm,
-              formState.transaction.master.voucherType,
-              formState.transaction.master.voucherType,
-              false
-            );
-      
-            dispatch(
-              formStateTransactionMasterHandleFieldChange({
-                fields: {
-                  voucherNumber: getVoucherNumberRes.voucherNumber,
-                  voucherPrefix: getVoucherNumberRes.voucherPrefix,
+        formState.transaction.master.voucherForm,
+        formState.transaction.master.voucherType,
+        formState.transaction.master.voucherType,
+        false
+      );
+
+      dispatch(
+        formStateTransactionMasterHandleFieldChange({
+          fields: {
+            voucherNumber: getVoucherNumberRes.voucherNumber,
+            voucherPrefix: getVoucherNumberRes.voucherPrefix,
             purchaseInvoiceNumber: "",
             // transactionMasterID: 0,
             transactionDate: moment(clientSession.softwareDate, "DD/MM/YYYY")
@@ -3174,8 +3209,7 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       });
       const res: DataAutoBarcode = await api.getAsync(
-        `${
-          Urls.inv_transaction_base
+        `${Urls.inv_transaction_base
         }${transactionType}/LoadProductDetailsByAutoBarCode?${queryParams.toString()}`
       );
 
@@ -3212,11 +3246,11 @@ const verified = Boolean(vch.master.pdtVerified);
         const _index =
           forImport != true
             ? formState.transaction.details.findIndex(
-                (x) =>
-                  x.barCode == product.autoBarcode &&
-                  x.productID > 0 &&
-                  x.slNo != detail.slNo
-              )
+              (x) =>
+                x.barCode == product.autoBarcode &&
+                x.productID > 0 &&
+                x.slNo != detail.slNo
+            )
             : -1;
         if (
           product.autoBarcode != "" &&
@@ -3285,10 +3319,10 @@ const verified = Boolean(vch.master.pdtVerified);
         // serial / description
         outDetail.productDescription = product.serialNumber;
 
-        if(isBTOorBTI){
+        if (isBTOorBTI) {
           outDetail.purchasePrice = product.stdPurchasePrice
           let multiFactor = product.multiFactor ?? 0;
-          if(product.isUnit2BarCode){
+          if (product.isUnit2BarCode) {
             outDetail.unit = product.unit2;
             outDetail.unitID = product.unit2ID;
             multiFactor = product.unit2Qty ?? multiFactor
@@ -3300,21 +3334,21 @@ const verified = Boolean(vch.master.pdtVerified);
             multiFactor = product.unit3Qty ?? multiFactor
             outDetail.unitPrice = product.unit3SalesPrice || 0;
           }
-          if(isToBranchStockVisible){
-              // string toBrStock = new PolosysERPInventoryClass.Masters.Products().GetBranchProductStock(dgvInventory.CurrentRow.Cells["ProductID"].Value.ToString(), dgvInventory.CurrentRow.Cells["ProductBatchID"].Value.ToString(), cbBranch.SelectedValue.ToString());
-              // dgvInventory.CurrentRow.Cells["ToBranchStock"].Value = toBrStock;
-              // string FromBrStock = new PolosysERPInventoryClass.Masters.Products().GetBranchProductStock(dgvInventory.CurrentRow.Cells["ProductID"].Value.ToString(), dgvInventory.CurrentRow.Cells["ProductBatchID"].Value.ToString(), PolosysFrameWork.General.BRANCHID.ToString());
-              // dgvInventory.CurrentRow.Cells["FromBrStock"].Value = FromBrStock;
+          if (isToBranchStockVisible) {
+            // string toBrStock = new PolosysERPInventoryClass.Masters.Products().GetBranchProductStock(dgvInventory.CurrentRow.Cells["ProductID"].Value.ToString(), dgvInventory.CurrentRow.Cells["ProductBatchID"].Value.ToString(), cbBranch.SelectedValue.ToString());
+            // dgvInventory.CurrentRow.Cells["ToBranchStock"].Value = toBrStock;
+            // string FromBrStock = new PolosysERPInventoryClass.Masters.Products().GetBranchProductStock(dgvInventory.CurrentRow.Cells["ProductID"].Value.ToString(), dgvInventory.CurrentRow.Cells["ProductBatchID"].Value.ToString(), PolosysFrameWork.General.BRANCHID.ToString());
+            // dgvInventory.CurrentRow.Cells["FromBrStock"].Value = FromBrStock;
           }
           outDetail.unitPrice = Number(product.stdPurchasePrice ?? 0);
           outDetail.vatPerc = 0;
-          if(formState.userConfig?.useMSPasUnitPrice && product.minSalePrice > 0){
+          if (formState.userConfig?.useMSPasUnitPrice && product.minSalePrice > 0) {
             outDetail.unitPrice = product.minSalePrice
           }
-          if(formState.userConfig?.userSalesPriceForStockTransfer && product.stdSalesPrice >0 ){
+          if (formState.userConfig?.userSalesPriceForStockTransfer && product.stdSalesPrice > 0) {
             outDetail.unitPrice = product.stdSalesPrice;
           }
-          if(multiFactor > 0){
+          if (multiFactor > 0) {
             const pPrice = outDetail.unitPrice;
             outDetail.unitPrice = pPrice * multiFactor;
 
@@ -3325,18 +3359,18 @@ const verified = Boolean(vch.master.pdtVerified);
           // }
 
           if (formState.userConfig?.showProductInfoPopup) {
-                dispatch(
-                  commonParams.formStateHandleFieldChangeKeysOnly({
-                    fields: {
-                      productInfo: true,
-                    },
-                  })
-                );
-              }
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  productInfo: true,
+                },
+              })
+            );
+          }
 
-          if(formState.userConfig?.userSalesPriceForStockTransfer){
+          if (formState.userConfig?.userSalesPriceForStockTransfer) {
             const PriceCategoryPrice = product.priceCategoryPrice;
-            if(PriceCategoryPrice !=0){
+            if (PriceCategoryPrice != 0) {
               outDetail.unitPrice = PriceCategoryPrice;
               outDetail.discPerc = product.priceCategoryDiscPerc
             }
@@ -3507,7 +3541,7 @@ const verified = Boolean(vch.master.pdtVerified);
             }
           }
         }
-        
+
 
         // default qty
         if (applicationSettings?.productsSettings?.setDefaultQty1) {
@@ -3547,7 +3581,7 @@ const verified = Boolean(vch.master.pdtVerified);
         outDetail.toWhouseStock = product.toWareHouseStockDetails; // check it
 
         // multi factor logic
-        if(!isBTOorBTI){
+        if (!isBTOorBTI) {
           if (product.multiFactor > 0) {
             const pPrice = Number(product.stdPurchasePrice);
             outDetail.cost = pPrice * product.multiFactor;
@@ -3619,9 +3653,9 @@ const verified = Boolean(vch.master.pdtVerified);
           ];
           final =
             _res?.transaction?.details != undefined &&
-            _res?.transaction?.details.length > 0
+              _res?.transaction?.details.length > 0
               ? (_res?.transaction
-                  ?.details[0] as DeepPartial<TransactionDetail>)
+                ?.details[0] as DeepPartial<TransactionDetail>)
               : latestData;
           if (!deviceInfo.isMobile) {
             currentDetails[data.rowIndex] = final as TransactionDetail;
@@ -3741,15 +3775,15 @@ const verified = Boolean(vch.master.pdtVerified);
       const OtherUnitPrice = await api.getAsync(
         `${Urls.inv_transaction_base}${transactionType}/ProductsUnitsOtherPrice?ProductBatchId=${detail.productBatchID}&UnitId=${outDetail.unitID}`
       );
-      
-      if(OtherUnitPrice > 0 ){
+
+      if (OtherUnitPrice > 0) {
         outDetail.salesPrice = OtherUnitPrice;
         outDetail.actualSalesPrice = OtherUnitPrice;
       }
-      if(formState?.userConfig?.userSalesPriceForStockTransfer && VoucherType.StockTransfer){
+      if (formState?.userConfig?.userSalesPriceForStockTransfer && VoucherType.StockTransfer) {
         outDetail.unitPrice = res.stdSalesPrice;
         outDetail.unitPriceTag = res.stdSalesPrice;
-        if(OtherUnitPrice > 0 ){
+        if (OtherUnitPrice > 0) {
           outDetail.unitPrice = OtherUnitPrice;
           outDetail.unitPriceTag = OtherUnitPrice;
         }
@@ -3874,7 +3908,7 @@ const verified = Boolean(vch.master.pdtVerified);
           false
         );
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const handleTextDataKeyDown = async (
     value: any,
@@ -4052,14 +4086,14 @@ const verified = Boolean(vch.master.pdtVerified);
           // Space key
           // Managing multi unit condition cases
           let multiUnitCheckStatus = false
-          const multiUnitVoucherTypes = ["ST", "DMG", "SH","EX","SC","AD"];
+          const multiUnitVoucherTypes = ["ST", "DMG", "SH", "EX", "SC", "AD"];
           if (multiUnitVoucherTypes.includes(formState.transaction.master.voucherType ?? "")) {
-            if(formState.allowMultiUnits){
+            if (formState.allowMultiUnits) {
               multiUnitCheckStatus = true;
-            }else{
+            } else {
               multiUnitCheckStatus = false;
             }
-          }else{
+          } else {
             multiUnitCheckStatus = true;
           }
           if (multiUnitCheckStatus) {
@@ -4265,7 +4299,7 @@ const verified = Boolean(vch.master.pdtVerified);
 
             if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-                "WARN" &&
+              "WARN" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -4296,7 +4330,7 @@ const verified = Boolean(vch.master.pdtVerified);
               }
             } else if (
               applicationSettings.inventorySettings?.showRateWarning.toUpperCase() ==
-                "BLOCK" &&
+              "BLOCK" &&
               data.salesPrice > 0
             ) {
               if (data.unitPrice > data.salesPrice) {
@@ -4307,7 +4341,7 @@ const verified = Boolean(vch.master.pdtVerified);
           } else if (columnName == "btnPrintBarcode") {
             if (
               formState.transaction.details[rowIndex].qty +
-                formState.transaction.details[rowIndex].stickerQty <=
+              formState.transaction.details[rowIndex].stickerQty <=
               0
             ) {
               break;
@@ -4549,9 +4583,8 @@ const verified = Boolean(vch.master.pdtVerified);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `Purchase_Import_Template_${
-        new Date().toISOString().split("T")[0]
-      }.xlsx`;
+      link.download = `Purchase_Import_Template_${new Date().toISOString().split("T")[0]
+        }.xlsx`;
       link.style.display = "none";
 
       document.body.appendChild(link);
@@ -4782,14 +4815,14 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       }
 
-      if(formState.transaction.master.voucherType === "EX" || formState.transaction.master.voucherType === "OS"){
+      if (formState.transaction.master.voucherType === "EX" || formState.transaction.master.voucherType === "OS") {
         ERPAlert.show({
-        icon: "info",
-        title: t(""),
-        text: t("loaded_successfully!. please_save"),
-        confirmButtonText: t("ok"),
-        showCancelButton: false
-       });
+          icon: "info",
+          title: t(""),
+          text: t("loaded_successfully!. please_save"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false
+        });
       }
 
       // setImportedCount(excelData.length);
@@ -4842,8 +4875,8 @@ const verified = Boolean(vch.master.pdtVerified);
           [ledgerBalance, ledgerData] = await Promise.all([
             (ledgerID ?? 0) > 0
               ? api.getAsync(
-                  `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
-                )
+                `${Urls.inv_transaction_base}${transactionType}/LedgerBalance/${ledgerID}`
+              )
               : 0,
             api.getAsync(
               `${Urls.inv_transaction_base}${transactionType}/LedgerDetails?LedgerId=${ledgerID}`
@@ -5002,12 +5035,12 @@ const verified = Boolean(vch.master.pdtVerified);
 
     try {
       // 1️⃣ Check if ILR already loaded
-      const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ByILRReferenceNo/${formState.transaction.master.deliveryNoteNumber}`,{});
+      const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/ByILRReferenceNo/${formState.transaction.master.deliveryNoteNumber}`, {});
 
 
       if (response?.isOk == true) {
-        if(response?.item?.details.length > 0 ){
-          if(response?.item?.isLoadedILR){
+        if (response?.item?.details.length > 0) {
+          if (response?.item?.isLoadedILR) {
             ERPAlert.show({
               icon: "warning",
               text: `${t("this_ilr_is_already_loaded_in_st")} : ${response?.item?.loadedSTVoucherNumber}, ${t("do_you_want_to_load_again")}`,
@@ -5021,11 +5054,12 @@ const verified = Boolean(vch.master.pdtVerified);
                 return;
               }
             })
-            
-          }else{
+
+          } else {
             handleLoadRequest(response);
           }
-          }} else {
+        }
+      } else {
         ERPAlert.show({
           icon: "warning",
           text: t(response?.message),
@@ -5178,16 +5212,16 @@ const verified = Boolean(vch.master.pdtVerified);
       );
       // Can optimize the below code if having time
       let apiEndPoint = "";
-      if(transactionType === "OpeningStock"){
-          apiEndPoint = "OpeningProducts"
-      }else if(transactionType ==="BranchTransferOut" || transactionType ==="BranchTransferIn"){
+      if (transactionType === "OpeningStock") {
+        apiEndPoint = "OpeningProducts"
+      } else if (transactionType === "BranchTransferOut" || transactionType === "BranchTransferIn") {
         apiEndPoint = "LoadProducts"
       }
       const warehouseId = formState.transaction.master.fromWarehouseID || 1;
       let mappedProducts: any[] = [];
-      if(transactionType ==="BranchTransferOut" || transactionType ==="BranchTransferIn"){
-         const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/${apiEndPoint}/${warehouseId}`);
-         if (response?.isOk === false) {
+      if (transactionType === "BranchTransferOut" || transactionType === "BranchTransferIn") {
+        const response = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/${apiEndPoint}/${warehouseId}`);
+        if (response?.isOk === false) {
           console.log("Failed to load Products")
           return;
         }
@@ -5233,7 +5267,7 @@ const verified = Boolean(vch.master.pdtVerified);
           });
         }
       }
-      if(transactionType === "OpeningStock"){
+      if (transactionType === "OpeningStock") {
         const response = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/${apiEndPoint}/${warehouseId}`, {});
         if (response?.isOk === false) {
           console.log("Failed to load Products")
@@ -5246,7 +5280,7 @@ const verified = Boolean(vch.master.pdtVerified);
           console.log("No_products_found")
           return;
         }
-       
+
         if (products && products.length > 0) {
           mappedProducts = products.map((p: any) => {
             const qty = Number(p.qty || 0);
@@ -5348,21 +5382,21 @@ const verified = Boolean(vch.master.pdtVerified);
   const handleResetStockToZero = async () => {
     // Based on the backend change in code, we need to pass all the data in a single api call, not two needed now- verify it
     // if(formState.allPositiveStockToZero){
-      let alertText = "";
-      let alertTittle = ""
-      if(formState.allPositiveStockToZero && formState.allNegativeStockToZero){
-        alertText = "do_you_want_to_reset_all_positive_and_negative_stock_to_zero?"
-        alertTittle = "positive_and_negative_stock_reset"
-      }
-      else if(formState.allPositiveStockToZero){
-        alertText = "do_you_want_to_reset_all_positive_stock_to_zero"
-        alertTittle = "positive_stock_reset"
-      }else if(formState.allNegativeStockToZero){
-        alertText = "do_you_want_to_reset_all_negative_stock_to_zero"
-        alertTittle = "negative_stock_reset"
-      }
+    let alertText = "";
+    let alertTittle = ""
+    if (formState.allPositiveStockToZero && formState.allNegativeStockToZero) {
+      alertText = "do_you_want_to_reset_all_positive_and_negative_stock_to_zero?"
+      alertTittle = "positive_and_negative_stock_reset"
+    }
+    else if (formState.allPositiveStockToZero) {
+      alertText = "do_you_want_to_reset_all_positive_stock_to_zero"
+      alertTittle = "positive_stock_reset"
+    } else if (formState.allNegativeStockToZero) {
+      alertText = "do_you_want_to_reset_all_negative_stock_to_zero"
+      alertTittle = "negative_stock_reset"
+    }
 
-      if (formState.allPositiveStockToZero || formState.allNegativeStockToZero) {
+    if (formState.allPositiveStockToZero || formState.allNegativeStockToZero) {
 
       try {
         ERPAlert.show({
@@ -5384,8 +5418,8 @@ const verified = Boolean(vch.master.pdtVerified);
             const queryString = new URLSearchParams(params as any).toString();
             // Need t check if the parameters are passed like this based on the api definition
             const res = await api.getAsync(`${Urls.inv_transaction_base}${transactionType}/SetToZero?${queryString}`);
-            
-            if(res.length > 0){
+
+            if (res.length > 0) {
               // progressBar1.Visible = true;
               // lblCount.Visible = true;
               // //  lblProgress.Visible = true;
@@ -5418,21 +5452,21 @@ const verified = Boolean(vch.master.pdtVerified);
   const HandleLoadStockCountBtn = async () => {
 
     try {
-    const tm: DeepPartial<TransactionFormState> = {
-      transaction: {
-        master: {}
-      }
-    };
+      const tm: DeepPartial<TransactionFormState> = {
+        transaction: {
+          master: {}
+        }
+      };
 
-    const master = tm.transaction!.master!;
-    master.voucherNumber = formState.transaction.master.stockCountVrNumber;
-    master.voucherPrefix = formState.transaction.master.stockCountPrefix;
-    master.voucherType = "SC"; // STOCK COUNT
-    master.voucherForm = "";
+      const master = tm.transaction!.master!;
+      master.voucherNumber = formState.transaction.master.stockCountVrNumber;
+      master.voucherPrefix = formState.transaction.master.stockCountPrefix;
+      master.voucherType = "SC"; // STOCK COUNT
+      master.voucherForm = "";
 
-    // Make correct the endpoint after set
-    // The below is not the correct api endponit - just added for checking
-    const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/LoadStockCount`,
+      // Make correct the endpoint after set
+      // The below is not the correct api endponit - just added for checking
+      const res = await api.postAsync(`${Urls.inv_transaction_base}${transactionType}/LoadStockCount`,
         {
           warehouseId: formState.transaction.master.fromWarehouseID,
           voucherNumber: master.voucherNumber,
@@ -5442,7 +5476,7 @@ const verified = Boolean(vch.master.pdtVerified);
           fromBranchID: master.branchID,
           financialYearID: master.financialYearID,  // Check This is needed!
           isUsingManualInvoiceNo: false,
-          manualInvoiceNumber:master.mannualInvoiceNumber,
+          manualInvoiceNumber: master.mannualInvoiceNumber,
           // isActualPriceVisible: true,
           // isStockDetailVisible: true,
           // pdtInvTransMasterID: 0,
@@ -5450,122 +5484,122 @@ const verified = Boolean(vch.master.pdtVerified);
         }
       );
 
-    if (!res.isOk || !res.item?.details || res.item.details.length === 0) {
-      ERPAlert.show({
-        icon: "warning",
-        text: t("no_record_found_with_this_voucher_number"),
-        title: "",
+      if (!res.isOk || !res.item?.details || res.item.details.length === 0) {
+        ERPAlert.show({
+          icon: "warning",
+          text: t("no_record_found_with_this_voucher_number"),
+          title: "",
+        });
+        return;
+      }
+
+      const responseDetails = res.item.details;
+      const mappedDetails = responseDetails.map((p: any, index: number) => {
+        const qty = Number(p.quantity || 0);
+        const stock = Number(p.stock || 0);
+        const diff = qty - stock;
+        const unitPrice = Number(p.stdPurchasePrice || 0);
+        const netAmount = qty * unitPrice;
+
+        return {
+          ...initialTransactionDetailData,
+          // slNo: generateUniqueKey(),   
+          pCode: p.productCode ?? "",
+          product: p.productName ?? "",
+          productID: p.productID ?? 0,
+          barCode: p.autoBarcode ?? "",
+          productBatchID: p.productBatchID ?? 0,
+          unitPrice: unitPrice,
+          cost: unitPrice,
+          unit: p.unitName ?? "",
+          unitID: p.unitID ?? 0,
+          qty: qty,
+          stock: stock,
+          fromWhouseStock: stock,
+          excess: diff > 0 ? diff : 0,
+          shortage: diff < 0 ? Math.abs(diff) : 0,
+          gross: netAmount,  // for fix zero qty validation
+          netValue: netAmount,  // for fix zero qty validation
+          total: netAmount,
+        };
       });
-      return;
-    }
 
-    const responseDetails = res.item.details;
-    const mappedDetails = responseDetails.map((p: any, index: number) => {
-      const qty = Number(p.quantity || 0);
-      const stock = Number(p.stock || 0);
-      const diff = qty - stock;
-      const unitPrice = Number(p.stdPurchasePrice || 0);
-      const netAmount = qty * unitPrice;
-
-      return {
+      // Add empty rows for new entries
+      const emptyRows = Array.from({ length: 30 }, () => ({
         ...initialTransactionDetailData,
-        // slNo: generateUniqueKey(),   
-        pCode: p.productCode ?? "",
-        product: p.productName ?? "",
-        productID: p.productID ?? 0,
-        barCode: p.autoBarcode ?? "",
-        productBatchID: p.productBatchID ?? 0,
-        unitPrice: unitPrice,
-        cost: unitPrice,
-        unit: p.unitName ?? "",
-        unitID: p.unitID ?? 0,
-        qty: qty,
-        stock: stock,
-        fromWhouseStock: stock,
-        excess: diff > 0 ? diff : 0,
-        shortage: diff < 0 ? Math.abs(diff) : 0,
-        gross: netAmount,  // for fix zero qty validation
-        netValue: netAmount,  // for fix zero qty validation
-        total: netAmount,
-      };
-    });
+        slNo: generateUniqueKey(),
+      }));
 
-    // Add empty rows for new entries
-    const emptyRows = Array.from({ length: 30 }, () => ({
-      ...initialTransactionDetailData,
-      slNo: generateUniqueKey(),
-    }));
+      const details = [...mappedDetails, ...emptyRows];
+      // Show summary
+      const summaryRes = calculateSummary(details, formState, { result: {} });
+      if (summaryRes.summary) {
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: { summary: summaryRes.summary },
+            updateOnlyGivenDetailsColumns: false,
+          })
+        );
+      }
 
-    const details = [...mappedDetails, ...emptyRows];
-    // Show summary
-    const summaryRes = calculateSummary(details, formState, { result: {} });
-    if (summaryRes.summary) {
+      // Update grid
+      dispatch(formStateSetDetails(details));
+
+      // Enable Save button (rights check)
       dispatch(
-        formStateHandleFieldChangeKeysOnly({
-          fields: { summary: summaryRes.summary },
-          updateOnlyGivenDetailsColumns: false,
+        updateFormElement({
+          fields: {
+            btnSave: {
+              disabled: !hasRight(formState.formCode, UserAction.Add),
+            },
+          },
         })
       );
+
+    } catch (error) {
+      console.error(error);
+      console.log("Failed to load stock count data");
     }
 
-    // Update grid
-    dispatch(formStateSetDetails(details));
-
-    // Enable Save button (rights check)
-    dispatch(
-      updateFormElement({
-        fields: {
-          btnSave: {
-            disabled: !hasRight(formState.formCode, UserAction.Add),
-          },
-        },
-      })
-    );   
-
-  }catch (error) {
-    console.error(error);
-    console.log("Failed to load stock count data");
   }
 
-  }
+  // The below code need to update after the end point response correct 
+  const refreshInventoryClick = async () => {
+    let status = false;
+    try {
+      const branches = await api.getAsync(Urls.select_branch);
+      debugger;
+      if (branches && branches.length > 0) {
+        for (let i = 2; i < branches.length; i++) {
+          const branchId = branches[i].branchID;
+          // The below code commented due to unavailability of end point
+          // const response = await api.postAsync(Urls.refreshAllBranches,{ branchId });
 
-    // The below code need to update after the end point response correct 
-    const refreshInventoryClick = async () => {
-      let status = false;
-      try {
-         const branches = await api.getAsync(Urls.select_branch);
-         debugger;
-        if (branches && branches.length > 0) {
-          for (let i = 2; i < branches.length; i++) {
-            const branchId = branches[i].branchID;
-            // The below code commented due to unavailability of end point
-            // const response = await api.postAsync(Urls.refreshAllBranches,{ branchId });
-
-            // if (!response) {
-            //   status = false;
-            //   break;
-            // }
-          }
-          if (status) {
-            ERPAlert.show({
-              icon: "success",
-              title: t("successfully_completed"),
-              text: t(""),
-              confirmButtonText: t("ok"),
-            });
-          } else {
-            ERPAlert.show({
-              icon: "error",
-              title: t("unexpected_error"),
-              text: t(""),
-              confirmButtonText: t("ok"),
-            });
-          }
+          // if (!response) {
+          //   status = false;
+          //   break;
+          // }
         }
-      } catch (error) {
-        console.error("Refresh error:", error);
+        if (status) {
+          ERPAlert.show({
+            icon: "success",
+            title: t("successfully_completed"),
+            text: t(""),
+            confirmButtonText: t("ok"),
+          });
+        } else {
+          ERPAlert.show({
+            icon: "error",
+            title: t("unexpected_error"),
+            text: t(""),
+            confirmButtonText: t("ok"),
+          });
+        }
       }
+    } catch (error) {
+      console.error("Refresh error:", error);
     }
+  }
 
   return {
     downloadImportTemplateHeadersOnly,

@@ -88,12 +88,11 @@ export const stockGridColStockJournal = (
       dataField: "cost",
       caption: t("cost"),
       dataType: "number",
-      decimalPoint: applicationSettings.mainSettings.decimalPoints,
-      readOnly: true,
+      decimalPoint: 4,
+      allowEditing:true,
       width: 100,
       alignment: "right",
     },
-
     {
       dataField: "brand",
       caption: t("brand"),
@@ -125,7 +124,6 @@ export const stockGridColStockJournal = (
       readOnly: false,
       alignment: "right",
     },
-
     {
       dataField: "unitID",
       caption: t("unit_id"),

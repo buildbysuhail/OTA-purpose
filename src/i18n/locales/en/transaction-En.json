@@ -1352,7 +1352,14 @@
   "please_specify_the_cardType!":"Please specify the CardType!",
   "ledger_not_found_please_check!":"Ledger Not Found. Please Check!",
   "please_specify_the_upi_type!":"Please specify the UPI Type!",
-  "please_specify_the_qr_type_type!":"Please specify the QR Type"
+  "please_specify_the_qr_type_type!":"Please specify the QR Type",
+
+  "enable_transaction_date":"Enable Transaction Date",
+  "discount_zero":"Discount Zero",
+  "discount_is_zero_do_you_want_to_continue":"Discount is zero, Do you want to continue?",
+  "enter_notes":"Enter Notes",
+  "token_no":"Token Number",
+  "please_type_here":"Please type here..."
 
 
 

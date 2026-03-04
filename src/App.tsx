@@ -467,6 +467,7 @@ function App() {
       {popupData.TemplateChooserModal.isOpen &&
         <ERPResizableSidebar
           minWidth={350}
+          zIndex={56}
           isOpen={popupData.TemplateChooserModal.isOpen ?? false}
           setIsOpen={() =>
             dispatch(

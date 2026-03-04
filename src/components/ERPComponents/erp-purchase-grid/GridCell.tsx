@@ -477,7 +477,7 @@ const cellContentStyle = {...getCellContentStyle(column)}
           onClick={() =>
              handlRowKeyDown(
               cellValue,
-              { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
+              { key: "Enter", preventDefault: () => {}, stopPropagation: () => {}, shiftKey: false, ctrlKey: false } as unknown as React.KeyboardEvent<HTMLElement>,
               column,
               index,
               details
@@ -547,7 +547,7 @@ const cellContentStyle = {...getCellContentStyle(column)}
               e.stopPropagation();
               onKeyDown(
                 item.slNo,
-                { key: "Enter" } as React.KeyboardEvent<HTMLElement>,
+                { key: "Enter", preventDefault: () => {}, stopPropagation: () => {}, shiftKey: false, ctrlKey: false } as unknown as React.KeyboardEvent<HTMLElement>,
                 "actionCol",
                 index
               );

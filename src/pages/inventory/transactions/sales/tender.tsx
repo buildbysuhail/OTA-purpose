@@ -68,6 +68,17 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
 
   const [upiList, setUpiList] = useState([]);
   const [bankCards, setBankCards] = useState([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        discAmountRef.current?.focus();
+        discAmountRef.current?.select();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   // Load Banc Card Details
   useEffect(() => {
     const loadBankCards = async () => {
@@ -196,8 +207,8 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       totalNet = totalNet + additionalAmt + roundOf - couponAmt;
     }else{
       if(isFromSave){
-         totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
-        totalNet = totalNet + additionalAmt;
+        totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
+        totalNet = totalNet + additionalAmt + roundOf - couponAmt;
       }else{
         totalNet = formState.summary.netValue || 0;
         totalNet = totalNet + additionalAmt;
@@ -781,7 +792,13 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
           },
         })
       )
-      resolveTenderPromise(true);
+      resolveTenderPromise({
+        bankCardDetails:formState.transaction.bankCardDetails,
+        upiDetails: formState.transaction.uPIDetails,
+        cashReceived: updatedCash,
+        bankAmt: totalBankCardAmount + totalQrPayAmount + cardAmount,
+        billDiscount: discAmount
+      });
       onClose();
     }
   };
@@ -827,7 +844,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                 <input
                   type="number"
                   min="0"
-                  value={Number(Number(discPercent??0).toFixed(2))}
+                  value={Number(Number(discPercent??0))}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     handleDiscPercentChange(val < 0 ? 0 : val);
@@ -837,16 +854,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   className="w-1/2 min-w-0 bg-gray-100 text-black text-right text-lg font-semibold px-3 py-2 rounded-md border border-gray-200 outline-none focus:border-blue-400 disabled:bg-gray-200 disabled:opacity-60"
                 />
                 <input
-                  ref={(el) => {
-                    discAmountRef.current = el;
-                    if (el && !el.disabled) {
-                      el.focus();
-                      el.select();
-                    }
-                  }}
+                ref={discAmountRef}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
+                      e.stopPropagation();
                       setTimeout(() => {
                         if (cashRcvdRef.current) {
                           cashRcvdRef.current.focus();
@@ -916,7 +928,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   ref={cashRcvdRef}
                   type="number"
                   min="0"
-                  value={Number(cashRcvd).toFixed(3)}
+                  value={Number(cashRcvd)}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     setCashRcvd(val < 0 ? 0 : val);
@@ -924,7 +936,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-
+                      e.stopPropagation();
                       setTimeout(() => {
                         applyBtnRef.current?.focus();
                       }, 0);

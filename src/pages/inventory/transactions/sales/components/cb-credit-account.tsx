@@ -50,7 +50,7 @@ const CreditAccount = React.forwardRef<HTMLInputElement, CreditAccountProps>(({ 
           id="inventoryLedgerID"
           // nameField="costCentreName"
           noLabel
-          className="min-w-[180px] !m-0"
+          // className="min-w-[180px] !m-0"
           fetching={formState.transactionLoading}
           // transactionLoading={true}
           label={t(formState.formElements.cbCreditAccount.label)}

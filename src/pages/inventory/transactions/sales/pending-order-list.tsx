@@ -608,6 +608,11 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
           allowExport={false}
           allowSearching={false}
           hideToolbar={true}
+          scrolling={{
+            mode: 'virtual',
+            useNative: true,
+            showScrollbar: 'always'
+          }}
           // showRowIndex={true}
         />
       </div>

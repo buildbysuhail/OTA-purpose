@@ -67,6 +67,7 @@ import { merge } from "lodash";
 import { AuthorizationModal } from "./components/AuthorizationSales";
 import DateChangeModal from "./components/dateChange";
 import EWayBillDetails from "./e-way-bill-details";
+import FlavoursFlv from "./flavours-flv";
 
 interface BilledItem {
   id?: number;
@@ -2466,19 +2467,19 @@ const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualP
           )}
         </ERPResizableSidebar> */}
 
-        <ERPResizableSidebar
+        {/* <ERPResizableSidebar
           minWidth={350}
           isOpen={isAttachmentOpen}
           setIsOpen={setIsAttachmentOpen}
           children={<ERPAttachment setIsOpen={setIsAttachmentOpen} />}
-        />
+        /> */}
 
-        <ERPResizableSidebar
+        {/* <ERPResizableSidebar
           minWidth={350}
           isOpen={isHistoryOpen}
           setIsOpen={setIsHistoryOpen}
           children={<ERPAttachment setIsOpen={setIsHistoryOpen} />}
-        />
+        /> */}
 
         {formState.openUnsavedPrompt == true && (
           <UnsavedChangesModal
@@ -2623,6 +2624,26 @@ const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualP
             t={t}
             productId={null}
             rowIndex={formState.imfData.rowIndex}/>
+        )}
+
+        {/* Flavour modal setup */}
+        {formState.flavourData && formState.flavourData.visible && (
+          <FlavoursFlv
+            data={formState.flavourData.data}
+            isOpen={formState.flavourData.visible}
+            onClose={() =>
+              dispatch(
+                formStateHandleFieldChangeKeysOnly({
+                  fields: { flavourData: { visible: false, data: "", rowIndex: 0, slNo: 0} },
+                  updateOnlyGivenDetailsColumns: true,
+                })
+              )
+            }
+            t={t}
+            productId={formState.flavourData.productId}
+            rowIndex={formState.flavourData.rowIndex}
+            productName={formState.flavourData.productName}
+          /> 
         )}
 
         {formState.productInfo && (

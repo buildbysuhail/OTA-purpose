@@ -514,7 +514,7 @@ export interface UserConfig {
   autoIncrementQty?: boolean;
   initialFocusToCustomer?: boolean;
   showSearchPopupWindowAutomatically?: boolean;
-  enableVoucherPrefixAndDate?: boolean;
+  // enableVoucherPrefixAndDate?: boolean;
   showCustomersAfterSales?: boolean;
   UserSalesPriceForTransfer?: boolean;
   showSrInProductInfoPopup?: boolean;
@@ -524,6 +524,7 @@ export interface UserConfig {
   stockOutConfirmation?: boolean;
   taxOnMRP?: boolean;
   taxOnFreeItem?: boolean;
+  enableTransactionDate?: boolean;
   //india
   autoEwayBill?: boolean;
   disableEinvoice?: boolean;
@@ -661,10 +662,12 @@ export interface TransactionFormState {
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number, productName: string };
   imfData: { visible: boolean, data: string, rowIndex: number, slNo: number },
+  flavourData: { visible: boolean, data: string, rowIndex: number, slNo: number, productName: string,productId: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
   quantityFactorDataM: string;
+  flavoursSelectedData: string;
   currentCell?: CurrentCell;
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;
@@ -1204,3 +1207,11 @@ export type LoadSrParams = {
   voucherPrefix: string;
   voucherForm: string;
 };
+
+export interface TenderResult {
+  bankCardDetails: any;
+  cashReceived: number;
+  bankAmt: number;
+  billDiscount: number;
+  upiDetails: any;
+}

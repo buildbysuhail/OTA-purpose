@@ -148,9 +148,18 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(
             data-skip={skip}
             data-jump-to={jumpTo}
             data-jump-target={jumpTarget}
-            style={sizeStyles.checkbox}
+            style={{
+              ...sizeStyles.checkbox,
+
+              // ✅ Apply border color from customization page
+              borderColor: appState.mode === "dark"
+                ? "#ffffff"
+                : `rgb(${inputBoxState?.borderColor ? inputBoxState?.borderColor : `95 95 95 / 1`
+                })`
+            }}
             className={`form-check-input dark:!bg-dark-bg-card dark:!border-dark-border ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-              } ${inputClassName}`}
+              } ${inputClassName}`
+            }
             {...props}
           />
           {!noLabel && (

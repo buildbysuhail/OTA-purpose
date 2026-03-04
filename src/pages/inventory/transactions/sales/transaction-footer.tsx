@@ -624,6 +624,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       />
         {(formState.transaction.master.voucherType === VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft)  && (
         <ERPCheckbox
+        localInputBox={formState?.userConfig?.inputBoxStyle}
           id="gatePassPrint"
           label={t("gate_pass")}
           disabled={!(applicationSettings.printerSettings.printGatePass || applicationSettings.printerSettings.printSelectedGatePass)}
@@ -639,6 +640,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
       {/* Make the below for vat# in si footer instead of gatepass */}
       {(formState.transaction.master.voucherType === VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft)  && (
         <><ERPCheckbox
+        localInputBox={formState?.userConfig?.inputBoxStyle}
           id="vat"
           label={t("vat_#")}
           data={formState}
@@ -648,6 +650,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           }}
         />
           <ERPInput
+          localInputBox={formState?.userConfig?.inputBoxStyle}
             id="vatNo"
             label={t("Tax no")}
             noLabel={true}
@@ -735,12 +738,13 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 {showCostCentreOutside && costCentreComponent}
               </>
             )}
-            {(applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
+            {/* {(applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && showAttachmentOutside) && (
               attachmentComponent
-            )}
+            )} */}
             <div className="w-full sm:w-auto sm:max-w-[270px] gap-0.5 flex flex-wrap sm:flex-nowrap">
               {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="creditCardAmount"
                   label={t("credit_card_amount")}
                   type="number"
@@ -752,6 +756,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice || 
               formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                 <ERPInput
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="couponAmount"
                   label={t("coupon_amount")}
                   type="number"
@@ -775,6 +780,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full sm:w-[130px]">
                   <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="srAmount"
                     label={t('sr_amount')}
                     type="number"
@@ -954,6 +960,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
           {/* first half - Warehouse and Cost Centre on same row */}
           <div className="flex flex-row flex-wrap items-end gap-2 min-w-0">
             {showWarehouseOutside && warehouseComponent}
+            {priceCategoryComponent}
             {formState.transaction.master.voucherType !== VoucherType.GoodsReceiptNote && (
               <>{showCostCentreOutside && costCentreComponent}</>
             )}
@@ -967,6 +974,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 
                {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
                 <ERPInput
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="creditCardAmount"
                   label={t("credit_card_amount")}
                   type="number"
@@ -978,6 +986,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               {(formState.transaction.master.voucherType === VoucherType.SalesInvoice ||
                formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                 <ERPInput
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="couponAmount"
                   label={t("coupon_amount")}
                   type="number"
@@ -1001,6 +1010,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                  formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                   <div className="w-full sm:w-[140px]">
                     <ERPInput
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="srAmount"
                       label={t('sr_amount')}
                       type="number"
@@ -1111,6 +1121,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                          formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft)
                         && (
                       <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="gatePassPrint"
                         label={t("gate_pass")}
                         disabled={!(applicationSettings.printerSettings.printGatePass || applicationSettings.printerSettings.printSelectedGatePass)}
@@ -1130,6 +1141,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                  formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
                   <li className="flex items-center gap-2">
                     <ERPCheckbox
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="vatVertical"
                       label={t("vat_#")}
                       data={formState}
@@ -1137,6 +1149,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       onChange={(e) => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { vatChecked: e.target.checked } }))}
                     />
                     <ERPInput
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
                       id="vatNoVertical"
                       label={t("Tax no")}
                       type="string"
@@ -1148,7 +1161,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   </li>
                 )}
                 {/* Field 7: Attachment */}
-                {verticalVisibleFields <= 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+                {/* {verticalVisibleFields <= 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
                   <li>
                     <button className="text-[#2563eb]">
                       <span className="hover:underline text-[#0ea5e9] capitalize" onClick={selectAttachment}>
@@ -1156,7 +1169,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                       </span>
                     </button>
                   </li>
-                )}
+                )} */}
                 {/* Field 8: Credit Card Amount */}
                 {verticalVisibleFields <= 8 && formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
                   <li>
@@ -1193,6 +1206,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   <li className="flex items-end gap-1">
                     {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                       <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="srAmountVertical"
                         label={t('sr_amount')}
                         type="number"
@@ -1454,6 +1468,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
               {(verticalVisibleFields > 6 && formState.transaction.master.voucherType === VoucherType.SalesInvoice || formState.transaction.master.voucherType == VoucherType.SalesInvoiceDraft) && (
                 <div className="w-full flex items-center gap-2 mt-1">
                   <ERPCheckbox
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="vatVerticalMain"
                     label={t("vat_#")}
                     data={formState}
@@ -1461,6 +1476,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     onChange={(e) => dispatch(formStateHandleFieldChangeKeysOnly({ fields: { vatChecked: e.target.checked } }))}
                   />
                   <ERPInput
+                  localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="vatNoVerticalMain"
                     label={t("Tax no")}
                     type="string"
@@ -1472,7 +1488,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                 </div>
               )}
               {/* Field 7: Attachment */}
-              {verticalVisibleFields > 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
+              {/* {verticalVisibleFields > 7 && applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && (
                 <div className="w-full mt-1">
                   <button className="text-[#2563eb] dark:text-[#60a5fa]">
                     <span className="hover:underline text-[#0ea5e9] dark:text-[#60a5fa] capitalize" onClick={selectAttachment}>
@@ -1480,7 +1496,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                     </span>
                   </button>
                 </div>
-              )}
+              )} */}
               {/* Field 8: Credit Card Amount */}
               {verticalVisibleFields > 8 && formState.transaction.master.voucherType !== VoucherType.SalesReturn && (
                 <div className="w-full mt-1">
@@ -1518,6 +1534,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
                   {formState.transaction.master.voucherType === VoucherType.SalesInvoice && (
                     <div className="flex-1">
                       <ERPInput
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
                         id="srAmountVerticalMain"
                         label={t('sr_amount')}
                         type="number"
@@ -1869,15 +1886,16 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             )}
           </>
         )}
-        {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
+        {/* {applicationSettings.branchSettings.fileAttachmentMethod !== 'No' && !showAttachmentOutside && (
           <div className="w-full mb-2 sm:mb-0 sm:w-auto">
             {attachmentComponent}
           </div>
-        )}
+        )} */}
         {!showSecondHalf && (
           <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0 flex">
             {(![VoucherType.SalesReturn,VoucherType.SalesOrder,VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.GoodsDeliveryNote].includes(formState.transaction.master.voucherType as any) &&(
               <ERPInput
+              localInputBox={formState?.userConfig?.inputBoxStyle}
                 id="creditCardAmount"
                 label={t("credit_card_amount")}
                 type="number"
@@ -1914,6 +1932,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
              formState.transaction.master.voucherType === VoucherType.SalesInvoiceDraft) && (
               <div className="w-full sm:max-w-[180px] mb-2 sm:mb-0">
                 <ERPInput
+                localInputBox={formState?.userConfig?.inputBoxStyle}
                   id="srAmount"
                   label={t('sr_amount')}
                   type="number"

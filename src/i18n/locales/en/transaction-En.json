@@ -1359,7 +1359,19 @@
   "discount_is_zero_do_you_want_to_continue":"Discount is zero, Do you want to continue?",
   "enter_notes":"Enter Notes",
   "token_no":"Token Number",
-  "please_type_here":"Please type here..."
+  "please_type_here":"Please type here...",
+
+  "please_select_the_warehouse":"Please Select the  Warehouse !!",
+  "please_select_the_different_warehouse":"Please Select the Different Warehouse !!",
+  "no_data_in_detail_fields":"No Data in Detail Fields",
+  "please_enter_the_stock_details":"Please Enter the Stock Details",
+  "please_correct_it_or_remove_the_row":". Please correct it or remove the row.",
+  "product_unit_id_is_missing_please_cross_check":"Product Unit ID is missing, Please cross-check:",
+  "zero_qty_entered_in_row":"Zero Qty Entered in Row",
+  "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row":"Items entered after a blank row will be skipped.Please remove blank Row:",
+  "please_enter_remarks_to_cotinue":"Please enter remarks to cotinue"
+
+
 
 
 

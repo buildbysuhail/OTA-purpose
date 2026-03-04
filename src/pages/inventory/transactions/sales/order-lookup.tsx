@@ -48,7 +48,7 @@ debugger;
         "",
         0,
         undefined,
-        false,
+        true,   // skip prompt
         false,
         vType,
         undefined,

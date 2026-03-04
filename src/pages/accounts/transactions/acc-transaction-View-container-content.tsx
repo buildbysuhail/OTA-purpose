@@ -35,6 +35,9 @@ export interface TransactionViewProps {
   transactionMasterID?: number;
   financialYearID?: number;
   isTeller?: boolean | false;
+  isDrawerMode?: boolean;
+  onClose?: () => void;
+  onDeleteSuccess?: () => void;
 }
 
 const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (props) => {
@@ -71,6 +74,24 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
   const previewHeight = templateStyleProperties.previewHeight ?? 500; // Can be number or "auto"
   const isAutoHeight = templateStyleProperties.isAutoHeight ?? false;
   const printData = stableTemplateProps?.printData;
+
+  // Auto-scale preview to fit drawer width
+  const drawerContentRef = useRef<HTMLDivElement>(null);
+  const [drawerScale, setDrawerScale] = useState(1);
+
+  useEffect(() => {
+    if (!props.isDrawerMode || !drawerContentRef.current) return;
+    const el = drawerContentRef.current;
+    const updateScale = () => {
+      const containerWidth = el.offsetWidth - 32; // account for px padding
+      const previewPx = previewWidth * (96 / 72); // pt to px
+      setDrawerScale(previewPx > containerWidth ? containerWidth / previewPx : 1);
+    };
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [props.isDrawerMode, previewWidth]);
 
 
 
@@ -116,6 +137,10 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
         url.searchParams.append(key, String(value));
       }
     });
+
+    if (props.isDrawerMode && props.onClose) {
+      props.onClose();
+    }
 
     if (formState?.userConfig?.editInNewTab) {
       window.open(url.toString(), "_blank");
@@ -169,8 +194,12 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
         if (response.status === 200) {
           ERPToast.show(t("transaction_deleted_successfully"), "success");
           setTimeout(() => {
-            navigate(-1); // Go back to the previous page
-          }, 500); // Delay navigation to allow toast to be seen
+            if (props.isDrawerMode && props.onDeleteSuccess) {
+              props.onDeleteSuccess();
+            } else {
+              navigate(-1);
+            }
+          }, 500);
         }
       } catch (error) {
         console.error("Failed to delete transaction", error);
@@ -203,14 +232,15 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
         className="dark:bg-dark-bg-card"
         sx={{
           overflowY: "auto",
-          marginLeft: { lg: "350px", xl: "350px" },
+          overflowX: props.isDrawerMode ? "visible" : undefined,
+          marginLeft: props.isDrawerMode ? 0 : { lg: "350px", xl: "350px" },
           backgroundColor: "#fff",
           '.dark &': {
             backgroundColor: '#111827',
           }
         }}
       >
-        <header className="fixed z-40 w-[-webkit-fill-available] h-[52px] bg-white dark:bg-dark-bg-card flex items-center justify-between gap-4 px-6 py-3 border-b border-gray-200 dark:border-dark-border">
+        <header className={`${props.isDrawerMode ? 'sticky top-0' : 'fixed'} z-40 w-[-webkit-fill-available] h-[52px] bg-white dark:bg-dark-bg-card flex items-center justify-between gap-4 px-6 py-3 border-b border-gray-200 dark:border-dark-border`}>
           <h1 className="text-sm md:text-sm font-semibold tracking-tight text-[color:var(--color-foreground)] dark:!text-dark-text">
             {(() => {
               if (!printData || printData.kind !== "voucher") return "INV-__";
@@ -283,9 +313,9 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
               disabled={loading}
               type="button"
               className="h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded inline-flex items-center gap-1.5 transition-all duration-200"
-              title="Previous"
-              aria-label="Previous"
-              onClick={(e) => { e.preventDefault(); goToPreviousPage() }}
+              title={props.isDrawerMode ? "Close" : "Previous"}
+              aria-label={props.isDrawerMode ? "Close" : "Previous"}
+              onClick={(e) => { e.preventDefault(); props.isDrawerMode && props.onClose ? props.onClose() : goToPreviousPage() }}
             >
               <X className="w-4 h-4" />
             </button>
@@ -303,10 +333,18 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
             }
           }}
         >
-          <div className="flex justify-center px-2 md:px-6 py-4 mt-[60px]">
-            <div className="relative">
+          <div
+            ref={props.isDrawerMode ? drawerContentRef : undefined}
+            className={`flex justify-center px-2 md:px-6 py-4 ${props.isDrawerMode ? '' : 'mt-[60px]'}`}
+          >
+            <div
+              className="relative"
+              style={props.isDrawerMode ? {
+                zoom: drawerScale,
+              } : undefined}
+            >
               <div
-                className="bg-white dark:bg-dark-bg-card shadow-sm border border-[color:var(--color-border)] dark:border-dark-border overflow-hidden rounded-sm"
+                className={`bg-white dark:bg-dark-bg-card shadow-sm border border-[color:var(--color-border)] dark:border-dark-border rounded-sm ${props.isDrawerMode ? 'overflow-visible' : 'overflow-hidden'}`}
 
                 style={{
 

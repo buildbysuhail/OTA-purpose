@@ -662,10 +662,12 @@ export interface TransactionFormState {
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number, productName: string };
   imfData: { visible: boolean, data: string, rowIndex: number, slNo: number },
+  flavourData: { visible: boolean, data: string, rowIndex: number, slNo: number, productName: string,productId: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
   quantityFactorDataM: string;
+  flavoursSelectedData: string;
   currentCell?: CurrentCell;
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;

@@ -12,7 +12,7 @@ import {
   TransactionBase,
   transactionRoutes,
 } from "../../../../components/common/content/transaction-routes";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../redux/store";
 import { useSelector } from "react-redux";
 import { safeBase64Decode, customJsonParse } from "../../../../utilities/jsonConverter";
@@ -20,6 +20,9 @@ import { getStorageString } from "../../../../utilities/storage-utils";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { UserConfig } from "../transaction-types";
 import { fetchUserConfig } from "../transaction-utils";
+import ERPResizableSidebar from "../../../../components/ERPComponents/erp-resizable-sidebar";
+import { SearchProvider } from "../../../accounts/transactions/search-context.tsx";
+import AccTransactionFormContainerViewContent from "../../../accounts/transactions/acc-transaction-View-container-content";
 
 const toggleTransactionPopup = (payload: {
   isOpen: boolean;
@@ -81,6 +84,34 @@ const TransactionGrid: React.FC<{
     console.log("tg s : ",formState?.userConfig?.editInNewTab);
     
   })
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerTransactionData, setDrawerTransactionData] = useState<any>(null);
+
+  const openDrawer = (row: any) => {
+    const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
+    const vchtype = row.voucherType;
+    const voucherform = row.formType ?? row.voucherForm;
+    const prefix = row.voucherPrefix;
+    const vchno = parseInt(row.voucherNumber || "0", 10);
+    const financialYearID = parseInt(row.financialYearID || "0", 10);
+    const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
+
+    setDrawerTransactionData({
+      transactionMasterID,
+      formType: voucherform,
+      voucherPrefix: prefix,
+      voucherType: vchtype,
+      financialYearID,
+      voucherNo: vchno,
+      formCode: tr?.formCode,
+      transactionType: tr?.transactionType ?? transactionType,
+      transactionBase: tr?.transactionBase,
+      title: tr?.title,
+      drCr: tr?.drCr,
+    });
+    setDrawerOpen(true);
+  };
 
   const [reload, setReload] = useState<boolean>(true);
   const columns: DevGridColumn[] = useMemo(
@@ -167,50 +198,17 @@ const TransactionGrid: React.FC<{
         cssClass: "centered-header",
         cellRender: (cellInfo) => {
           const row = cellInfo.data;
-          const transactionMasterID = parseInt(row.invTransactionMasterID || "0", 10);
-          const vchtype = row.voucherType;
-          const voucherform = row.formType;
-          const prefix = row.voucherPrefix;
-          const vchno = row.voucherNumber;
-          const financialYearID = parseInt(row.financialYearID || "0", 10);
-
-          const tr = transactionRoutes.find((x) => x.voucherType === vchtype);
-
-          let transactionData: any = {};
-          if (parseInt(vchno, 10) > 0) {
-            transactionData = {
-              transactionMasterID,
-              formType: voucherform,
-              voucherPrefix: prefix,
-              voucherType: vchtype,
-              financialYearID,
-              formCode: tr?.formCode,
-              transactionType: tr?.transactionType,
-              transactionBase: tr?.transactionBase,
-              title: tr?.title,
-              drCr: tr?.drCr,
-            };
-          }
-          // Convert object to query string
-          const queryString = new URLSearchParams(
-            Object.entries(transactionData).reduce((acc, [key, value]) => {
-              acc[key] = String(value ?? "");
-              return acc;
-            }, {} as Record<string, string>)
-          ).toString();
-
           return (
             <div style={{ textAlign: "center" }}>
-              <Link
-                to={`/${tr?.transactionBase}/${tr?.transactionType}/${cellInfo.value}?${queryString}`}
-                style={{ color: "#1b6de0", textDecoration: "underline" }}
-                onClick={() => {
-                  console.log("cellInfo", cellInfo);
-                  console.log("transactionData", transactionData);
+              <span
+                style={{ color: "#1b6de0", textDecoration: "underline", cursor: "pointer" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  openDrawer(row);
                 }}
               >
                 {cellInfo.value}
-              </Link>
+              </span>
             </div>
           );
         }
@@ -645,57 +643,7 @@ const TransactionGrid: React.FC<{
               view={{
                 type: "popup",
                 action: () => {
-                  const row = cellElement.data;
-                  const transactionMasterID = parseInt(
-                    row.invTransactionMasterID || "0",
-                    10
-                  );
-
-                  const vchtype = row.voucherType;
-                  const voucherform = row.voucherForm;
-
-                  const prefix = row.voucherPrefix;
-                  const vchno = row.voucherNumber;
-                  const financialYearID = parseInt(
-                    row.financialYearID || "0",
-                    10
-                  );
-
-                  const tr = transactionRoutes.find(
-                    (x: any) => x.voucherType === vchtype
-                  );
-
-                  let transactionData = {};
-                  if (parseInt(vchno, 10) > 0) {
-                    transactionData = {
-                      transactionMasterID,
-                      formType: voucherform,
-                      voucherPrefix: prefix,
-                      voucherType: vchtype,
-                      financialYearID,
-                      voucherNo: parseInt(vchno, 10),
-                      formCode: tr?.formCode,
-                      transactionType: tr?.transactionType,
-                      transactionBase: tr?.transactionBase,
-                      title: tr?.title,
-                      drCr: tr?.drCr,
-                    };
-                  }
-                  const url = new URL(
-                    `${window.location.origin}/${TransactionBase.Sales}/${transactionType}`
-                  );
-
-                  // Append all parameters from the `params` object
-                  Object.entries(transactionData).forEach(([key, value]) => {
-                    url.searchParams.append(key, String(value));
-                  });
-
-                  if (formState?.userConfig?.editInNewTab) {
-                    window.open(url.toString(), "_blank");
-                  } else {
-                    const path = url.pathname + url.search;
-                    navigate(path);
-                  }
+                  openDrawer(cellElement.data);
                 },
               }}
               edit={{
@@ -808,6 +756,40 @@ const TransactionGrid: React.FC<{
           </div>
         </div>
       </div>
+      {drawerOpen && drawerTransactionData && (
+        <ERPResizableSidebar
+          isOpen={drawerOpen}
+          setIsOpen={() => setDrawerOpen(false)}
+          position="right"
+          initialWidth={Math.min(700, window.innerWidth * 0.55)}
+          minWidth={500}
+          maxWidth={Math.min(1000, window.innerWidth * 0.8)}
+          zIndex={55}
+          overlayNeeded={true}
+        >
+          <SearchProvider>
+            <AccTransactionFormContainerViewContent
+              isInvTrans={true}
+              transactionMasterID={drawerTransactionData.transactionMasterID}
+              transactionType={drawerTransactionData.transactionType}
+              voucherNo={drawerTransactionData.voucherNo}
+              voucherType={drawerTransactionData.voucherType}
+              voucherPrefix={drawerTransactionData.voucherPrefix}
+              formType={drawerTransactionData.formType}
+              formCode={drawerTransactionData.formCode}
+              title={drawerTransactionData.title}
+              drCr={drawerTransactionData.drCr}
+              financialYearID={drawerTransactionData.financialYearID}
+              isDrawerMode={true}
+              onClose={() => setDrawerOpen(false)}
+              onDeleteSuccess={() => {
+                setDrawerOpen(false);
+                setReload(true);
+              }}
+            />
+          </SearchProvider>
+        </ERPResizableSidebar>
+      )}
     </Fragment>
   );
 };

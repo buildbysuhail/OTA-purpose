@@ -6212,6 +6212,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               })
             );
           } else if (columnName == "grossConvert") {
+            debugger;
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
@@ -6247,6 +6248,24 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               })
             );
 
+          }
+          else if (columnName == "fLV") {
+            const rowData: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  flavourData: {
+                    visible: true,
+                    data: rowData.productDescription,
+                    slNo: rowIndex,
+                    productName: rowData.product,
+                    productId: rowData.productID,
+
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
           }
           else {
             if (columnName === "qty") {

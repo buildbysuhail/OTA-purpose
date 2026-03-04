@@ -1354,7 +1354,10 @@
 
   "enable_transaction_date": "تفعيل تاريخ المعاملة",
   "discount_zero": "خصم صفر",
-  "discount_is_zero_do_you_want_to_continue": "قيمة الخصم هي صفر، هل تريد الاستمرار؟"
+  "discount_is_zero_do_you_want_to_continue": "قيمة الخصم هي صفر، هل تريد الاستمرار؟",
+  "enter_notes": "أدخل الملاحظات",
+  "token_no": "رقم الرمز",
+  "please_type_here": "يرجى الكتابة هنا..."
 
   
 

@@ -1352,7 +1352,9 @@
   "please_specify_the_upi_type!": "يرجى تحديد نوع UPI!",
   "please_specify_the_qr_type_type!": "يرجى تحديد نوع رمز QR",
 
-  "enable_transaction_date": "تفعيل تاريخ المعاملة"
+  "enable_transaction_date": "تفعيل تاريخ المعاملة",
+  "discount_zero": "خصم صفر",
+  "discount_is_zero_do_you_want_to_continue": "قيمة الخصم هي صفر، هل تريد الاستمرار؟"
 
   
 

@@ -207,8 +207,8 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       totalNet = totalNet + additionalAmt + roundOf - couponAmt;
     }else{
       if(isFromSave){
-         totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
-        totalNet = totalNet + additionalAmt;
+        totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
+        totalNet = totalNet + additionalAmt + roundOf - couponAmt;
       }else{
         totalNet = formState.summary.netValue || 0;
         totalNet = totalNet + additionalAmt;

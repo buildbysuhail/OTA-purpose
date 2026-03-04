@@ -3104,7 +3104,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
           formStateHandleFieldChange({
             fields: {
               saving: false,
-              savingCompleted: true,
+              savingCompleted: false,
             },
           })
         );

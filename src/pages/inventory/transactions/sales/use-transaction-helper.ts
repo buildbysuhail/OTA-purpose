@@ -3556,6 +3556,23 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       let outState: DeepPartial<TransactionFormState> = {
         transaction: { master: {}, details: [] },
       };
+
+      // If the billDisccount is zero, Then validate
+      if (formState.transaction.master.billDiscount === 0) {
+        const confirmResult = await ERPAlert.show({
+          icon: "question",
+          title: t("discount_zero"),
+          text: t("discount_is_zero_do_you_want_to_continue"),
+          confirmButtonText: t("yes"),
+          cancelButtonText: t("no"),
+          showCancelButton: true,
+        });
+        // if the user cliks No, return
+        if (!confirmResult) {
+          return;
+        }
+      }
+
       let billDisc = 0,
         totalGross = 0,
         itemGross = 0,
@@ -3581,7 +3598,13 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           itemDisc = ((billDisc + taxOndiscount ) * grossPerc) / 100;
           discPerc = round((itemDisc / itemGross) * 100, 5);
 
-          const detail = { slNo: item.slNo, discPerc: discPerc };
+          let detail;
+          if (discPerc === 0) {
+            detail = {slNo: item.slNo, discPerc: discPerc, discount: 0 };
+          } else {
+            detail = { slNo: item.slNo, discPerc: discPerc};
+          }
+
           const updatedRow = await calculateRowAmount(
             item,
             "discPerc",

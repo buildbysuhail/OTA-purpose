@@ -69,10 +69,11 @@ const ProductMultiUnitsIndia = forwardRef<
       data: { unit: string; barcode: String }[];
     }>({ index: 0, open: false, unit: "", data: [] });
     const multiUnitRef = useRef<any>(null);
+
     const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number; }>({ mobile: 500, windows: 500 });
     useEffect(() => {
       let gridHeightMobile = modalHeight - 500;
-      let gridHeightWindows = modalHeight - (isGlobal ? 500 : 450);
+      let gridHeightWindows = modalHeight - (isGlobal ? 300 : 250);
       setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
     }, [isMaximized, modalHeight]);
 
@@ -546,6 +547,7 @@ const ProductMultiUnitsIndia = forwardRef<
             <ErpDevGrid
               ref={multiUnitRef}
               hideGridHeader={true}
+             
               // hideDefaultSearchPanel={true}
               keyExpr="unitID"
               data={getFieldProps("units").value}

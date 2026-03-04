@@ -905,6 +905,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
                 {([VoucherType.SalesOrder, VoucherType.GoodRequest, VoucherType.RequestForQuotation, VoucherType.ServiceInvoice].includes(formState.transaction.master.voucherType as any) &&
                   <ERPInput
+                    localInputBox={formState?.userConfig?.inputBoxStyle}
                     id="orderCardNo"
                     label={t("token_no")}
                     type="number"

@@ -1354,8 +1354,21 @@
 
   "enable_transaction_date": "تفعيل تاريخ المعاملة",
   "discount_zero": "خصم صفر",
-  "discount_is_zero_do_you_want_to_continue": "قيمة الخصم هي صفر، هل تريد الاستمرار؟"
+  "discount_is_zero_do_you_want_to_continue": "قيمة الخصم هي صفر، هل تريد الاستمرار؟",
+  "enter_notes": "أدخل الملاحظات",
+  "token_no": "رقم الرمز",
+  "please_type_here": "يرجى الكتابة هنا...",
 
+  "please_select_the_warehouse": "يرجى اختيار المستودع!!",
+  "please_select_the_different_warehouse": "يرجى اختيار مستودع مختلف!!",
+  "no_data_in_detail_fields": "لا توجد بيانات في حقول التفاصيل",
+  "please_enter_the_stock_details": "يرجى إدخال تفاصيل المخزون",
+  "please_correct_it_or_remove_the_row": ". يرجى التصحيح أو حذف الصف.",
+  "product_unit_id_is_missing_please_cross_check": "معرف وحدة المنتج مفقود، يرجى التحقق من:",
+  "zero_qty_entered_in_row": "تم إدخال كمية صفرية في الصف",
+  "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row": "سيتم تجاهل الأصناف المدخلة بعد صف فارغ. يرجى حذف الصف الفارغ:",
+  "please_enter_remarks_to_cotinue": "يرجى إدخال الملاحظات للمتابعة",
+  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled": "لا يجب أن يكون تاريخ المعاملة لاحقاً للتاريخ الحالي عند تفعيل الفاتورة الإلكترونية في المملكة العربية السعودية"
   
 
 }

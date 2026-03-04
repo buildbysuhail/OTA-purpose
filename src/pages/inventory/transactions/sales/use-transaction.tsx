@@ -1404,7 +1404,7 @@ focusCurrentColumn ??
         await ERPAlert.show({
           icon: "error",
           title: t("validation_error"),
-          text: t("transaction_date_should_not_be_post_dated"),
+          text: t("transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled"),
           confirmButtonText: t("ok"),
         });
         return {
@@ -1594,6 +1594,7 @@ focusCurrentColumn ??
         isValid: false
       };
     }
+    debugger;
     // CODE CHECKED########
     // ============ Transaction Date Validation ============
     const transDateValidation = validateTransactionDate(
@@ -6212,6 +6213,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               })
             );
           } else if (columnName == "grossConvert") {
+            debugger;
             changeGrossToUnitRate(rowIndex, columnName);
           } else if (columnName == "serial") {
             const rowData: TransactionDetail =
@@ -6247,6 +6249,24 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               })
             );
 
+          }
+          else if (columnName == "fLV") {
+            const rowData: TransactionDetail = _isMobRow ? (formState.row ?? initialTransactionDetailData) : formState.transaction.details[rowIndex];
+            dispatch(
+              commonParams.formStateHandleFieldChangeKeysOnly({
+                fields: {
+                  flavourData: {
+                    visible: true,
+                    data: rowData.productDescription,
+                    slNo: rowIndex,
+                    productName: rowData.product,
+                    productId: rowData.productID,
+
+                  },
+                },
+                updateOnlyGivenDetailsColumns: true,
+              })
+            );
           }
           else {
             if (columnName === "qty") {

@@ -1254,7 +1254,7 @@
   "skip_and_continue":"Skip and Continue",
   "duplicate_serial":"Duplicate Serial",
   "serial_exist_in_row":"Serial exist in row :",
-  "date_warning":"Data Warning",
+  "date_warning":"Date Warning",
   "system_date_doesn’t_match_transaction_date. Do_you_want_to_update?":"System date does not match the transaction date. Do you want to update it?",
   "demo_expired_please_activate":"Demo expired. Please activate",
   "day_closed":"Day Closed",
@@ -1356,7 +1356,23 @@
 
   "enable_transaction_date":"Enable Transaction Date",
   "discount_zero":"Discount Zero",
-  "discount_is_zero_do_you_want_to_continue":"Discount is zero, Do you want to continue?"
+  "discount_is_zero_do_you_want_to_continue":"Discount is zero, Do you want to continue?",
+  "enter_notes":"Enter Notes",
+  "token_no":"Token Number",
+  "please_type_here":"Please type here...",
+
+  "please_select_the_warehouse":"Please Select the  Warehouse !!",
+  "please_select_the_different_warehouse":"Please Select the Different Warehouse !!",
+  "no_data_in_detail_fields":"No Data in Detail Fields",
+  "please_enter_the_stock_details":"Please Enter the Stock Details",
+  "please_correct_it_or_remove_the_row":". Please correct it or remove the row.",
+  "product_unit_id_is_missing_please_cross_check":"Product Unit ID is missing, Please cross-check:",
+  "zero_qty_entered_in_row":"Zero Qty Entered in Row",
+  "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row":"Items entered after a blank row will be skipped.Please remove blank Row:",
+  "please_enter_remarks_to_cotinue":"Please enter remarks to cotinue",
+  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled":"Transaction Date Should Not Be Post Dated When KSA E-Invoice Is Enabled"
+
+
 
 
 

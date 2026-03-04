@@ -329,6 +329,14 @@ const LedgerReport = () => {
       width: 150,
     },
     {
+      dataField: "costCenter",
+      caption: t("cost_center"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200,
+    },
+    {
       dataField: "checkStatus",
       caption: t("check_status"),
       dataType: "string",

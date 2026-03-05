@@ -809,6 +809,7 @@ export interface TransactionFormState {
   branchCheckbox?: boolean; // for stock branch transfer
   checkedSO?: boolean; // Item load request - sales order
   checkedSI?: boolean; // Item load request - sales
+  iSBTOModify?: boolean; // Item load request - sales
 }
 export interface GiftModel {
   productBatchID: number;

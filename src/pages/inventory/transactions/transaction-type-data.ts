@@ -635,6 +635,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   enableCreditAccount: false,
   partyColor:"",
   branchCheckbox: true,
+  iSBTOModify:false,
   summaryConfig: [
     {
       column: "qty",

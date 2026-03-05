@@ -1368,7 +1368,12 @@
   "zero_qty_entered_in_row": "تم إدخال كمية صفرية في الصف",
   "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row": "سيتم تجاهل الأصناف المدخلة بعد صف فارغ. يرجى حذف الصف الفارغ:",
   "please_enter_remarks_to_cotinue": "يرجى إدخال الملاحظات للمتابعة",
-  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled": "لا يجب أن يكون تاريخ المعاملة لاحقاً للتاريخ الحالي عند تفعيل الفاتورة الإلكترونية في المملكة العربية السعودية"
+  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled": "لا يجب أن يكون تاريخ المعاملة لاحقاً للتاريخ الحالي عند تفعيل الفاتورة الإلكترونية في المملكة العربية السعودية",
+
+  "product_serial_exists_in_row": "الرقم التسلسلي للمنتج موجود في الصف",
+  "please_check_and_try_again": "يرجى التحقق والمحاولة مرة أخرى",
+  "product_serial_of": "الرقم التسلسلي لـ",
+  "are_equal_please_check_and_try_again": "متطابقان. يرجى التحقق والمحاولة مرة أخرى"
   
 
 }

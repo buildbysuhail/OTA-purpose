@@ -6243,6 +6243,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                     visible: true,
                     data: rowData.productDescription,
                     slNo: rowIndex,
+                    productId: rowData.productID,
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,
@@ -6261,7 +6262,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                     slNo: rowIndex,
                     productName: rowData.product,
                     productId: rowData.productID,
-
+                    rowIndex: rowIndex // This also use here for slNo instaed
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,

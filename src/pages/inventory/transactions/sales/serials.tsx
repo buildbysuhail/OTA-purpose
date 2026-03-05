@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { DataGrid } from "devextreme-react";
-import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/data-grid";
+import {
+  Column,
+  Editing,
+  KeyboardNavigation,
+  Paging,
+  RemoteOperations,
+  Scrolling,
+} from "devextreme-react/data-grid";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
-import { handleResponse } from "../../../../utilities/HandleResponse";
-import { APIClient } from "../../../../helpers/api-client";
-import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { formStateHandleFieldChangeKeysOnly } from "../reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import ERPAlert from "../../../../components/ERPComponents/erp-sweet-alert";
+import { APIClient } from "../../../../helpers/api-client";
+import Urls from "../../../../redux/urls";
 
+const api = new APIClient();
 interface SerialItem {
   slNo: number;
   serial: string;
@@ -28,11 +35,12 @@ interface SerialsProps {
   productName: string;
 }
 
-const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, rowIndex, t ,productName}) => {
-  const [serialData, setSerialData] = useState<SerialItem[]>([{ slNo: 1, serial: '' }]);
+const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, rowIndex, t,productName}) => {
+  const [serialData, setSerialData] = useState<SerialItem[]>([{ slNo: 1, serial: "" },]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const dataGridRef = useRef<any>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [skipAndContinue, setSkipAndContinue] = useState(false);
 
   const dispatch = useDispatch();
   const formState = useSelector((state: RootState) => state.InventoryTransaction);
@@ -47,44 +55,63 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
   }, []);
 
   useEffect(() => {
-    if (isOpen && data && data !== "") {
-      const formattedData = data.split(',').map((serial: string, index: number) => ({
-        slNo: index + 1,
-        serial: serial.trim() || ''
-      }));
-      
-      setSerialData(formattedData);
-      
-      // Focus on the last row with proper cleanup
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+    if (isOpen) {
+      // Get the qty value from the row
+      const rowQty = formState.transaction.details[rowIndex]?.qty || 1;
+
+      if (data && data !== "") {
+        const formattedData = data
+          .split(",")
+          .map((serial: string, index: number) => ({
+            slNo: index + 1,
+            serial: serial.trim() || "",
+          }));
+        setSerialData(formattedData);
+      } else {
+        // Create rows based on rowQty
+        const initialRows = Array.from({ length: rowQty }, (_, i) => ({
+          slNo: i + 1,
+          serial: "",
+        }));
+
+        setSerialData(initialRows);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+          if (dataGridRef.current) {
+            dataGridRef.current.instance.editCell(0, 1);
+          }
+        }, 100);
       }
-      
-      timeoutRef.current = setTimeout(() => {
-        if (dataGridRef.current && formattedData.length > 0) {
-          dataGridRef.current.instance.editCell(formattedData.length - 1, 1);
-        }
-      }, 100);
-    } else if (isOpen) {
-      setSerialData([{ slNo: 1, serial: '' }]);
-      
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      
-      timeoutRef.current = setTimeout(() => {
-        if (dataGridRef.current) {
-          dataGridRef.current.instance.editCell(0, 1);
-        }
-      }, 100);
     }
-  }, [isOpen, data]);
+  }, [isOpen, data, rowIndex, formState.transaction.details]);
+
+
+  // Validate serial duplicates when skip true
+  const validateSerials = (): boolean => {
+    if (skipAndContinue) return true;
+    const seen = new Map<string, number>();
+    for (let i = 0; i < serialData.length; i++) {
+      const serial = serialData[i]?.serial?.trim();
+      if (!serial) continue;
+      if (seen.has(serial)) {
+        const firstRow = seen.get(serial)!;
+        ERPAlert.show({
+          title: t("warning"),
+          text:t("product_serial_of") +" " +(firstRow + 1) +" " +t("and") +" " +(i + 1) +" " +t("are_equal_please_check_and_try_again"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+      seen.set(serial, i);
+    }
+    return true;
+  };
 
   const handleSaveButtonClick = async () => {
-    setIsSaving(true);
+    if(!validateSerials()) return;
     try {
-      const validSerials = serialData.filter(item => item.serial && item.serial.trim() !== '');
-      const dataToSaveString = validSerials.map(item => item.serial.trim()).join(',');
+      const validSerials = serialData.filter((item) => item.serial && item.serial.trim() !== "");
+      const dataToSaveString = validSerials.map((item) => item.serial.trim()).join(",");
       const lt = validSerials.length;
 
       const slNo = formState.transaction.details[rowIndex].slNo;
@@ -93,18 +120,19 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
           fields: {
             serialNoEntryData: { visible: false, data: "", rowIndex: -1 },
             transaction: {
-              details: [{
-                productDescription: dataToSaveString,
-                qty: lt,
-                slNo: slNo
-              }]
-            }
+              details: [
+                {
+                  productDescription: dataToSaveString,
+                  qty: lt,
+                  slNo: slNo,
+                },
+              ],
+            },
           },
           updateOnlyGivenDetailsColumns: true,
-          rowIndex
+          rowIndex,
         })
       );
-      
       onClose(); // Close modal on successful save
     } catch (error) {
       console.error("Error saving serials:", error);
@@ -117,91 +145,107 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
     }
   };
 
-  const checkForDuplicate = useCallback((value: string, excludeIndex?: number): boolean => {
-    const normalizedValue = value.trim().toUpperCase();
-    return serialData.some((item, index) => {
+  const checkForDuplicate = useCallback((value: string, excludeIndex?: number) => {
+    const normalized = value.trim().toUpperCase();
+    const foundIndex = serialData.findIndex((item, index) => {
       if (excludeIndex !== undefined && index === excludeIndex) return false;
-      return item.serial.trim().toUpperCase() === normalizedValue;
+      return item.serial.trim().toUpperCase() === normalized;
     });
-  }, [serialData]);
+    return foundIndex;
+    },
+    [serialData]
+  );
 
   const onEditorPreparing = (e: any) => {
-    if (e.parentType === 'dataRow' && e.dataField === 'serial') {
-      const originalKeyDown = e.editorOptions.onKeyDown;
-      e.editorOptions.onKeyDown = (event: any) => {
-        if (originalKeyDown) {
-          originalKeyDown(event);
-        }
-        
-        if (["Enter", "ArrowUp", "ArrowDown"].includes(event.event.key) && event.component) {
-          const currentValue = event.component.option('text');
-          
-          if (currentValue && currentValue.trim() !== '') {
-            // Check for duplicates
-            if (checkForDuplicate(currentValue, e.row.rowIndex)) {
-              ERPAlert.show({
-                title: t("warning"),
-                text: t("duplicate_serial"),
-              });
-          event.event.preventDefault();
-              return;
-            }
-            
-            const rowIndex = e.row.rowIndex;
-            const isLastRow = rowIndex === serialData.length - 1;
-            
-            // Update the current row's serial
-            setSerialData(prevData => {
-              const updatedData = [...prevData];
-              updatedData[rowIndex] = { ...updatedData[rowIndex], serial: currentValue.trim() };
-              
-              // Add new row if this is the last row
-              if (isLastRow && ["Enter", "ArrowDown"].includes(event.event.key)) {
-                updatedData.push({ slNo: updatedData.length + 1, serial: '' });
-              }
-              
-              return updatedData;
+    if (e.parentType === "dataRow" && e.dataField === "serial") {
+      e.editorOptions.onValueChanged = async (args: any) => {
+        const value = args.value ?? "";
+        const rowIdx = e.row.rowIndex;
+
+        try {
+          const payload = {
+            serial: String(value),
+            oldInvTransMasterID:
+              formState.transaction.master.invTransactionMasterID,
+            voucherType: formState.transaction.master.voucherType,
+            isEdit: formState.isEdit,
+          };
+
+          const response = await api.postAsync(
+            `${Urls.inv_transaction_base}${formState.transactionType}/CheckSerial`,
+            payload
+          );
+
+          if (response.isOk === false) {
+            ERPAlert.show({
+              title: t("warning"),
+              text: t(response.message),
+              showCancelButton: false,
             });
-            
-            // Move to next row
-            if (timeoutRef.current) {
-              clearTimeout(timeoutRef.current);
-            }
-            
-            timeoutRef.current = setTimeout(() => {
-              if (dataGridRef.current) {
-                const nextRowIndex = isLastRow ? rowIndex + 1 : rowIndex + 1;
-                dataGridRef.current.instance.editCell(nextRowIndex, 1);
-              }
-            }, 50);
           }
-          
-          event.event.preventDefault();
+        } catch (error) {
+          console.error("CheckSerial API error:", error);
+        }
+
+        const dupIndex = checkForDuplicate(value, rowIdx);
+        if (value.trim() !== "" && dupIndex !== -1) {
+          ERPAlert.show({
+            title: t("warning"),
+            text:t("product_serial_exists_in_row") +" " +(dupIndex + 1) +". " +t("please_check_and_try_again"),
+            showCancelButton: false,
+          });
+
+          // args.component.option("value", serialData[rowIdx]?.serial ?? "");
+        }
+
+        setSerialData((prev) => {
+          const updated = [...prev];
+          updated[rowIdx] = {
+            ...updated[rowIdx],
+            serial: value,
+          };
+          return updated;
+        });
+      };
+
+      // CHECK AGAIN WHEN LEAVING CELL
+      e.editorOptions.onFocusOut = (args: any) => {
+        const value = args.component.option("value") ?? "";
+        const rowIdx = e.row.rowIndex;
+
+        const dupIndex = checkForDuplicate(value, rowIdx);
+
+        if (value.trim() !== "" && dupIndex !== -1) {
+          ERPAlert.show({
+            title: t("warning"),
+            text:t("product_serial_exists_in_row") +" " +(dupIndex + 1) +". " +t("please_check_and_try_again"),
+            showCancelButton: false,
+          });
+
+          // args.component.option("value", serialData[rowIdx]?.serial ?? "");
         }
       };
     }
   };
 
-  const onContentReady = (e: any) => {
-    // Only focus on initial load, not on every content ready
-    if (serialData.length > 0 && dataGridRef.current && !isSaving) {
-      const lastRowIndex = serialData.length - 1;
-      const lastRowSerial = serialData[lastRowIndex]?.serial;
-      
-      // Only focus if the last row is empty
-      if (!lastRowSerial || lastRowSerial.trim() === '') {
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-        
-        timeoutRef.current = setTimeout(() => {
-          if (dataGridRef.current) {
-            e.component.editCell(lastRowIndex, 1);
-          }
-        }, 50);
-      }
-    }
-  };
+  // const onContentReady = (e: any) => {
+  //   // Only focus on initial load, not on every content ready
+  //   if (serialData.length > 0 && dataGridRef.current && !isSaving) {
+  //     const lastRowIndex = serialData.length - 1;
+  //     const lastRowSerial = serialData[lastRowIndex]?.serial;
+  //     // Only focus if the last row is empty
+  //     if (!lastRowSerial || lastRowSerial.trim() === "") {
+  //       if (timeoutRef.current) {
+  //         clearTimeout(timeoutRef.current);
+  //       }
+  //       timeoutRef.current = setTimeout(() => {
+  //         if (dataGridRef.current) {
+  //           e.component.editCell(lastRowIndex, 1);
+  //         }
+  //       }, 50);
+  //     }
+  //   }
+  // };
 
   return (
     <ERPModal
@@ -212,21 +256,21 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
       height={430}
       content={
         <>
-          <h6 className="text-blue-800 text-md font-bold">{productName}</h6>
-          <div className="w-full flex flex-col gap-4 p-4">
+          <h6 className="text-blue-800 text-md font-bold text-center">{productName}</h6>
+          <div className="w-full flex flex-col items-center gap-4 p-4">
             <DataGrid
               ref={dataGridRef}
               keyExpr="slNo"
               dataSource={serialData}
-              onContentReady={onContentReady}
-              className='custom-data-grid-dark-only'
+              // onContentReady={onContentReady}
+              className="custom-data-grid-dark-only"
               focusedRowEnabled={false}
               showBorders={true}
               columnAutoWidth={true}
               rowAlternationEnabled={true}
               onEditorPreparing={onEditorPreparing}
               repaintChangesOnly={true}
-              height={220}
+              height={250}
             >
               <Editing
                 mode="cell"
@@ -243,7 +287,7 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
 
               <Column
                 dataField="slNo"
-                caption={t("sl.no")}
+                caption={t("slNo")}
                 width={50}
                 allowEditing={false}
               />
@@ -264,18 +308,24 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
               />
             </DataGrid>
           </div>
-          <ERPCheckbox
-            id="skipAndContinue"
-            label={t("skip_and_continue")}
-          />
         </>
       }
       footer={
-        <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 pr-[10px] rounded-b-md">
+        <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex items-center justify-between dark:!border-dark-border dark:!bg-dark-bg bg-white border-t z-10 px-[10px] my-2 rounded-b-md">
+        <ERPCheckbox
+          id="skipAndContinue"
+          label={t("skip_and_continue")}
+          checked={skipAndContinue}
+          onChange={(e: any) => {
+            setSkipAndContinue(e.target.checked);
+          }}
+        />
+        <div className="flex space-x-2">
           <ERPSubmitButton
             type="reset"
             onClick={onClose}
-            className="dark:text-dark-hover-text w-28 bg-[#808080] text-[#404040] max-w-[115px]"
+            className="max-w-[115px]"
+            variant="secondary"
             disabled={isSaving}
           >
             {t("cancel")}
@@ -290,6 +340,7 @@ const Serials: React.FC<SerialsProps> = ({ data, isOpen, productId, onClose, row
             {t("save")}
           </ERPSubmitButton>
         </div>
+      </div>
       }
       disableOutsideClickClose={false}
     />

@@ -6261,7 +6261,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                     slNo: rowIndex,
                     productName: rowData.product,
                     productId: rowData.productID,
-
+                    rowIndex: rowIndex // This also use here for slNo instaed
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,

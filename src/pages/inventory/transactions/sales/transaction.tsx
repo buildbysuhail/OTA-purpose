@@ -1428,6 +1428,77 @@ const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualP
     run()
   }, [formState.quantityFactorDataM]);
 
+  // When The Flavors flv modal updates - test the code
+  useEffect(() => {
+     const run = async()=>{
+    if (formState.flavoursSelectedData != "") {
+      const data = JSON.parse(formState.flavoursSelectedData);
+      const rowIndex = data.rowIndex;
+      const flavoursData = data.data;
+      const baseRowData = formState.transaction.details[rowIndex];
+      let currentDetails = [
+        ...formState.transaction.details.filter((x) => x.productID > 0),
+      ];
+      let addDetails: TransactionDetail[] = [];
+      for (let index = 0; index < flavoursData.length; index++) {
+        const value = flavoursData[index];
+        if (!value.qty || value.qty <= 0) continue;
+
+        if (index === 0) {
+          const rowData = { ...baseRowData, qty: value.qty, flavors: value.flavour };
+          const res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [{ qty: value.qty, flavors: value.flavour, slNo: baseRowData.slNo }] } } }, true);
+          if (res?.transaction?.details && res.transaction.details.length > 0) {
+            res.transaction.details[0]!.flavors = value.flavour;
+            currentDetails[rowIndex] = res.transaction.details[0]! as TransactionDetail;
+          }
+        } else {
+          const rowData = {
+            ...baseRowData,
+            qty: value.qty,
+            slNo: generateUniqueKey(),
+            flavors: value.flavour,
+          };
+          const res = await calculateRowAmount(rowData, "qty", { result: { transaction: { details: [rowData] } } }, true);
+          if (
+            res?.transaction?.details &&
+            res?.transaction?.details.length > 0
+          ) {
+            addDetails.push(res.transaction.details[0] as TransactionDetail);
+          }
+        }
+      }
+
+      const final = [...currentDetails, ...addDetails];
+      const summaryRes = calculateSummary(final, formState, { result: {} });
+
+      const totalRes = await calculateTotal(
+        formState.transaction.master,
+        summaryRes.summary as SummaryItems,
+        formState.formElements,
+        { result: {} }
+      );
+
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            ...totalRes,
+            summary: summaryRes.summary,
+            flavoursSelectedData:"",
+            transaction: {
+              ...totalRes.transaction,
+              details: final,
+            },
+          },
+          updateOnlyGivenDetailsColumns: true,
+          rowIndex: rowIndex,
+          itemsToAddToDetails: addDetails,
+        })
+      );
+    }
+      
+    }
+    run()
+  }, [formState.flavoursSelectedData]);
 
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date

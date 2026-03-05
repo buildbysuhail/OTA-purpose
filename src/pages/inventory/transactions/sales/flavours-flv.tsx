@@ -41,6 +41,7 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
   onClose,
   t,
   productName,
+  rowIndex
 }) => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [flavourData, setFlavourData] = useState<FlavourRow[]>([]);
@@ -51,17 +52,12 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
     (state: RootState) => state.InventoryTransaction
   );
 
-  // 🔹 Load Flavours
   useEffect(() => {
     if (!productId) return;
 
     const loadFlavours = async () => {
       try {
-        const response = await api.getAsync(
-          `${Urls.inv_transaction_base}${formState.transactionType}/ProductFlavors/${productId}`
-        );
-
-        // Convert string[] → object[]
+        const response = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/ProductFlavors/${productId}`);
         const formatted: FlavourRow[] = response.map(
           (item: string, index: number) => ({
             slNo: index + 1,
@@ -79,7 +75,7 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
     loadFlavours();
   }, [productId]);
 
-  // 🔹 Handle Qty Edit
+  // Handle Qty Edit
   const handleCellValueChanged = (e: any) => {
     if (e.dataField === "qty" && e.parentType === "dataRow") {
       const defaultOnValueChanged = e.editorOptions.onValueChanged;
@@ -98,14 +94,14 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
     }
   };
 
-  // 🔹 Save
+  // Save
   const handleSaveButtonClick = async () => {
     if (flavourData && flavourData.length > 0) {
           dispatch(
             formStateHandleFieldChangeKeysOnly({
               fields: {
                 flavoursSelectedData: JSON.stringify({
-                  rowIndex: 1,  //---------------------------------------------------------------------
+                  rowIndex: rowIndex,
                   data: flavourData,
                 }),
               },

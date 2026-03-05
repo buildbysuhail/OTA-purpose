@@ -1375,7 +1375,14 @@
   "product_serial_exists_in_row":"Product serial exist in row",
   "please_check_and_try_again":"Please check and try again",
   "product_serial_of":"Product serial of",
-  "are_equal_please_check_and_try_again":"are equal. Please check and try again"
+  "are_equal_please_check_and_try_again":"are equal. Please check and try again",
+  "please_select_a_branch_to_transfer":"Please select a branch to transfer",
+  "invalid_branch":"Invalid Branch",
+  "invalid_to_branch_warehouse":"Invalid To branch Warehouse",
+  "please_select_a_valid_to_branch_warehouse":"Please select a valid To branch warehouse",
+  "save_failed_transaction_cannot_be_saved":"Save failed. Transaction cannot be saved because the Voucher No is 0. Please change/increment Voucher No to save this bill."
+
+
 
 
 

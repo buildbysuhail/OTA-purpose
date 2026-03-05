@@ -1373,7 +1373,14 @@
   "product_serial_exists_in_row": "الرقم التسلسلي للمنتج موجود في الصف",
   "please_check_and_try_again": "يرجى التحقق والمحاولة مرة أخرى",
   "product_serial_of": "الرقم التسلسلي لـ",
-  "are_equal_please_check_and_try_again": "متطابقان. يرجى التحقق والمحاولة مرة أخرى"
+  "are_equal_please_check_and_try_again": "متطابقان. يرجى التحقق والمحاولة مرة أخرى",
+
+  "please_select_a_branch_to_transfer": "يرجى اختيار الفرع للتحويل",
+  "invalid_branch": "فرع غير صالح",
+  "invalid_to_branch_warehouse": "مستودع الفرع المحول إليه غير صالح",
+  "please_select_a_valid_to_branch_warehouse": "يرجى اختيار مستودع فرع صحيح للتحويل إليه",
+  "save_failed_transaction_cannot_be_saved": "فشل الحفظ. لا يمكن حفظ المعاملة لأن رقم القيد هو 0. يرجى تغيير أو زيادة رقم القيد لحفظ هذه الفاتورة."
+
   
 
 }

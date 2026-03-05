@@ -117,12 +117,12 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
       closeModal={onClose}
       title={t("flavours")}
       width={350}
-      height={450}
+      height={420}
       content={
-        <>
-          <h6 className="text-blue-800 text-md font-bold">
-            {productName}
-          </h6>
+        <div className="w-full flex items-center flex-col justify-center">
+            <h6 className="text-center text-blue-800 text-md font-bold">
+                {productName}
+            </h6>
 
           <div className="w-full flex flex-col gap-4 p-4">
             <DataGrid
@@ -136,7 +136,7 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
               columnAutoWidth={true}
               rowAlternationEnabled={true}
               repaintChangesOnly={true}
-              height={220}
+              height={250}
             >
               <Editing
                 mode="cell"
@@ -161,14 +161,14 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
               <Column
                 dataField="flavour"
                 caption={t("flavour")}
-                width={180}
+                width={200}
                 allowEditing={false}
               />
 
               <Column
                 dataField="qty"
                 caption={t("qty")}
-                width={100}
+                width={120}
                 allowEditing={true}
                 dataType="number"
               />
@@ -182,7 +182,7 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
               />
             </DataGrid>
           </div>
-        </>
+        </div>
       }
       footer={
         <div className="absolute -bottom-0 h-[42px] pt-[4px] pb-[2px] left-0 w-full flex justify-end space-x-2 bg-white border-t z-10 pr-[10px] rounded-b-md">
@@ -191,6 +191,7 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
             onClick={onClose}
             variant="secondary"
             disabled={isSaving}
+            className="w-16"
           >
             {t("cancel")}
           </ERPSubmitButton>
@@ -200,6 +201,7 @@ const FlavoursFlv: React.FC<FlavourProps> = ({
             variant="primary"
             onClick={handleSaveButtonClick}
             disabled={isSaving}
+            className="w-16"
           >
             {t("save")}
           </ERPSubmitButton>

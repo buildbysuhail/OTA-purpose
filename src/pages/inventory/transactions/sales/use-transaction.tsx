@@ -6243,6 +6243,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
                     visible: true,
                     data: rowData.productDescription,
                     slNo: rowIndex,
+                    productId: rowData.productID,
                   },
                 },
                 updateOnlyGivenDetailsColumns: true,

@@ -661,13 +661,14 @@ export interface TransactionFormState {
   showPcode: boolean;
   batchEntryData: { visible: boolean; data: string; rowIndex: number };
   serialNoEntryData: { visible: boolean; data: string; rowIndex: number, productName: string };
-  imfData: { visible: boolean, data: string, rowIndex: number, slNo: number },
+  imfData: { visible: boolean, data: string, rowIndex: number, slNo: number, productId: number },
   flavourData: { visible: boolean, data: string, rowIndex: number, slNo: number, productName: string,productId: number },
   batchSelectionData: string;
   popupSearchSelectionData: string;
   quantityFactorData: string;
   quantityFactorDataM: string;
   flavoursSelectedData: string;
+  flavoursDescriptionData: string; // This for IMF Button
   currentCell?: CurrentCell;
   batchesUnits?: UnitByBatchDetailsDto[];
   productInfo: boolean;

@@ -1500,6 +1500,39 @@ const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualP
     run()
   }, [formState.flavoursSelectedData]);
 
+  // Imf Button data change - flavour
+  useEffect(() => {
+    const run = async () => {
+      try {
+        if (!formState.flavoursDescriptionData) return;
+        const flavourObj = JSON.parse(formState.flavoursDescriptionData);
+        const { rowIndex, productDescription, qty } = flavourObj;
+        const rows = [...formState.transaction.details];
+        const data = formState.transaction.details[rowIndex];
+        const updatedRow = {...rows[rowIndex], productDescription,qty,};
+
+        let sd = await calculateRowAmount(
+          data,
+          "qty",
+          {
+            result: {
+              transaction: {
+                details: [updatedRow],
+              },
+            },
+            formStateHandleFieldChangeKeysOnly:
+              formStateHandleFieldChangeKeysOnly,
+          }, false, rowIndex
+        );
+        
+      } catch (error) {
+        console.error("Flavour processing error:", error);
+      }
+    };
+
+    run();
+  }, [formState.flavoursDescriptionData]);
+
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -2693,7 +2726,7 @@ const isActualPriceVisible = formState.gridColumns.find(x=>x.dataField=="actualP
               )
             }
             t={t}
-            productId={null}
+            productId={formState.imfData.productId}
             rowIndex={formState.imfData.rowIndex}/>
         )}
 

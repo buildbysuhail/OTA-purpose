@@ -1126,7 +1126,11 @@ focusCurrentColumn ??
     partyLedgerID: number,
     grandTotal: number,
     oldPartyLedgerID: number,
-    previousGrandTotal: number
+    previousGrandTotal: number,
+    creditAmtFromLedgerData?: number,
+    creditDaysFromLedgerData?: number,
+    partyBalanceFromLedgerData?: number,
+    dueBalanceFromLedgerData?: number
   ): CreditLimitResult => {
     let result = false;
     let msg = "";
@@ -1138,10 +1142,11 @@ focusCurrentColumn ??
 
     try {
 
-      creditAmt = formState.ledgerData.creditAmount || 0;
-      creditDays = formState?.ledgerData.creditDays || 0;
-      partyBalance = formState?.ledgerData.ledgerBalance || 0;
-      dueBalance = formState?.ledgerData.dueBalance || 0;
+      // The four extra parameter is added for ledger load case, in that case, the dispatched ledger data is not getting
+      creditAmt = creditAmtFromLedgerData ?? (formState.ledgerData.creditAmount || 0);
+      creditDays = creditDaysFromLedgerData ?? (formState?.ledgerData.creditDays || 0);
+      partyBalance = partyBalanceFromLedgerData ??  (formState?.ledgerData.ledgerBalance || 0);
+      dueBalance = dueBalanceFromLedgerData ?? (formState?.ledgerData.dueBalance || 0);
 
       /* ---------------- CREDIT AMOUNT CHECK ---------------- */
       if (creditAmt > 0) {
@@ -6631,6 +6636,90 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
       // setIsLoading(false);
     }
   };
+
+  // Preset Price Cateogory
+  const setPreSetPriceCategory = () => {
+    if(userSession.dbIdValue === "SAMAPLASTICS"){
+      if ((formState.userConfig?.presetPriceCategoryId ?? 0) > 0) {
+      dispatch(
+        formStateMasterHandleFieldChange({
+          fields: {
+            priceCategoryID: formState.userConfig?.presetPriceCategoryId,
+          },
+        })
+      );
+      dispatch(
+        formStateHandleFieldChangeKeysOnly({
+          fields: {
+            formElements: {
+              cbPriceCategory: { disabled: true },
+            },
+          },
+          updateOnlyGivenDetailsColumns: true,
+        })
+      );
+    }
+    }
+  }
+
+  // Changeing ledger Validation
+  const ledgerSelectionAlertChecking = async (ledgerData: any) => {
+      // -------  This the nelow three lines are needed! --------
+      let IsCSI = false;
+      if(formState.transaction.master.voucherForm === "CSI"){
+        IsCSI = true;
+      }
+      // -----------------------------------------------------------
+      if(ledgerData.stopCredit && IsCSI=== false ){
+        ERPAlert.show({
+          icon: "warning",
+          title: t(""),
+          text: t("credit_stopped_for_this_customer"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false
+        });
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              creditAccount : true
+            },
+          })
+        );
+        
+      }else{
+        dispatch(
+          formStateHandleFieldChange({
+            fields: {
+              creditAccount : false
+            },
+          })
+        );
+      }
+
+      if(applicationSettings.accountsSettings?.blockOnCreditLimit !=="Ignore"){
+        const creditRes = checkThePartyCreditLimit(
+          formState.transaction.master.ledgerID,
+          formState.transaction.master.grandTotal,
+          formState.oldLedgerId || 0,
+          formState.previousGrandTotal || 0,
+          ledgerData.creditAmount || 0,
+          ledgerData.creditDays || 0,
+          ledgerData.ledgerBalance || 0,
+          ledgerData.dueBalance || 0
+
+        );
+        if(creditRes.exceeded){
+          await ERPAlert.show({
+          icon: "warning",
+          title: t("warning"),
+          text: creditRes.message,
+          confirmButtonText: t("ok"),
+          showCancelButton: false
+        });
+        }
+      }
+  }
+
   const loadLedgerData = async (
     _formState?: DeepPartial<TransactionFormState>,
     _dispatch?: any
@@ -6638,6 +6727,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
     //     if (_formState?.transaction?.master?.voucherType == "LPO") {
     // return;
     //     }
+    let ledgerData: any;
     const ledgerID = (_formState ?? formState)?.transaction?.master?.ledgerID;
     const voucherType = (_formState ?? formState)?.transaction?.master
       ?.voucherType;
@@ -6654,7 +6744,6 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
     try {
       if (!isNullOrUndefinedOrZero(ledgerID)) {
         let ledgerBalance: any;
-        let ledgerData: any;
 
         if (_formState?.transaction?.master?.voucherType === "LPO") {
           // ✅ Manually assign values when voucher type is LPO
@@ -6723,8 +6812,8 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
               if (!isValidVat) {
                 await ERPAlert.show({
                   icon: "error",
-                  title: "Invalid VAT Number",
-                  text: "Invalid VAT Registration number. Please correct and try again",
+                  title: "invalid_vat_number",
+                  text: "invalid_vat_registration_number_please_correct_and_try_again",
                 });
                 return;
               }
@@ -6757,11 +6846,13 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
             if (data && data.name === "Delivery Customer") {
               await ERPAlert.show({
                 icon: "info",
-                title: "Delivery Customer",
-                text: "Delivery Customer.!",
+                title: "delivery_customer",
+                text: "",
               });
             }
           }
+          // set PresetPrice Category
+          setPreSetPriceCategory()
           // set party color to the party color box
           if (ledgerData?.partyColor) {
             const hexColor = String(ledgerData.partyColor).trim().split(" ")[0];
@@ -6812,6 +6903,9 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
             },
           };
         }
+        
+        // Dunction for checking alert box conditions in ledger Selection
+        ledgerSelectionAlertChecking(ledgerData)
         _dispatch &&
           _dispatch(
             formStateHandleFieldChangeKeysOnly({
@@ -6841,6 +6935,9 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
             },
           },
         };
+
+        // Dunction for checking alert box conditions in ledger Selection
+        ledgerSelectionAlertChecking(ledgerData)
         _dispatch &&
           _dispatch(
             formStateHandleFieldChangeKeysOnly({

@@ -1379,7 +1379,13 @@
   "invalid_branch": "فرع غير صالح",
   "invalid_to_branch_warehouse": "مستودع الفرع المحول إليه غير صالح",
   "please_select_a_valid_to_branch_warehouse": "يرجى اختيار مستودع فرع صحيح للتحويل إليه",
-  "save_failed_transaction_cannot_be_saved": "فشل الحفظ. لا يمكن حفظ المعاملة لأن رقم القيد هو 0. يرجى تغيير أو زيادة رقم القيد لحفظ هذه الفاتورة."
+  "save_failed_transaction_cannot_be_saved": "فشل الحفظ. لا يمكن حفظ المعاملة لأن رقم القيد هو 0. يرجى تغيير أو زيادة رقم القيد لحفظ هذه الفاتورة.",
+
+  "invalid_discount": "خصم غير صالح",
+  "maximum_bill_discount_allowed_is": "الحد الأقصى المسموح به لخصم الفاتورة هو ",
+  "invalid_vat_number": "رقم ضريبة القيمة المضافة غير صالح",
+  "invalid_vat_registration_number_please_correct_and_try_again": "رقم التسجيل الضريبي غير صالح. يرجى التصحيح والمحاولة مرة أخرى",
+  "delivery_customer": "عميل توصيل!"
 
   
 

@@ -225,18 +225,6 @@ export const useDirectPrint = () => {
           />
         );
       }
-      //  else if (adviceTem.includes(template?.templateGroup ?? "")) {
-      //   // Handle advice templates
-      //   // TODO: Implement advice template handling
-      //   console.warn("Advice template handling not yet implemented");
-      //   return { success: false, reason: "not-implemented" };
-      // }
-      //  else if (template?.templateGroup === "Cheque") {
-      //   // Handle cheque templates
-      //   // TODO: Implement cheque template handling
-      //   console.warn("Cheque template handling not yet implemented");
-      //   return { success: false, reason: "not-implemented" };
-      // }
        else {
 
         // For standard templates, fetch the data

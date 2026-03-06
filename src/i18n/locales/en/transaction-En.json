@@ -1369,8 +1369,26 @@
   "product_unit_id_is_missing_please_cross_check":"Product Unit ID is missing, Please cross-check:",
   "zero_qty_entered_in_row":"Zero Qty Entered in Row",
   "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row":"Items entered after a blank row will be skipped.Please remove blank Row:",
-  "please_enter_remarks_to_cotinue":"Please enter remarks to cotinue",
-  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled":"Transaction Date Should Not Be Post Dated When KSA E-Invoice Is Enabled"
+  "please_enter_remarks_to_cotinue":"Please enter remarks to continue",
+  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled":"Transaction Date Should Not Be Post Dated When KSA E-Invoice Is Enabled",
+
+  "product_serial_exists_in_row":"Product serial exist in row",
+  "please_check_and_try_again":"Please check and try again",
+  "product_serial_of":"Product serial of",
+  "are_equal_please_check_and_try_again":"are equal. Please check and try again",
+  "please_select_a_branch_to_transfer":"Please select a branch to transfer",
+  "invalid_branch":"Invalid Branch",
+  "invalid_to_branch_warehouse":"Invalid To branch Warehouse",
+  "please_select_a_valid_to_branch_warehouse":"Please select a valid To branch warehouse",
+  "save_failed_transaction_cannot_be_saved":"Save failed. Transaction cannot be saved because the Voucher No is 0. Please change/increment Voucher No to save this bill.",
+
+  "invalid_discount":"Invalid Discount",
+  "maximum_bill_discount_allowed_is":"Maximum bill discount allowed is ",
+  "invalid_vat_number":"Invalid VAT number",
+  "invalid_vat_registration_number_please_correct_and_try_again":"Invalid VAT Registration number. Please correct and try again",
+  "delivery_customer":"Delivery Customer!"
+
+
 
 
 

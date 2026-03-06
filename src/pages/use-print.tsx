@@ -2154,7 +2154,7 @@ export const fetchDefaultTemplateFromApi = async (
   formType?: string,
   customerType?: string
 ): Promise<TemplateState<unknown> | null> => {
-  
+  debugger
   try {
     const api = new APIClient();
     const res = await api.postAsync(`${Urls.default_template}`, {
@@ -2334,7 +2334,7 @@ export const fetchDefaultTemplate = async (
   formType?: string,
   customerType?: string
 ) => {
-   
+   debugger
   try {
     const _template = await fetchDefaultTemplateFromApi(
       voucherType,
@@ -2355,7 +2355,7 @@ export const getOrFetchTemplate = async (
   formType?: string,
   customerType?: string
 ) => {
-  
+  debugger
   const template = await getTemplateFromStore(
     voucherType,
     customerType,

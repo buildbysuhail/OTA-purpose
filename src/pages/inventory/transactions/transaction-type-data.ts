@@ -635,6 +635,7 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   enableCreditAccount: false,
   partyColor:"",
   branchCheckbox: true,
+  iSBTOModify:false,
   summaryConfig: [
     {
       column: "qty",
@@ -752,10 +753,11 @@ export const TransactionFormStateInitialData: TransactionFormState = {
   quantityFactorData: "",
   quantityFactorDataM: "",
   flavoursSelectedData:"",
+  flavoursDescriptionData:"",
   batchEntryData: { visible: false, data: "", rowIndex: -1 },
   serialNoEntryData: { visible: false, data: "", rowIndex: -1, productName: "" },
-  imfData: { visible: false, data: "", rowIndex: -1, slNo: 0 },
-  flavourData: { visible: false,data: "",rowIndex: -1,slNo: 0,productName: "",productId: 0 },
+  imfData: { visible: false, data: "", rowIndex: 0, slNo: 0, productId: 0 },
+  flavourData: { visible: false,data: "",rowIndex: 0, slNo: 0,productName: "",productId: 0 },
   productInfo: false,
   ShowProductBatchUnitDetails: false,
   ledgerDetails: false,

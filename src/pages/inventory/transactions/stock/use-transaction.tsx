@@ -155,7 +155,9 @@ export const useTransaction = (
   chequeStatusRef?: any,
   handleKeyDown?: (e: any, field: string, rowIndex: number) => void,
   formStateRef?: any,
-  purchaseGridRef?: any
+  purchaseGridRef?: any,
+  setIsDropDownOpen?: (value: { open: boolean, autoAddressFocus: boolean }) => void,
+  branchRef?: any,
 ) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
@@ -743,26 +745,30 @@ export const useTransaction = (
     return response;
   };
   // ---------------------- Need To Make function and api call correct after getting the details about the backend process -------------
-  const checkBranchIsCommonInventory = async (branchID: number): Promise<boolean> => {
-    let result = true;
-    const response = await api.getAsync(`/Branch/CheckBranchIsCommonInventoryOrNot?branchId=${branchID}`);
-    if (response.length > 0) {
-      if (response?.useMainBranchInventory === false) {
-        result = false;
-        return false;
-      }
-    }
-    return result;
-  };
+  // const checkBranchIsCommonInventory = async (branchID: number): Promise<boolean> => {
+  //   let result = true;
+  //   const response = await api.getAsync(`/Branch/CheckBranchIsCommonInventoryOrNot?branchId=${branchID}`);
+  //   if (response.length > 0) {
+  //     if (response?.useMainBranchInventory === false) {
+  //       result = false;
+  //       return false;
+  //     }
+  //   }
+  //   return result;
+  // };
   // ----------------------------------------------------------------------------------------------------------------------------------------
 
   async function validate(): Promise<boolean> {
     const master = formState.transaction.master;
     const details = formState.transaction.details;
-    const setting = applicationSettings.productsSettings.mRPLessThanSalesPrice;
 
     const firstFreeRow = details.findIndex((d) => !d.productBatchID);
     const lastRowIndex = firstFreeRow === -1 ? details.length : firstFreeRow;
+    //BTI AND BTO FROM ANSSP Shortcut
+    if ([VoucherType.BranchTransferIn, VoucherType.BranchTransferOut].includes(formState.transaction.master.voucherType as any)
+      && formState.iSBTOModify) {
+      return true;
+    }
     // Check if warehouse id
     if (master.voucherType !== VoucherType.StockTransfer && master.voucherType !== VoucherType.DamageEntry && master.voucherType !== VoucherType.ExcessStock &&
       master.voucherType !== VoucherType.ShortageStock && master.voucherType !== VoucherType.ItemLoadRequest) {
@@ -799,39 +805,29 @@ export const useTransaction = (
         return false;
       }
     }
-    //already in backend
-    // if(master.invTransactionMasterID>0)
-    // {
-    //     int Active = new PolosysERPInventoryClass.Transaction.InventoryTransactionMaster().GetIsInvTransactionIsActiveOrInvoiced(PDTInvTransMasterID);
-    //     if (Active == 0)
-    //     {
-    //         PolosysFrameWork.General.ShowMessageBox("Already converted.");
-    //         return false;
-    //     }
-    // }
     // Transaction date check
-    if(![VoucherType.ItemLoadRequest,VoucherType.OpeningStock].includes(master.voucherType as any)){
-     const transDateValidation = validateTransactionDate(
-      new Date(new Date(formState.transaction.master.transactionDate)),
-      false,
-      undefined,
-      hasBlockedRight
-    );
-    if (!transDateValidation.valid) {
-      await ERPAlert.show({
-        title: t("warning"),
-        text: transDateValidation.message,
-        icon: "warning",
-      });
+    if (![VoucherType.ItemLoadRequest, VoucherType.OpeningStock].includes(master.voucherType as any)) {
+      const transDateValidation = validateTransactionDate(
+        new Date(new Date(formState.transaction.master.transactionDate)),
+        false,
+        undefined,
+        hasBlockedRight
+      );
+      if (!transDateValidation.valid) {
+        await ERPAlert.show({
+          title: t("warning"),
+          text: transDateValidation.message,
+          icon: "warning",
+        });
+      }
     }
-    }
-   
+
     //  No stock items validation
     if (lastRowIndex === 0) {
       await ERPAlert.show({
         icon: "warning",
         title: t("no_data_in_detail_fields"),
-       text: t("please_enter_the_stock_details"),
+        text: t("please_enter_the_stock_details"),
         confirmButtonText: t("ok"),
       });
       return false;
@@ -845,7 +841,7 @@ export const useTransaction = (
         await ERPAlert.show({
           icon: "warning",
           title: t("validation_error"),
-         text: `${t("invalid_item_details_in_row")} ${i + 1}. ${t("please_correct_it_or_remove_the_row")}`,
+          text: `${t("invalid_item_details_in_row")} ${i + 1}. ${t("please_correct_it_or_remove_the_row")}`,
           confirmButtonText: t("ok"),
         });
         return false;
@@ -899,7 +895,7 @@ export const useTransaction = (
     //  ---------------------------------BTO, BTI Validation---------------------------------------------------
     // --------------validation error massages------------------
 
-    if (master.voucherType === VoucherType.BranchTransferIn || master.voucherType === VoucherType.BranchTransferOut) {
+    if (master.voucherType === VoucherType.BranchTransferIn || master.voucherType === VoucherType.BranchTransferOut || master.voucherType === VoucherType.DamageExpirySubstitute) {
       // Grand total check
       if (master.grandTotal < 0) {
         await ERPAlert.show({
@@ -911,6 +907,8 @@ export const useTransaction = (
         });
         return false;
       }
+    }
+    if (master.voucherType === VoucherType.BranchTransferIn || master.voucherType === VoucherType.BranchTransferOut) {
       //   // Zero Quantity validation
       for (let i = 0; i < lastRowIndex; i++) {
         if (Number(details[i].qty) === 0) {
@@ -920,7 +918,6 @@ export const useTransaction = (
             text: t(`zero_qty_in_row ${i + 1} do_you_want_to_continue?`),
             confirmButtonText: t("ok"),
           });
-
           if (!confirm) return false;
         }
       }
@@ -933,7 +930,6 @@ export const useTransaction = (
         });
         return false;
       }
-      debugger;
       if (Number(master.branchID || 0) < 2) {
         await ERPAlert.show({
           icon: "warning",
@@ -946,69 +942,115 @@ export const useTransaction = (
 
       const selectedBranchId = Number(master.branchID || 0);
       const currentBranchId = Number(userSession.currentBranchId || 0)
+      //added in backend Api call
+      // const showNotLinkedMsg = async () => {
+      //   await ERPAlert.show({
+      //     icon: "warning",
+      //     title: t("validation_error"),
+      //     text: t("Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible"),
+      //     confirmButtonText: t("ok"),
+      //     showCancelButton: false,
+      //   });
+      // };
+      // // Case 1: selected branch is Main (1) -> check current branch
+      // if (selectedBranchId === 1) {
+      //   const isLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
+      //   if (!isLinked) {
+      //     await showNotLinkedMsg();
+      //     return false;
+      //   }
+      // }
+      // // Case 2: selected branch is NOT main, but current is Main -> check selected branch
+      // else if (selectedBranchId !== 1 && currentBranchId === 1) {
+      //   const isLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
+      //   if (!isLinked) {
+      //     await showNotLinkedMsg();
+      //     return false;
+      //   }
+      // }
+      // // Case 3: both are NOT main -> check BOTH branches
+      // else if (selectedBranchId !== 1 && currentBranchId !== 1) {
+      //   const isSelectedLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
+      //   if (!isSelectedLinked) {
+      //     await showNotLinkedMsg();
+      //     return false;
+      //   }
 
-      const showNotLinkedMsg = async () => {
-        await ERPAlert.show({
-          icon: "warning",
-          title: t("validation_error"),
-          text: t("Inventory_of_selected_branch_is_not_linked_with_Main_branch_BTO_not_possible"),
-          confirmButtonText: t("ok"),
-          showCancelButton: false,
-        });
-      };
-      // Case 1: selected branch is Main (1) -> check current branch
-      if (selectedBranchId === 1) {
-        const isLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
-        if (!isLinked) {
-          await showNotLinkedMsg();
+      //   const isCurrentLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
+      //   if (!isCurrentLinked) {
+      //     await showNotLinkedMsg();
+      //     return false;
+      //   }
+      // }
+
+      if (currentBranchId == 1) {
+        if (selectedBranchId <= 1) {
+          await ERPAlert.show({
+            icon: "warning",
+            title: t("invalid_branch"),
+            text: t("please_select_a_branch_to_transfer"),
+            confirmButtonText: t("ok"),
+            showCancelButton: false,
+          });
           return false;
-        }
-      }
-      // Case 2: selected branch is NOT main, but current is Main -> check selected branch
-      else if (selectedBranchId !== 1 && currentBranchId === 1) {
-        const isLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
-        if (!isLinked) {
-          await showNotLinkedMsg();
-          return false;
-        }
-      }
-      // Case 3: both are NOT main -> check BOTH branches
-      else if (selectedBranchId !== 1 && currentBranchId !== 1) {
-        const isSelectedLinked = (await checkBranchIsCommonInventory(selectedBranchId)) ?? false;
-        if (!isSelectedLinked) {
-          await showNotLinkedMsg();
-          return false;
+        } else {
+          if (selectedBranchId <= 0 && formState?.userConfig?.skipNonMandatoryFields == false) {
+            await ERPAlert.show({
+              icon: "warning",
+              title: t("invalid_branch"),
+              text: t("please_select_a_branch_to_transfer"),
+              confirmButtonText: t("ok"),
+              showCancelButton: false,
+              onConfirm: () => {
+                // Open the sales header dropdown and focus mobile number field
+                setIsDropDownOpen?.({ open: true, autoAddressFocus: false });
+                setTimeout(() => {
+                  branchRef?.current?.focus();
+                  branchRef?.current?.select();
+                }, 100);
+              },
+            });
+            return false;
+          }
+          else if (selectedBranchId <= 0 && formState?.userConfig?.skipNonMandatoryFields == true) {
+            branchRef?.current?.focus();
+            branchRef?.current?.select();
+            return false;
+          }
         }
 
-        const isCurrentLinked = (await checkBranchIsCommonInventory(currentBranchId)) ?? false;
-        if (!isCurrentLinked) {
-          await showNotLinkedMsg();
-          return false;
-        }
-      }
-      // Party selection check
-      if (selectedBranchId <= 0) {
-        await ERPAlert.show({
-          icon: "warning",
-          title: t("validation_error"),
-          text: t("branch_should_be_selected"),
-          confirmButtonText: t("ok"),
-          showCancelButton: false,
-        });
-        return false;
       }
 
       if (selectedBranchId === currentBranchId) {
         await ERPAlert.show({
           icon: "warning",
-          title: t("validation_error"),
+          title: t("invalid_branch"),
           text: t("please_select_different_branch_to_transfer"),
           confirmButtonText: t("ok"),
           showCancelButton: false,
         });
         return false;
       }
-
+      if (Number(master.toBranchWarehouseID || 0) < 1 && userSession.IsSyncServerDB) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("invalid_to_branch_warehouse"),
+          text: t("please_select_a_valid_to_branch_warehouse"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
+      if (selectedBranchId <= 0) {
+        await ERPAlert.show({
+          icon: "warning",
+          title: t("invalid_branch"),
+          text: t("branch_should_be_selected"),
+          confirmButtonText: t("ok"),
+          showCancelButton: false,
+        });
+        return false;
+      }
       if (Number(master.salesManID || 0) <= 0) {
         await ERPAlert.show({
           icon: "warning",
@@ -1016,233 +1058,134 @@ export const useTransaction = (
           text: t("select_valid_salesman"),
           confirmButtonText: t("ok"),
           showCancelButton: false,
+          //  salesman?.current?.focus();
         })
         return false;
       }
 
       // --------------------------------showNegativeStockWarning---------------------------------
+      //done in backend Api call
+      for (let i = 0; i < lastRowIndex; i++) {
+        const row = details[i];
+        if (!row.gross || row.gross == 0) {
+          const confirm = await ERPAlert.show({
+            icon: "question",
+            title: t("zero_value"),
+            text: `${t("zero_rate_or_qty_entered_in_row")} ${i + 1}. ${t("do_you_want_to_continue")}`,
+            confirmButtonText: t("yes"),
+            cancelButtonText: t("no"),
+            showCancelButton: true,
+          });
+          if (!confirm) {
+            const rowIndex = details.findIndex((x) => x.slNo === row.slNo);
+            const res = safeFocusColumn(rowIndex, "qty");
+            setCurrentCell(res, details[rowIndex] as TransactionDetail, true);
+            return false;
+          }
+        }
+      }
+      // 🔹 Serial Checking
+      if (details.length > 0) {
 
-      // let showNegativeStockWarning = applicationSettings.inventorySettings.showNegStockWarning;
+        for (let i = 0; i < details.length; i++) {
 
-      // if (userSession.dbIdValue === "BAHAMDOON") {
-      //   showNegativeStockWarning = master.negativeStockModeFromWarehouse; 
-      // }
+          const row = details[i];
 
-      // if(applicationSettings.inventorySettings.showNegStockWarning && userSession.dbIdValue === "BAHAMDOON"){
+          if ((row.productDescription ?? "").trim() !== "") {
 
-      // } 
-      // -------------------------------------------------------------------------------------------------
-      // if (showNegativeStockWarning === "Block") {
-      //   for (let i = 0; i < lastRowIndex; i++) {
-      //     const row = details[i];
+            const serials = row.productDescription.split(",");
 
-      //     const qty = Number(row.qty || 0);
-      //     const prevQty = Number(row.prevQty || 0);     // C# used Qty.Tag (previous qty)
-      //     let qtyDiff = qty - prevQty;
+            for (const rawSerial of serials) {
 
-      //     const stock = Number(row.stock || 0);
+              const serial = rawSerial.trim();
 
-      //     // C# MultiFactor = GetProductUnitQty(productBatchId, unitId)
-      //     // Use row.unitMultiFactor if you already have it, else call API once per row or cache it.
-      //     const multiFactor = Number(row.unitMultiFactor || 1);
-      //     qtyDiff = qtyDiff * multiFactor;
-
-      //     if (qtyDiff > stock) {
-      //       await ERPAlert.show({
-      //         icon: "warning",
-      //         title: t("validation_error"),
-      //         text: t("negative_stock_in_row_cant_proceed", { row: i + 1 }),
-      //         confirmButtonText: t("ok"),
-      //         showCancelButton: false,
-      //       });
-      //       return false;
-      //     }
-      //   }
-      // }
+              if (serial !== "") {
 
 
-      // ---------------------getIsInvTransactionActiveOrInvoiced--------------
+                // 🔹 Block Non Stock Serial Selling
+                if (applicationSettings.inventorySettings.blockNonStockSerialSelling) {
 
-      // if (Number(master.pdtInvTransMasterID || 0) > 0) {
+                  const params = new URLSearchParams({
+                    SerialNumber: serial,
+                    OldInvTransMasterID: master.invTransactionMasterID.toString()
+                  });
 
-      //   const active = await getIsInvTransactionActiveOrInvoiced(
-      //     master.pdtInvTransMasterID
-      //   );
+                  const imeiCount = await api.getAsync(
+                    `${Urls.inv_transaction_base}${transactionType}/GetCountofIMEI?${params.toString()}`
+                  );
+                  if (imeiCount <= 0) {
 
-      //   if (active === 0) {
-      //     await ERPAlert.show({
-      //       icon: "warning",
-      //       title: t("validation_error"),
-      //       text: t("already_converted"),
-      //       confirmButtonText: t("ok"),
-      //     });
+                    await ERPAlert.show({
+                      icon: "error",
+                      title: t("non_stock_serial"),
+                      text: `${i + 1} ${t("row_serial")} '${serial}' ${t("is_out_of_stock")}`,
+                      confirmButtonText: t("ok"),
+                      showCancelButton: false
+                    });
+                    return false
 
-      //     return false;
-      //   }
-      // }
-    }
-    if(master.voucherType==VoucherType.ItemLoadRequest && master.remarks==""){
-      //For ILR have same warehouse check but not working so not added 
-       await ERPAlert.show({
-          title: t("validation_error"),
-          text: t("please_enter_remarks_to_cotinue"),
-          confirmButtonText: t("ok"),
-        });
-        return false;
-    }
-    // ----------------------------------------------------------------------------------------
+                  }
+                }
+                const vr = await api.postAsync(
+                  `${Urls.inv_transaction_base}${transactionType}/CheckSerial`,
+                  {
+                    Serial: serial,
+                    OldInvTransMasterID: master.invTransactionMasterID ?? 0,
+                    VoucherType: master.voucherType,
+                    IsEdit: formState.isEdit
+                  }
+                );
+                if (vr && vr !== "") {
 
-    //   // Zero Quantity validation
-    //   for (let i = 0; i < lastRowIndex; i++) {
-    //   if (Number(details[i].qty) === 0) {
-    //     const confirm = await ERPAlert.show({
-    //       icon: "warning",
-    //         title: t("validation_error"),
-    //         text: t(`Zero Qty in Row ${i + 1} Do you want to continue?`),
-    //         confirmButtonText: t("ok"),
-    //     });
+                  const confirm = await ERPAlert.show({
+                    icon: "question",
+                    title: t("duplicate_serial"),
+                    text: `${i + 1} ${t("row_serial_exists_in")} ${vr}. ${t("do_you_want_to_continue")}`,
+                    confirmButtonText: t("yes"),
+                    cancelButtonText: t("no"),
+                    showCancelButton: true
+                  });
 
-    //     if (!confirm) return false;
-    //   }
-    // }
+                  if (confirm !== true) {
+                    return false
+                  };
+                }
+              }
 
-    // Item entered in a blank row
-    for (let i = lastRowIndex; i < details.length; i++) {
-      if (details[i].productID) {
+
+            }
+          }
+        }
+      }
+  if (master.voucherNumber==0 && formState.isEdit ) {
         await ERPAlert.show({
+          icon: "warning",
           title: t("validation_error"),
-          text: t(
-            `Items entered after a blank row will be skipped.Please remove blank Row:: ${lastRowIndex + 1
-            }`
-          ),
+          text: t("save_failed_transaction_cannot_be_saved"),
           confirmButtonText: t("ok"),
         });
         return false;
       }
     }
 
+    if (master.voucherType == VoucherType.ItemLoadRequest && master.remarks == "") {
+      //For ILR have same warehouse check but not working so not added 
+      await ERPAlert.show({
+        title: t("validation_error"),
+        text: t("please_enter_remarks_to_cotinue"),
+        confirmButtonText: t("ok"),
+      });
+      return false;
+    }
+    // ----------------------------------------------------------------------------------------
+
     // Stock update restriction
 
-    // Equivalent condition:
-    // if ((setting is not "Block" && UserSession.IsAPPGlobal) || !UserSession.IsAPPGlobal)
-    // if (setting == "Block" && clientSession.isAppGlobal) {
-    //   // Find invalid rows (Sales price greater than MRP)
-    //   const invalidRows = details
-    //     .map((item, index) => ({ item, index }))
-    //     .filter(({ item }) => item.salesPrice > item.mrp)
-    //     .map(({ index }) => index + 1);
 
-    //   if (invalidRows.length > 0) {
-    //     await ERPAlert.show({
-    //       icon: "error",
-    //       title: t("validation_error"),
-    //       text: t(
-    //         `Sales price greater than MRP at rows: ${invalidRows.join(", ")}`
-    //       ),
-    //       confirmButtonText: t("ok"),
-    //     });
-    //     return false;
-    //   }
-    // }
 
-    // if (
-    //   !formState.transaction.master.stockUpdate &&
-    //   (formState.transaction.master.voucherType === "PI" ||
-    //     formState.transaction.master.voucherType === "PR")
-    // ) {
-    //   const voucherType = formState.transaction.master.voucherType;
-    //   const confirm = await ERPAlert.show({
-    //     icon: "info",
-    //     title: t("stock_update_warning"),
-    //     text:
-    //       voucherType === "PI"
-    //         ? "Stock cannot be updated in this invoice.In goods Receipt voucher stock already updated. Do you want to continue?"
-    //         : voucherType === "PR"
-    //           ? "Stock cannot be updated in this invoice.In Goods Receipt Return voucher stock already updated. Do you want to continue?"
-    //           : "",
-    //     confirmButtonText: t("yes"),
-    //     cancelButtonText: t("no"),
-    //     showCancelButton: true,
-    //   });
-    //   if (!confirm) {
-    //     return false;
-    //   }
-    // }
 
-    // Cost centre validation
-    // if (
-    //   applicationSettings.accountsSettings.maintainCostCenter &&
-    //   isNullOrUndefinedOrZero(master.costCentreID)
-    // ) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("validation_error"),
-    //     text: t("select_valid_cost_centre"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
 
-    // Grand total check
-    // if (master.grandTotal < 0) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("validation_error"),
-    //     text: t("wrong_discount_or_value"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
 
-    // // Transaction date check
-    // const transDateValidation = validateTransactionDate(
-    //   new Date(new Date(formState.transaction.master.transactionDate)),
-    //   false,
-    //   undefined,
-    //   hasBlockedRight
-    // );
-    // if (!transDateValidation.valid) {
-    //   await ERPAlert.show({
-    //     title: t("warning"),
-    //     text: transDateValidation.message,
-    //     icon: "warning",
-    //   });
-    // }
-
-    // Day close check
-    // const closedDate = await getClosedDate(api, formState.transactionType);
-    // const tmpDate = new Date(master.transactionDate)
-    // tmpDate.setHours(0, 0, 0, 0);
-    // if (closedDate >= new Date(tmpDate)) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("invalid_transaction_date"),
-    //     text: t("day_closed"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
-
-    // if (master.invTransactionMasterID > 0 && new Date(closedDate) >= new Date(formState.prevTransactionDate??"01/01/1900")) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("invalid_transaction_date"),
-    //     text: t("cannot_edit_day_closed"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
-
-    // Party selection check
-    // if (!master.ledgerID) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("invalid_party"),
-    //     text: t("select_cash_or_party"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
 
     // // Reference number validation
     // if (
@@ -1271,35 +1214,6 @@ export const useTransaction = (
     //       });
     //       return false;
     //     }
-    //   }
-    // }
-
-    // Scheme discount account check
-    // if (
-    //   DBID_VALUE === "SAMAPLASTICS" &&
-    //   getSchemeDiscount(details) > 0 &&
-    //   !master.schemeDiscountPostingLedgerId
-    // ) {
-    //   await ERPAlert.show({
-    //     icon: "error",
-    //     title: t("scheme_discount_warning"),
-    //     text: t("select_scheme_discount_posting_ledger"),
-    //     confirmButtonText: t("ok"),
-    //   });
-    //   return false;
-    // }
-
-    // Product validation
-    // for (let i = 0; i < details.length; i++) {
-    //   const row = details[i];
-    //   if (!row.productBatchId || row.productBatchId === 0) {
-    //     await ERPAlert.show({
-    //       icon: "error",
-    //       title: t("validation_error"),
-    //       text: t("invalid_item_details_in_row", { row: i + 1 }),
-    //       confirmButtonText: t("ok"),
-    //     });
-    //     return false;
     //   }
     // }
 
@@ -1345,18 +1259,6 @@ export const useTransaction = (
     }
 
     // Check no items after blank rows
-    // const firstFreeIndex = details.findIndex((x) => !x.productId);
-    // for (let i = firstFreeIndex + 1; i < details.length; i++) {
-    //   if (details[i].productId) {
-    //     await ERPAlert.show({
-    //       icon: "error",
-    //       title: t("validation_error"),
-    //       text: t("items_after_blank_row", { row: firstFreeIndex + 1 }),
-    //       confirmButtonText: t("ok"),
-    //     });
-    //     return false;
-    //   }
-    // }
 
     // Finalize
     // calculateTotal();

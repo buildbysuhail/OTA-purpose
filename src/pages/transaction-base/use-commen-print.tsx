@@ -17,7 +17,7 @@ import { TemplateState } from "../InvoiceDesigner/Designer/interfaces"
 import { useCallback } from "react"
 
 const api = new APIClient()
-export const useCommenPrint = () => {
+export const useCommenPrint = () => { 
   const dispatch = useDispatch()
   const { directPrint } = useDirectPrint();
   const userSession = useAppSelector((state: RootState) => state.UserSession)
@@ -56,7 +56,7 @@ export const useCommenPrint = () => {
       }
     }
       // If template is valid, proceed with printing
-    if (template?.id == 0) {
+    if (!template && template?.id == 0) {
       // ERPAlert.show({ title: "Please Set Template For Print" })
       ERPToast.showWith("Please Set Template For Print", "warning");
       return

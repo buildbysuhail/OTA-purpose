@@ -242,11 +242,11 @@ const AccTransactionFormContainerViewContent: React.FC<TransactionViewProps> = (
       >
         <header className={`${props.isDrawerMode ? 'sticky top-0' : 'fixed'} z-40 w-[-webkit-fill-available] h-[52px] bg-white dark:bg-dark-bg-card flex items-center justify-between gap-4 px-6 py-3 border-b border-gray-200 dark:border-dark-border`}>
           <h1 className="text-sm md:text-sm font-semibold tracking-tight text-[color:var(--color-foreground)] dark:!text-dark-text">
-            {(() => {
+            {/* {(() => {
               if (!printData || printData.kind !== "voucher") return "INV-__";
-              return `INV-${printData.data.master.voucherNumber ?? "__"}`;
-            })()}
-
+              return ;
+            })()} */}
+            {`INV-${props.voucherNo ?? "__"}`}
           </h1>
 
           <div className="flex items-center gap-1 border border-gray-200 dark:border-dark-border rounded-md bg-white dark:bg-dark-bg-card p-0.5">

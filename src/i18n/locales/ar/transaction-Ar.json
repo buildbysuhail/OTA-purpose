@@ -1368,7 +1368,25 @@
   "zero_qty_entered_in_row": "تم إدخال كمية صفرية في الصف",
   "items_entered_after_blank_row_will_be_skipped_please_remove_blank_row": "سيتم تجاهل الأصناف المدخلة بعد صف فارغ. يرجى حذف الصف الفارغ:",
   "please_enter_remarks_to_cotinue": "يرجى إدخال الملاحظات للمتابعة",
-  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled": "لا يجب أن يكون تاريخ المعاملة لاحقاً للتاريخ الحالي عند تفعيل الفاتورة الإلكترونية في المملكة العربية السعودية"
+  "transaction_date_should_not_be_post_dated_when_ksa_einvoice_is_enabled": "لا يجب أن يكون تاريخ المعاملة لاحقاً للتاريخ الحالي عند تفعيل الفاتورة الإلكترونية في المملكة العربية السعودية",
+
+  "product_serial_exists_in_row": "الرقم التسلسلي للمنتج موجود في الصف",
+  "please_check_and_try_again": "يرجى التحقق والمحاولة مرة أخرى",
+  "product_serial_of": "الرقم التسلسلي لـ",
+  "are_equal_please_check_and_try_again": "متطابقان. يرجى التحقق والمحاولة مرة أخرى",
+
+  "please_select_a_branch_to_transfer": "يرجى اختيار الفرع للتحويل",
+  "invalid_branch": "فرع غير صالح",
+  "invalid_to_branch_warehouse": "مستودع الفرع المحول إليه غير صالح",
+  "please_select_a_valid_to_branch_warehouse": "يرجى اختيار مستودع فرع صحيح للتحويل إليه",
+  "save_failed_transaction_cannot_be_saved": "فشل الحفظ. لا يمكن حفظ المعاملة لأن رقم القيد هو 0. يرجى تغيير أو زيادة رقم القيد لحفظ هذه الفاتورة.",
+
+  "invalid_discount": "خصم غير صالح",
+  "maximum_bill_discount_allowed_is": "الحد الأقصى المسموح به لخصم الفاتورة هو ",
+  "invalid_vat_number": "رقم ضريبة القيمة المضافة غير صالح",
+  "invalid_vat_registration_number_please_correct_and_try_again": "رقم التسجيل الضريبي غير صالح. يرجى التصحيح والمحاولة مرة أخرى",
+  "delivery_customer": "عميل توصيل!"
+
   
 
 }

@@ -1380,7 +1380,13 @@
   "invalid_branch":"Invalid Branch",
   "invalid_to_branch_warehouse":"Invalid To branch Warehouse",
   "please_select_a_valid_to_branch_warehouse":"Please select a valid To branch warehouse",
-  "save_failed_transaction_cannot_be_saved":"Save failed. Transaction cannot be saved because the Voucher No is 0. Please change/increment Voucher No to save this bill."
+  "save_failed_transaction_cannot_be_saved":"Save failed. Transaction cannot be saved because the Voucher No is 0. Please change/increment Voucher No to save this bill.",
+
+  "invalid_discount":"Invalid Discount",
+  "maximum_bill_discount_allowed_is":"Maximum bill discount allowed is ",
+  "invalid_vat_number":"Invalid VAT number",
+  "invalid_vat_registration_number_please_correct_and_try_again":"Invalid VAT Registration number. Please correct and try again",
+  "delivery_customer":"Delivery Customer!"
 
 
 

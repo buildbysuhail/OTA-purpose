@@ -495,15 +495,16 @@ debugger;
 
   // Handle template saving
   const handleSave = useCallback(
-    async (dataUrl: string) => {
-      debugger
+    async (dataUrl: string, overrides?: { templateGroup?: string; templateName?: string; formType?: string; customerType?: string; isCurrent?: boolean; skipNavigate?: boolean }) => {
       const thumbImage = dataUrl;
       const backgroundImage = activeTemplate.background_image ?? "";
       const backgroundImageHeader = activeTemplate.background_image_header ?? "";
       const backgroundImageFooter = activeTemplate.background_image_footer ?? "";
       const signatureImage = activeTemplate.signature_image ?? "";
+      const resolvedGroup = overrides?.templateGroup ?? templateGroup;
       const tmpTemplate = {
         ...activeTemplate,
+        isCurrent: overrides?.isCurrent ?? (activeTemplate?.isCurrent ?? false),
         content: null,
         background_image: "",
         thumbImage: "",
@@ -512,9 +513,12 @@ debugger;
         signatureImage: "",
         propertiesState: {
           ...activeTemplate?.propertiesState,
-          template_group: templateGroup,
+          template_group: resolvedGroup,
           template_kind: templateKind,
           template_type: designerType,
+          templateName: overrides?.templateName ?? activeTemplate?.propertiesState?.templateName,
+          template_formType: overrides?.formType ?? activeTemplate?.propertiesState?.template_formType,
+          template_customerType: overrides?.customerType ?? activeTemplate?.propertiesState?.template_customerType,
         },
 
       } as TemplateState<T>;
@@ -704,14 +708,16 @@ debugger;
             //     const merged = merge({}, initial, parsedTemplate);
             
             await addTemplateToStore({...activeTemplate,
-          template_group: templateGroup,
+          template_group: resolvedGroup,
           template_kind: templateKind,
           template_type: designerType,
             } as any);
-        
+
           }
 
-          navigate(`/templates?template_group=${templateGroup}&form_type=${ tmpTemplate.propertiesState?.template_formType??""}&customer_type=${ tmpTemplate.propertiesState?.template_customerType??""}`);
+          if (!overrides?.skipNavigate) {
+            navigate(`/templates?template_group=${resolvedGroup}&form_type=${ tmpTemplate.propertiesState?.template_formType??""}&customer_type=${ tmpTemplate.propertiesState?.template_customerType??""}`);
+          }
         });
       } catch (error) {
         console.error("Error saving template:", error);
@@ -722,8 +728,9 @@ debugger;
   );
 
   // Updated save function that captures preview as image
-  const manageSaveAccTemplate = useCallback(async () => {
-    if (id === "new" && !activeTemplate?.propertiesState?.templateName) {
+  const manageSaveAccTemplate = useCallback(async (overrides?: { templateGroup?: string; templateName?: string; formType?: string; customerType?: string; isCurrent?: boolean; skipNavigate?: boolean }) => {
+    const templateNameToCheck = overrides?.templateName ?? activeTemplate?.propertiesState?.templateName;
+    if (id === "new" && !templateNameToCheck) {
       ERPToast.show(t("template_name_is_required"));
       return;
     }
@@ -732,7 +739,7 @@ debugger;
       setLoading(true);
       const imageDataUrl = await capturePreviewAsImage();
 
-      await handleSave(imageDataUrl);
+      await handleSave(imageDataUrl, overrides);
     } catch (error) {
       console.error("Error saving template:", error);
       ERPToast.show(t("failed_to_save_template"));

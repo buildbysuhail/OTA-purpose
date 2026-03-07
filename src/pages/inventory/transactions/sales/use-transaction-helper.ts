@@ -3477,6 +3477,27 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           );
           }
         }
+        
+        // --------------- If product contains flavours - open flavour modal -------------------
+        // Check it is the roght place to put the code!
+        if(res?.isShowFlavour){
+          dispatch(
+          commonParams.formStateHandleFieldChangeKeysOnly({
+            fields: {
+              flavourData: {
+                visible: true,
+                data: "",
+                slNo: data.rowIndex,
+                productName: product.productName,
+                productId: product.productID,
+                rowIndex: data.rowIndex
+              },
+            },
+            updateOnlyGivenDetailsColumns: true,
+          })
+        );
+        }
+        // ------------------- end of Flavor modal code end -------------------
 
         return result;
       } else if (res?.productId > 0 && forImport != true) {
@@ -3775,7 +3796,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       }
     }
     // Bill discount + tax-on-bill-disc logic (Indian-specific branch will later override if needed)
-    const billDisc = Number(master.billDiscount ?? 0);
+    let billDisc = Number(master.billDiscount ?? 0);
     const additionalAmt = Number(master.adjustmentAmount ?? 0);
 
     // write vat to result.master
@@ -3839,7 +3860,16 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         // reset bill discount
         // caller said they will set master fields as needed; mirror C# by setting back
         // but keep result consistent:
-        master.billDiscount = 0;
+        // Bill discount Validation if above grand Total
+        ERPAlert.show({
+          icon: "info",
+          title: t("invalid_discount"),
+          text: t("maximum_bill_discount_allowed_is") + ` ${_TotalNetValue}`,
+          confirmButtonText: t("ok"),
+          showCancelButton: false
+        });
+
+        result.transaction!.master!.billDiscount = 0;
         TaxableAmt_StdRate = 0;
         taxOnBilldisc = 0;
       } else {
@@ -3864,6 +3894,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       // update taxed value in result.master
       result.transaction!.master!.taxOnDiscount = taxOnBilldisc;
     }
+    billDisc = result.transaction!.master!.billDiscount ?? billDisc;
 
     // For India: recalc tax breakdown source (if needed) and set totalTax
     if (clientSession.isAppGlobal === true) {

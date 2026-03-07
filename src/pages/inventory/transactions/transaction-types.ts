@@ -1045,6 +1045,7 @@ export interface DataAutoBarcode {
   productId: number;
   units: UnitByBatchDetailsDto[];
   isShowItemPopUp: boolean;
+  isShowFlavour?: boolean;
 }
 export interface BarcodeLabel {
   labelCount: number;

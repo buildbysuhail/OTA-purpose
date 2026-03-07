@@ -201,21 +201,21 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
     const initialCardAmount = formState.transaction.master.bankAmt;
     const isFromSave = formState.tenderWindow?.isFromSave;
 
+    const round = formState.transaction.master.roundAmount || 0; // round amount
+    const taxOnDiscValue = Number(formState.transaction.master.taxOnDiscount) || 0;
     let totalNet = 0;
     if(allowMultiPayment){
       totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0); // Total summary value is using Now check It
-      totalNet = totalNet + additionalAmt + roundOf - couponAmt;
+      totalNet = totalNet + additionalAmt + round - couponAmt;
     }else{
       if(isFromSave){
         totalNet = (formState.summary.total || 0) - (formState.transaction.master.srAmount || 0)
-        totalNet = totalNet + additionalAmt + roundOf - couponAmt;
+        totalNet = totalNet + additionalAmt + round - couponAmt;
       }else{
         totalNet = formState.summary.netValue || 0;
         totalNet = totalNet + additionalAmt;
       }
     }
-    const round = formState.transaction.master.roundAmount || 0; // round amount
-    const taxOnDiscValue = Number(formState.transaction.master.taxOnDiscount) || 0;
 
     if(isFromSave && !allowMultiPayment){
        if(initialCardAmount > 0){
@@ -254,12 +254,12 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
       let calculatedNetTotal = (total + addAmount + roundOf) - (couponAmt);
       calculatedNetTotal = total - discAmount - taxOnDiscAmount;
       // Set net Total value
-      setNetTotal(calculatedNetTotal);
+      setNetTotal(Number(calculatedNetTotal.toFixed(applicationSettings.mainSettings.decimalPoints)));
       const totalReceived = cashRcvd;
       const cardAmount = cardEnabled ? cardAmt : 0;
       // Calculate balance value
       const calculatedBalance = calculatedNetTotal-(totalReceived + totalQrPayAmount + totalBankCardAmount + cardAmount)
-      setBalance(calculatedBalance);
+      setBalance(Number(calculatedBalance.toFixed(applicationSettings.mainSettings.decimalPoints)));
       if(allowMultiPayment){
         const initialCardAmount = formState.transaction.master.bankAmt;
         const isFromSave = formState.tenderWindow?.isFromSave;
@@ -323,14 +323,14 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
   const handleDiscAmountChange = (value: number) => {
     setDiscAmount(value);
     if (total > 0) {
-      setDiscPercent((value / total) * 100);
+      setDiscPercent(0);
     }
   };
 
   // Discount percentage value change function
   const handleDiscPercentChange = (value: number) => {
     setDiscPercent(value);
-    setDiscAmount((total * value) / 100);
+    setDiscAmount(Number(((total * value) / 100).toFixed(applicationSettings.mainSettings.decimalPoints)));
   };
 
   // Delete row from upi details grid
@@ -871,7 +871,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   min="0"
                   value={discAmount}
                   onChange={(e) => {
-                    const val = parseFloat(e.target.value) || 0;
+                    const val = Number(e.target.value) || 0;
                     handleDiscAmountChange(val < 0 ? 0 : val);
                   }}
                   disabled={!discEnabled}

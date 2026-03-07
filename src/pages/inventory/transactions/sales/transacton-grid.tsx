@@ -214,7 +214,7 @@ const TransactionGrid: React.FC<{
         }
       },
       {
-        dataField: "purchaseInvoiceNumber",
+        dataField: "deliveryNoteNumber",
         caption: t("ref_no"),
         dataType: "string",
         allowSorting: true,

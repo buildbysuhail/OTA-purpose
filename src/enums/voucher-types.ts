@@ -34,7 +34,7 @@ enum VoucherType {
   ShortageStock = "SH",
   MaterialReceipt = "MR",
   StockTransfer = "ST",
-  StockTransferShortageSpecial = "SH_SP",
+  StockTransferShortageSpecial = "SH-SP",
   PurchaseOrder = "PO",
   BankReconciliation = "BRC",
   SaleReturnEstimate = "SRE",
@@ -49,7 +49,7 @@ enum VoucherType {
   AssetDepreciation = "DEP",
   PurchaseEstimate = "PE",
   PurchaseQuotation = "PQ",
-  StockTransferExcessSpecial = "EX_SP",
+  StockTransferExcessSpecial = "EX-SP",
   PurchaseOrderTransist = "POT",
   RequestForQuotation = "RFQ",
   JournalVoucherSpecial = "JVSP", //

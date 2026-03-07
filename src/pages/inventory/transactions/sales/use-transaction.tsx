@@ -7520,7 +7520,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
             ? t(title)
             : isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
 
-        printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
+        printOnSave: applicationSettings.inventorySettings?.printInvAfterSave,
       };
       _formState = await loadLedgerData(_formState) as any;
       _formState.isInitialLedger = true;

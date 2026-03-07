@@ -1776,7 +1776,8 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           ? false
           : true,
       billDiscount: m.billDiscount,
-      taxOnDiscount: [VoucherType.ServiceInvoice, VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn].includes(m.voucherType as any)
+      taxOnDiscount: [VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate,VoucherType.SalesOrder,
+        VoucherType.GoodRequest,VoucherType.RequestForQuotation,VoucherType.SalesQuotation].includes(m.voucherType as any)
         || (m.voucherType == VoucherType.GoodsDeliveryNote && !clientSession.isAppGlobal)
         ? m.taxOnDiscount
         : 0,

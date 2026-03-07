@@ -861,7 +861,7 @@ focusCurrentColumn ??
         /** ---------------- Remarks ---------------- */
         // remarks: vch.master.remarks,
 
-        /** ---------------- Amounts ---------------- */
+        /** ---------------- Amounts ---------------- */    
         cashReceived:
           !isSalesBookingLoaded ?
             [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
@@ -871,7 +871,7 @@ focusCurrentColumn ??
                 : round(vch?.master?.cashReceived)
             : sbCashReceived,
         refDate: [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
-          ? vch?.master?.OrderDate : vch?.master?.DeliveryDate,
+          ? vch?.master?.orderDate : vch?.master?.deliveryDate,
 
         billDiscount: !isSalesBookingLoaded
           ? voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
@@ -891,7 +891,7 @@ focusCurrentColumn ??
 
         /** ---------------- Cash Received Flag ---------------- */
         hasCashPaid:
-          vch.master.cashReceived >= vch.master.grandTotal,
+          vch.master.cashReceived >= vch.master.grandTotal,   
 
         /** ---------------- Lock ---------------- */
         // isLocked: vch.master.isLocked, //not in use added for enable disable in above

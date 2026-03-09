@@ -727,7 +727,7 @@ focusCurrentColumn ??
           formType || (formState.transaction.master.voucherForm ?? ""),
           out_voucherType || (formState.transaction.master.voucherType ?? ""),
           voucherPrefix || (formState.transaction.master.voucherPrefix ?? ""),
-          false
+          true    // isVoucherPrefix
         );
         voucher.isEdit = false;
         voucher.formElements = {
@@ -6675,7 +6675,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
         ERPAlert.show({
           icon: "warning",
           title: t(""),
-          text: t("credit_stopped_for_this_customer"),
+          text: t("credit_stopped_for_customer"),
           confirmButtonText: t("ok"),
           showCancelButton: false
         });

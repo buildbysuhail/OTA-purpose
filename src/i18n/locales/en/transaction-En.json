@@ -1222,7 +1222,7 @@
   "transaction_date_should_not_be_post_dated":"Transaction date should not be post dated date!",
   "excess_card_amount_entered, do_you_want_to_continue":"Excess card amount entered,Do you want Continue?",
   "wrong_value_or_discount":"Wrong Value/Discount. Please check values",
-  "credit_stopped_for_customer":"Credit Stopped for this customer!!!",
+  "credit_stopped_for_customer":"Credit Stopped for this customer.",
   "stock_cannot_be_updated_gd_already_deducted":"Stock cannot be updated in this invoice. In Goods Delivery voucher stock already deducted. Do you want to continue?",
   "stock_cannot_be_updated_gdr_already_updated":"Stock cannot be updated in this invoice. In Goods Delivery Return voucher stock already updated. Do you want to continue?",
   "select_valid_salesman":"Please select a valid salesman and try again.",

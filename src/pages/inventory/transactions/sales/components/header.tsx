@@ -197,7 +197,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           const accTransactionDetailId = formState.transaction.master.accTransactionDetailIDForBillwise;
           try {
             const api = new APIClient();
-            const billwise = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Dr&AccTransactionDetailID=${accTransactionDetailId}`);
+            const billwise = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/BillwiseMaster/?LedgerId=${formState.transaction.master.ledgerID}&DrCr=Cr&AccTransactionDetailID=${accTransactionDetailId}`);
             if (accTransactionDetailId > 0) {
               billwise.map((x: BillwiseData) => ({
                 ...x,
@@ -212,7 +212,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                     billwiseDetails: formState.transaction.master.billWiseString,
                     ledgerBillWiseLoading: false,
                     showbillwise: true,
-                    billwiseDrCr: "Dr",
+                    billwiseDrCr: "Cr",
                   },
                 })
               );
@@ -220,9 +220,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
           } catch (err) {
             console.error("Error opening Billwise form", err);
           }
-        } else {
-          alert("Please check selected party is bill wise or not.");
-        }
+        } 
       } catch (err) {
         console.error("Error in Billwise Click", err);
       }
@@ -923,7 +921,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
                       </li>
                     )}
 
-                    {formState.transaction.master.invTransactionMasterID > 0 && formState.transaction.master.voucherType === 'PR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
+                    {formState.transaction.master.invTransactionMasterID > 0 && formState.transaction.master.voucherType === 'SR' && applicationSettings.accountsSettings.maintainBillwiseAccount && (
                       <li>
                         <button
                           className="w-full flex items-center gap-3 px-3 py-[5px] hover:bg-[#fef2f2] hover:text-[#991b1b] dark:hover:bg-[#7f1d1d4d] dark:hover:text-[#fca5a5] transition-all duration-200 rounded-md group text-left"

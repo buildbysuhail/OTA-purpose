@@ -2943,8 +2943,9 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
         params.master.cashReceived = tenderRes?.cashReceived;
         params.master.bankAmt = tenderRes.bankAmt;
         params.master.billDiscount = tenderRes?.billDiscount;
-        params.bankCardDetails = tenderRes.bankCardDetails ?? [];
+        params.bankCardDetails = Array.isArray(tenderRes.bankCardDetails) ? tenderRes.bankCardDetails : [];
         params.upiDetails = tenderRes.upiDetails ?? [];
+        params.master.bankLedgerID = tenderRes?.bankCardDetails?.ledgerId  // Check it is needed in non allow multi payment case
       }
       // let params = {
       //   master: {

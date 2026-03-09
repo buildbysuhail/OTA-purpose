@@ -2155,7 +2155,7 @@ const UltraFastReorderableVirtualTableGrid = forwardRef(
         } as React.KeyboardEvent<HTMLElement>;
 
         if (onKeyDownRef.current) {
-          debugger;
+          
          await onKeyDownRef.current(
             result.text,
             syntheticEvent,
@@ -2680,7 +2680,7 @@ const hidColumns: string[] = [
       <>
       
           <>{isMobile && !formState.transactionLoading && <DraggablePlusButton onClick={() => {
-            debugger;
+            
             dispatch(formStateHandleFieldChangeKeysOnly({fields:{
               row: {
                 ...initialTransactionDetailData,
@@ -3976,7 +3976,7 @@ const hidColumns: string[] = [
                      <button
                        className="flex-1 py-4 text-center text-base font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                        onClick={(e: any) =>{
-                        debugger;
+                        
                         if(!formState.row) return;
                         onSaveItem && onSaveItem(formState.row,"SaveAndNew")
                        }}
@@ -3986,7 +3986,7 @@ const hidColumns: string[] = [
                      <button
                        className="flex-1 py-4 text-center bg-red-600 text-white text-base font-medium hover:bg-red-700"
                        onClick={(e: any) =>{
-                        debugger;
+                        
                         if(!formState.row) return;
                         onSaveItem && onSaveItem(formState.row,"Save")
                        }}

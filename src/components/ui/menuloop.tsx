@@ -115,7 +115,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
       e.preventDefault();
       e.stopPropagation();
     } else if (e.key === "ArrowRight") {
-      debugger;
+      
       e.preventDefault();
       const next = (e.target as any).nextElementSibling;
       const isOpened = next?.classList?.contains("double-menu-active") ?? false;

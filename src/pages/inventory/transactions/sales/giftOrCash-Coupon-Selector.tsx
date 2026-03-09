@@ -148,7 +148,7 @@ const GiftOrCashCouponSelector: React.FC<GiftOrCashCouponSelectorProps> = ({ clo
                 });
                 return;
               }
-              debugger;
+              
               if(billAmount - totalAmount < res.cardBalance){
                 setCouponRow((prev: any) => {
                     return {

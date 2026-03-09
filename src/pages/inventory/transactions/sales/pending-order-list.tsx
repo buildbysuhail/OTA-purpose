@@ -447,7 +447,7 @@ const PendingOrderList: React.FC<PendingOrderListProps> = ({
       voucherNumbers: voucherPrefix + voucherNumbers.join(","),
       referenceNumber,
     };
-    debugger;
+    
     // Handle different form types and voucher type combinations
     if (
       (voucherType === "SO" || voucherType === "GD") &&

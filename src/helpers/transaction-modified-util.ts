@@ -69,7 +69,7 @@ export const setTransactionForHistory = (
       },
     };
   } else if (type == "inv") {
-    debugger;
+    
     return {
       transaction: {
         master: {..._formState.transaction.master,

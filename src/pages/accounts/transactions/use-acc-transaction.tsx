@@ -1483,7 +1483,7 @@ export const useAccTransaction = (
       });
       return false;
     }
-    debugger;
+    
     const isAmountZero =  isNullOrUndefinedOrZero(totalAmount ?? formState.row.amount);
     const fdsdd = isNullOrUndefinedOrZero(
       formState.transaction.master.totalAmount

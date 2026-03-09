@@ -20,7 +20,7 @@ const StockLedgerFilter = ({
 
   const dispatch = useDispatch();
   const handleSetDate = () => {
-    debugger;
+    
     const today = moment().local();
     dispatch(setStockDate({ from: getFieldProps("fromDate").value, to: getFieldProps("toDate").value }))
   };

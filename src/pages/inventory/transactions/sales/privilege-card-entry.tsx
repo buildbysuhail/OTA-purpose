@@ -157,7 +157,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     // Function handle redeem value button click - OTP Send
     const handleRedeemPointClick = async (points: number) => {
         setRedeemPoints(0);
-        debugger;
+        
         if((formState.transaction.privilegeCardDetails.oBalance ?? 0) >= points) {
           try{
             setSelectedPoint(points)
@@ -219,7 +219,7 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
     // In "P" Button Case - need to make the code correct
     const handleRedeemChangeDesign2 = (redeem: number) => {
       setRedeemPoints(redeem);
-      debugger;
+      
       if (redeem > 0) {
         const grandTotal = Number(formState.transaction.master.grandTotal || 0);
         const prevOldBalance = Number(formState.transaction.privilegeCardDetails.oBalance || 0);

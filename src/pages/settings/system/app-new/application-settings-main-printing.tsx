@@ -184,7 +184,7 @@ const MainPrintingFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           value={settings.printerSettings.directPrintMethodForBrowser}
           onChangeData={(data: any) =>
           {
-            debugger;
+            
             handleFieldChange(
               "printerSettings",
               "directPrintMethodForBrowser",

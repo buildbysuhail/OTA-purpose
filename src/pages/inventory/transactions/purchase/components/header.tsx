@@ -127,7 +127,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     };
 
     const printMultiRowBarcode = async () => {
-      debugger;
+      
       const allSlNos = formState.transaction.details.filter(row => row.productID && row.productID > 0)
       .map(row => row.slNo);
 
@@ -228,7 +228,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
     
     const postUserConfig = async () => {
       try {
-        debugger;
+        
         const base64 = modelToBase64Unicode({ ...formState.userConfig, themeName: 'Custom' });
         const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, base64);
         handleResponse(response, async () => {

@@ -357,7 +357,7 @@ export const useTransaction = (
     showLoading,
     disablePnlMasters = true
   ) => {
-    debugger;
+    
     const _s_isDirty = isDirtyTransaction(
       formState.prev,
       {
@@ -2988,7 +2988,7 @@ export const useTransaction = (
         );
         calculateSummaryAndTotal = true;
       }
-      debugger;
+      
       if (_isMobRow) {
         dispatch(
           formStateHandleFieldChangeKeysOnly({
@@ -5470,7 +5470,7 @@ export const useTransaction = (
     let status = false;
     try {
       const branches = await api.getAsync(Urls.select_branch);
-      debugger;
+      
       if (branches && branches.length > 0) {
         for (let i = 2; i < branches.length; i++) {
           const branchId = branches[i].branchID;

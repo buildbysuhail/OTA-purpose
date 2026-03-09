@@ -379,7 +379,7 @@ const LedgerReport = () => {
   };
 
   const billWiseDetailsGridOpen = async (rowData: any) => {
-    debugger;
+    
     if (!rowData) {
       ERPAlert.show({
         title: t("no_row_selected"),

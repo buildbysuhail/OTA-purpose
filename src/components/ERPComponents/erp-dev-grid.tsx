@@ -1033,7 +1033,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = forwardRef(
     };
 
     const header = useMemo(() => {
-      debugger;
+      
       if (!filterText || (!filter && !postData)) return filterText || "";
       const data = { ...filter, ...postData};
       const _gridHeader = filterText.toString();

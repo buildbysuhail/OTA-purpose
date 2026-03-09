@@ -84,7 +84,7 @@ const handlePrintPdf =async()=>{
       // Call API to get PDF data
       const Data = await fetchDefaultTemplateFromToken(token);
       if (Data) {
-        debugger;
+        
 
         const { template, data } = Data;
         // Generate QR codes
@@ -141,7 +141,7 @@ const handlePrintPdf =async()=>{
 
   // Auto-download when token is available
   useEffect(() => {
-    debugger;
+    
     if (token) {
       generatePdf(token);
     }

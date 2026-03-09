@@ -78,7 +78,7 @@ const SalesInvoiceNumber: React.FC<SalesInvoiceNumberProps> = ({
           isStockDetailVisible: false,
         };
 
-        debugger;
+        
         let response = await api.getAsync(
           url,
           new URLSearchParams(params).toString()

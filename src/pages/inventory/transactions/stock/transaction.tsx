@@ -628,7 +628,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
       }
 
       if (!isInvoker) {
-        debugger;
+        
         const voucher: TransactionData = {...transactionInitialData,details:!deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
             ...initialTransactionDetailData,
             slNo: generateUniqueKey()

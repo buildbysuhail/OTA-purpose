@@ -612,7 +612,7 @@ export const useTransaction = (
     }
 
     if (vch == null || vch?.master == null) {
-      debugger;
+      
       // const vno = await getNextVoucherNumber(params.formType,params.voucherType,params.voucherPrefix, false);
       vch = {
         ...transactionInitialData,
@@ -3453,7 +3453,7 @@ export const useTransaction = (
     showDialog?: boolean;
     message?: string
   }> => {
-    debugger;
+    
     let { result } = commonParams;
     try {
       const key = event.key;

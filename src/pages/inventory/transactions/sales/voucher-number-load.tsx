@@ -84,7 +84,7 @@ const VoucherNumberLoad: React.FC<VoucherNumberLoadProps> = ({
 
   const handleLoadBtnClick = async () => {
     try {
-      debugger;
+      
       const res = await loadAndSetTransVoucher(
         false,
         Number(vNumber),

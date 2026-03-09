@@ -452,22 +452,30 @@ const GridTheme: React.FC<GridThemeProps> = ({ isOpen, onClose, t, transactionTy
     }
   };
 
- const handleSave = async () => {
-    try {
-      
-      if (!formState.selectedTheme) return;
-      const response = await api.post(`${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, { ...formState?.userConfig, ...formState.selectedTheme });
-      handleResponse(response, async() => {
-        const base64 = modelToBase64Unicode({ ...formState?.userConfig, ...formState.selectedTheme });
-        await setStorageString(`${transactionType}_LocalSettings`, base64)
-        dispatch(formStateHandleFieldChangeKeysOnly({ fields: { selectedTheme: null, themeChangeCountdown: undefined } }))
-        onClearThemeChangeInterval && onClearThemeChangeInterval();
-        onClose();
-      });
-    } catch (error) {
-      console.log("error in save table theme", error);
-    }
-  };
+const handleSave = async () => {
+  try {
+    if (!formState.selectedTheme) return;
+    
+    const merged = { ...formState?.userConfig, ...formState.selectedTheme };
+    const base64 = modelToBase64Unicode(merged); // ✅ encode first
+
+    const response = await api.post(
+      `${Urls.inv_transaction_base}${transactionType}/UpdateLocalSettings`, 
+      base64  // ✅ send the string, not the object
+    );
+
+    handleResponse(response, async () => {
+      await setStorageString(`${transactionType}_LocalSettings`, base64);
+      dispatch(formStateHandleFieldChangeKeysOnly({ 
+        fields: { selectedTheme: null, themeChangeCountdown: undefined } 
+      }));
+      onClearThemeChangeInterval && onClearThemeChangeInterval();
+      onClose();
+    });
+  } catch (error) {
+    console.log("error in save table theme", error);
+  }
+};
 
   return (
     <ERPResizableSidebar isOpen={isOpen} setIsOpen={onClose} minWidth={450} overlayNeeded={false}>

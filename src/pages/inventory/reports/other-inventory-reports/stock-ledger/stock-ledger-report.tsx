@@ -327,7 +327,7 @@ const StockLedger = () => {
       summaryType: "sum",
       valueFormat: "fixedPoint",
      customizeText: (e: any) => {
-      debugger;
+      
               const parsedValue = erpParseFloat(getFormattedValue(balance));
               const result = getFormattedValue(parsedValue) || "0";
               return result.toString()

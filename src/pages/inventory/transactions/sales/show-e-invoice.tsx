@@ -34,7 +34,7 @@ const ShowEInvoice: React.FC<ShowEInvoiceProps> = ({ closeModal, t, formState })
     
     for (let i = 0; i < Number(numericValue); i++) {
     try {
-      debugger;
+      
       if (InvMasterID> 0){
         // The Api end point is not set now, Need to manage after it done
         const response = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/LoadEInvoice`);

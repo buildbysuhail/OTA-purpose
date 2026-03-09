@@ -508,7 +508,7 @@ const ItemWiseSummaryReport: FC<ItemWiseSummaryReportProps> = ({ gridHeader, dat
   const dataGridRef = useRef<any>(null);
 
   useEffect(() => {
-    debugger;
+    
     if (filter.ignoreGroupwise == false) {
       const gridInstance = dataGridRef.current?.instance();
       if (gridInstance) {

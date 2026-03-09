@@ -364,7 +364,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
   }>(null);
 
    const onSaveItem = async(item: TransactionDetail, mode:"Save" | "SaveAndNew") => {
-      debugger;
+      
       if(!(item.productBatchID > 0)) return;
       const exist = formState.transaction.details.find(x => x.slNo == formState.row?.slNo);
                           if(exist) {
@@ -823,7 +823,7 @@ const TransactionForm: React.FC<TransactionProps> = ({
 
 
       if (!isInvoker) {
-        debugger;
+        
         const voucher: TransactionData = {...transactionInitialData,details:!deviceInfo.isMobile ? Array.from({ length: 30 }, (_, index) => ({
             ...initialTransactionDetailData,
             slNo: generateUniqueKey()

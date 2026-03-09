@@ -90,6 +90,7 @@ export const purchaseGridCol = (
         allowEditing: true,
         width: 100,
         alignment: "right",
+        decimalPoint:4
       },
       {
         dataField: "unit",

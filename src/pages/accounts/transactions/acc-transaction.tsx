@@ -346,6 +346,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   const ledgerIDChanged = (item: any) => {
     const loadLedgerData = async () => {
+      
       dispatch(
         accFormStateHandleFieldChange({
           fields: {
@@ -423,6 +424,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   : ledgerData,
                 ledgerDataLoading: false,
                 row: {
+                  ...formState.row,
                   ledgerID: ledgerID,
                   ledgerCode: ledgerData?.ledgerCode,
                   ledgerName: ledgerData?.partyName,
@@ -3434,7 +3436,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           }}
         />
       )}
-      {transactionType !== "" && (
+      {transactionType !== "" && isHistorySidebarOpen &&(
         <HistorySidebar
           transactionType={transactionType ?? ""}
           isOpen={isHistorySidebarOpen}

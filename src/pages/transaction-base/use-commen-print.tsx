@@ -38,7 +38,7 @@ export const useCommenPrint = () => {
   printData?: any,
   templateId?: number
 ): Promise<void> => {
-      debugger;
+      
     const effectiveTransDate = transDate ?? new Date().toISOString();
 
     let template;

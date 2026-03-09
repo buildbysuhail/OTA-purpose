@@ -34,7 +34,7 @@ const BillDiscountInput: React.FC<BillDiscountInputProps> = ({ formState, dispat
               fields: { billDiscount: billDisc },
             })
           );
-          debugger;
+          
           applyTaxOnBillDiscount && applyTaxOnBillDiscount(billDisc);
         },
         100

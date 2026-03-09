@@ -314,7 +314,7 @@ const accTransactionSlice = createSlice({
         userSession: UserModel;
       }>
     ) => {
-      debugger;
+      
       const data = action.payload.row;
       const amount =
         action.payload.isForeignCurrencyEnabled && data.amount

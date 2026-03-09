@@ -189,7 +189,7 @@ const PrivilegeCardReport = () => {
   const { getFormattedValue } = useNumberFormat();
   const customizeSummaryRow = useMemo(() => {
     return (itemInfo: { value: any }) => {
-      debugger;
+      
       const value = itemInfo.value;
       if (
         value === null ||

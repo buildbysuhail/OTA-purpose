@@ -402,9 +402,10 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
                     dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/ProductInfo/PI/`}
                     method={ActionType.POST}
                     postData={{
-                      productId: formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productID : 0,
-                      partyLedgerId: formState.transaction.master.ledgerID,
-                      isSelectedPartyDetailsOnly: showSelectedPartyOnly,
+                      productID: formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productID : 0,
+                      ledgerID: showSelectedPartyOnly ?formState.transaction.master.ledgerID:0,
+                      productBatchID:formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productBatchID : 0,
+                      unitID:formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productBatchID : 0,
                     }}
                     gridId="purchaseDetailsGrid"
                     height={gridHeight}
@@ -431,9 +432,10 @@ const ProductInfoSlideUp: React.FC<ProductInfoSlideUpProps> = ({
                     method={ActionType.POST}
                     dataUrl={`${Urls.inv_transaction_base}${formState.transactionType}/ProductInfo/SI/`}
                     postData={{
-                      productId: formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productID : 0,
-                      partyLedgerId: formState.transaction.master.ledgerID,
-                      isSelectedPartyDetailsOnly: showSelectedPartyOnly,
+                      productID: formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productID : 0,
+                      ledgerID: showSelectedPartyOnly  ? formState.transaction.master.ledgerID:0,
+                      productBatchID:formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productBatchID : 0,
+                      unitID:formState.transaction.details && formState.transaction.details[formState.currentCell?.rowIndex ?? 0] ? formState.transaction.details[formState.currentCell?.rowIndex ?? 0].productBatchID : 0,
                     }}
                     gridId="salesDetailsGrid"
                     height={gridHeight}

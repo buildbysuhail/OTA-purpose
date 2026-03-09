@@ -86,7 +86,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       ? hasRight(state.formCode, UserAction.Add) &&
       (state?.transaction?.details?.length ?? 0) > 0
       : false;
-  debugger;
+  
     state.formElements.btnEdit.disabled = !isClosed && state.formElements.btnEdit.disabled==false
       ? !hasRight(state.formCode, UserAction.Edit)
       : false;
@@ -1579,7 +1579,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     billDiscount: number,
     isRPOS = false
   ) => {
-    debugger;
+    
     master.itemTaxDetails = [];
     master.taxableDetails = [];
 
@@ -1688,11 +1688,11 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   };
 
   const attachMaster = async (formState: TransactionFormState) => {
-    debugger;
+    
     const m = formState.transaction.master;
     const isCashOrBank = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/IsCashOrBank/${m.ledgerID}`);
     let isRefund = false; //value from return global refund button click
-    debugger;
+    
     const privperc = applicationSettings.mainSettings.previlegeCardPerc;
     let master = {
       ...m,
@@ -1942,7 +1942,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       master.couponAmt -
       master.grandTotal;
 
-    debugger;
+    
     if (m.deliveryDate == null || m.deliveryDate == undefined) {
       m.deliveryDate = m.transactionDate;
     }
@@ -2138,7 +2138,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   ): Promise<any> {
     try {
       let totalQty = 0;
-      debugger;
+      
       if (!baseRow) return false;
       const rowIndex = formState.transaction.details.findIndex(
         (d) => d.slNo === slNo
@@ -2173,7 +2173,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
 
         let _outRow: DeepPartial<TransactionDetail> = {};
 
-        debugger;
+        
         let hascurrentRowProcessed = false;
         for (let i = 0; i <= rowIndex; i++) {
           let row = formState.transaction.details[i];
@@ -2215,12 +2215,12 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
               hascurrentRowProcessed = true;
               outRow.free = freeQty,
                 outRow.qty = 0
-              _outRow = outRow; debugger;
+              _outRow = outRow; 
             }
           }
 
         }
-        debugger;
+        
         if (hascurrentRowProcessed) {
           return _outRow
         }
@@ -2430,7 +2430,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
           } else {
           }
         }
-        debugger;
+        
         const voucherType = formState.transaction.master.voucherType;
 
         const isSI = voucherType === VoucherType.SalesInvoice;
@@ -2728,7 +2728,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         }
 
         
-        debugger;
+        
         if (isSI && applicationSettings.productsSettings.maintainSchemes) {
           let schemeApplied = false;
 
@@ -2925,7 +2925,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
         /** ---------------- Tax / MRP inclusive ---------------- */
         let uRate = 0;
         let taxPerc = Number(outDetail.vatPerc || 0);
-        debugger;
+        
         // DBID check (same as C#)
         if (userSession.dbIdValue !== "543140180640") {
           // Draft mode / form type condition
@@ -3683,9 +3683,9 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
   }
   async function calculateTaxOnDiscount(inputBillDiscount?: number, details?: TransactionDetail[], ignoreTaxOnDiscountCalculateTotal?:boolean) {
     try {
-      debugger;
+      
       if (!applicationSettings.branchSettings.enableTaxOnBillDiscount) return;
-      debugger;
+      
       const decimalPoints = applicationSettings.mainSettings.decimalPoints;
       let oldTaxOnBillDisc = formState.transaction.master.taxOnDiscount ?? 0;
       let taxPerc = getMaxTaxPercInItemList(details);
@@ -3830,7 +3830,7 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
 
-    debugger;
+    
     // tax on bill discount handling (mirror C# Indian logic)
     let taxOnBilldisc = Number(master.taxOnDiscount ?? 0);
     let blnApplyTaxonDiscount = true;

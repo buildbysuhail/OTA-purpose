@@ -262,7 +262,7 @@ const Header = React.forwardRef<HTMLInputElement, HeaderProps>(
       );
     };
     const printMultiRowBarcode = async () => {
-      debugger;
+      
       const allSlNos = formState.transaction.details.filter(row => row.productID && row.productID > 0)
       .map(row => row.slNo);
 

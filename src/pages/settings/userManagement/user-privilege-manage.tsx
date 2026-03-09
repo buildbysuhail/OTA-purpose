@@ -181,14 +181,14 @@ const getAllChildIds = (parentId: number, data: UserRight[]): number[] => {
         const matchingParent = immediateParentsOfEndNodes.find(
           (parent) => parent.formCode === item.formCode
         );
-        debugger;
+        
         if (matchingParent && typeof item.userRights === "string") {
           const hasbd =  item.userRights.includes(UserAction.BlockedDiscount)
           const finalrights = hasbd ? item.userRights.replace(UserAction.BlockedDiscount,"") : item.userRights
           const rightsIds = Array.from(finalrights).map(
             (permission: string) => {
               
-        debugger;
+        
               const permissionRight = userRights.find(
                 (right) =>
                   right.headId === matchingParent.id &&
@@ -325,7 +325,7 @@ const onSelectionChanged = useCallback(
       userRights: string;
       treeNodeIndex: number;
     }[] = [];
-    debugger;
+    
     const immediateParentsOfEndNodes =
       getImmediateParentsOfEndNodes(userRightsData??[]);
     // Map to aggregate data by formCode

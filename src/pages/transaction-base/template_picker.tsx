@@ -39,7 +39,7 @@ export default function TemplatesView({ setIsOpen, onTemplateChoosed, voucherTyp
 
     const fetchTemplates = async () => {
       try {
-        debugger;
+        
         setTemplateLoad(true);
 
         const fetchFiltered = (formTypeVal: string, customerTypeVal: string) =>

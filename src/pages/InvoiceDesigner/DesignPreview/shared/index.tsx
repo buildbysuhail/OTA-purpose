@@ -139,7 +139,7 @@ const SharedTemplatePreview = ({ printData, template, qrCodeImages = {}, isTempl
               <button
                 className="group relative w-full px-5 py-4 text-sm text-slate-700 hover:bg-gradient-to-br hover:from-violet-50 hover:to-fuchsia-50 rounded-2xl flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] overflow-hidden border border-transparent hover:border-violet-200/50 hover:shadow-lg hover:shadow-violet-500/10"
                 onClick={() => {
-                  debugger;
+                  
                   dispatch(
                     toggleTemplateChooserModal({ isOpen: true, templateGroup: template?.templateGroup, customerType: template?.customerType, formType: template?.formType, isInv: isInvTrans,isInLedgerReport })
                   );

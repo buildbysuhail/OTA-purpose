@@ -175,7 +175,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   };
 
   const saveThemeChange = async () => {
-    debugger;
+    
     try{
     setIsSaving(true);
     const res = await api.postAsync(Urls.updateUserThemes, {

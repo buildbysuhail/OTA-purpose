@@ -768,7 +768,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
         if(isCreditable && clientSession.isAppGlobal){
           updatedCash = 0;
         }else if(isCashOrBank){
-          updatedCash = netTotal;
+          updatedCash = 0;      // updatedCash = netTotal; CheckIt
         }
       }
     }
@@ -793,7 +793,7 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
         })
       )
       resolveTenderPromise({
-        bankCardDetails:formState.transaction.bankCardDetails,
+        bankCardDetails: allowMultiPayment ? formState.transaction.bankCardDetails: bankCardDetails,
         upiDetails: formState.transaction.uPIDetails,
         cashReceived: updatedCash,
         bankAmt: totalBankCardAmount + totalQrPayAmount + cardAmount,
@@ -1062,11 +1062,11 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                   </div>
                   <ERPDataComboBox
                     id="bank_ac"
-                    noLabel={true}
+                    noLabel
                     variant="outlined"
                     className="tender-combobox"
                     noPlaceholder
-                    style={{ backgroundColor: 'white', borderRadius: '6px' }}
+                    style={{ backgroundColor: "white", borderRadius: "6px" }}
                     field={{
                       id: "ledgerID",
                       required: true,
@@ -1074,16 +1074,13 @@ const Tender: React.FC<TenderProps> = ({ isOpen, onClose, t}) => {
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    value={bankCardDetails.ledgerId}
-                    // value={bankCardDetails.ledgerId || -2}  // Use This if need to select the first item initially
-                    onChange={(e) =>
-                      setBankCardDetails((prev: any) => {
-                        return {
-                          ...prev,
-                          ledgerId: e?.value
-                        }
-                      })
-                    }
+                    value={bankCardDetails.ledgerId ?? null}
+                    onChange={(e) => {
+                      setBankCardDetails((prev: any) => ({
+                        ...prev,
+                        ledgerId: e?.value
+                      }));
+                    }}
                     disabled={!ledgerEnabled || formState.tenderWindow?.isFromSave}
                   />
                 </div>

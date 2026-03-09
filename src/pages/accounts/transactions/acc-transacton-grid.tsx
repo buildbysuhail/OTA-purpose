@@ -196,7 +196,7 @@ const AccTransactionGrid: React.FC<{
             filter: any,
             exportCell: any
           ) => {
-            debugger;
+            
             if (exportCell != undefined) {
               const value =
                 cellInfo.data?.voucherNumber == null

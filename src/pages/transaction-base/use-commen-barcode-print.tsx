@@ -35,7 +35,7 @@ export const usePurchasePrint = () => {
     isInvTrans: boolean =true
 
   ): Promise<void> {
-    debugger;
+    
     let modifiedDetails: DeepPartial<TransactionDetail>[] = [];
     let batchCreatedList = [];
     try {

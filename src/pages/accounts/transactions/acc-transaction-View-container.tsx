@@ -110,7 +110,7 @@ const AccTransactionFormContainerView: React.FC<TransactionViewProps> = (props) 
 
   const onRowClick = useCallback(
     (event: any) => {
-      debugger;
+      
       const _event = event.data != undefined ? event : event?.event;
       const clickedRow = _event.data
       

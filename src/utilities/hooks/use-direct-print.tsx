@@ -97,7 +97,7 @@ export const useDirectPrint = () => {
   // Function to fetch template data (extracted from useTemplateDesigner)
   const fetchTemplateData = async (params: DirectPrintArgs) => {
     try {
-      debugger;
+      
       let printData: PrintData = params.data;
       if (params.masterIDParam && params.masterIDParam != 0 && !printData) {
         const data = (await loadPrintData(
@@ -170,7 +170,7 @@ export const useDirectPrint = () => {
 
   const directPrint = useCallback(async (params: DirectPrintArgs) => {
     try {
-      debugger;
+      
       startPrintJob();
       let pdfDocument;
       let noDefaultPrint: boolean = false;

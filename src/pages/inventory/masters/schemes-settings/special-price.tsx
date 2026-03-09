@@ -25,7 +25,7 @@ export const initialSpecialPrice: {
     groupID: "",
     schemeID: 0,
     barcode: "",
-    unitID: 0,
+    unitId: 0,
     salesPrice: 0,
     groupPrice: 0,
     nameCode: "",
@@ -52,7 +52,7 @@ export interface SpecialPriceData {
   isGroup: boolean;
   groupID: string;
   barcode: string;
-  unitID: number;
+  unitId: number;
   unitName: string;
   salesPrice: number;
   groupPrice: number;
@@ -123,18 +123,20 @@ export const SpecialPrice: React.FC = () => {
         ...prev,
         data: {
           ...prev.data,
-          productBatchId: response.productBatchId,
+          productBatchID: response.productBatchID,
           productName: response.productName,
           unitId: response.unitId,
           unitName: response.unit,
           stdSalesPrice: response.stdSalesPrice,
           stdPurchasePrice: response.stdPurchasePrice,
           salesPrice: response.specialPrice ?? 0,
+          batchID: response.productBatchID ?? 0,
+          barcode: obj.barcode ?? 0,
         },
       }));
       // handleDataChange({
       //   ...obj,
-      //   productBatchId: response.productBatchId,
+      //   productBatchID: response.productBatchID,
       //   productName: response.productName,
       //   unitId: response.unitId,
       //   unitName: response.unit,
@@ -185,12 +187,15 @@ export const SpecialPrice: React.FC = () => {
         productBatchID: obj.batchID,
         salesPrice: obj.salesPrice,
         groupID: isNullOrUndefinedOrEmpty(obj.groupID) ? 0 : obj.groupID,
-        unitID: isNullOrUndefinedOrEmpty(obj.unitID) ? 0 : obj.unitID,
+        unitId: isNullOrUndefinedOrEmpty(obj.unitId) ? 0 : obj.unitId,
       };
       const url = `${Urls.special_price_scheme}`;
       const response = await api.postAsync(url, payload);
       handleResponse(response, () => {
-        handleLoad();
+        setGridData((prev: any) => {
+          return [...prev,{...payload,productName:obj.productName, autoBarcode: obj.barcode, unitName: obj.unitName,stdSalesPrice:obj.stdSalesPrice,specialPriceID:response.item.specialPriceID}]
+        });
+        // handleLoad();
       });
     }
   }, [specialPriceForm, handleLoad]);
@@ -468,13 +473,14 @@ export const SpecialPrice: React.FC = () => {
                         ...prev,
                         data: {
                           ...prev.data,
-                          unitID: data.unitID,
+                          unitId: data.unitId,
                           unitName: data.unit,
                           barcode: data.autoBarcode,
                           salesPrice: data.sPrice,
                           stdSalesPrice: data.sPrice,
                           stdPurchasePrice: data.pPrice,
                           batchID: data.productBatchID,
+                          productBatchID: data.productBatchID,
                         },
                       }));
                     }}
@@ -493,7 +499,7 @@ export const SpecialPrice: React.FC = () => {
                     //   const obj = specialPriceForm;
                     //   handleDataChange({
                     //     ...obj,
-                    //     unitID: data.unitID,
+                    //     unitId: data.unitId,
                     //     unitName: data.unit,
                     //     barcode: data.autoBarcode,
                     //     salesPrice: data.sPrice,
@@ -590,22 +596,24 @@ export const SpecialPrice: React.FC = () => {
           />
           <Column
             dataField="productBatchID"
-            width={60}
+            width={150}
             caption={t("product_batch_id")}
           />
           <Column
             dataField="specialPriceID"
-            width={100}
+            width={150}
             caption={t("special_price_id")}
           />
           <Column
             dataField="stdSalesPrice"
             width={100}
+            dataType="number"
             caption={t("salesPrice")}
           />
           <Column
             dataField="salesPrice"
             width={100}
+            dataType="number"
             caption={t("scheme_price")}
           />
           <Column

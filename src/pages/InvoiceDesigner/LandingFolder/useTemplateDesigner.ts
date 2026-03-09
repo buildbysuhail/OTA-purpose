@@ -180,7 +180,7 @@ export const useTemplateDesigner = <T = unknown,>({
 
   const loadPrintAndTemplateData = useCallback(
     async (isActiveRef: { current: boolean }) => {
-      debugger;
+      
       if (!MasterIDParam) return;
 
       setLoading(true);
@@ -260,7 +260,7 @@ export const useTemplateDesigner = <T = unknown,>({
         setVoucherPrintData(voucherData);
 
         if (!manuvalTemplateFeatch) return;
-debugger;
+
         let template = await getOrFetchTemplate(
           voucherData.master?.voucherType,
           voucherData.master?.voucherForm ?? "",
@@ -393,7 +393,7 @@ debugger;
   useEffect(() => {
    if(!isTemplateDesigner && !isAccAdviceReport){
     console.log("Running template selection effect");
-   debugger;
+   
     if (!manuvalTemplateFeatch) return;
     // Detect MasterIDParam change (new transaction)
     const isMasterIdChanged = currentMasterIdRef.current !== MasterIDParam;

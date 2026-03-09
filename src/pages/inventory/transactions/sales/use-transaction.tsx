@@ -727,7 +727,7 @@ focusCurrentColumn ??
           formType || (formState.transaction.master.voucherForm ?? ""),
           out_voucherType || (formState.transaction.master.voucherType ?? ""),
           voucherPrefix || (formState.transaction.master.voucherPrefix ?? ""),
-          false
+          true    // isVoucherPrefix
         );
         voucher.isEdit = false;
         voucher.formElements = {
@@ -861,7 +861,7 @@ focusCurrentColumn ??
         /** ---------------- Remarks ---------------- */
         // remarks: vch.master.remarks,
 
-        /** ---------------- Amounts ---------------- */
+        /** ---------------- Amounts ---------------- */    
         cashReceived:
           !isSalesBookingLoaded ?
             [VoucherType.SalesReturn, VoucherType.SaleReturnEstimate].includes(voucherType as any)
@@ -871,7 +871,7 @@ focusCurrentColumn ??
                 : round(vch?.master?.cashReceived)
             : sbCashReceived,
         refDate: [VoucherType.GoodsDeliveryReturn, VoucherType.GoodsReceiptReturn, VoucherType.ServiceInvoice].includes(voucherType as any)
-          ? vch?.master?.OrderDate : vch?.master?.DeliveryDate,
+          ? vch?.master?.orderDate : vch?.master?.deliveryDate,
 
         billDiscount: !isSalesBookingLoaded
           ? voucherType == VoucherType.SalesInvoice && !clientSession.isAppGlobal ? getFormattedValueIgnoreRounding(vch?.master?.billDiscount)
@@ -891,7 +891,7 @@ focusCurrentColumn ??
 
         /** ---------------- Cash Received Flag ---------------- */
         hasCashPaid:
-          vch.master.cashReceived >= vch.master.grandTotal,
+          vch.master.cashReceived >= vch.master.grandTotal,   
 
         /** ---------------- Lock ---------------- */
         // isLocked: vch.master.isLocked, //not in use added for enable disable in above
@@ -2943,8 +2943,9 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
         params.master.cashReceived = tenderRes?.cashReceived;
         params.master.bankAmt = tenderRes.bankAmt;
         params.master.billDiscount = tenderRes?.billDiscount;
-        params.bankCardDetails = tenderRes.bankCardDetails ?? [];
+        params.bankCardDetails = Array.isArray(tenderRes.bankCardDetails) ? tenderRes.bankCardDetails : [];
         params.upiDetails = tenderRes.upiDetails ?? [];
+        params.master.bankLedgerID = tenderRes?.bankCardDetails?.ledgerId  // Check it is needed in non allow multi payment case
       }
       // let params = {
       //   master: {
@@ -6674,7 +6675,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
         ERPAlert.show({
           icon: "warning",
           title: t(""),
-          text: t("credit_stopped_for_this_customer"),
+          text: t("credit_stopped_for_customer"),
           confirmButtonText: t("ok"),
           showCancelButton: false
         });
@@ -7520,7 +7521,7 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
             ? t(title)
             : isInitial ? t(title) + "[" + formType + "]" : t(title)) ?? "",
 
-        printOnSave: applicationSettings.accountsSettings?.printAccAftersave,
+        printOnSave: applicationSettings.inventorySettings?.printInvAfterSave,
       };
       _formState = await loadLedgerData(_formState) as any;
       _formState.isInitialLedger = true;

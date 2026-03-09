@@ -54,6 +54,8 @@ const ManualInvNo = React.forwardRef<HTMLInputElement, LoadByManualInvNoProps>(
         300
       );
     const showLoadByRefNo = useCallback(async () => {
+      if (!orderNumberValue) return;
+
         await props.loadAndSetTransVoucher(
           true,
           undefined,

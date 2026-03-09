@@ -44,6 +44,7 @@ import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { Column, Editing, KeyboardNavigation, Paging, RemoteOperations, Scrolling } from "devextreme-react/cjs/data-grid";
 import ERPSubmitButton from "../../../../components/ERPComponents/erp-submit-button";
 import { ProductMultiBarcodeManage } from "../products/product-multibarcode-manage";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
 export interface MultiBarcodeState {
   open: boolean;
@@ -741,60 +742,69 @@ useEffect(() => {
         onClick={() => updatePrice()}
         title="Update Price"
       /> */}
-
-      <ERPFormButtons
-        customButtons={[
-          {
-            title: t("update_price"),
-            onClick: updatePrice,
-            disabled:
-              appSettings.branchSettings.maintainMasterEntry ||
-              (formState.data.product.productID ?? 0) <= 0 ||
-              !appSettings.branchSettings?.useBranchWiseSalesPrice ||
-              isView,
-            variant: "secondary",
-          },
-          {
-            title: t("flavors"),
-            onClick: handleFlavorOpen,
-            variant: "secondary",
-            disabled: isView,
-          },
-          {
-            title: t("multi_barcode"),
-            onClick: handleMultibarcode,
-            variant: "secondary",
-            disabled: isView,
-          },
-        ].filter((x: any) => {
-          const obj = getFieldProps("*") as any as productDto;
-          if (x.title == "Flavors") {
-            if ((formState.data.product.productID ?? 0) == 0) {
-              return false
-            }
-          }
-
-          if (x.title == "Multi Barcode") {
-            if (((clientSession.isAppGlobal && !obj.elements?.mbVisible)) || (formState.data.product.productID ?? 0) == 0) {
-              return false
-            }
-          }
-
-          return true;
-        }) as []
+  <div className="absolute bottom-0 left-0 h-[44px] flex items-center px-[10px] z-20">
+    <ERPCheckbox
+      id="flv"
+      label="FLV"
+      checked={getFieldProps("config.showFlavourOnSave").value ?? false}
+      disabled={isView}
+      onChange={(e: any) =>
+        handleFieldChange("config.showFlavourOnSave", e.target.checked)
+      }
+    />
+  </div>
+  <ERPFormButtons
+    customButtons={[
+      {
+        title: t("update_price"),
+        onClick: updatePrice,
+        disabled:
+          appSettings.branchSettings.maintainMasterEntry ||
+          (formState.data.product.productID ?? 0) <= 0 ||
+          !appSettings.branchSettings?.useBranchWiseSalesPrice ||
+          isView,
+        variant: "secondary",
+      },
+      {
+        title: t("flavors"),
+        onClick: handleFlavorOpen,
+        variant: "secondary",
+        disabled: isView,
+      },
+      {
+        title: t("multi_barcode"),
+        onClick: handleMultibarcode,
+        variant: "secondary",
+        disabled: isView,
+      },
+    ].filter((x: any) => {
+      const obj = getFieldProps("*") as any as productDto;
+      if (x.title == "Flavors") {
+        if ((formState.data.product.productID ?? 0) == 0) {
+          return false;
         }
-
-        onClear={handleClear}
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={handleClose}
-        submitDisabled={
-          !appSettings.branchSettings.maintainMasterEntry ||
-          getFieldProps("hasDisabled").value == true ||
-          isView
+      }
+      if (x.title == "Multi Barcode") {
+        if (
+          (clientSession.isAppGlobal && !obj.elements?.mbVisible) ||
+          (formState.data.product.productID ?? 0) == 0
+        ) {
+          return false;
         }
-        onSubmit={handleSubmitProductManage}
-      />
+      }
+      return true;
+    }) as []}
+    onClear={handleClear}
+    isEdit={isEdit}
+    isLoading={isLoading}
+    onCancel={handleClose}
+    submitDisabled={
+      !appSettings.branchSettings.maintainMasterEntry ||
+      getFieldProps("hasDisabled").value == true ||
+      isView
+    }
+    onSubmit={handleSubmitProductManage}
+  />
       <ERPModal
         isOpen={flavorsOpen.open}
         // closeModal={(reload: boolean) =>

@@ -21,7 +21,6 @@ const OrderLookup: React.FC<OrderLookupProps> = ({ t, loadAndSetTransVoucher, on
     let vNumber = "";
     let vPrefix = "";
     let vType = "";
-debugger; 
     if (LoadPrefixType.toUpperCase() === "SO") {
       vNumber = orderNo.vrNumber;
       vPrefix = orderNo.vrPrefix;
@@ -48,7 +47,7 @@ debugger;
         "",
         0,
         undefined,
-        true,   // skip prompt
+        true,
         false,
         vType,
         undefined,
@@ -57,14 +56,24 @@ debugger;
         undefined,
         true,
       );
-      if(res === true){
+      if (res === true) {
         onHide?.();
       }
-  };
-
+    };
 
   return (
     <div className="space-y-3 p-2">
+
+      {/* Column Headers */}
+      <div className="grid grid-cols-[120px_1fr_80px] gap-3 items-center">
+        <div />
+        <div className="flex gap-2">
+          <span className="flex-1 text-xs font-semibold text-gray-500 text-center">{t("vr_prefix")}</span>
+          <span className="flex-1 text-xs font-semibold text-gray-500 text-center">{t("vr_number")}</span>
+        </div>
+        <div />
+      </div>
+
       {/* Order No */}
       <div className="grid grid-cols-[120px_1fr_80px] gap-3 items-center">
         <label className="text-left text-md text-semibold text-black">
@@ -76,12 +85,7 @@ debugger;
             type="text"
             value={orderNo.vrPrefix}
             noLabel={true}
-            onChange={(e) =>
-              setOrderNo(prev => ({
-                ...prev,
-                vrPrefix: e.target.value.toUpperCase()
-              }))
-            }
+            onChange={(e) => setOrderNo(prev => ({ ...prev, vrPrefix: e.target.value.toUpperCase() }))}
             className="flex-1"
           />
           <ERPInput
@@ -89,12 +93,7 @@ debugger;
             type="text"
             value={orderNo.vrNumber}
             noLabel={true}
-            onChange={(e) =>
-              setOrderNo(prev => ({
-                ...prev,
-                vrNumber: e.target.value
-              }))
-            }
+            onChange={(e) => setOrderNo(prev => ({ ...prev, vrNumber: e.target.value }))}
             className="flex-1"
           />
         </div>

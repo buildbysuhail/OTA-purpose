@@ -313,6 +313,7 @@ const BaseDesigner: React.FC<BaseDesignerProps> = React.memo(
         templateName: form.templateName,
         isCurrent: form.setAsDefault,
         skipNavigate: true,
+        forceNew: true,
       })
       // modal stays open so the user can save to multiple configurations
     }

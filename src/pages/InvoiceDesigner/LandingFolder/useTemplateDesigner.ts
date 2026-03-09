@@ -495,7 +495,7 @@ debugger;
 
   // Handle template saving
   const handleSave = useCallback(
-    async (dataUrl: string, overrides?: { templateGroup?: string; templateName?: string; formType?: string; customerType?: string; isCurrent?: boolean; skipNavigate?: boolean }) => {
+    async (dataUrl: string, overrides?: { templateGroup?: string; templateName?: string; formType?: string; customerType?: string; isCurrent?: boolean; skipNavigate?: boolean; forceNew?: boolean }) => {
       const thumbImage = dataUrl;
       const backgroundImage = activeTemplate.background_image ?? "";
       const backgroundImageHeader = activeTemplate.background_image_header ?? "";
@@ -540,7 +540,7 @@ debugger;
         background_image_footer: backgroundImageFooter,
         signature_image: signatureImage,
         branchId: 0,
-        id: id == "new" ? 0 : activeTemplate?.id,
+        id: (overrides?.forceNew || id == "new") ? 0 : activeTemplate?.id,
       };
 
       const initial = templateInitialState().activeTemplate;
@@ -728,7 +728,7 @@ debugger;
   );
 
   // Updated save function that captures preview as image
-  const manageSaveAccTemplate = useCallback(async (overrides?: { templateGroup?: string; templateName?: string; formType?: string; customerType?: string; isCurrent?: boolean; skipNavigate?: boolean }) => {
+  const manageSaveAccTemplate = useCallback(async (overrides?: { templateGroup?: string; templateName?: string; formType?: string; customerType?: string; isCurrent?: boolean; skipNavigate?: boolean; forceNew?: boolean }) => {
     const templateNameToCheck = overrides?.templateName ?? activeTemplate?.propertiesState?.templateName;
     if (id === "new" && !templateNameToCheck) {
       ERPToast.show(t("template_name_is_required"));

@@ -816,10 +816,10 @@ focusCurrentColumn ??
         /** ---------------- Dates ---------------- */
         transactionDate:
           loadVType === ""
-            ? new Date(vch.master.transactionDate)
+            ? vch.master.transactionDate
             : formState.transaction.master.transactionDate,
 
-        prevTransDate: new Date(vch.master.transactionDate),
+        prevTransDate: vch.master.transactionDate,
 
         // orderDate: new Date(vch.master.orderDate),
         // deliveryDate: new Date(vch.master.deliveryDate),

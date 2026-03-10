@@ -1395,6 +1395,7 @@
   "size_chart":"Size Chart",
   "vision/other_details":"Vision/Other Details",
 
-  "enter_remarks":"Enter Remarks"
+  "enter_remarks":"Enter Remarks",
+  "show_selected_only":"Show Selected Only"
 
 }

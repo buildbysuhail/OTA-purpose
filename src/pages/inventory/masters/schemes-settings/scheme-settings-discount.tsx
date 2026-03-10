@@ -76,6 +76,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "number",
       width: 100,
       visible: false,
+      allowSearch: true,
     },
     {
       dataField: "pCode",
@@ -83,6 +84,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "string",
       width: 120,
       showInPdf: true,
+      allowSearch: true,
     },
     {
       dataField: "product",
@@ -90,6 +92,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "string",
       width: 200,
       showInPdf: true,
+      allowSearch: true,
     },
     {
       dataField: "autoBarcode",
@@ -97,6 +100,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "string",
       width: 120,
       showInPdf: true,
+      allowSearch: true,
     },
     {
       dataField: "manualBarcode",
@@ -104,6 +108,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "string",
       width: 120,
       visible: false,
+      allowSearch: true,
     },
     {
       dataField: "unit2Barcode",
@@ -111,6 +116,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "string",
       width: 120,
       visible: false,
+      allowSearch: true,
     },
     {
       dataField: "unit3Barcode",
@@ -118,6 +124,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "string",
       width: 120,
       visible: false,
+      allowSearch: true,
     },
     {
       dataField: "stdSalesPrice",
@@ -125,6 +132,7 @@ export const SchemeSettingsDiscount: React.FC = () => {
       dataType: "number",
       width: 150,
       showInPdf: true,
+      allowSearch: true,
     },
   ], []);
 

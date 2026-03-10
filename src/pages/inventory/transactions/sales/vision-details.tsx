@@ -5,6 +5,8 @@ import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { RootState } from "../../../../redux/store";
 import Urls from "../../../../redux/urls";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
 
 
 interface visionDetailsProps {
@@ -12,38 +14,72 @@ interface visionDetailsProps {
   t: any;
 }
 
-interface visionDetails {
-  warehouseID: number;
-  warehouseName: string;
-  stock: number;
-  stockDetails: string;
-}
-
 const api = new APIClient();
+const formState = useSelector((state: RootState) => state.InventoryTransaction);
 const visionDetails: React.FC<visionDetailsProps> = ({closeModal, t}) => {
   const gridColumns: DevGridColumn[] = [
     {
-      dataField: "warehouseName",
-      caption: t("warehouse_name"),
+      dataField: "CType",
+      caption: t("..."),
       dataType: "string",
       width: 150,
     },
     {
-      dataField: "stock",
-      caption: t("stock"),
-      dataType: "number",
+      dataField: "RE_SPH",
+      caption: t("sph"),
+      dataType: "string",
+      width: 150,
+    },
+    {
+      dataField: "RE_CYL",
+      caption: t("cyl"),
+      dataType: "string",
       width: 250,
     },
     {
-      dataField: "stockDetails",
-      caption: t("stock_details"),
+      dataField: "RE_AXIS",
+      caption: t("axis"),
+      dataType: "string",
+      width: 250,
+    },
+
+    {
+      dataField: "RE_VN",
+      caption: t("vn"),
+      dataType: "string",
+      width: 250,
+    },
+
+    {
+      dataField: "LE_SPH",
+      caption: t("sph"),
+      dataType: "string",
+      width: 250,
+    },
+
+    {
+      dataField: "LE_CYL",
+      caption: t("cyl"),
+      dataType: "string",
+      width: 250,
+    },
+
+    {
+      dataField: "LE_AXIS",
+      caption: t("axis"),
+      dataType: "string",
+      width: 250,
+    },
+
+    {
+      dataField: "LE_VN",
+      caption: t("vn"),
       dataType: "string",
       width: 250,
     },
   ];
-  const formState = useSelector((state: RootState) => state.InventoryTransaction);
-
-
+  
+ 
   return (
     <>
       <div className="flex items-end gap-2">
@@ -52,8 +88,8 @@ const visionDetails: React.FC<visionDetailsProps> = ({closeModal, t}) => {
         <ErpDevGrid
           columns={gridColumns}
           // dataSource={warehouseStock}
-          gridId="WStockDetailsDetailsGrid"
-          keyExpr="warehouseID"
+          gridId="visionDetailGrid"
+          keyExpr="CType"
           height={400}
           hideGridAddButton={true}
           columnHidingEnabled={true}
@@ -78,6 +114,22 @@ const visionDetails: React.FC<visionDetailsProps> = ({closeModal, t}) => {
           }}
         />
       </div>
+    <div className="flex justify-center items-center gap-3">
+      <ERPInput
+        localInputBox={formState?.userConfig?.inputBoxStyle}
+        id="remarks"
+        label={t("Remarks")}
+        type="text"
+        className="p-2 w-96 !mb-4"
+        placeholder={t("enter_remarks")}
+  
+      />
+
+      <ERPButton
+        title={t("Save")}
+        variant="primary"
+      />
+    </div>
     </>
   );
 };

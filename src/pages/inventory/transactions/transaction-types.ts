@@ -794,6 +794,7 @@ export interface TransactionFormState {
   
   voucherNumberLck?:boolean; 
   einvoiceCheckBox?:boolean;
+  visionDetails?: boolean;
 
   // india
   eWayBill?: boolean;

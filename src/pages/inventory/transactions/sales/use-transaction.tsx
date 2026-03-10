@@ -7807,6 +7807,19 @@ if([VoucherType.SalesInvoice,VoucherType.DeliveryChallan,VoucherType.GoodsDelive
     };
 
     //////////////////////
+    // Vision details visibility
+    if(applicationSettings.mainSettings.maintainBusinessType === "Opticals"){
+      _formState.formElements.btnVisionDetails = {
+      ...initialFormElements.btnVisionDetails,
+      visible: true,
+      label:"vision_details"
+     }
+    }else if(applicationSettings.mainSettings.maintainBusinessType === "Stitching Center"){
+      _formState.formElements.btnVisionDetails = {
+      ...initialFormElements.btnVisionDetails,
+      visible: true,
+      label:"size_chart"
+    }}
 
     if (userSession.dbIdValue?.trim() === "SEMAKA") {
       _formState.formElements = {

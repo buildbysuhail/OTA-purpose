@@ -1391,10 +1391,8 @@
   "vr_prefix": "VR Prefix",
   "vr_number": "VR Number"
 
-
-
-
-
-
+  "vision_details":"Vision Details",
+  "size_chart":"Size Chart",
+  "vision/other_details":"Vision/Other Details"
 
 }

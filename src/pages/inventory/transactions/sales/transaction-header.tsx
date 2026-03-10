@@ -50,6 +50,7 @@ import BtnToInvoice from "./components/btnToInvoice";
 import CreditAccount from "./components/cb-credit-account";
 import SalesInvoiceNumber from "./sales-invoice-number";
 import VoucherNumberLoad from "./voucher-number-load";
+import VisionDetails from "./vision-details";
 
 const api = new APIClient();
 interface TransactionHeaderProps {
@@ -201,6 +202,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     dispatch(
       formStateHandleFieldChange({
         fields: { draftModeModal: false },
+      })
+    );
+  };
+
+  // Open the vision details modal
+  const handleVisionDetailsModal = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { visionDetails: true },
       })
     );
   };
@@ -394,6 +404,14 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
     dispatch(
       formStateHandleFieldChange({
         fields: { wStockListOpen: false }
+      })
+    )
+  }
+   // Close vision Modal
+   const CloseVisionDetails = () => {
+    dispatch(
+      formStateHandleFieldChange({
+        fields: { visionDetails: false }
       })
     )
   }
@@ -1075,6 +1093,15 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                        {([VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.RequestForQuotation,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && !clientSession.isAppGlobal) && (                    
                 <div className="h-10 w-8 mr-2 border border-gray-400" style={{backgroundColor: formState?.partyColor ?? "#E5E7EB"}}/>)}
                 
+                {/* Vision Detail or Size chart Button */}
+                {[VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) &&
+                  formState.formElements.btnVisionDetails.visible && (
+                    <ERPButton
+                      title={t(formState.formElements.btnVisionDetails.label)}
+                      variant="secondary"
+                      onClick={handleVisionDetailsModal}
+                    />
+                )}
 
                 {([VoucherType.SalesInvoice, VoucherType.SalesReturn, VoucherType.SaleReturnEstimate, VoucherType.SalesInvoiceDraft].includes(formState.transaction.master.voucherType as any) &&
                   <div>
@@ -1289,6 +1316,21 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                     height={300}
                     closeModal={CloseWStockList}
                     content={<WareHouseStock t={t} closeModal={CloseWStockList} productName={formState.currentCell?.data?.product || ""} productBatchID={formState.currentCell?.data?.productBatchID} />}
+                  />
+                )}
+                {formState.visionDetails && (
+                  <ERPModal
+                    isOpen={formState.visionDetails}
+                    title={t("vision/other_details")}
+                    width={500}
+                    height={300}
+                    closeModal={CloseVisionDetails}
+                    content={
+                      <VisionDetails
+                        t={t}
+                        closeModal={CloseVisionDetails}
+                      />
+                    }
                   />
                 )}
 
@@ -1660,6 +1702,16 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                        {([VoucherType.SalesInvoice,VoucherType.SalesReturn,VoucherType.RequestForQuotation,VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) && !clientSession.isAppGlobal) && (                    
                 <div className="h-10 w-8 mr-2 border border-gray-400" style={{backgroundColor: formState?.partyColor ?? "#E5E7EB"}}/>)}
               </div>
+
+                {/* Vision Detail or Size chart Button */}
+                {[VoucherType.SalesOrder].includes(formState.transaction.master.voucherType as any) &&
+                  formState.formElements.btnVisionDetails.visible && (
+                    <ERPButton
+                      title={t(formState.formElements.btnVisionDetails.label)}
+                      variant="secondary"
+                      onClick={handleVisionDetailsModal}
+                    />
+                )}
 
               <div className="flex items-center gap-2 mt-2">
                 

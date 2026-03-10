@@ -1329,6 +1329,7 @@ const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
                       <VisionDetails
                         t={t}
                         closeModal={CloseVisionDetails}
+                        formState={formState}
                       />
                     }
                   />

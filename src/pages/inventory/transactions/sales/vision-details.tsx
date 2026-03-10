@@ -12,11 +12,11 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 interface visionDetailsProps {
   closeModal: () => void;
   t: any;
+  formState: any;
 }
 
 const api = new APIClient();
-const formState = useSelector((state: RootState) => state.InventoryTransaction);
-const visionDetails: React.FC<visionDetailsProps> = ({closeModal, t}) => {
+const visionDetails: React.FC<visionDetailsProps> = ({closeModal, t, formState}) => {
   const gridColumns: DevGridColumn[] = [
     {
       dataField: "CType",

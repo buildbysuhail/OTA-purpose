@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../../utilities/hooks/useA
 import { useRootState } from '../../../../utilities/hooks/useRootState';
 import PrivilegeCardManage from '../../../accounts/masters/account-privilege-card/privilege-card-manage';
 import { RootState } from '../../../../redux/store';
-import { PrivilegeCardDetails, TransactionFormState } from '../transaction-types';
+import { PrivilegeCardDetails, SummaryItems, TransactionFormState } from '../transaction-types';
 import { APIClient } from '../../../../helpers/api-client';
 import Urls from '../../../../redux/urls';
 import { formStateHandleFieldChangeKeysOnly } from '../reducer';
@@ -19,6 +19,7 @@ interface PrivilegeCardEntryProps {
   t: (key: string) => string;
   data: string;
   formState: TransactionFormState;
+  calculateTotal: any;
 }
 
 const api = new APIClient();
@@ -27,7 +28,8 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
   onClose,
   t,
   data,
-  formState
+  formState,
+  calculateTotal
 }) => {
 
   const [redeemPoints,setRedeemPoints] = useState(0)
@@ -186,23 +188,45 @@ const PrivilegeCardEntry: React.FC<PrivilegeCardEntryProps> = ({
           const oldBalanceValue = formState.transaction.privilegeCardDetails.oBalance;
           setRedeemPoints(selectedPoint)
 
-          dispatch(
-            formStateHandleFieldChangeKeysOnly({
-              fields: {
-                transaction: {
-                  privilegeCardDetails: {
-                    totalBalance: (oldBalanceValue ?? 0) - selectedPoint,
-                  },
-                  master: {
-                    billDiscount: selectedPoint,
-                      // privCardID: Already dispatch in keydown
-                      privAddAmount: addAmount,
-                      privRedeem: selectedPoint   
-                  }
+          const res = await calculateTotal({ ...formState.transaction.master, billDiscount: selectedPoint }, formState.summary as SummaryItems, formState.formElements,{
+            result: {
+              transaction: {
+                privilegeCardDetails: {
+                  totalBalance: (oldBalanceValue ?? 0) - selectedPoint,
                 },
-              },
-            })
-          );
+                master: {
+                  billDiscount: selectedPoint,
+                  privAddAmount: addAmount,
+                  privRedeem: selectedPoint
+                }
+              }
+            }
+          }
+        );
+
+        dispatch(
+          formStateHandleFieldChangeKeysOnly({
+            fields: res
+          })
+        );
+
+          // dispatch(
+          //   formStateHandleFieldChangeKeysOnly({
+          //     fields: {
+          //       transaction: {
+          //         privilegeCardDetails: {
+          //           totalBalance: (oldBalanceValue ?? 0) - selectedPoint,
+          //         },
+          //         master: {
+          //           billDiscount: selectedPoint,
+          //             // privCardID: Already dispatch in keydown
+          //             privAddAmount: addAmount,
+          //             privRedeem: selectedPoint   
+          //         }
+          //       },
+          //     },
+          //   })
+          // );
           setOtpModalOpen(false)
           setShowInvalidOtpMessage(false)
           setRedeemPoints(selectedPoint)

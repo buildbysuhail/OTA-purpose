@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   ResponseModel,
@@ -430,18 +430,34 @@ export function useFormManager<T>({
           (method != undefined && method == ActionType.POST && loadDataRequired)
           ? { ...initialData?.data, [keyField]: key }
           : { ...initialData.data };
-      setLocalFormState((prevState: any) => ({
-        ...prevState,
-        data: { ...sds },
-        validations: {},
-      }));
+      startTransition(() => {
+        setLocalFormState((prevState: any) => ({
+          ...prevState,
+          data: { ...sds },
+          validations: {},
+        }));
+        setPrevLocalFormState({
+          data: { ...sds },
+          validations: {},
+          loading: false,
+          error: null,
+        });
+      })
     } else {
-      reduxManager.setState(rName, {
-        data: initialData,
-        validations: {},
-        loading: false,
-        error: null,
-      });
+      startTransition(() => {
+        reduxManager.setState(rName, {
+          data: initialData,
+          validations: {},
+          loading: false,
+          error: null,
+        });
+        setPrevLocalFormState({
+          data: initialData,
+          validations: {},
+          loading: false,
+          error: null,
+        });
+      })
     }
   }, [
     (useApiClient ? localFormState : reduxFormState)?.data,
@@ -455,13 +471,16 @@ export function useFormManager<T>({
       JSON.stringify(currentState?.data) !==
       JSON.stringify(prevLocalFormState?.data)
     ) {
-      appDispatch(
-        onCloseWithUnsavedChange({
-          warn: true,
-          succeeded: false,
-          canceled: false,
-        })
-      );
+      startTransition(() => {
+        appDispatch(
+          onCloseWithUnsavedChange({
+            warn: true,
+            succeeded: false,
+            canceled: false,
+          })
+        );
+      })
+
     } else {
       onClose?.();
     }

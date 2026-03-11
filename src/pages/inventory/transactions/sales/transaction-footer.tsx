@@ -2258,6 +2258,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             formState={formState}
             t={t}
             data={""}
+            calculateTotal={calculateTotal}
           />
         )}
         {isModalOpen && isModalOpen.visible && [VoucherType.SalesInvoice, VoucherType.SalesReturn,].includes(formState.transaction.master.voucherType as VoucherType) && (
@@ -2311,6 +2312,7 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
             formState={formState}
             t={t}
             data={""}
+            calculateTotal={calculateTotal}
           />
         )}
         {isModalOpen && isModalOpen.visible && [VoucherType.SalesInvoice, VoucherType.SalesReturn,].includes(formState.transaction.master.voucherType as VoucherType) && (

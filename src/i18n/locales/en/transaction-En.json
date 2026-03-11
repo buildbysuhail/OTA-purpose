@@ -1396,6 +1396,9 @@
   "vision/other_details":"Vision/Other Details",
 
   "enter_remarks":"Enter Remarks",
-  "show_selected_only":"Show Selected Only"
+  "show_selected_only":"Show Selected Only",
+  "details_added_successfully":"Details added successfully",
+  "measurements_not_found":"Measurements not found!",
+  "please_add_measurements":"Please add measurements"
 
 }

@@ -1508,9 +1508,12 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             newX = newX - containerAbsPos.x - containerPadding;
             newY = newY - containerAbsPos.y - containerPadding;
 
-            // Clamp within container bounds
-            const maxX = targetContainer.width - (containerPadding * 2) - dragW;
-            const maxY = targetContainer.height - (containerPadding * 2) - dragH;
+            // Clamp within the container's usable area.
+            // CSS absolute children are positioned from the padding-box edge,
+            // so the full inner area (height minus border only) is available.
+            // overflow:hidden on the container clips anything beyond.
+            const maxX = targetContainer.width - dragW;
+            const maxY = targetContainer.height - dragH;
             newX = Math.max(0, Math.min(newX, maxX));
             newY = Math.max(0, Math.min(newY, maxY));
           }

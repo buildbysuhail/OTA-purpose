@@ -163,6 +163,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const [draggingComponent, setDraggingComponent] = useState<PlacedComponent | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragTargetContainerId, setDragTargetContainerId] = useState<string | undefined>(undefined);
+  const [alignmentGuides, setAlignmentGuides] = useState<{ x: number[]; y: number[] }>({ x: [], y: [] });
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<Record<string, HTMLCanvasElement | null>>({});
   const qrCodeRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -1488,6 +1489,8 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           let newY = pxToPt(e.clientY - canvasRect.top) - dragOffsetRef.current.y;
 
           const allComponents = templateData?.barcodeState?.placedComponents || [];
+          const dragW = draggingRef.current!.width;
+          const dragH = draggingRef.current!.height;
 
           // Use mouse position to find which container the cursor is over
           const mouseCanvasX = pxToPt(e.clientX - canvasRect.left);
@@ -1506,11 +1509,66 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             newY = newY - containerAbsPos.y - containerPadding;
 
             // Clamp within container bounds
-            const maxX = targetContainer.width - (containerPadding * 2) - draggingRef.current!.width;
-            const maxY = targetContainer.height - (containerPadding * 2) - draggingRef.current!.height;
+            const maxX = targetContainer.width - (containerPadding * 2) - dragW;
+            const maxY = targetContainer.height - (containerPadding * 2) - dragH;
             newX = Math.max(0, Math.min(newX, maxX));
             newY = Math.max(0, Math.min(newY, maxY));
           }
+
+          // ── Alignment guides + snapping (single closest per axis) ──
+          const SNAP_THRESHOLD = 4; // pt
+          let bestSnapX: { delta: number; guide: number } | null = null;
+          let bestSnapY: { delta: number; guide: number } | null = null;
+
+          // Only compare with siblings (same containerId)
+          const siblings = allComponents.filter(
+            c => c.id !== draggingRef.current!.id && c.containerId === newContainerId
+          );
+
+          // Dragging element edges (relative coords, same as siblings)
+          const dragLeft = newX;
+          const dragCenterX = newX + dragW / 2;
+          const dragRight = newX + dragW;
+          const dragTop = newY;
+          const dragCenterY = newY + dragH / 2;
+          const dragBottom = newY + dragH;
+
+          for (const comp of siblings) {
+            const cL = comp.x;
+            const cCX = comp.x + comp.width / 2;
+            const cR = comp.x + comp.width;
+            const cT = comp.y;
+            const cCY = comp.y + comp.height / 2;
+            const cB = comp.y + comp.height;
+
+            // X-axis: check left-left, left-right, center-center, right-left, right-right
+            for (const [dEdge, cEdge] of [
+              [dragLeft, cL], [dragLeft, cR], [dragCenterX, cCX], [dragRight, cL], [dragRight, cR],
+            ]) {
+              const delta = cEdge - dEdge;
+              if (Math.abs(delta) < SNAP_THRESHOLD && (!bestSnapX || Math.abs(delta) < Math.abs(bestSnapX.delta))) {
+                bestSnapX = { delta, guide: cEdge };
+              }
+            }
+
+            // Y-axis: check top-top, top-bottom, center-center, bottom-top, bottom-bottom
+            for (const [dEdge, cEdge] of [
+              [dragTop, cT], [dragTop, cB], [dragCenterY, cCY], [dragBottom, cT], [dragBottom, cB],
+            ]) {
+              const delta = cEdge - dEdge;
+              if (Math.abs(delta) < SNAP_THRESHOLD && (!bestSnapY || Math.abs(delta) < Math.abs(bestSnapY.delta))) {
+                bestSnapY = { delta, guide: cEdge };
+              }
+            }
+          }
+
+          if (bestSnapX) newX += bestSnapX.delta;
+          if (bestSnapY) newY += bestSnapY.delta;
+
+          setAlignmentGuides({
+            x: bestSnapX ? [bestSnapX.guide] : [],
+            y: bestSnapY ? [bestSnapY.guide] : [],
+          });
 
           // Update draggingRef to track container changes
           if (draggingRef.current) {
@@ -1571,6 +1629,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         setDraggingComponent(null);
         setDragOffset({ x: 0, y: 0 });
         setDragTargetContainerId(undefined);
+        setAlignmentGuides({ x: [], y: [] });
         draggingRef.current = null;
 
         dragOffsetRef.current = { x: 0, y: 0 };
@@ -2025,7 +2084,6 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         const isLine = selectedComponent.type === DesignerElementType.line;
         let { x, y, width, height, lineWidth, lineThickness } = selectedComponent;
 
-        console.log(`[KeyboardAction] key=${key} shift=${e.shiftKey} ctrl=${e.ctrlKey} isResize=${isResize} isFastMove=${isFastMove} w=${width} h=${height}`);
 
         if (isResize) {
           // -------- RESIZE MODE (Shift+Arrow) --------
@@ -2622,6 +2680,38 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                     return renderComponent(comp, false);
                   }
                 })}
+
+              {/* Alignment guide lines — max 1 per axis */}
+              {alignmentGuides.x.map((x, i) => (
+                <div
+                  key={`guide-x-${i}`}
+                  style={{
+                    position: "absolute",
+                    left: `${x}pt`,
+                    top: 0,
+                    width: 0,
+                    height: "100%",
+                    borderLeft: "1px solid rgba(255,0,80,0.6)",
+                    pointerEvents: "none",
+                    zIndex: 9999,
+                  }}
+                />
+              ))}
+              {alignmentGuides.y.map((y, i) => (
+                <div
+                  key={`guide-y-${i}`}
+                  style={{
+                    position: "absolute",
+                    top: `${y}pt`,
+                    left: 0,
+                    height: 0,
+                    width: "100%",
+                    borderTop: "1px solid rgba(255,0,80,0.6)",
+                    pointerEvents: "none",
+                    zIndex: 9999,
+                  }}
+                />
+              ))}
             </div>
           </ResizableBox>
         </div>

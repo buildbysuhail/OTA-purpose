@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback, useMemo, useLayoutEffect } from "react";
-import { Settings, Minus, Menu, Edit, Scan, Printer, X, Image, QrCode as QrCodeIcon, Package, Keyboard } from "lucide-react";
+import { Settings, Minus, Scan, Printer, X, Image, QrCode as QrCodeIcon, Package, Keyboard, Type, GripVertical, LayoutGrid } from "lucide-react";
 import JsBarcode from "jsbarcode";
 import html2canvas from "html2canvas";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
@@ -285,44 +285,51 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     {
       id: DesignerElementType.text,
       label: t("text"),
-      icon: <Edit className="w-4 h-4" />,
+      icon: <Type className="w-4 h-4" />,
       defaultContent: "Text",
+      color: "#6366f1",
     },
     {
       id: DesignerElementType.barcode,
       label: t("barcode"),
       icon: <Scan className="w-4 h-4" />,
       defaultContent: "123456789012",
+      color: "#8b5cf6",
     },
     {
       id: DesignerElementType.field,
       label: t("field"),
-      icon: <Menu className="w-4 h-4" />,
+      icon: <LayoutGrid className="w-4 h-4" />,
       defaultContent: "Select",
+      color: "#3b82f6",
     },
     {
       id: DesignerElementType.line,
       label: t("line"),
       icon: <Minus className="w-4 h-4" />,
       defaultContent: "Line",
+      color: "#64748b",
     },
     {
       id: DesignerElementType.image,
       label: t("image"),
       icon: <Image className="w-4 h-4" />,
       defaultContent: "Image",
+      color: "#10b981",
     },
     {
       id: DesignerElementType.qrCode,
       label: t("qrcode"),
       icon: <QrCodeIcon className="w-4 h-4" />,
       defaultContent: "QrCode",
+      color: "#f59e0b",
     },
     {
       id: DesignerElementType.container,
       label: t("container"),
-      icon: <Package className="w-4 h-4 text-blue-600" />,
+      icon: <Package className="w-4 h-4" />,
       defaultContent: "",
+      color: "#ec4899",
     },
   ];
 
@@ -2493,11 +2500,11 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           setLeftSidebarWidth(size.width);
         }}
       >
-        <div className="border-r border-gray-200 p-4">
-          <div className="bg-[] border-b border-dashed pb-2 mb-1 border-gray-600">
-            <h2 className="text-sm font-semibold text-gray-700">{t('components')}</h2>
+        <div className="border-r border-gray-200 p-3 h-full">
+          <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-gray-200">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">{t('components')}</h2>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {components
               ?.filter((x: any) => {
                 if (!forCustomRows) {
@@ -2515,22 +2522,23 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                   key={component.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, component.id)}
-                  // className="flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg 
-                  // font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0"
-                  className={`flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded  cursor-move bg-slate-100 font-medium shadow-sm hover:shadow 
-                    hover:bg-
-                     transform hover:scale-105 transition-all duration-200 text-sm flex-shrink-0
-                    ${component.id === DesignerElementType.container
-                      ? 'border-2 border-dashed border-gray-100'
-                      : ''
-                    }`}
+                  className="group flex items-center gap-2.5 px-2.5 py-2 rounded-md cursor-grab active:cursor-grabbing
+                    bg-white border border-gray-100 hover:border-gray-200
+                    hover:bg-gray-50 hover:shadow-sm
+                    transition-all duration-150 ease-out text-sm select-none"
                   title={component.id === DesignerElementType.container
                     ? 'Container - Drop elements inside to group them'
                     : component.label
                   }
                 >
-                  {component.icon}
-                  <span className="ml-2">{component.label}</span>
+                  <div
+                    className="flex items-center justify-center w-7 h-7 rounded-md flex-shrink-0"
+                    style={{ backgroundColor: `${(component as any).color}12`, color: (component as any).color }}
+                  >
+                    {component.icon}
+                  </div>
+                  <span className="font-medium text-gray-700 group-hover:text-gray-900 text-xs">{component.label}</span>
+                  <GripVertical className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ))}
           </div>

@@ -623,7 +623,55 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing,formtype,custome
         {/* Enhanced Content - Fixed for full width list view */}
         <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50/50 to-blue-50/30 dark:from-slate-900/50 dark:to-slate-800/50">
           <div className="p-2 w-full">
-            {activeTab === "all" ? (
+            {/* Skeleton Shimmer Loader while loading */}
+            {loading ? (
+              <div className="space-y-4 w-full">
+                <style>{`
+                  @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                  }
+                  .skeleton-shimmer {
+                    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 37%, #e2e8f0 63%);
+                    background-size: 200% 100%;
+                    animation: shimmer 1.5s ease-in-out infinite;
+                  }
+                  .dark .skeleton-shimmer {
+                    background: linear-gradient(90deg, #1e293b 25%, #334155 37%, #1e293b 63%);
+                    background-size: 200% 100%;
+                  }
+                `}</style>
+                {/* Skeleton group sections */}
+                {[0, 1].map((groupIdx) => (
+                  <div key={groupIdx} className="w-full">
+                    <div className="border rounded-md p-2 bg-white dark:bg-dark-bg-card border-slate-200 dark:border-dark-border">
+                      {/* Skeleton group header */}
+                      <div className="flex items-center gap-2 border-b pb-2 border-slate-200 dark:border-dark-border mb-3">
+                        <div className="w-8 h-8 rounded-md skeleton-shimmer" />
+                        <div className="skeleton-shimmer h-4 w-32 rounded" />
+                      </div>
+                      {/* Skeleton template cards */}
+                      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 gap-2 w-full">
+                        {[0, 1, 2, 3, 4].map((cardIdx) => (
+                          <div
+                            key={cardIdx}
+                            className="w-full max-w-[200px] sm:max-w-[220px] md:max-w-[240px] lg:max-w-[200px] h-[250px] xs:h-[260px] sm:h-[280px] md:h-[300px] lg:h-[280px] bg-white dark:bg-dark-bg-card rounded-xl sm:rounded-2xl border border-slate-200 dark:border-dark-border overflow-hidden mx-auto sm:mx-0"
+                          >
+                            {/* Thumbnail skeleton */}
+                            <div className="w-full h-[80%] skeleton-shimmer" />
+                            {/* Info skeleton */}
+                            <div className="p-3 space-y-2">
+                              <div className="skeleton-shimmer h-3.5 w-3/4 rounded" />
+                              <div className="skeleton-shimmer h-3 w-1/2 rounded" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : activeTab === "all" ? (
               // Render grouped templates for "All" tab
               <div className="space-y-2 w-full">
                 {Object.entries(groupedTemplatesForAll).map(([templateType, templates]) => {
@@ -695,7 +743,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing,formtype,custome
             )}
 
             {/* Enhanced Empty State */}
-            {filteredTemplates.length === 0 && (
+            {!loading && filteredTemplates.length === 0 && (
               <div className="text-center py-16 sm:py-20 px-4 w-full">
                 <div className="text-4xl sm:text-6xl mb-4 sm:mb-6">🎨</div>
                 <h3 className="text-lg sm:text-2xl font-bold text-slate-900 dark:!text-dark-text mb-3">{t('no_templates_found')}</h3>

@@ -1673,15 +1673,15 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
       ...new Set(master.itemTaxDetails.map((i: any) => i.taxPerc)),
     ];
 
-    distinctTaxPerc.forEach(taxPerc => {
+    distinctTaxPerc.forEach((taxPerc) => {
       master.taxableDetails.push({
         taxPerc,
         taxableAmount: master.itemTaxDetails
           .filter((i: any) => i.taxPerc === taxPerc)
-          .reduce((s: any, i: any) => s + i.taxableAmount, 0),
+          .reduce((s: number, i: any) => s + (Number(i.taxableAmount) || 0), 0),
         taxAmount: master.itemTaxDetails
           .filter((i: any) => i.taxPerc === taxPerc)
-          .reduce((s: any, i: any) => s + i.taxAmount, 0),
+          .reduce((s: number, i: any) => s + (Number(i.taxAmount) || 0), 0),
       });
     });
     return master;

@@ -162,6 +162,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const [loading, setLoading] = useState(false);
   const [draggingComponent, setDraggingComponent] = useState<PlacedComponent | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [dragTargetContainerId, setDragTargetContainerId] = useState<string | undefined>(undefined);
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<Record<string, HTMLCanvasElement | null>>({});
   const qrCodeRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -704,9 +705,6 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.target !== e.currentTarget) {
-      return;
-    }
 
     const canvasRect = canvasRef.current?.getBoundingClientRect();
 
@@ -1051,9 +1049,13 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             width: "100%",
             height: "100%",
             backgroundColor: container.containerProps?.backgroundColor || "#f5f5f5",
-            border: isSelected
-              ? "2px solid #2196f3"
-              : `${container.containerProps?.borderWidth || 1}pt ${container.containerProps?.borderStyle || "dashed"} ${container.containerProps?.borderColor || "#999"}`,
+            border: dragTargetContainerId === container.id
+              ? "2px dashed #4caf50"
+              : isSelected
+                ? "2px solid #2196f3"
+                : `${container.containerProps?.borderWidth || 1}pt ${container.containerProps?.borderStyle || "dashed"} ${container.containerProps?.borderColor || "#999"}`,
+            boxShadow: dragTargetContainerId === container.id ? "0 0 8px rgba(76,175,80,0.4)" : "none",
+            transition: "border 0.15s ease, box-shadow 0.15s ease",
             padding: `${container.containerProps?.padding || 10}pt`,
             boxSizing: "border-box",
             position: "relative",
@@ -1481,43 +1483,40 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           if (!draggingRef.current || !canvasRef.current) return;
 
           const canvasRect = canvasRef.current.getBoundingClientRect();
+          // Absolute position on canvas (without container offset)
           let newX = pxToPt(e.clientX - canvasRect.left) - dragOffsetRef.current.x;
           let newY = pxToPt(e.clientY - canvasRect.top) - dragOffsetRef.current.y;
 
-          // Calculate relative position if inside a container
-          if (draggingRef.current?.containerId) {
-            const containerChain = [];
-            let currentContainerId = draggingRef.current.containerId;
+          const allComponents = templateData?.barcodeState?.placedComponents || [];
 
-            while (currentContainerId) {
-              const container = (templateData?.barcodeState?.placedComponents || []).find(
-                c => c.id === currentContainerId
-              );
-              if (container) {
-                containerChain.push(container);
-                currentContainerId = container.containerId ?? "";
-              } else {
-                break;
-              }
-            }
+          // Use mouse position to find which container the cursor is over
+          const mouseCanvasX = pxToPt(e.clientX - canvasRect.left);
+          const mouseCanvasY = pxToPt(e.clientY - canvasRect.top);
+          const targetContainer = findDeepestContainerAt(
+            mouseCanvasX, mouseCanvasY, allComponents, draggingRef.current!.id
+          );
 
-            if (containerChain.length > 0) {
-              const immediateParent = containerChain[0];
-              const parentAbsolutePos = getAbsolutePosition(
-                immediateParent,
-                templateData?.barcodeState?.placedComponents || []
-              );
-              const containerPadding = immediateParent.containerProps?.padding || 10;
+          const newContainerId = targetContainer?.id;
 
-              newX = newX - parentAbsolutePos.x - containerPadding;
-              newY = newY - parentAbsolutePos.y - containerPadding;
+          if (targetContainer) {
+            // Convert absolute canvas position to relative-to-container position
+            const containerAbsPos = getAbsolutePosition(targetContainer, allComponents);
+            const containerPadding = targetContainer.containerProps?.padding || 10;
+            newX = newX - containerAbsPos.x - containerPadding;
+            newY = newY - containerAbsPos.y - containerPadding;
 
-              const maxX = immediateParent.width - (containerPadding * 2) - draggingRef.current!.width;
-              const maxY = immediateParent.height - (containerPadding * 2) - draggingRef.current!.height;
-              newX = Math.max(0, Math.min(newX, maxX));
-              newY = Math.max(0, Math.min(newY, maxY));
-            }
+            // Clamp within container bounds
+            const maxX = targetContainer.width - (containerPadding * 2) - draggingRef.current!.width;
+            const maxY = targetContainer.height - (containerPadding * 2) - draggingRef.current!.height;
+            newX = Math.max(0, Math.min(newX, maxX));
+            newY = Math.max(0, Math.min(newY, maxY));
           }
+
+          // Update draggingRef to track container changes
+          if (draggingRef.current) {
+            draggingRef.current = { ...draggingRef.current, containerId: newContainerId };
+          }
+          setDragTargetContainerId(newContainerId);
 
           // Update templateData WITHOUT pushing to history yet
           setTemplateData((prev: TemplateState<unknown>) => {
@@ -1527,6 +1526,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                   ...comp,
                   x: newX,
                   y: newY,
+                  containerId: newContainerId,
                 };
               }
               return comp;
@@ -1553,6 +1553,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                 ...prevSelected,
                 x: newX,
                 y: newY,
+                containerId: newContainerId,
               };
             }
             return prevSelected;
@@ -1569,6 +1570,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         debouncedPushDragHistory.flush();
         setDraggingComponent(null);
         setDragOffset({ x: 0, y: 0 });
+        setDragTargetContainerId(undefined);
         draggingRef.current = null;
 
         dragOffsetRef.current = { x: 0, y: 0 };

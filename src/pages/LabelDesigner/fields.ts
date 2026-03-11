@@ -143,8 +143,8 @@ export const shortcutGroups = [
     items: [
       { keys: ["Delete"],                 description: "Delete element" },
       { keys: ["↑ ↓ ← →"],               description: "Move element (1 pt)" },
-      { keys: ["Shift", "↑ ↓ ← →"],      description: "Move element (10 pt)" },
-      { keys: ["Alt", "↑ ↓ ← →"],        description: "Resize element" },
+      { keys: ["Ctrl","Shift", "↑ ↓ ← →"],      description: "Move element (10 pt)" },
+      { keys: ["Shift", "↑ ↓ ← →"],        description: "Resize element" },
     ],
   },
 ];

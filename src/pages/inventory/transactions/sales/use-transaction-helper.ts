@@ -4049,9 +4049,14 @@ export const useTransactionHelper = (transactionType: string, focusToNextColumn:
     }
 
 
-    const giftEnabled = await checkGiftOnBilling(result.transaction!.master!.grandTotal);
-    result.formElements.btnGiftOnBilling = result.formElements.btnGiftOnBilling || { visible: false };
-    result.formElements.btnGiftOnBilling.visible = giftEnabled;
+    if (master.voucherType === VoucherType.SalesInvoice) {
+      const giftEnabled = await checkGiftOnBilling(result.transaction!.master!.grandTotal);
+
+      result.formElements.btnGiftOnBilling =
+        result.formElements.btnGiftOnBilling || { visible: false };
+
+      result.formElements.btnGiftOnBilling.visible = giftEnabled;
+    }
 
     // dispatch only changed fields (keep pattern identical to PI)
     commonParams.formStateHandleFieldChangeKeysOnly &&

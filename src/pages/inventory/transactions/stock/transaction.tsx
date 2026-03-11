@@ -904,6 +904,18 @@ const TransactionForm: React.FC<TransactionProps> = ({
         };
       }
 
+      // for Vijay Moolans, ShowSelectedOnly checkbox and load button
+      if(voucherType === VoucherType.ItemLoadRequest && userSession.dbIdValue === "572054329920"){
+        _formState.formElements.chkShowSelectedOnly = {
+          ..._formState.formElements.chkShowSelectedOnly,
+          visible: true
+
+        }
+        _formState.formElements.btnLoad = {
+          ..._formState.formElements.btnLoad,
+          visible: true
+        }
+      }
 
         //
         // _formState = await loadLedgerData(_formState) as any;

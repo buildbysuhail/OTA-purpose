@@ -503,6 +503,9 @@ export const initialFormElements: { [key: string]: FormElementState } = {
   btnConvertToInvoice: { visible: false, disabled: false, label:""},
   chkCreditAccount: { visible: true, disabled: false, label: "credit_account" },
   cbCreditAccount: { visible: true, disabled: false, label: "" },
+  btnVisionDetails: { visible: false, disabled: false, label: ""},
+  chkShowSelectedOnly: { visible: false, disabled: false, label: ""},
+  btnLoad: { visible: false, disabled: false, label: ""},
 
   // Need to verify the below 6
   lblProject: { visible: false, disabled: false, label: "" },

@@ -1,41 +1,38 @@
 import moment from "moment";
 
 export interface SchemesData {
-  schemeId: number | null;
+  schemeID: number;
   schemeCode: string;
   schemeName: string;
   dateFrom: string;
   dateTo: string;
   schemeType: string;
-  itemProductId: number;
+  itemProductID: number;
   qtyLimit: number;
   schemeRate: number;
   freeQty: number;
-  freeItemProductId: number;
+  freeItemProductID: number;
   schemeStatus: string;
   itemBatchNo: number;
-  discPerc: number;
+  discPercentage: number;
 }
 
 export const initialSchemesData = {
   data: {
-    schemeId: 0,
-  schemeCode: '',
-  schemeName: '',
-  dateFrom: moment().local().toDate(),
-  dateTo: moment().add(10, 'days').local().toDate(),
-  schemeType: '',
-  itemProductId: 0,
-  qtyLimit: 0,
-  schemeRate: 0,
-  freeQty: 0,
-  freeItemProductId: 0,
-  schemeStatus: -2,
-  itemBatchNo: 0,
-  discPerc: 0,
+    schemeID: 0,
+    schemeCode: '',
+    schemeName: '',
+    dateFrom: moment().local().format('YYYY-MM-DD'),
+    dateTo: moment().add(10, 'days').local().format('YYYY-MM-DD'),
+    schemeType: '',
+    itemProductID: 0,
+    qtyLimit: 0,
+    schemeRate: 0,
+    freeQty: 0,
+    freeItemProductID: 0,
+    schemeStatus: '',
+    itemBatchNo: 0,
+    discPercentage: 0,
   },
-  validations: {
-    vehicleName: "",
-    vehicleNumber: ""
-  },
+  validations: {},
 };

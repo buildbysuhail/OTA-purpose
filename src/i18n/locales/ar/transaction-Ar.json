@@ -1388,7 +1388,17 @@
   "delivery_customer": "عميل توصيل!",
   "no_product_selected": "لم يتم اختيار أي منتج",
   "vr_prefix": "بادئة VR",
-  "vr_number": "رقم VR"
+  "vr_number": "رقم VR",
+
+  "vision_details": "تفاصيل الرؤية",
+  "size_chart": "جدول المقاسات",
+  "vision/other_details": "الرؤية/تفاصيل أخرى",
+  "enter_remarks":"أدخل الملاحظات",
+  "show_selected_only": "إظهار المختار فقط",
+
+  "details_added_successfully": "تمت إضافة التفاصيل بنجاح",
+  "measurements_not_found": "لم يتم العثور على القياسات!",
+  "please_add_measurements": "يرجى إضافة القياسات"
 
   
 

@@ -1042,6 +1042,34 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
                     title="load_vouchers"
                   />
                  )}
+
+                 {[VoucherType.ItemLoadRequest].includes(formState.transaction.master.voucherType as VoucherType) && (
+                  <div className="flex items-end gap-2">
+                    {formState.formElements.chkShowSelectedOnly?.visible && (
+                    <ERPCheckbox
+                      localInputBox={formState?.userConfig?.inputBoxStyle}
+                      id="showSelectedOnly"
+                      label={t("show_selected_only")}
+                      checked={formState?.showSelectedOnly}
+                      className="text-left !m-0 dark:text-dark-text"
+                      onChange={(e) =>{
+                          dispatch(
+                           formStateHandleFieldChangeKeysOnly(
+                            { fields: { showSelectedOnly: e.target.checked} }
+                        ))
+                      }}
+                    />
+                    )}
+                    {formState.formElements.btnLoad?.visible && (
+                    <ERPButton
+                      title={t("load")}
+                      variant="secondary"
+                      // The end point is not ready - so complete onclick after end point ready
+                      onClick={()=> alert("Start: Waiting for end Point")}
+                    />
+                    )}
+                  </div>
+                 )}
               
                  {[VoucherType.StockAdjuster].includes(formState.transaction.master.voucherType as VoucherType) && (
                    <div className="flex gap-1 items-end">

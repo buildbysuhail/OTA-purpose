@@ -2019,29 +2019,49 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         e.preventDefault();
         e.stopPropagation();
 
-        const step = e.shiftKey ? 10 : 1; // Shift+Arrow = larger movement
-        let { x, y, width, height } = selectedComponent;
+        const isResize = e.shiftKey && !e.ctrlKey && !e.metaKey;   // Shift+Arrow = resize
+        const isFastMove = (e.ctrlKey || e.metaKey) && e.shiftKey;  // Ctrl+Shift+Arrow = fast move
+        const step = isFastMove ? 10 : 1;
+        const isLine = selectedComponent.type === DesignerElementType.line;
+        let { x, y, width, height, lineWidth, lineThickness } = selectedComponent;
 
-        if (e.altKey) {
-          // -------- RESIZE MODE (Alt+Arrow) --------
-          console.log('Resize mode');
-          switch (key) {
-            case 'arrowup':
-              height = Math.max(20, height - step);
-              break;
-            case 'arrowdown':
-              height = Math.max(20, height + step);
-              break;
-            case 'arrowleft':
-              width = Math.max(20, width - step);
-              break;
-            case 'arrowright':
-              width = Math.max(20, width + step);
-              break;
+        console.log(`[KeyboardAction] key=${key} shift=${e.shiftKey} ctrl=${e.ctrlKey} isResize=${isResize} isFastMove=${isFastMove} w=${width} h=${height}`);
+
+        if (isResize) {
+          // -------- RESIZE MODE (Shift+Arrow) --------
+          if (isLine) {
+            switch (key) {
+              case 'arrowup':
+                lineThickness = Math.max(1, (lineThickness || 1) - step);
+                break;
+              case 'arrowdown':
+                lineThickness = (lineThickness || 1) + step;
+                break;
+              case 'arrowleft':
+                lineWidth = Math.max(5, (lineWidth || 100) - step);
+                break;
+              case 'arrowright':
+                lineWidth = (lineWidth || 100) + step;
+                break;
+            }
+          } else {
+            switch (key) {
+              case 'arrowup':
+                height = Math.max(5, height - step);
+                break;
+              case 'arrowdown':
+                height = height + step;
+                break;
+              case 'arrowleft':
+                width = Math.max(5, width - step);
+                break;
+              case 'arrowright':
+                width = width + step;
+                break;
+            }
           }
         } else {
-          // -------- MOVE MODE (Arrow only) --------
-          console.log('Move mode');
+          // -------- MOVE MODE (Arrow / Ctrl+Shift+Arrow) --------
           switch (key) {
             case 'arrowup':
               y = Math.max(0, y - step);
@@ -2058,6 +2078,11 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           }
         }
 
+        // Build updated properties
+        const updatedProps = isLine
+          ? { x, y, width, height, lineWidth, lineThickness }
+          : { x, y, width, height };
+
         // Update templateData
         const newTemplateData: TemplateState<unknown> = {
           ...templateData,
@@ -2065,16 +2090,16 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
             ...templateData.barcodeState,
             placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
               comp.id === selectedComponent.id
-                ? { ...comp, x, y, width, height }
+                ? { ...comp, ...updatedProps }
                 : comp
             ),
           },
         };
 
         setTemplateData(newTemplateData);
-        pushToHistory(newTemplateData, `${e.altKey ? 'Resized' : 'Moved'} component with keyboard`);
+        pushToHistory(newTemplateData, `${isResize ? 'Resized' : 'Moved'} component with keyboard`);
         setSelectedComponent((prev) =>
-          prev ? { ...prev, x, y, width, height } : prev
+          prev ? { ...prev, ...updatedProps } : prev
         );
         return;
       }

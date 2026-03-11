@@ -159,11 +159,14 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get("template_group")! as VoucherType | string;
   const [selectedComponent, setSelectedComponent] = useState<PlacedComponent | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
   const [draggingComponent, setDraggingComponent] = useState<PlacedComponent | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragTargetContainerId, setDragTargetContainerId] = useState<string | undefined>(undefined);
   const [alignmentGuides, setAlignmentGuides] = useState<{ x: number[]; y: number[] }>({ x: [], y: [] });
+  const multiDragStartRef = useRef<Map<string, { x: number; y: number }>>(new Map());
+  const multiDragMouseStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<Record<string, HTMLCanvasElement | null>>({});
   const qrCodeRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -382,6 +385,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
   const handleDragStart = (e: React.DragEvent, componentType: DesignerElementType) => {
     e.dataTransfer.setData("componentType", componentType.toString());
     setSelectedComponent(null);
+    setSelectedIds(new Set());
   };
 
   // Drop into container handler - UPDATED for n-level nesting
@@ -391,6 +395,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     const componentType = parseInt(e.dataTransfer.getData("componentType")) as DesignerElementType;
     // No longer prevent containers from being dropped into containers
     setSelectedComponent(null);
+    setSelectedIds(new Set());
     const containerRect = e.currentTarget.getBoundingClientRect();
     const containerElement = e.currentTarget;
     const computedStyle = window.getComputedStyle(containerElement);
@@ -510,6 +515,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         pushToHistory(newTemplateData, `Added ${componentType} containers`);
         setTimeout(() => {
           setSelectedComponent(newComponent);
+          setSelectedIds(new Set([newComponent.id]));
         }, 0);
       }
     }
@@ -524,6 +530,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       const x = pxToPt(e.clientX - canvasRect.left);
       const y = pxToPt(e.clientY - canvasRect.top);
       setSelectedComponent(null);
+      setSelectedIds(new Set());
       // Find the deepest container at this position
       const placedComponents = templateData?.barcodeState?.placedComponents || [];
       const targetContainer = findDeepestContainerAt(x, y, placedComponents);
@@ -647,6 +654,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
         setTimeout(() => {
           setSelectedComponent(newComponent);
+          setSelectedIds(new Set([newComponent.id]));
         }, 0);
       }
     }
@@ -659,50 +667,63 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     e.nativeEvent.stopImmediatePropagation();
     setDraggingComponent(null);
     setDragOffset({ x: 0, y: 0 });
-    if (selectedComponent?.id === component.id) {
-      return;
-    }
+
     const fullComponent = templateData?.barcodeState?.placedComponents?.find(
       c => c.id === component.id
-    );
+    ) || component;
 
-    if (fullComponent) {
-      let componentToSelect = {
-        ...fullComponent,
-        x: fullComponent.x,
-        y: fullComponent.y,
-        containerId: fullComponent.containerId,
+    let componentToSelect = { ...fullComponent };
+    if (fullComponent.type === DesignerElementType.container && !fullComponent.containerProps) {
+      componentToSelect.containerProps = {
+        backgroundColor: "#fafafa",
+        borderColor: "#d0d0d0",
+        borderWidth: 1,
+        borderStyle: "dashed",
+        padding: 10,
+        autoResize: false,
+        minHeight: 100,
+        maxHeight: 500,
+        borderRound: 1,
       };
+    }
 
-      if (fullComponent.type === DesignerElementType.container && !fullComponent.containerProps) {
-        componentToSelect.containerProps = {
-          backgroundColor: "#fafafa",
-          borderColor: "#d0d0d0",
-          borderWidth: 1,
-          borderStyle: "dashed",
-          padding: 10,
-          autoResize: false,
-          minHeight: 100,
-          maxHeight: 500,
-          borderRound: 1,
-        };
-      }
-
+    if (e.ctrlKey || e.metaKey) {
+      // Ctrl+Click: toggle in/out of multi-selection
+      setSelectedIds(prev => {
+        const next = new Set(prev);
+        if (next.has(componentToSelect.id)) {
+          next.delete(componentToSelect.id);
+          // If removed the primary, pick another or clear
+          if (selectedComponent?.id === componentToSelect.id) {
+            const remaining = [...next];
+            if (remaining.length > 0) {
+              const allComps = templateData?.barcodeState?.placedComponents || [];
+              const newPrimary = allComps.find(c => c.id === remaining[0]);
+              setSelectedComponent(newPrimary || null);
+            } else {
+              setSelectedComponent(null);
+            }
+          }
+        } else {
+          next.add(componentToSelect.id);
+          setSelectedComponent(componentToSelect);
+        }
+        return next;
+      });
+      setActiveTab("element");
+    } else {
+      // Normal click: single select (replace selection)
+      if (selectedComponent?.id === componentToSelect.id && selectedIds.size <= 1) return;
       setSelectedComponent(null);
+      setSelectedIds(new Set([componentToSelect.id]));
       requestAnimationFrame(() => {
         setSelectedComponent(componentToSelect);
-        setActiveTab("element");
-      });
-    } else {
-      setSelectedComponent(null);
-      requestAnimationFrame(() => {
-        setSelectedComponent(component);
         setActiveTab("element");
       });
     }
   };
 
-  // Mouse down handler - UPDATED for nested containers
+  // Mouse down handler - UPDATED for multi-select & nested containers
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -710,14 +731,34 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     const canvasRect = canvasRef.current?.getBoundingClientRect();
 
     if (canvasRect) {
-      const fullComponent = templateData?.barcodeState?.placedComponents?.find(
-        c => c.id === component.id
-      );
+      const allComps = templateData?.barcodeState?.placedComponents || [];
+      const fullComponent = allComps.find(c => c.id === component.id);
 
       if (!fullComponent) {
         console.error('Component not found in main list:', component.id);
         return;
       }
+
+      // If clicking on a non-selected component without Ctrl, single-select it
+      if (!selectedIds.has(fullComponent.id) && !e.ctrlKey && !e.metaKey) {
+        setSelectedComponent(fullComponent);
+        setSelectedIds(new Set([fullComponent.id]));
+      }
+
+      // Store initial positions of all selected components for multi-drag
+      const startPositions = new Map<string, { x: number; y: number }>();
+      const idsToTrack = new Set(selectedIds);
+      idsToTrack.add(fullComponent.id);
+      for (const id of idsToTrack) {
+        const c = allComps.find(comp => comp.id === id);
+        if (c) startPositions.set(id, { x: c.x, y: c.y });
+      }
+      multiDragStartRef.current = startPositions;
+      // Store initial mouse canvas position (in pt) for multi-drag delta calculation
+      multiDragMouseStartRef.current = {
+        x: pxToPt(e.clientX - canvasRect.left),
+        y: pxToPt(e.clientY - canvasRect.top),
+      };
 
       setDraggingComponent(null);
       setTimeout(() => {
@@ -726,10 +767,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       }, 0);
 
       // Calculate absolute position considering nested containers
-      const absolutePos = getAbsolutePosition(
-        fullComponent,
-        templateData?.barcodeState?.placedComponents || []
-      );
+      const absolutePos = getAbsolutePosition(fullComponent, allComps);
 
       const offsetX = pxToPt(e.clientX - canvasRect.left) - absolutePos.x;
       const offsetY = pxToPt(e.clientY - canvasRect.top) - absolutePos.y;
@@ -766,6 +804,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     setTemplateData(newTemplateData);
     pushToHistory(newTemplateData, 'Deleted component(s)');
     setSelectedComponent(null);
+    setSelectedIds(new Set());
   };
   //  clear all in desinger buttons:
   const handleClear = () => {
@@ -780,14 +819,16 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     // pushToHistory(newTemplateData, 'Cleared canvas');
     clearHistory();
     setSelectedComponent(null);
+    setSelectedIds(new Set());
   };
   // Property change handlers
   const handlePropertyChange = (property: keyof PlacedComponent, value: string | number | boolean, id?: number | undefined,) => {
     if (selectedComponent) {
-      const updatedComponent = { ...selectedComponent, [property]: value };
+      // Apply to specific id, or to ALL selected components
+      const targetIds = id ? new Set([String(id)]) : selectedIds;
       const updatedComponents =
         templateData?.barcodeState?.placedComponents?.map((comp) =>
-          comp.id === (id ? id : selectedComponent.id) ? updatedComponent : comp
+          targetIds.has(comp.id) ? { ...comp, [property]: value } : comp
         );
 
       const newTemplateData: TemplateState<unknown> = {
@@ -803,9 +844,10 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         newTemplateData,
         `Changed ${String(property)} to ${value}`
       );
-      setSelectedComponent(updatedComponent);
-      if (updatedComponent.type === DesignerElementType.barcode) {
-        generateBarcode(updatedComponent);
+      const updatedPrimary = { ...selectedComponent, [property]: value };
+      setSelectedComponent(updatedPrimary);
+      if (updatedPrimary.type === DesignerElementType.barcode) {
+        generateBarcode(updatedPrimary);
       }
     }
   };
@@ -994,7 +1036,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
   // Render nested container with recursive support
   const renderNestedContainer = (container: PlacedComponent, allComponents: PlacedComponent[], depth: number = 0): React.ReactNode => {
-    const isSelected = selectedComponent?.id === container.id;
+    const isSelected = selectedIds.has(container.id);
     const containerChildren = allComponents.filter(comp => comp.containerId === container.id);
     const calculateContainerHeight = () => {
       if (!container.containerProps?.autoResize || containerChildren.length === 0) {
@@ -1116,7 +1158,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
   // Render component
   const renderComponent = (component: PlacedComponent, isChild: boolean = false) => {
-    const isSelected = selectedComponent?.id === component.id;
+    const isSelected = selectedIds.has(component.id);
     const style: React.CSSProperties = {
       position: "absolute",
       left: `${component.x}pt`,
@@ -1339,7 +1381,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                 width: "100%",
                 height: "100%",
                 border:
-                  selectedComponent?.id === component.id
+                  selectedIds.has(component.id)
                     ? "2px solid #2196f3"
                     : "none",
                 boxSizing: "border-box",
@@ -1394,7 +1436,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                 width: "100%",
                 height: "100%",
                 border:
-                  selectedComponent?.id === component.id
+                  selectedIds.has(component.id)
                     ? "2px solid #2196f3"
                     : "none",
                 overflow: "hidden",
@@ -1491,31 +1533,40 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           const allComponents = templateData?.barcodeState?.placedComponents || [];
           const dragW = draggingRef.current!.width;
           const dragH = draggingRef.current!.height;
+          const isMultiDrag = multiDragStartRef.current.size > 1;
 
-          // Use mouse position to find which container the cursor is over
-          const mouseCanvasX = pxToPt(e.clientX - canvasRect.left);
-          const mouseCanvasY = pxToPt(e.clientY - canvasRect.top);
-          const targetContainer = findDeepestContainerAt(
-            mouseCanvasX, mouseCanvasY, allComponents, draggingRef.current!.id
-          );
+          // Mouse delta in pt (works for both canvas-level and container-relative coords)
+          const currentMouseX = pxToPt(e.clientX - canvasRect.left);
+          const currentMouseY = pxToPt(e.clientY - canvasRect.top);
+          const mouseDx = currentMouseX - multiDragMouseStartRef.current.x;
+          const mouseDy = currentMouseY - multiDragMouseStartRef.current.y;
 
-          const newContainerId = targetContainer?.id;
+          // For multi-drag: skip container re-parenting — just translate all by delta
+          // For single drag: detect container and convert coordinates
+          let newContainerId: string | undefined;
 
-          if (targetContainer) {
-            // Convert absolute canvas position to relative-to-container position
-            const containerAbsPos = getAbsolutePosition(targetContainer, allComponents);
-            const containerPadding = targetContainer.containerProps?.padding || 10;
-            newX = newX - containerAbsPos.x - containerPadding;
-            newY = newY - containerAbsPos.y - containerPadding;
+          if (!isMultiDrag) {
+            const mouseCanvasX = pxToPt(e.clientX - canvasRect.left);
+            const mouseCanvasY = pxToPt(e.clientY - canvasRect.top);
+            const targetContainer = findDeepestContainerAt(
+              mouseCanvasX, mouseCanvasY, allComponents, draggingRef.current!.id
+            );
+            newContainerId = targetContainer?.id;
 
-            // Clamp within the container's usable area.
-            // CSS absolute children are positioned from the padding-box edge,
-            // so the full inner area (height minus border only) is available.
-            // overflow:hidden on the container clips anything beyond.
-            const maxX = targetContainer.width - dragW;
-            const maxY = targetContainer.height - dragH;
-            newX = Math.max(0, Math.min(newX, maxX));
-            newY = Math.max(0, Math.min(newY, maxY));
+            if (targetContainer) {
+              const containerAbsPos = getAbsolutePosition(targetContainer, allComponents);
+              const containerPadding = targetContainer.containerProps?.padding || 10;
+              newX = newX - containerAbsPos.x - containerPadding;
+              newY = newY - containerAbsPos.y - containerPadding;
+
+              const maxX = targetContainer.width - dragW;
+              const maxY = targetContainer.height - dragH;
+              newX = Math.max(0, Math.min(newX, maxX));
+              newY = Math.max(0, Math.min(newY, maxY));
+            }
+          } else {
+            // Multi-drag: keep the primary element's current containerId
+            newContainerId = draggingRef.current!.containerId;
           }
 
           // ── Alignment guides + snapping (single closest per axis) ──
@@ -1582,13 +1633,14 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           // Update templateData WITHOUT pushing to history yet
           setTemplateData((prev: TemplateState<unknown>) => {
             const updatedComponents = (prev?.barcodeState?.placedComponents || []).map((comp) => {
-              if (comp.id === draggingRef.current!.id) {
-                return {
-                  ...comp,
-                  x: newX,
-                  y: newY,
-                  containerId: newContainerId,
-                };
+              if (isMultiDrag && multiDragStartRef.current.has(comp.id)) {
+                // Multi-drag: ALL selected components use mouse delta applied to their original positions
+                const startPos = multiDragStartRef.current.get(comp.id)!;
+                return { ...comp, x: Math.max(0, startPos.x + mouseDx), y: Math.max(0, startPos.y + mouseDy) };
+              }
+              if (draggingRef.current && comp.id === draggingRef.current.id) {
+                // Single drag: primary component uses exact position (with snapping/container logic)
+                return { ...comp, x: newX, y: newY, containerId: newContainerId };
               }
               return comp;
             });
@@ -1601,21 +1653,14 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
               },
             };
 
-            // Call debounced history push with the new state
             debouncedPushDragHistory(newState);
-
             return newState;
           });
           // Update selected component for UI feedback
           setSelectedComponent((prevSelected) => {
-            const draggingId = draggingRef.current?.id; // safe access
+            const draggingId = draggingRef.current?.id;
             if (prevSelected && draggingId && prevSelected.id === draggingId) {
-              return {
-                ...prevSelected,
-                x: newX,
-                y: newY,
-                containerId: newContainerId,
-              };
+              return { ...prevSelected, x: newX, y: newY, containerId: newContainerId };
             }
             return prevSelected;
           });
@@ -1987,6 +2032,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     if (!_template) return null;
 
     setSelectedComponent(null);
+    setSelectedIds(new Set());
     setTemplateData(_template);
     resetHistory(_template);
   };
@@ -2048,13 +2094,28 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
       // ============ DELETE: Delete key or Backspace ============
       if (
         (key === 'delete') &&
-        selectedComponent &&
+        selectedIds.size > 0 &&
         !isInputElement
       ) {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Delete triggered');
-        handleDelete(selectedComponent.id);
+        // Batch delete all selected components
+        const componentsToDelete = new Set<string>();
+        const components = templateData?.barcodeState?.placedComponents || [];
+        const findAllChildren = (id: string) => {
+          componentsToDelete.add(id);
+          components.forEach(comp => { if (comp.containerId === id) findAllChildren(comp.id); });
+        };
+        for (const id of selectedIds) findAllChildren(id);
+        const updatedComponents = components.filter(comp => !componentsToDelete.has(comp.id));
+        const newTemplateData: TemplateState<unknown> = {
+          ...templateData,
+          barcodeState: { ...templateData.barcodeState, placedComponents: updatedComponents },
+        };
+        setTemplateData(newTemplateData);
+        pushToHistory(newTemplateData, 'Deleted component(s)');
+        setSelectedComponent(null);
+        setSelectedIds(new Set());
         return;
       }
 
@@ -2067,6 +2128,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         e.stopPropagation();
         console.log('Deselect triggered');
         setSelectedComponent(null);
+        setSelectedIds(new Set());
         setDraggingComponent(null);
         setDragOffset({ x: 0, y: 0 });
         return;
@@ -2074,7 +2136,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
 
       // ============ ARROW KEYS: Move or Resize selected component ============
       if (
-        selectedComponent &&
+        selectedIds.size > 0 &&
         ['arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key) &&
         !isInputElement
       ) {
@@ -2084,84 +2146,69 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
         const isResize = e.shiftKey && !e.ctrlKey && !e.metaKey;   // Shift+Arrow = resize
         const isFastMove = (e.ctrlKey || e.metaKey) && e.shiftKey;  // Ctrl+Shift+Arrow = fast move
         const step = isFastMove ? 10 : 1;
-        const isLine = selectedComponent.type === DesignerElementType.line;
-        let { x, y, width, height, lineWidth, lineThickness } = selectedComponent;
 
-
-        if (isResize) {
-          // -------- RESIZE MODE (Shift+Arrow) --------
+        // Resize only works for single selection
+        if (isResize && selectedIds.size === 1 && selectedComponent) {
+          const isLine = selectedComponent.type === DesignerElementType.line;
+          let { width, height, lineWidth, lineThickness } = selectedComponent;
           if (isLine) {
             switch (key) {
-              case 'arrowup':
-                lineThickness = Math.max(1, (lineThickness || 1) - step);
-                break;
-              case 'arrowdown':
-                lineThickness = (lineThickness || 1) + step;
-                break;
-              case 'arrowleft':
-                lineWidth = Math.max(5, (lineWidth || 100) - step);
-                break;
-              case 'arrowright':
-                lineWidth = (lineWidth || 100) + step;
-                break;
+              case 'arrowup': lineThickness = Math.max(1, (lineThickness || 1) - step); break;
+              case 'arrowdown': lineThickness = (lineThickness || 1) + step; break;
+              case 'arrowleft': lineWidth = Math.max(5, (lineWidth || 100) - step); break;
+              case 'arrowright': lineWidth = (lineWidth || 100) + step; break;
             }
           } else {
             switch (key) {
-              case 'arrowup':
-                height = Math.max(5, height - step);
-                break;
-              case 'arrowdown':
-                height = height + step;
-                break;
-              case 'arrowleft':
-                width = Math.max(5, width - step);
-                break;
-              case 'arrowright':
-                width = width + step;
-                break;
+              case 'arrowup': height = Math.max(5, height - step); break;
+              case 'arrowdown': height = height + step; break;
+              case 'arrowleft': width = Math.max(5, width - step); break;
+              case 'arrowright': width = width + step; break;
             }
           }
-        } else {
-          // -------- MOVE MODE (Arrow / Ctrl+Shift+Arrow) --------
+          const updatedProps = isLine
+            ? { width, height, lineWidth, lineThickness }
+            : { width, height };
+          const newTemplateData: TemplateState<unknown> = {
+            ...templateData,
+            barcodeState: {
+              ...templateData.barcodeState,
+              placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
+                comp.id === selectedComponent.id ? { ...comp, ...updatedProps } : comp
+              ),
+            },
+          };
+          setTemplateData(newTemplateData);
+          pushToHistory(newTemplateData, 'Resized component with keyboard');
+          setSelectedComponent(prev => prev ? { ...prev, ...updatedProps } : prev);
+        } else if (!isResize) {
+          // -------- MOVE MODE: move ALL selected components --------
+          let dx = 0, dy = 0;
           switch (key) {
-            case 'arrowup':
-              y = Math.max(0, y - step);
-              break;
-            case 'arrowdown':
-              y = y + step;
-              break;
-            case 'arrowleft':
-              x = Math.max(0, x - step);
-              break;
-            case 'arrowright':
-              x = x + step;
-              break;
+            case 'arrowup': dy = -step; break;
+            case 'arrowdown': dy = step; break;
+            case 'arrowleft': dx = -step; break;
+            case 'arrowright': dx = step; break;
           }
+          const newTemplateData: TemplateState<unknown> = {
+            ...templateData,
+            barcodeState: {
+              ...templateData.barcodeState,
+              placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
+                selectedIds.has(comp.id)
+                  ? { ...comp, x: Math.max(0, comp.x + dx), y: Math.max(0, comp.y + dy) }
+                  : comp
+              ),
+            },
+          };
+          setTemplateData(newTemplateData);
+          pushToHistory(newTemplateData, 'Moved component(s) with keyboard');
+          setSelectedComponent(prev =>
+            prev && selectedIds.has(prev.id)
+              ? { ...prev, x: Math.max(0, prev.x + dx), y: Math.max(0, prev.y + dy) }
+              : prev
+          );
         }
-
-        // Build updated properties
-        const updatedProps = isLine
-          ? { x, y, width, height, lineWidth, lineThickness }
-          : { x, y, width, height };
-
-        // Update templateData
-        const newTemplateData: TemplateState<unknown> = {
-          ...templateData,
-          barcodeState: {
-            ...templateData.barcodeState,
-            placedComponents: (templateData?.barcodeState?.placedComponents || []).map((comp) =>
-              comp.id === selectedComponent.id
-                ? { ...comp, ...updatedProps }
-                : comp
-            ),
-          },
-        };
-
-        setTemplateData(newTemplateData);
-        pushToHistory(newTemplateData, `${isResize ? 'Resized' : 'Moved'} component with keyboard`);
-        setSelectedComponent((prev) =>
-          prev ? { ...prev, ...updatedProps } : prev
-        );
         return;
       }
 
@@ -2254,6 +2301,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
     setZoom,
     pushToHistory,
     manageSaveTemplate,
+    selectedIds,
   ]);
 
   useEffect(() => {
@@ -2578,6 +2626,7 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setSelectedComponent(null);
+              setSelectedIds(new Set());
               setDraggingComponent(null);
               setDragOffset({ x: 0, y: 0 });
             }
@@ -2822,6 +2871,20 @@ const PDFBarcodeDesigner: React.FC<PDFBarcodeDesignerProps> = ({ forCustomRows =
                 className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
 
               >
+                {selectedIds.size > 1 && (
+                  <div style={{
+                    background: "#e3f2fd",
+                    borderRadius: 4,
+                    padding: "4px 8px",
+                    marginBottom: 8,
+                    fontSize: 12,
+                    color: "#1565c0",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}>
+                    {selectedIds.size} elements selected
+                  </div>
+                )}
                 {selectedComponent.type === DesignerElementType.container && (
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="subtitle2" sx={{ mb: 1 }}>

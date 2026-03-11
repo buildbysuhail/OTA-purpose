@@ -22,8 +22,6 @@ interface visionDetailsProps {
   formState: any;
 }
 
-//------------------------------ HERE THE PARTY ID IS NOT GETTING - SO FIXED VALUE IS USED FOR NOW -----------------------------------------
-// --------------------------------- CHANGE THE PARTY ID AFTER GETTING THE PARTY ID ----------------------------------------------------------
 const api = new APIClient();
 const visionDetails: React.FC<visionDetailsProps> = ({
   closeModal,
@@ -33,7 +31,7 @@ const visionDetails: React.FC<visionDetailsProps> = ({
   const applicationSettings = useSelector(
     (state: RootState) => state.ApplicationSettings
   );
-  const partyID = formState.transaction.master.ledgerID; // Need to change
+  const partyID = formState.ledgerData.partyID;
   const IsOptical =
     applicationSettings.mainSettings.maintainBusinessType === "Opticals"
       ? true
@@ -43,11 +41,7 @@ const visionDetails: React.FC<visionDetailsProps> = ({
       try {
         debugger;
         if (IsOptical) {
-          const response = await api.getAsync(
-            `${Urls.inv_transaction_base}${
-              formState.transactionType
-            }/SelectOpticsDetails/${11044}`
-          ); // need to change
+          const response = await api.getAsync( `${Urls.inv_transaction_base}${formState.transactionType}/SelectOpticsDetails/${partyID}`);
 
           if (!response || response.length === 0) {
             setVisionData(defaultVisionRows);
@@ -76,9 +70,7 @@ const visionDetails: React.FC<visionDetailsProps> = ({
 
           setVisionData(mergedRows);
         } else {
-          const measurements = await api.getAsync(
-            `${Urls.inv_transaction_base}${formState.transactionType}/Data/MeasurementChart`
-          );
+          const measurements = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/Data/MeasurementChart`);
 
           if (!measurements || measurements.length === 0) {
             ERPAlert.show({
@@ -90,11 +82,7 @@ const visionDetails: React.FC<visionDetailsProps> = ({
             closeModal();
             return;
           } else {
-            const response = await api.getAsync(
-              `${Urls.inv_transaction_base}${
-                formState.transactionType
-              }/SelectOpticsDetails/${11044}`
-            );
+            const response = await api.getAsync(`${Urls.inv_transaction_base}${formState.transactionType}/SelectOpticsDetails/${partyID}`);
             if (!response || response.length === 0) {
               const measurementRows = measurements.map((row: any) => ({
                 id: 0,
@@ -265,7 +253,7 @@ const visionDetails: React.FC<visionDetailsProps> = ({
       const payload = visionData.map((row: any) => ({
         id: row.id ?? 0,
         branchID: formState.transaction.master.branchID ?? 1,
-        partyID: 11044, // Need to change
+        partyID: partyID,
         cType: row.CType,
         rE_SPH: row.RE_SPH,
         rE_CYL: row.RE_CYL,

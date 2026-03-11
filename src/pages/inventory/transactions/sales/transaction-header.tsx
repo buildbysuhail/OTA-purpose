@@ -208,11 +208,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
   // Open the vision details modal
   const handleVisionDetailsModal = () => {
-    dispatch(
-      formStateHandleFieldChange({
-        fields: { visionDetails: true },
-      })
-    );
+    // Currently Opens modal if having setIsPartyDetailsOpen
+    // Make changes if not needed ledgerID
+    if(formState.ledgerData.partyID !==null){
+      dispatch(
+        formStateHandleFieldChange({
+          fields: { visionDetails: true },
+        })
+      );
+    }
   };
 
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "credit" | null>(null);

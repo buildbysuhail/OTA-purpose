@@ -19,7 +19,7 @@ interface PrivilegeCardEntryProps {
   t: (key: string) => string;
   data: string;
   formState: TransactionFormState;
-  calculateTotal: any;
+  calculateTotal?: any;
 }
 
 const api = new APIClient();

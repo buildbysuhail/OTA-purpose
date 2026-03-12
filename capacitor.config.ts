@@ -3,11 +3,11 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.polosys.app',
   appName: 'polosys-erp',
-  webDir: 'build',
-  // server: {
-  //   url: 'http://192.168.20.12:5173', // your Vite Network IP
-  //   cleartext: true
-  // },
+  webDir: 'dist',
+  server: {
+    url: 'http://192.168.20.3:5173', // your Vite Network IP
+    cleartext: true
+  },
 
   plugins: {
     SplashScreen: {

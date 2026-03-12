@@ -41,9 +41,9 @@ export default defineConfig(({ mode }) => {
   build: {
     // sourcemap: true,
     // outDir: 'C:\\inetpub\\wwwroot',
-    outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
+    // outDir: 'C:\\Host\\Polosys\\PolosysERP.UI',
     //  outDir: 'build',
-    //  outDir: 'dist',
+     outDir: 'dist',
     //  sourcemap: false,
     //  minify: "esbuild",
     //  target: "es2018",

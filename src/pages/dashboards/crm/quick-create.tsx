@@ -32,6 +32,9 @@ export default function QuickCreate() {
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
         </svg>
         Quick Create 10.0.3-ota.6
+        <p className="text-red-600 bg-red-50">
+        Dummy text
+        </p>
       </h2>
       <div className="grid grid-cols-4 gap-3">
         {quickCreateItems.map((item, index) => (
